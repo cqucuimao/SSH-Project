@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <location id="1" latitude="102.0" longitude="101.0"/>
+  <address id="1" description="重大" detail="重庆大学" location_id="1"/>
+  <customerorganization id="1" abbreviation="教委" name="重庆市沙坪坝区教育委员会" address_id="1"/>
+  <customerorganization id="2" abbreviation="体委" name="重庆市江北区体育委员会" address_id="1"/>
+  <customerorganization id="3" abbreviation="重大" name="重庆市沙坪坝区沙正街174号" address_id="1"/>
+  <customerorganization id="4" abbreviation="重邮" name="重庆市南岸区重庆邮电大学" address_id="1"/>
+</dataset>

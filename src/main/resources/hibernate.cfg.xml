@@ -1,0 +1,42 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+<session-factory>
+
+	<!-- 数据连接信息
+		<property name="hibernate.connection.url">jdbc:mysql:///itcastoa</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">1234</property>
+	-->
+
+	<property name="hibernate.dialect">
+		org.hibernate.dialect.MySQL5InnoDBDialect
+	</property>
+
+	<!-- 其他配置信息 -->
+	<property name="show_sql">true</property>
+	<property name="hbm2ddl.auto">update</property>
+
+	<!-- 
+	设置默认的事务隔离级别：
+	隔离级别		对应的整数表示
+	READ UNCOMMITED	1
+	READ COMMITED	2
+	REPEATABLE READ	4
+	SERIALIZEABLE	8
+	 -->
+	<property name="connection.isolation">2</property>
+		
+	<!-- 声明映射文件
+	<mapping class="com.msober.domain.privilege.Role" />
+	<mapping class="com.msober.domain.privilege.User" />
+	<mapping class="com.msober.domain.privilege.Department" />
+	<mapping class="com.msober.domain.privilege.Privilege" />
+	<mapping class="com.msober.domain.privilege.DeleteRecord" />
+	 -->
+	
+</session-factory>
+</hibernate-configuration>

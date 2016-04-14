@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <carservicetype id="1" personLimit="4" pricePerDay="5.000000" pricePerKM="6.000000" title="titile"/>
+  <carservicetype id="2" personLimit="5" pricePerDay="6.000000" pricePerKM="7.000000" title="rrr"/>
+</dataset>

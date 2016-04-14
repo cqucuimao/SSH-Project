@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<car id="1" EngineSN="2" VIN="1" brand="benchi" insuranceExpiredDate="2025-01-02 23:20:42.0" memo="&#24320;&#24555;&#28857;" mileage="1800" model="SUV" nextCareMile="2000" nextExaminateDate="2020-12-25 20:30:23.0" plateNumber="&#28189;A123456" registDate="2000-01-01 14:23:18.0" device_id="1" driver_id="1" servicePoint_id="1" serviceType_id="1"/>
+	<car id="2" EngineSN="1" VIN="2" brand="baoma" insuranceExpiredDate="2025-01-03 23:30:40.0" memo="&#24320;&#24555;&#28857;" mileage="2000" model="xiao" nextCareMile="2500" nextExaminateDate="2020-12-25 20:40:30.0" plateNumber="&#28189;A456789" registDate="2000-01-02 14:30:20.0" device_id="1" driver_id="1" servicePoint_id="1" serviceType_id="1"/>
+  	<car id="3" EngineSN="3" VIN="3" brand="changan" insuranceExpiredDate="2024-02-03 24:00:01.0" memo="保养" mileage="1000" model="da" nextCareMile="1200" nextExaminateDate="2019-02-03 24:00:01.0" plateNumber="&#28189;A456689" registDate="1999-02-03 24:00:01.0" device_id="2" driver_id="2" servicePoint_id="2" serviceType_id="2"/>
+  	<car id="4" EngineSN="4" VIN="4" brand="benben" insuranceExpiredDate="2024-05-09 24:00:01.0" memo="年审" mileage="1700" model="chaoda" nextCareMile="2200" nextExaminateDate="2019-05-09 24:00:01.0" plateNumber="&#28189;A367280" registDate="1999-05-09 24:00:01.0" device_id="2" driver_id="2" servicePoint_id="2" serviceType_id="2"/>
+	<carrepair id="1" appointment="false" fromDate="2015-12-21 10:34:09.0" memo="车辆维修" money="1000.00" toDate="2015-12-21 22:10:59.0" car_id="1"/>
+	<carrepair id="2" appointment="true" fromDate="2015-12-22 10:35:10.0" memo="几点维修" money="1500.00" toDate="2015-12-22 22:30:10.0" car_id="2"/>
+	<carrepair id="3" appointment="false" fromDate="2015-12-20 14:37:10.0" memo="谁的车要维修" money="2500.00" toDate="2015-12-20 24:34:15.0" car_id="3"/>
+	<carrepair id="4" appointment="true" fromDate="2015-12-25 13:35:10.0" memo="在哪里维修" money="2200.00" toDate="2015-12-30 23:59:17.0" car_id="4"/>
+</dataset>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <carinsurance id="1" fromDate="2000-09-10 14:30:30.0" insureCompany="平安保险" memo="车辆保险" money="2000.00" toDate="2020-09-10 14:30:30.0" car_id="1"/>
+  <carinsurance id="2" fromDate="2010-07-15 08:40:30.0" insureCompany="安盛保险" memo="车辆需要保险" money="2500.00" toDate="2030-07-15 08:40:30.0" car_id="2"/>
+  <carinsurance id="3" fromDate="2008-03-03 17:20:30.0" insureCompany="长安保险" memo="车辆保险" money="3000.00" toDate="2028-03-03 17:20:30.0" car_id="3"/>
+  <carinsurance id="4" fromDate="2018-07-15 09:30:50.0" insureCompany="盛大保险" memo="车辆需要保险" money="3500.00" toDate="2038-07-15 09:30:50.0" car_id="4"/>
+  <car id="1" EngineSN="2" VIN="1" brand="benchi" insuranceExpiredDate="2015-12-31 23:20:42.0" memo="&#24320;&#24555;&#28857;" mileage="1000" model="SUV" nextCareMile="2000" nextExaminateDate="2020-12-25 20:30:23.0" plateNumber="&#28189;A123456" registDate="2000-01-01 14:23:18.0" device_id="1" driver_id="1" servicePoint_id="1" serviceType_id="1" status="0"/>
+  <car id="2" EngineSN="1" VIN="2" brand="baoma" insuranceExpiredDate="2015-12-25 23:30:40.0" memo="&#24320;&#24555;&#28857;" mileage="1100" model="xiao" nextCareMile="2500" nextExaminateDate="2020-12-25 20:40:30.0" plateNumber="&#28189;A456789" registDate="2000-01-02 14:30:20.0" device_id="1" driver_id="1" servicePoint_id="1" serviceType_id="1" status="0"/>
+  <car id="3" EngineSN="3" VIN="3" brand="bentian" insuranceExpiredDate="2016-01-10 24:00:01.0" memo="保养是吧" mileage="1200" model="zhong" nextCareMile="1400" nextExaminateDate="2018-02-03 24:00:01.0" plateNumber="&#28189;A456619" registDate="1998-02-03 24:00:01.0" device_id="3" driver_id="3" servicePoint_id="3" serviceType_id="3" status="0"/>
+  <car id="4" EngineSN="4" VIN="4" brand="fengtian" insuranceExpiredDate="2016-01-01 24:00:01.0" memo="保养与否" mileage="1300" model="chaoda" nextCareMile="1700" nextExaminateDate="2017-02-03 24:00:01.0" plateNumber="&#28189;A459329" registDate="1997-02-03 24:00:01.0" device_id="4" driver_id="4" servicePoint_id="4" serviceType_id="4" status="0"/>
+  <servicepoint id="1" name="&#30913;&#22120;&#21475;" location_id="1"/>
+</dataset>

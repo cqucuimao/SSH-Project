@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+	<!-- 指定由spring负责action对象的创建 -->
+	<constant name="struts.objectFactory" value="spring" />
+	<!-- 所有匹配*.do的请求都由struts2处理 -->
+	<constant name="struts.action.extension" value="action" />
+	<!-- 是否启用开发模式(开发时设置为true,发布到生产环境后设置为false) -->
+	<constant name="struts.devMode" value="true" />
+	<!-- struts配置文件改动后，是否重新加载(开发时设置为true,发布到生产环境后设置为false) -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 设置浏览器是否缓存静态内容(开发时设置为false,发布到生产环境后设置为true) -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<!-- 请求参数的编码方式 -->
+	<constant name="struts.i18n.encoding" value="utf-8" />
+	<!-- 每次HTTP请求系统都重新加载资源文件，有助于开发(开发时设置为true,发布到生产环境后设置为false) -->
+	<constant name="struts.i18n.reload" value="true" />
+	<!-- 文件上传最大值 -->
+	<constant name="struts.multipart.maxSize" value="104857600" />
+	<!-- 让struts2支持动态方法调用,使用叹号访问方法 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<!-- Action名称中是否还是用斜线 -->
+	<constant name="struts.enable.SlashesInActionNames" value="false" />
+	<!-- 允许标签中使用表达式语法 -->
+	<constant name="struts.tag.altSyntax" value="true" />
+	<!-- 对于WebLogic,Orion,OC4J此属性应该设置成true -->
+	<constant name="struts.dispatcher.parametersWorkaround" value="false" />
+	<!-- 把主题设为simple -->
+	<constant name="struts.ui.theme" value="simple" />
+	<!-- 指定允许上传的文件最大字节数。默认值是2097152(2M) -->
+	<constant name="struts.multipart.maxSize" value="20971520" /><!-- 
+		20M -->
+	<!-- 设置上传文件的临时文件夹,默认使用javax.servlet.context.tempdir -->
+	<constant name="struts.multipart.saveDir " value="d:/YuqinFolder/tmp" />
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+
+	<package name="basePackage" extends="struts-default" namespace="/">
+
+		<interceptors>
+			<!-- 声明拦截器 -->
+			<interceptor name="checkPrivilege"
+				class="com.yuqincar.utils.CheckPrivilegeInterceptor"></interceptor>
+
+			<!-- 配置自己的拦截器栈 -->
+			<interceptor-stack name="myDefaultStack">
+				<interceptor-ref name="checkPrivilege"></interceptor-ref>
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">true</param>
+					<param name="exception.logLevel">error</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<!-- 配置默认的拦截器栈 -->
+		<default-interceptor-ref name="myDefaultStack"></default-interceptor-ref>
+
+		<!-- 配置全局的Result -->
+		<global-results>
+			<result name="loginUI">/WEB-INF/view/loginAction/loginUI.jsp</result>
+			<result name="noPrivilegeUI">/noPrivilegeUI.jsp</result>
+		</global-results>
+
+		<!-- 首页 -->
+		<action name="home_*" class="homeAction" method="{1}">
+			<result name="{1}">/WEB-INF/view/homeAction/{1}.jsp</result>
+		</action>
+
+		<!-- 用户管理 -->
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="list">/WEB-INF/view/userAction/user_list.jsp</result>
+			<result name="saveUI">/WEB-INF/view/userAction/user_saveUI.jsp</result>
+			<result name="info">/WEB-INF/view/userAction/user_info.jsp</result>
+			<result name="popup">/WEB-INF/view/userAction/user_popup.jsp</result>
+			<result name="toList" type="redirectAction">user_list</result>
+		</action>
+
+		<!-- 岗位管理 -->
+		<action name="role_*" class="roleAction" method="{1}">
+			<result name="list">/WEB-INF/view/roleAction/role_list.jsp</result>
+			<result name="saveUI">/WEB-INF/view/roleAction/role_saveUI.jsp</result>
+			<result name="setPrivilegeUI">/WEB-INF/view/roleAction/role_setPrivilegeUI.jsp
+			</result>
+			<result name="toList" type="redirectAction">role_list</result>
+		</action>
+
+
+		<!-- 部门管理 -->
+		<action name="department_*" class="departmentAction" method="{1}">
+			<result name="list">/WEB-INF/view/departmentAction/department_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/departmentAction/department_saveUI.jsp
+			</result>
+			<result name="popup">/WEB-INF/view/departmentAction/department_popup.jsp
+			</result>
+			<result name="toList" type="redirectAction">department_list</result>
+		</action>
+
+		<!-- 汽车管理 -->
+		<action name="car_*" class="carAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carInformationAction/car_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carInformationAction/car_saveUI.jsp
+			</result>
+			<result name="popup">/WEB-INF/view/carAction/carInformationAction/car_popup.jsp
+			</result>
+			<result name="device">/WEB-INF/view/carAction/carInformationAction/car_device.jsp
+			</result>
+			<result name="toList" type="redirectAction">car_list</result>
+		</action>
+
+		<!-- 车型管理 -->
+		<action name="carServiceType_*" class="carServiceTypeAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carServiceTypeAction/carServiceType_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carServiceTypeAction/carServiceType_saveUI.jsp
+			</result>
+			<result name="toList" type="redirectAction">carServiceType_list</result>
+		</action>
+
+		<!-- 违章信息管理 -->
+		<action name="carViolation_*" class="carAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carViolationAction/carViolation_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carViolationAction/carViolation_saveUI.jsp
+			</result>
+			<result name="toList" type="redirectAction">car_list</result>
+		</action>
+
+		<!-- 驻车点管理 -->
+		<action name="servicePoint_*" class="servicePointAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/carAction/servicePointAction/servicePoint_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/servicePointAction/servicePoint_saveUI.jsp
+			</result>
+			<result name="input">/WEB-INF/view/carAction/servicePointAction/servicePoint_saveUI.jsp
+			</result>
+			<result name="toList" type="redirectAction">servicePoint_list</result>
+		</action>
+
+		<!-- 车辆保养管理 -->
+		<action name="carCare_*" class="carCareAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carCareAction/carCare_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carCareAction/carCare_saveUI.jsp
+			</result>
+			<result name="saveAppoint">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp
+			</result>
+			<!-- 
+			<result name="input">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp
+			</result>
+			 -->
+			<result name="remindList">/WEB-INF/view/carAction/carCareAction/carCare_checkRemind.jsp
+			</result>
+			<result name="carCareDetail">/WEB-INF/view/carAction/carCareAction/carCare_detail.jsp
+			</result>
+			<result name="toList" type="redirectAction">carCare_list</result>
+		</action>
+
+		<!-- 车辆保险管理 -->
+		<action name="carInsurance_*" class="carInsuranceAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_saveUI.jsp
+			</result>
+			<result name="input">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_saveUI.jsp
+			</result>
+			<result name="remindList">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_checkRemind.jsp
+			</result>
+			<result name="carInsuranceDetail">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_detail.jsp
+			</result>
+			<result name="toList" type="redirectAction">carInsurance_list</result>
+		</action>
+
+		<!-- 车辆维修管理 -->
+		<action name="carRepair_*" class="carRepairAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carRepairAction/carRepair_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carRepairAction/carRepair_saveUI.jsp
+			</result>
+			<!-- 
+			<result name="input">/WEB-INF/view/carAction/carRepairAction/carRepair_saveUI.jsp
+			</result>
+			 -->
+			<result name="saveAppoint">/WEB-INF/view/carAction/carRepairAction/carRepair_saveAppoint.jsp
+			</result>
+			<result name="carRepairDetail">/WEB-INF/view/carAction/carRepairAction/carRepair_detail.jsp
+			</result>
+			<result name="toList" type="redirectAction">carRepair_list</result>
+		</action>
+
+		<!-- 车辆加油管理 -->
+		<action name="carRefuel_*" class="carRefuelAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carRefuelAction/carRefuel_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carRefuelAction/carRefuel_saveUI.jsp
+			</result>
+			<result name="carRefuelDetail">/WEB-INF/view/carAction/carRefuelAction/carRefuel_detail.jsp
+			</result>
+			<result name="toList" type="redirectAction">carRefuel_list</result>
+		</action>
+
+		<!-- 车辆年审管理 -->
+		<action name="carExamine_*" class="carExamineAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carExamineAction/carExamine_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carExamineAction/carExamine_saveUI.jsp
+			</result>
+			<!-- 
+			<result name="input">/WEB-INF/view/carAction/carExamineAction/carExamine_saveUI.jsp
+			</result>
+			 -->
+			<result name="saveAppoint">/WEB-INF/view/carAction/carExamineAction/carExamine_saveAppoint.jsp
+			</result>
+			<result name="remindList">/WEB-INF/view/carAction/carExamineAction/carExamine_checkRemind.jsp
+			</result>
+			<result name="carExamineDetail">/WEB-INF/view/carAction/carExamineAction/carExamine_detail.jsp
+			</result>
+			<result name="toList" type="redirectAction">carExamine_list</result>
+		</action>
+
+		<!-- 车辆实时监控管理 -->
+		<action name="realtime_*" class="realtimeAction" method="{1}">
+			<result name="home">/WEB-INF/view/monitorAction/realtime.jsp</result>
+			<result name="mapWindow">/WEB-INF/view/monitorAction/mapWindow.jsp
+			</result>
+		</action>
+		<!-- 车辆轨迹回放管理 -->
+		<action name="replay_*" class="replayAction" method="{1}">
+			<result name="home">/WEB-INF/view/monitorAction/replay.jsp</result>
+		</action>
+		<!-- 车辆历史警报管理 -->
+		<action name="alarm_*" class="alarmAction" method="{1}">
+			<result name="home">/WEB-INF/view/monitorAction/alarm.jsp</result>
+		</action>
+
+		<!-- 客户管理 -->
+		<action name="customer_*" class="customerAction" method="{1}">
+			<result name="list">/WEB-INF/view/customerAction/customerAction/customer_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/customerAction/customerAction/customer_saveUI.jsp
+			</result>
+			<result name="input">/WEB-INF/view/customerAction/customerAction/customer_saveUI.jsp
+			</result>
+			<result name="toList" type="redirectAction">customer_list</result>
+		</action>
+
+		<!-- 客户单位管理 -->
+		<action name="customerOrganization_*" class="customerOrganizationAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_saveUI.jsp
+			</result>			
+			<result name="managerUI">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_managerUI.jsp
+			</result>
+			<result name="toList" type="redirectAction">customerOrganization_list</result>			
+			<result name="popup">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_popup.jsp
+			</result>
+		</action>
+
+		<!-- 保养统计记录 -->
+		<action name="careStatistic_*" class="careStatisticAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/queryStatisticsAction/careStatisticAction/careStatistic_list.jsp
+			</result>
+			<result name="weekList">/WEB-INF/view/queryStatisticsAction/careStatisticAction/careStatistic_weekList.jsp
+			</result>
+			<result name="monthList">/WEB-INF/view/queryStatisticsAction/careStatisticAction/careStatistic_monthList.jsp
+			</result>
+			<result name="query">/WEB-INF/view/queryStatisticsAction/careStatisticAction/careStatistic_queryList.jsp
+			</result>
+		</action>
+
+		<!-- 加油统计记录 -->
+		<action name="refuelStatistic_*" class="refuelStatisticAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/queryStatisticsAction/refuelStatisticAction/refuelStatistic_list.jsp
+			</result>
+			<result name="weekList">/WEB-INF/view/queryStatisticsAction/refuelStatisticAction/refuelStatistic_weekList.jsp
+			</result>
+			<result name="monthList">/WEB-INF/view/queryStatisticsAction/refuelStatisticAction/refuelStatistic_monthList.jsp
+			</result>
+			<result name="query">/WEB-INF/view/queryStatisticsAction/refuelStatisticAction/refuelStatistic_queryList.jsp
+			</result>
+		</action>
+
+		<!-- 保险统计记录 -->
+		<action name="insuranceStatistic_*" class="insuranceStatisticAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/queryStatisticsAction/insuranceStatisticAction/insuranceStatistic_list.jsp
+			</result>
+			<result name="weekList">/WEB-INF/view/queryStatisticsAction/insuranceStatisticAction/insuranceStatistic_weekList.jsp
+			</result>
+			<result name="monthList">/WEB-INF/view/queryStatisticsAction/insuranceStatisticAction/insuranceStatistic_monthList.jsp
+			</result>
+			<result name="query">/WEB-INF/view/queryStatisticsAction/insuranceStatisticAction/insuranceStatistic_queryList.jsp
+			</result>
+		</action>
+
+		<!-- 维修统计记录 -->
+		<action name="repairStatistic_*" class="repairStatisticAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/queryStatisticsAction/repairStatisticAction/repairStatistic_list.jsp
+			</result>
+			<result name="weekList">/WEB-INF/view/queryStatisticsAction/repairStatisticAction/repairStatistic_weekList.jsp
+			</result>
+			<result name="monthList">/WEB-INF/view/queryStatisticsAction/repairStatisticAction/repairStatistic_monthList.jsp
+			</result>
+			<result name="query">/WEB-INF/view/queryStatisticsAction/repairStatisticAction/repairStatistic_queryList.jsp
+			</result>
+		</action>
+		
+		<!-- 已完成订单统计记录 -->
+		<action name="completedOrderStatistic_*" class="completedOrderStatisticAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/queryStatisticsAction/completedOrderStatisticAction/completedOrderStatistic_list.jsp
+			</result>
+			<result name="weekList">/WEB-INF/view/queryStatisticsAction/completedOrderStatisticAction/completedOrderStatistic_weekList.jsp
+			</result>
+			<result name="monthList">/WEB-INF/view/queryStatisticsAction/completedOrderStatisticAction/completedOrderStatistic_monthList.jsp
+			</result>
+			<result name="query">/WEB-INF/view/queryStatisticsAction/completedOrderStatisticAction/completedOrderStatistic_queryList.jsp
+			</result>
+		</action>
+		
+		<!-- 已收款对账单统计记录 -->
+		<action name="accountsReceivableStatistic_*" class="accountsReceivableStatisticAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/queryStatisticsAction/accountsReceivableStatisticAction/accountsReceivableStatistic_list.jsp
+			</result>
+			<result name="weekList">/WEB-INF/view/queryStatisticsAction/accountsReceivableStatisticAction/accountsReceivableStatistic_weekList.jsp
+			</result>
+			<result name="monthList">/WEB-INF/view/queryStatisticsAction/accountsReceivableStatisticAction/accountsReceivableStatistic_monthList.jsp
+			</result>
+			<result name="query">/WEB-INF/view/queryStatisticsAction/accountsReceivableStatisticAction/accountsReceivableStatistic_queryList.jsp
+			</result>
+		</action>
+		
+		<!-- GPS设备API -->
+		<action name="api" class="apiAction" method="api">
+		</action>
+		<!-- 百度地图API转发 -->
+		<action name="baidu" class="baiduApiAction" method="api">
+		</action>
+
+		<!-- 登录注销功能 -->
+		<action name="login_*" class="loginAction" method="{1}">
+			<result name="input">/WEB-INF/view/loginAction/loginUI.jsp</result>
+			<result name="loginUI">/WEB-INF/view/loginAction/loginUI.jsp</result>
+			<result name="logout">/WEB-INF/view/loginAction/loginUI.jsp</result>
+			<result name="toHome" type="redirect">/index.jsp</result>
+		</action>
+
+		<!-- 调度功能 -->
+		<action name="schedule_*" class="scheduleAction" method="{1}">
+			<result name="scheduling">/WEB-INF/view/scheduleAction/schedule_scheduling.jsp
+			</result>
+			<result name="queue">/WEB-INF/view/scheduleAction/schedule_queue.jsp
+			</result>
+			<result name="toQueue"  type="redirectAction">schedule_queue
+			</result>
+			<result name="map">/WEB-INF/view/addressComponmentAction/map.jsp
+			</result>
+			<result name="historyAddress">/WEB-INF/view/addressComponmentAction/historyAddress.jsp
+			</result>
+			<result name="success">/WEB-INF/view/scheduleAction/success.jsp</result>
+			<result name="deprived">/WEB-INF/view/scheduleAction/schedule_deprived.jsp</result>
+			<result name="input">/WEB-INF/view/scheduleAction/schedule_scheduling.jsp
+			</result>
+			<result name="orderView" type="redirectAction">order_view?orderId=${scheduleFromUpdateOrderId}</result>
+			<result name="watchKeeper">/WEB-INF/view/scheduleAction/schedule_watchKeeper.jsp</result>
+		</action>
+
+		<!-- 订单管理功能 -->
+		<action name="order_*" class="orderAction" method="{1}">
+			<result name="list">/WEB-INF/view/scheduleAction/order_orderManager.jsp
+			</result>
+			<result name="info">/WEB-INF/view/scheduleAction/orderDetail.jsp
+			</result>
+			<result name="view">/WEB-INF/view/scheduleAction/orderView.jsp
+			</result>
+			<result name="print">/WEB-INF/view/scheduleAction/orderPrint.jsp
+			</result>
+			<result name="cancel">/WEB-INF/view/scheduleAction/order_cancel.jsp
+			</result>
+			<result name="postpone">/WEB-INF/view/scheduleAction/order_postpone.jsp
+			</result>
+			<result name="reschedule">/WEB-INF/view/scheduleAction/order_reschedule.jsp
+			</result>
+			<result name="modifyMile">/WEB-INF/view/scheduleAction/order_modifyMile.jsp
+			</result>
+			<result name="modifyMoney">/WEB-INF/view/scheduleAction/order_modifyMoney.jsp
+			</result>
+			<result name="protocolOrderRemind">/WEB-INF/view/scheduleAction/order_protocolOrderRemind.jsp
+			</result>
+			<result name="unAcceptedOrderRemind">/WEB-INF/view/scheduleAction/order_unAcceptedOrderRemind.jsp
+			</result>
+		</action>
+
+		<!-- 未收款订单管理 -->
+	     <action name="unpaidOrder_*" class="unpaidOrderAction" method="{1}">
+	    	<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
+	    	<result name="list">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
+	     </action>
+	     <!-- 对账单管理 -->
+	     <action name="orderStatement_*" class="orderStatementAction" method="{1}">
+	    	<result name="home">/WEB-INF/view/receiptAction/orderStatement.jsp</result>
+	    	<result name="list">/WEB-INF/view/receiptAction/orderStatement.jsp</result>
+	    	<result name="paidList">/WEB-INF/view/receiptAction/paidOrderStatement.jsp</result>
+	    	<result name="info">/WEB-INF/view/receiptAction/orderStatementInfo.jsp</result>
+	    	<result name="success" type="stream">
+                <param name="contentType">application/pdf; charset=gb2312</param>
+                <param name="inputName">pdfStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">2048</param>
+            </result>
+	     </action>
+
+		<!-- 司机任务管理功能 -->
+		<action name="driver_*" class="driverAction" method="{1}">
+			<result name="taskList">/WEB-INF/view/scheduleAction/schedule_taskList.jsp
+			</result>
+		</action>
+
+
+
+	</package>
+
+	<!-- 给App使用 -->
+	<package name="appPackage" extends="struts-default" namespace="/app">
+
+		<interceptors>
+			<interceptor-stack name="defaultStackWithLogEnabled">
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">true</param>
+					<param name="exception.logLevel">error</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="defaultStackWithLogEnabled" />
+
+		<action name="user_*" class="appUserAction" method="{1}"></action>
+		<action name="message_*" class="appRemindMessageAction" method="{1}"></action>
+		<action name="order_*" class="appOrderAction" method="{1}"></action>
+		<action name="upload_*" class="uploadAction" method="{1}">
+			<!-- 动态设置Action的属性值 -->
+			<param name="savePath">/uploads</param>
+			<!-- 设置允许上传的文件类型 -->
+			<!-- zip文件:firefox : application/octet-stream chrome : application/octet-stream 
+				oprea : application/zip IE : application/x-zip-compressed rar文件:firefox : 
+				application/x-rar-compressed chrome : application/octet-stream oprea : application/x-rar-compressed -->
+			<param name="allowTypes">image/png,image/gif,image/jpeg,application/octet-stream</param>
+			<result name="input">/WEB-INF/view/uploadAction/input.jsp</result>
+			<!-- 配置Struts 2默认的视图页面 -->
+			<result>/WEB-INF/view/uploadAction/succ.jsp</result>
+		</action>
+		<action name="signature_*" class="appOrderSignatureAction"
+			method="{1}">
+			<param name="savePath">upload/signature</param>
+			<param name="allowTypes">image/png,image/gif,image/jpeg</param>
+			<result name="input">/WEB-INF/view/app/uploadUI.jsp</result>
+		</action>
+		<!--验证码 -->
+		<action name="securityCodeImage" class="securityCodeImageAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputName">imageStream</param>
+				<param name="bufferSize">2048</param>
+			</result>
+		</action>
+	</package>
+	
+	<!-- 给OrderApp使用 -->
+	<package name="orderAppPackage" extends="struts-default" namespace="/orderapp">
+		<interceptors>
+			<interceptor-stack name="defaultStackWithLogEnabled">
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">true</param>
+					<param name="exception.logLevel">error</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="defaultStackWithLogEnabled" />
+
+		<action name="OrderApp_*" class="orderAppAction" method="{1}"></action>
+		<action name="user_*" class="appUserAction" method="{1}"></action>
+	</package>
+	
+	
+	<!-- 给ScheduleApp使用 -->
+	<package name="scheduleAppPackage" extends="struts-default" namespace="/scheduleapp">
+		<interceptors>
+			<interceptor-stack name="defaultStackWithLogEnabled">
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled">true</param>
+					<param name="exception.logLevel">error</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="defaultStackWithLogEnabled" />
+
+		<action name="ScheduleApp_*" class="scheduleAppAction" method="{1}"></action>
+	</package>
+</struts>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+	<user id="1" loginname="driver1" name="aa"
+		password="21232f297a57a5a743894a0e4a801fc3" />
+	<user id="2" loginname="dirver2" name="driver2"
+		password="21232f297a57a5a743894a0e4a801fc3" />
+
+	<APPRemindMessage id="1" user_id="1" sended="0" description="message1" />
+	<APPRemindMessage id="2" user_id="1" sended="0" description="message2" />
+	
+	<APPRemindMessage id="3" user_id="2" sended="1" />
+	
+	<APPRemindMessage id="4" user_id="1" sended="1" />
+	
+
+</dataset>

@@ -1,0 +1,63 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+
+
+<div class="pageToolbar">
+
+	<span class="page">${recordCount}&nbsp;条结果&nbsp;&nbsp;${currentPage}/${pageCount}页&nbsp;&nbsp;
+   	<span class="PageSelectorNum" style="cursor: hand;" onClick="gotoPage(${num});">${num}</span>
+   	
+   	<s:if test=" 1 != currentPage "><%-- 非首页 --%>
+   		<a href="javascript: gotoPage(1)" title="首页" ><img src="skins/images/page/page_first_a.gif" alt="first page" /></a>
+	</s:if>
+	<s:else>
+   		<a  title="首页" ><img src="skins/images/page/page_first_b.gif" alt="first page" /></a>
+	</s:else>
+	
+	<s:if test=" 1 != currentPage "><%-- 非首页 --%>
+   	<a href="javascript: gotoPage(${currentPage}-1)"><img src="skins/images/page/page_pre_a.gif" alt="previous page"/></a>
+   	</s:if>
+   	<s:else>
+   	   	<img src="skins/images/page/page_pre_b.gif" alt="previous page"/>
+   	</s:else>
+   	
+   	<s:if test=" pageCount != currentPage "><%-- 非尾页 --%>
+   		<a href="javascript: gotoPage(${currentPage+1})"><img src="skins/images/page/page_next_a.gif" alt="next page"/></a>
+   	</s:if>
+   	<s:else>
+   		<a><img src="skins/images/page/page_next_b.gif" alt="next page"/></a>
+   	</s:else>
+   	
+   	<s:if test=" pageCount != currentPage "><%-- 非尾页 --%>
+   	<a href="javascript: gotoPage(${pageCount})" title="尾页"><img src="skins/images/page/page_last_a.gif" alt="last page"/></a>
+   	</s:if>
+   	<s:else>
+   	<a title="尾页"><img src="skins/images/page/page_last_b.gif" alt="last page"/></a>
+   	</s:else>
+   	
+   	转到： <select id="pageNum" onchange="gotoPage(this.value)">
+		<s:iterator begin="1" end="%{pageCount}" var="num">
+			<s:if test="#num == currentPage">
+				<option value="${num}" selected="selected">${num}</option>
+			</s:if>
+			<s:else>
+				<option value="${num}">${num}</option>
+			</s:else>
+		</s:iterator>
+	</select>
+	
+ 	</span>
+</div>
+
+
+<script type="text/javascript">
+	/**
+	 * 转到指定的页码
+	 * @param {Object} pageNum
+	 */
+	function gotoPage(pageNum){
+		$("#pageForm").append("<input type='hidden' name='pageNum' value='" + pageNum + "'>"); // 添加pageNum表单字段
+		$("#pageForm").submit();
+	}
+</script>

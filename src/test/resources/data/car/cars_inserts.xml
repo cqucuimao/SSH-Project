@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+  <car id="1" EngineSN="2" VIN="1" brand="BMW" insuranceExpiredDate="2000-01-02 23:20:42.0" memo="&#24320;&#24555;&#28857;" mileage="1000" model="SUV" nextCareMile="2000" nextExaminateDate="2000-01-03 20:30:23.0" plateNumber="&#28189;A123456" registDate="2000-01-01 14:23:18.0" device_id="1" driver_id="1" servicePoint_id="1" serviceType_id="1"/>
+  <car id="2" EngineSN="3" VIN="2" brand="Volvo" insuranceExpiredDate="2000-01-02 23:20:42.0" memo="123" mileage="1000" model="SUV" nextCareMile="2000" nextExaminateDate="2000-01-03 20:30:23.0" plateNumber="A1111" registDate="2000-01-01 14:23:18.0" device_id="2" driver_id="2" servicePoint_id="2" serviceType_id="2"/>
+  
+</dataset>

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <location id="1" latitude="102.0" longitude="101.0"/>
+  
+  <customerorganization id="1" abbreviation="&#25945;&#22996;" name="&#37325;&#24198;&#24066;&#27801;&#22378;&#22365;&#21306;&#25945;&#32946;&#22996;&#21592;&#20250;" address_id="1"/>
+  
+  <customer id="1" name="123123" customerOrganization_id="1"/>
+  <address id="1" description="&#37325;&#22823;" detail="&#37325;&#24198;&#22823;&#23398;" location_id="1"/>
+  <carservicetype id="1" personLimit="4" pricePerDay="5.000000" pricePerKM="6.000000" title="titile"/>
+  <user id="1" name="&#24352;&#19977;"/>
+  <user id="2" name="&#26446;&#22235;"/>
+  <order_ id="1" actualDay="0" createTime="2015-11-01 10:23:26.0" lastUpdateTime="2015-12-22 10:23:26.0" actualMile="0.0" actualMoney="120.000000" chargeMode="0" orderMile="0.0" orderMoney="120.000000" passengerNumber="4" phone="1234566777" planBeginDate="2015-12-22 10:23:26.0" actualBeginDate="2015-12-22 10:23:26.0" planEndDate="2015-12-22 10:23:26.0" sn="151100001" status="4" car_id="1" customer_id="1" customerOrganization_id="1" fromAddress_id="1" serviceType_id="1" toAddress_id="1" actualBeginMile="0.0" actualEndMile="0.0"/>
+  <order_ id="2" actualDay="0" createTime="2015-01-01 10:23:26.0" lastUpdateTime="2015-12-22 10:23:26.0" actualMile="0.0" actualMoney="120.000000" chargeMode="1" orderMile="0.0" orderMoney="120.000000" passengerNumber="4" phone="1234566777" planBeginDate="2015-12-22 10:23:26.0" actualBeginDate="2015-12-22 10:23:26.0" planEndDate="2015-12-22 10:23:26.0" sn="151100004" status="5" car_id="2" customer_id="1" customerOrganization_id="1" fromAddress_id="1" serviceType_id="1" toAddress_id="1" actualBeginMile="0.0" actualEndMile="0.0"/>
+  <order_ id="3" actualDay="0" createTime="2015-01-01 10:23:26.0" lastUpdateTime="2015-12-22 10:23:26.0" actualMile="0.0" actualMoney="120.000000" chargeMode="1" orderMile="0.0" orderMoney="120.000000" passengerNumber="4" phone="1234566777" planBeginDate="2015-12-22 10:23:26.0" actualBeginDate="2015-12-22 10:23:26.0" planEndDate="2015-12-22 10:23:26.0" sn="151100005" status="2" car_id="2" customer_id="1" customerOrganization_id="1" fromAddress_id="1" serviceType_id="1" toAddress_id="1" actualBeginMile="0.0" actualEndMile="0.0"/>
+</dataset>

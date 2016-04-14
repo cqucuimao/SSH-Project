@@ -1,0 +1,187 @@
+﻿@charset "utf-8";
+html {
+    /*overflow: hidden;
+    height: 100%*/
+}
+body {
+    font-size: 12px;
+    margin: 0px;
+	padding:0px;
+    font-family: Helvetica, Tahoma, Arial, "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+	background-color:#dfedf5;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle
+}
+form {
+    height: 100%;
+    vertical-align: middle
+}
+td, th, input, textarea, select {
+    font-size: 12px;
+    font-family: Helvetica, Tahoma, Arial, "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+}
+a {
+    color: #ff6600;
+    text-decoration: none;
+}
+a:hover{
+	color: #ff6600;
+	text-decoration:underline;
+}
+[class^="icon-"], [class*="icon"], [class="icon"] {
+    background-image: url("images/icons.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+    *display: inline;
+    zoom:1;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 20px;
+}
+i.icon-user{background-position: 0 0;}
+i.icon-password{background-position: -22px 0;}
+i.icon-vaildate{background-position: -44px 0;}
+.inputButton {
+    border: 1px solid #22bdf6;
+    background: #22bdf6;
+    color: #fff;
+    cursor: pointer;
+    height: 44px;
+    font-size: 16px;
+    font-weight: bolder;
+    vertical-align: middle;
+    overflow: visible;
+    width: 270px;
+    text-align:center;
+}
+.inputButton:hover {
+    background-color: #286090;
+    border-color: #204d74;
+    color: #fff;
+}
+.inputText {
+    background: #FFFFFF;
+    border: 1px solid #bbb;
+    height: 38px;
+    line-height: 38px;
+    font-size: 14px;
+    font-weight:normal;
+    padding: 0 4px 0 6px;
+    vertical-align: middle;
+}
+input.onFocus, textarea.onFocus {
+    border: 1px solid #0860ae;
+    color: #0860ae;
+}
+.bg{
+    height: 400px;
+    background:url("images/bg.png") repeat 0 0;
+}
+.bg .inner{background:url("images/loginBg.png") no-repeat center bottom;height: 100%;}
+.loginWrap .logo{
+    background: url("images/logo.png") no-repeat 0 center;
+    height: 69px;
+    line-height: 69px;
+    padding-left: 150px;
+    font-size: 30px;
+    color: #22bdf6;
+    position: absolute;
+    top:-70px;
+    right: 0; 
+    width: 400px;
+    margin: 0;
+}
+.loginWrap .logo em{
+    font-style: normal;
+    color: #dddddd;
+    float: left;
+    margin-top: 10px;
+	margin-left:20px;
+    border-right:solid 1px #ddd; 
+    display: block;
+    width: 5px;
+    height: 49px;
+}
+.loginBox .input-group{
+    display: inline-block;
+    *display: inline;
+    zoom:1;
+    position: relative;
+    line-height: normal;
+    vertical-align: middle;
+    border-radius: 4px;
+}
+.input-group i{
+    width: 20px;
+    height: 20px;
+    margin: 9px 0 0 9px;
+}
+.loginBox .input-group-addon {
+    display: block;
+    white-space: nowrap;
+    float: left;
+    vertical-align: middle;
+    border-right: none;
+    width: 38px;
+    height: 38px;
+    background: #eee;
+    border-radius: 4px 0 0 4px;
+    border:solid 1px #bbb;
+    border-right: none;
+}
+.loginBox .input-group .inputText {
+    position: relative;
+    width: 220px;
+    z-index: 2;
+    border-radius: 0 4px 4px 0;
+    border-left: none;
+}
+.loginWrap{
+    background: url(images/loginBox_bg.png) repeat 0 0;
+    width: 500px;
+    margin-left: -251px;
+    padding: 0;
+    position: absolute;
+    top: 183px;
+    left: 50%
+}
+.loginBox{
+    text-align: left;
+    padding: 50px 112px;
+    font-size: 12px;
+    font-weight: normal;
+    color: #156194;
+}
+.loginFoot{
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    right: 0;
+}
+.loginFoot .copyRight {
+    color: #999;
+    text-align: center;
+}
+.loginBox .form-group {
+    margin-bottom: 5px;
+}
+.loginBox a {
+    color: #373737;
+    padding: 3px 0;
+}
+.Fpsw{text-align: right;padding-right: 10px;}
+.loginBox .vaildate .inputText{width:136px; }
+.loginBox img{vertical-align: middle;}
+.loginBox .note {
+    color: #ff6600;
+    padding-bottom: 5px;
+    font-size: 12px;
+}
+.loginBox .inputButton{margin-top: 6px;}
+

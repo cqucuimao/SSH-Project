@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <car id="1" EngineSN="2" VIN="1" brand="benchi" insuranceExpiredDate="2025-01-02 23:20:42.0" memo="&#24320;&#24555;&#28857;" mileage="1000" model="SUV" nextCareMile="2000" nextExaminateDate="2016-01-05 20:30:23.0" plateNumber="&#28189;A123456" registDate="2000-01-01 14:23:18.0" device_id="1" driver_id="1" servicePoint_id="1" serviceType_id="1"/>
+  <car id="2" EngineSN="1" VIN="2" brand="baoma" insuranceExpiredDate="2025-01-03 23:30:40.0" memo="&#24320;&#24555;&#28857;" mileage="1100" model="xiao" nextCareMile="2500" nextExaminateDate="2015-12-25 20:40:30.0" plateNumber="&#28189;A456789" registDate="2000-01-02 14:30:20.0" device_id="1" driver_id="1" servicePoint_id="1" serviceType_id="1"/>
+  <car id="3" EngineSN="3" VIN="4" brand="changan" insuranceExpiredDate="2024-02-04 00:00:01.0" memo="&#20445;&#20859;" mileage="1000" model="da" nextCareMile="1200" nextExaminateDate="2016-02-04 00:00:01.0" plateNumber="&#28189;A456689" registDate="1999-02-04 00:00:01.0" device_id="2" driver_id="2" servicePoint_id="2" serviceType_id="2"/>
+  <car id="4" EngineSN="4" VIN="3" brand="benben" insuranceExpiredDate="2023-02-04 00:00:01.0" memo="&#20445;&#20859;123" mileage="1000" model="zhong" nextCareMile="1400" nextExaminateDate="2015-12-31 00:00:01.0" plateNumber="&#28189;A459389" registDate="1998-02-04 00:00:01.0" device_id="2" driver_id="2" servicePoint_id="2" serviceType_id="2"/>
+  <carrefuel id="1" date="2015-12-26 14:27:30.0" money="500.00" memo="在磁器口加油" car_id="1"/>
+  <carrefuel id="2" date="2015-12-25 17:47:29.0" money="400.00" memo="在磁器口加油" car_id="2"/>
+  <carrefuel id="3" date="2015-12-20 19:27:50.0" money="700.00" memo="在石门大桥加油" car_id="3"/>
+  <carrefuel id="4" date="2015-12-22 08:30:49.0" money="600.00" memo="在重大C区加油" car_id="4"/>
+</dataset>

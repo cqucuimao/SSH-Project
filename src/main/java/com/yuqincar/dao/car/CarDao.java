@@ -1,0 +1,75 @@
+package com.yuqincar.dao.car;
+
+import java.util.List;
+
+import com.yuqincar.dao.common.BaseDao;
+import com.yuqincar.domain.car.Car;
+
+public interface CarDao extends BaseDao<Car> {
+
+	boolean isPlateNumberExist(String plateNumber);
+
+	boolean isVINExist(String VIN);
+
+	boolean isEngineSNExist(String EngineSN);
+
+	boolean canDeleteCar(long id);
+
+
+	List<Car> getAllNeedCareCars();
+
+	List<Car> getAllNeedExamineCars();
+
+	List<Car> getAllNeedInsuranceCars();
+
+	Car getByPlateNumber(String plateNumber);
+
+	/**
+	 * 根据驾驶员名称，车牌号，驻车点查找车辆
+	 * @param driverName
+	 * @param plateNumber
+	 * @param servicePointName
+	 * @return
+	 */
+	List<Car> findByDriverNameAndPlateNumberAndServicePointName(String driverName, String plateNumber,
+			String servicePointName);
+
+	/**
+	 * 根据驾驶员名称，驻车点查找车辆
+	 * @param driverName
+	 * @param servicePointName
+	 * @return
+	 */
+	List<Car> findByDriverNameServicePointName(String driverName, String servicePointName);
+
+	/**
+	 * 根据驻车点民称查找车辆
+	 * @param servicePointName
+	 * @return
+	 */
+	List<Car> findByServicePointName(String servicePointName);
+
+	/**
+	 * 根据驾驶员和车牌号查找车辆信息
+	 * @param driverName
+	 * @param plateNumber
+	 * @return
+	 */
+	Car findByDriverNameAndPlateNumber(String driverName, String plateNumber);
+
+	/**
+	 * 根据驾驶员姓名查找车辆
+	 * @param driverName
+	 * @return
+	 */
+	List<Car> findByDriverName(String driverName);
+	
+	public List<Car> searchByPlateNumber(String plateNumber) ;
+
+	/**
+	 * 获取所有未报废车辆
+	 * @return
+	 */
+	List<Car> getAllNormalCars();
+
+}

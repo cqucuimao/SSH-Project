@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSON;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
@@ -259,13 +260,16 @@ public class OrderAppAction extends BaseAction{
 		if (dayOrder.equals("false")){
 			System.out.println("4");
 			cme=ChargeModeEnum.MILE;
-			Location l0=new Location();
-			l0.setLongitude(beginAddressLocationLongitude);
-			l0.setLatitude(beginAddressLocationLatitude);
-			Location l1=new Location();
-			l1.setLongitude(endAddressLocationLongitude);
-			l1.setLatitude(endAddressLocationLatitude);			
-			mileage = orderService.calculatePathDistance(l0,l1);
+			
+			Location from=new Location();
+			from.setLongitude(beginAddressLocationLongitude);
+			from.setLatitude(beginAddressLocationLatitude);
+			Location to=new Location();
+			to.setLongitude(endAddressLocationLongitude);
+			to.setLatitude(endAddressLocationLatitude);
+							
+			mileage=orderService.estimateMileage(null, from, to);
+			
 		}else{
 			System.out.println("5");
 			cme=ChargeModeEnum.DAY;
@@ -352,6 +356,7 @@ public class OrderAppAction extends BaseAction{
 		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
 		
+		List<Address> addresses=new ArrayList<Address>();
 		Address fromAddress=new Address();		
 		fromAddress.setDescription(beginAddress);
 		fromAddress.setDetail(beginAddressDetail);
@@ -359,8 +364,8 @@ public class OrderAppAction extends BaseAction{
 		l0.setLongitude(beginAddressLocationLongitude);
 		l0.setLatitude(beginAddressLocationLatitude);
 		fromAddress.setLocation(l0);
+		addresses.add(fromAddress);
 		
-		order.setFromAddress(fromAddress);
 		if (order.getChargeMode()==ChargeModeEnum.MILE) {
 			Address toAddress=new Address();
 			toAddress.setDescription(endAddress);
@@ -369,20 +374,15 @@ public class OrderAppAction extends BaseAction{
 			l1.setLongitude(endAddressLocationLongitude);
 			l1.setLatitude(endAddressLocationLatitude);
 			toAddress.setLocation(l1);
-			order.setToAddress(toAddress);
+			addresses.add(toAddress);
 		}
 		order.setMemo("");
 		order.setOrderMile(0L);
 		order.setCreateTime(new Date());
 		
-		order.setCallForOther(callForOther.equals("true") ? true : false);
-		order.setOtherPassengerName(callForOtherName);
-		order.setOtherPhoneNumber(callForOtherPhoneNumber);
-		order.setCallForOtherSendSMS(callForOtherSendSMS.equals("true") ? true : false);
-		
 		order.setOrderSource(OrderSourceEnum.APP);
 		
-		orderService.EnQueue(order,null,0);
+		orderService.EnQueue(order,addresses, null,0);
 		
 		writeJson("{\"status\":true}");
 	}
@@ -717,7 +717,8 @@ public class OrderAppAction extends BaseAction{
 			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
-		
+		System.out.println("in updateDeviceToken");
+		System.out.println("phoneNumber="+phoneNumber);
 		Customer customer=customerService.getCustomerByPhoneNumber(phoneNumber);
 		if(deviceType.equals("ios"))
 			customer.setAppDeviceType(UserAPPDeviceTypeEnum.IOS);

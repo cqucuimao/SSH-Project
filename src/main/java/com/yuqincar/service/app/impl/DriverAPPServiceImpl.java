@@ -123,17 +123,11 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			//给APP下单用户发送APP提醒消息
 			if(order.getOrderSource()==OrderSourceEnum.APP){
 				StringBuffer sb=new StringBuffer();
-				sb.append("您的订单已经派发。将由").append(order.getDriver().getName()).append("为您提供驾驶服务，车牌号：")
-					.append(order.getCar().getPlateNumber()).append("联系电话：").append(order.getDriver().getPhoneNumber())
-					.append("。");
-				if(order.getChargeMode()==ChargeModeEnum.MILE)
-					sb.append("您的上车时间是：").append(DateUtils.getYMDHMString(order.getPlanBeginDate())).append("，上车地点：").append(order.getFromAddress().getDescription())
-					.append("（").append(order.getFromAddress().getDetail()).append("），目的地：").append(order.getToAddress().getDescription())
-					.append("（").append(order.getToAddress().getDetail()).append("）。");
-				else
-					sb.append("您的用车时间是：").append(DateUtils.getYMDHMString(order.getPlanBeginDate())).append(" 至 ").append(DateUtils.getYMDString(order.getPlanEndDate()))
-						.append("，上车地点：").append(order.getFromAddress().getDescription()).append("（").append(order.getFromAddress().getDetail()).append("）。");
-				appMessageService.sendMessage(order.getCustomer(), sb.toString());
+				sb.append("订单已派发。司机：").append(order.getDriver().getName()).append("（").append(order.getDriver().getPhoneNumber())
+					.append("，").append(order.getCar().getPlateNumber()).append("）");
+				Map<String,Object> map=new HashMap<String,Object>();
+				map.put("orderId", order.getId());
+				appMessageService.sendMessageToCustomerAPP(order.getCustomer(), sb.toString(),map);
 			}
 			return 1;
 		} else {

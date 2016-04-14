@@ -373,8 +373,6 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 	}
 	
 	private int SSMOrder(Order order, Order toUpdateOrder, String scheduleMode){
-		CustomerOrganization co = null;
-		Customer c = null;
 		ChargeModeEnum chargeModeEnum = ChargeModeEnum.fromString(chargeMode);
 		CarServiceType carServiceType = null;
 		Date beginDate = null;
@@ -399,13 +397,14 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		if(order.getCreateTime()==null)
 			order.setCreateTime(new Date());
 		
+		List<Address> addresses=new ArrayList<Address>(2);
 		Address fromAddress=new Address();
 		fromAddress.setDescription(fromAddressDescription);
 		fromAddress.setDetail(fromAddressDetail);
 		fromAddress.setLocation(new Location());
 		fromAddress.getLocation().setLongitude(fromAddressLongitude);
 		fromAddress.getLocation().setLatitude(fromAddressLatitude);
-		order.setFromAddress(fromAddress);
+		addresses.add(fromAddress);
 		if (order.getChargeMode()==ChargeModeEnum.MILE) {
 			Address toAddress=new Address();
 			toAddress.setDescription(toAddressDescription);
@@ -413,19 +412,11 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			toAddress.setLocation(new Location());
 			toAddress.getLocation().setLongitude(toAddressLongitude);
 			toAddress.getLocation().setLatitude(toAddressLatitude);
-			order.setFromAddress(toAddress);
+			addresses.add(toAddress);
 		}
 		order.setMemo(memo);
 		order.setOrderMile(0L);
 		
-		//把设置单位、客户的代码放在这儿的原因是：如果放在前面，当从队列拿出订单来调度时，会报Customer未保存的错误。
-		co=new CustomerOrganization();
-		co.setName(customerOrganization);
-		order.setCustomerOrganization(co);	//到Service层去处理是否新建客户单位
-		c=new Customer();
-		c.setName(customer);
-		order.setCustomer(c);							//到Service层去处理是否新建客户
-
 		int result = 0;
 		String str=null;
 		if(scheduleMode==null || scheduleMode.isEmpty()){
@@ -435,7 +426,7 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			str=OrderService.SCHEDULE_FROM_QUEUE;
 		else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE))
 			str=OrderService.SCHEDULE_FROM_UPDATE;
-		result = orderService.scheduleOrder(str, order, car,copyOrderCount,toUpdateOrder,user);
+		result = orderService.scheduleOrder(str, order,customerOrganization,customer,addresses, car,copyOrderCount,toUpdateOrder,user);
 		return result;
 	}
 	
@@ -525,13 +516,15 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		order.setPhone(phoneNumber);
 		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
+		
+		List<Address> addresses=new ArrayList<Address>();
 		Address fromAddress=new Address();
 		fromAddress.setDescription(fromAddressDescription);
 		fromAddress.setDetail(fromAddressDetail);
 		fromAddress.setLocation(new Location());
 		fromAddress.getLocation().setLongitude(fromAddressLongitude);
 		fromAddress.getLocation().setLatitude(fromAddressLatitude);
-		order.setFromAddress(fromAddress);
+		addresses.add(fromAddress);
 		if (order.getChargeMode()==ChargeModeEnum.MILE) {
 			Address toAddress=new Address();
 			toAddress.setDescription(toAddressDescription);
@@ -539,13 +532,13 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			toAddress.setLocation(new Location());
 			toAddress.getLocation().setLongitude(toAddressLongitude);
 			toAddress.getLocation().setLatitude(toAddressLatitude);
-			order.setFromAddress(toAddress);
+			addresses.add(toAddress);
 		}
 		order.setMemo(memo);
 		order.setOrderMile(0L);
 		order.setCreateTime(new Date());
 		order.setOrderSource(OrderSourceEnum.SCHEDULER);
-		orderService.EnQueue(order,null,copyOrderCount);
+		orderService.EnQueue(order,addresses,null,copyOrderCount);
 	}
 	
 	public void getOrdersInQueue(){

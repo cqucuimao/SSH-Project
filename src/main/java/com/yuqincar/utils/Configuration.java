@@ -18,7 +18,8 @@ public class Configuration {
 	private static String smsLogFile = null;
 	private static String smsToken = null;
 	private static Map<String, String> smsTemplate = null;
-	private static String IOSPushKeyStore=null;
+	private static String IOSDriverPushKeyStore=null;
+	private static String IOSCustomerPushKeyStore=null;
 	private static String AppleDeveloperPassword=null;
 	
 	//调度员能够调度一个队列中的订单所需的最大分钟数。超过这个时间，就会被剥夺。
@@ -38,7 +39,8 @@ public class Configuration {
 			workspaceFolder = props.getProperty("workspaceFolder");
 			smsLogFile = props.getProperty("smsLogFile");
 			smsToken = props.getProperty("smsToken");
-			IOSPushKeyStore = props.getProperty("IOSPushKeyStore");
+			IOSDriverPushKeyStore = props.getProperty("IOSDriverPushKeyStore");
+			IOSCustomerPushKeyStore = props.getProperty("IOSCustomerPushKeyStore");
 			AppleDeveloperPassword = props.getProperty("AppleDeveloperPassword");			
 			depriveScheduleMinute=Integer.parseInt(props.getProperty("depriveScheduleMinute"));
 
@@ -103,12 +105,20 @@ public class Configuration {
 		Configuration.depriveScheduleMinute = depriveScheduleMinute;
 	}
 
-	public static String getIOSPushKeyStore() {
-		return IOSPushKeyStore;
+	public static String getIOSDriverPushKeyStore() {
+		return IOSDriverPushKeyStore;
 	}
 
-	public static void setIOSPushKeyStore(String iOSPushKeyStore) {
-		IOSPushKeyStore = iOSPushKeyStore;
+	public static void setIOSDriverPushKeyStore(String iOSDriverPushKeyStore) {
+		IOSDriverPushKeyStore = iOSDriverPushKeyStore;
+	}
+
+	public static String getIOSCustomerPushKeyStore() {
+		return IOSCustomerPushKeyStore;
+	}
+
+	public static void setIOSCustomerPushKeyStore(String iOSCustomerPushKeyStore) {
+		IOSCustomerPushKeyStore = iOSCustomerPushKeyStore;
 	}
 
 	public static String getAppleDeveloperPassword() {

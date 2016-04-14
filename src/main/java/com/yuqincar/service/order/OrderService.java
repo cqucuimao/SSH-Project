@@ -10,6 +10,7 @@ import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.monitor.Location;
+import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderOperationTypeEnum;
@@ -49,7 +50,7 @@ public interface OrderService extends BaseService {
 	 * 
 	 * @param order
 	 */
-	public void EnQueue(Order order,String baseSN,int copyNumber);
+	public void EnQueue(Order order,List<Address> addresses, String baseSN,int copyNumber);
 
 	/**
 	 * 得到推荐的汽车。并将满足条件的汽车按照匹配度降序排列，可分页。 推荐汽车的原则： 
@@ -112,7 +113,7 @@ public interface OrderService extends BaseService {
 	 * 			8 乘车人数超过限定
 	 * 			9 超过调度时间，被剥夺调度权
 	 */
-	public int scheduleOrder(String scheduleMode,Order order, Car car, int copyNumber,Order toUpdateOrder,User user);
+	public int scheduleOrder(String scheduleMode,Order order,String organizationName, String customerName,List<Address> addresses, Car car, int copyNumber,Order toUpdateOrder,User user);
 
 	/**
 	 * 得到队列中的所有订单，并按时间升序排列（距离现在时间较远的排前面）。也就是返回order.status==IN_QUEUE的所有订单。

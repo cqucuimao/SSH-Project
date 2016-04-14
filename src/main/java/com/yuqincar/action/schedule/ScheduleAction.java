@@ -329,10 +329,6 @@ public class ScheduleAction extends BaseAction {
 		order.setPhone(phone);
 		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
-		order.setFromAddress(address.get(0));
-		if (order.getChargeMode()==ChargeModeEnum.MILE) {
-			order.setToAddress(address.get(1));
-		}
 		order.setMemo(memo);
 		order.setOrderMile(0L);
 		order.setCreateTime(new Date());
@@ -340,7 +336,7 @@ public class ScheduleAction extends BaseAction {
 		System.out.println("needCopy="+needCopy);
 		if(needCopy==null || needCopy.equals("off"))
 			copyNumber=0;
-		orderService.EnQueue(order,null,copyNumber);
+		orderService.EnQueue(order,address,null,copyNumber);
 		return "success";
 	}
 
@@ -509,8 +505,6 @@ public class ScheduleAction extends BaseAction {
 			}else
 				toUpdateOrder.setCallForOther(false);
 		}
-		CustomerOrganization customerOrganization = null;
-		Customer customer = null;
 		ChargeModeEnum chargeModeEnum = null;
 		CarServiceType carServiceType_ = null;
 		Date beginDate = null;
@@ -537,25 +531,12 @@ public class ScheduleAction extends BaseAction {
 			order.setOrderMoney(new BigDecimal(0));
 		if(order.getCreateTime()==null)
 			order.setCreateTime(new Date());
-		order.setFromAddress(address.get(0));
-		System.out.println("address.size()="+address.size());
-		if (order.getChargeMode()==ChargeModeEnum.MILE) {
-			order.setToAddress(address.get(1));
-		}
 		order.setMemo(memo);
 		order.setOrderMile(0L);
 		System.out.println("needCopy="+needCopy);
 		if(needCopy==null || needCopy.isEmpty() || needCopy.equals("off"))
 			copyNumber=0;
 		
-		//把设置单位、客户的代码放在这儿的原因是：如果放在前面，当从队列拿出订单来调度时，会报Customer未保存的错误。
-		customerOrganization=new CustomerOrganization();
-		customerOrganization.setName(customerOrganizationName);
-		order.setCustomerOrganization(customerOrganization);	//到Service层去处理是否新建客户单位
-		customer=new Customer();
-		customer.setName(customerName);
-		order.setCustomer(customer);							//到Service层去处理是否新建客户
-
 		System.out.println("callForOther="+callForOther);
 		System.out.println("otherPassengerName="+otherPassengerName);
 		System.out.println("otherPhoneNumber="+otherPhoneNumber);
@@ -586,7 +567,7 @@ public class ScheduleAction extends BaseAction {
 		else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE))
 			str=OrderService.SCHEDULE_FROM_UPDATE;
 		User user=(User)ActionContext.getContext().getSession().get("user");
-		result = orderService.scheduleOrder(str, order, car,copyNumber,toUpdateOrder,user);
+		result = orderService.scheduleOrder(str, order,customerOrganizationName, customerName, address, car,copyNumber,toUpdateOrder,user);
 		System.out.println("result="+result);
 		if (result == 0){
 			if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE)){	

@@ -81,6 +81,19 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		}
 	}
 	
+	private AddressVO getAddressVO(Address address){
+		LocationVO location=new LocationVO();
+		location.setId(address.getLocation().getId());
+		location.setLongitude(address.getLocation().getLongitude());
+		location.setLatitude(address.getLocation().getLatitude());
+		AddressVO addressVO=new AddressVO();
+		addressVO.setId(address.getId());
+		addressVO.setDescription(address.getDescription());
+		addressVO.setDetail(address.getDetail());
+		addressVO.setLocation(location);
+		return addressVO;
+	}
+	
 	/**
 	 * 获取某个用户执行中的订单
 	 * 应该只有一条记录返回
@@ -101,7 +114,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		
 		vo.orderId = o.getId();
 		vo.chargeMode = o.getChargeMode();
-		vo.fromAddress = o.getFromAddress();
+		vo.fromAddress = getAddressVO(o.getFromAddress());
 		vo.planBeginDate = o.getPlanBeginDate();
 		vo.planEndDate = o.getPlanEndDate();
 		vo.status = o.getStatus();
@@ -114,7 +127,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		}
 
 		if (vo.chargeMode == ChargeModeEnum.MILE) {
-			vo.toAddress = o.getToAddress();
+			vo.toAddress = getAddressVO(o.getToAddress());
 			if (o.getActualEndLocation() != null) {
 				vo.toLatitude = o.getActualEndLocation().getLatitude();
 				vo.toLongitude = o.getActualEndLocation().getLongitude();
@@ -149,7 +162,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 
 			vo.orderId = o.getId();
 			vo.chargeMode = o.getChargeMode();
-			vo.fromAddress = o.getFromAddress();
+			vo.fromAddress = getAddressVO(o.getFromAddress());
 			vo.planBeginDate = o.getPlanBeginDate();
 			vo.planEndDate = o.getPlanEndDate();
 			vo.sn = o.getSn();
@@ -159,7 +172,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			}
 
 			if (vo.chargeMode == ChargeModeEnum.MILE) {
-				vo.toAddress = o.getToAddress();
+				vo.toAddress = getAddressVO(o.getToAddress());
 				if (o.getActualEndLocation() != null) {
 					vo.toLatitude = o.getActualEndLocation().getLatitude();
 					vo.toLongitude = o.getActualEndLocation().getLongitude();
@@ -189,7 +202,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 
 		vo.orderId = o.getId();
 		vo.chargeMode = o.getChargeMode();
-		vo.fromAddress = o.getFromAddress();
+		vo.fromAddress = getAddressVO(o.getFromAddress());
 		vo.planBeginDate = o.getPlanBeginDate();
 		vo.planEndDate = o.getPlanEndDate();
 		vo.status = o.getStatus();
@@ -200,7 +213,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		}
 
 		if (vo.chargeMode == ChargeModeEnum.MILE) {
-			vo.toAddress = o.getToAddress();
+			vo.toAddress = getAddressVO(o.getToAddress());
 			if (o.getActualEndLocation() != null) {
 				vo.toLatitude = o.getActualEndLocation().getLatitude();
 				vo.toLongitude = o.getActualEndLocation().getLongitude();
@@ -377,13 +390,68 @@ public class AppOrderAction extends BaseAction implements Preparable {
 
 }
 
+class LocationVO{
+	private double longitude;
+	private double latitude;
+	private Long id;
+	public double getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	public double getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}	
+}
+
+class AddressVO {
+	private Long id;
+	private String description;
+	private String detail;
+	private LocationVO location;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDetail() {
+		return detail;
+	}
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+	public LocationVO getLocation() {
+		return location;
+	}
+	public void setLocation(LocationVO location) {
+		this.location = location;
+	}	
+}
+
 class AppUndoOrderVo {
 	public Long orderId;
 	public ChargeModeEnum chargeMode;
 	public Date planBeginDate;
 	public Date planEndDate;
-	public Address fromAddress ;
-	public Address toAddress;
+	public AddressVO fromAddress ;
+	public AddressVO toAddress;
 	public double fromLongitue;
 	public double fromLatitude;
 	public double toLongitude;

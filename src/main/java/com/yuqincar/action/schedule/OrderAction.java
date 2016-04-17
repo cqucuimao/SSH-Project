@@ -136,15 +136,19 @@ public class OrderAction extends BaseAction {
 			
 			TreeMap<Date, String> map=orderService.getOrderTrackAbstract(order);
 			List<AbstractTrackVO> list=new ArrayList<AbstractTrackVO>();
-			if(map!=null)
+			if(map!=null){
+				System.out.println("map.size="+map.keySet().size());
 				for(Date date:map.keySet()){
 					AbstractTrackVO atvo=new AbstractTrackVO();
 					atvo.setAbstractTime(DateUtils.getYMDHMSString(date));
 					atvo.setAbstractAddress(map.get(date));
 					list.add(atvo);
 				}
+			}
+			System.out.println("list.size="+list.size());
 			if(list.size()<9){
-				for(int i=1;i<=9-list.size();i++){
+				int n=9-list.size();
+				for(int i=1;i<=n;i++){
 					AbstractTrackVO atvo=new AbstractTrackVO();
 					atvo.setAbstractTime(" ");
 					atvo.setAbstractAddress(" ");

@@ -52,8 +52,10 @@ public class AppOrderAction extends BaseAction implements Preparable {
 
 	public void prepare() throws Exception {
 		String username = request.getParameter("username");
-		String password = request.getParameter("pwd");
-		user = userService.getByLoginNameAndPassword(username, password);
+		String pwd = request.getParameter("pwd");
+		System.out.println("in prepare");
+		System.out.println("username="+username+",pwd="+pwd);
+		user = userService.getByLoginNameAndPassword(username, pwd);
 	}
 
 	/**

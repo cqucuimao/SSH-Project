@@ -5,10 +5,12 @@
 package com.yuqincar.action.schedule;
 
 import java.math.BigDecimal;
-import java.security.Signature;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -131,6 +133,25 @@ public class OrderAction extends BaseAction {
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
+			
+			TreeMap<Date, String> map=orderService.getOrderTrackAbstract(order);
+			List<AbstractTrackVO> list=new ArrayList<AbstractTrackVO>();
+			if(map!=null)
+				for(Date date:map.keySet()){
+					AbstractTrackVO atvo=new AbstractTrackVO();
+					atvo.setAbstractTime(DateUtils.getYMDHMSString(date));
+					atvo.setAbstractAddress(map.get(date));
+					list.add(atvo);
+				}
+			if(list.size()<9){
+				for(int i=1;i<=9-list.size();i++){
+					AbstractTrackVO atvo=new AbstractTrackVO();
+					atvo.setAbstractTime(" ");
+					atvo.setAbstractAddress(" ");
+					list.add(atvo);
+				}
+			}
+			ActionContext.getContext().put("abstractTrackList", list);
 		}
 		return "print";
 	}
@@ -590,7 +611,23 @@ public class OrderAction extends BaseAction {
 	public void setRescheduleReason(String rescheduleReason) {
 		this.rescheduleReason = rescheduleReason;
 	}
-	
+}
+
+class AbstractTrackVO{
+	private String abstractTime;
+	private String abstractAddress;
+	public String getAbstractTime() {
+		return abstractTime;
+	}
+	public void setAbstractTime(String abstractTime) {
+		this.abstractTime = abstractTime;
+	}
+	public String getAbstractAddress() {
+		return abstractAddress;
+	}
+	public void setAbstractAddress(String abstractAddress) {
+		this.abstractAddress = abstractAddress;
+	}	
 }
 
 class carJson {

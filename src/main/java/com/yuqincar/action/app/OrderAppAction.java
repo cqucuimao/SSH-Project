@@ -418,6 +418,7 @@ public class OrderAppAction extends BaseAction{
 		
 		List<BaseEntity> list=orderService.dealCCP(newCustomerOrganizationName, newCustomerName, phoneNumber);
 		Customer customer=(Customer)list.get(1);
+		customer.setCustomerOrganization((CustomerOrganization)list.get(0));
 		customer.setGender(newGender.equals("male"));
 		customerService.updateCustomer(customer);
 		

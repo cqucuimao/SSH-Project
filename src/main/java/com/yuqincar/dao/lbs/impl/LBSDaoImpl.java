@@ -7,15 +7,24 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yuqincar.dao.lbs.LBSDao;
 import com.yuqincar.domain.monitor.Location;
+import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.HttpMethod;
 
 @Repository
 public class LBSDaoImpl implements LBSDao{
 	
 	public Location getCurrentLocation(String sn) {
+		String api = "http://api.capcare.com.cn:1045/api/device.get.do?device_sn="
+				+sn+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN";
+		String json = HttpMethod.get(api);
+		JSONObject data = (JSONObject) JSON.parse(json);
+		JSONObject device = (JSONObject) data.get("device");
+		JSONObject position = (JSONObject) device.get("position");
 		Location location = new Location();
-		location.setLatitude(123.123);
-		location.setLongitude(111.11);
+		location.setLongitude(Double.parseDouble(position.getString("lng")));
+		location.setLatitude(Double.parseDouble(position.getString("lat")));
+		System.out.println("location.lng"+location.getLongitude());
+		System.out.println("location.lat"+location.getLatitude());
 		return location;
 	}
 
@@ -36,17 +45,16 @@ public class LBSDaoImpl implements LBSDao{
 	}
 	
 	
-	public float getCurrentMile(String sn, String beginTime, String endTime) {
-		String api = "http://api.capcare.com.cn:1045/api/statistic.do?user_id=45036&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&app_name=M2616_BD&language=zh_CN";
-		String params = String.format("&device_sn=%s&begin=%s&end=%s", sn,beginTime,endTime);
-		
-		String json = HttpMethod.get(api+params);
+	public float getStepMile(String sn, String beginTime, String endTime) {
+		String api = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="
+				+sn+"&begin="+beginTime+"&end="+endTime+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN&_=1450765172310";
+		String json = HttpMethod.get(api);
 		JSONObject data = (JSONObject) JSON.parse(json);
-		JSONArray mileages = (JSONArray) data.get("mileages");
+		JSONArray track = (JSONArray) data.get("track");
 		float distance = 0;
-		if(mileages.size()>0) {
-			JSONObject mileage = (JSONObject) mileages.get(0);
-			distance = mileage.getFloatValue("distance");
+		for(int i=0;i<track.size();i++){
+			JSONObject obj = (JSONObject) track.get(i);
+			distance += obj.getFloatValue("distance");
 		}
 		return distance;
 
@@ -54,14 +62,20 @@ public class LBSDaoImpl implements LBSDao{
 	}
 	public static void main(String[] args) {
 		LBSDao lbsDao = new LBSDaoImpl();
-		float mile = lbsDao.getCurrentMile("354188046608662");
+//		Location location=lbsDao.getCurrentLocation("892620160125106");
+//		System.out.println("location.lng"+location.getLongitude());
+//		System.out.println("location.lat"+location.getLatitude());
+		String from=String.valueOf(DateUtils.getYMDHMS("2016-04-15 08:20:00").getTime());
+		String to=String.valueOf(DateUtils.getYMDHMS("2016-04-15 22:00:00").getTime());
+		System.out.println("from="+from);
+		System.out.println("to="+to);
+		float mile = lbsDao.getStepMile("892620160125106",from,to);
 		System.out.println(mile);
+//		
+//		//1453309203000 2016/1/21 1:0:3
+//		//1453341603000 2016/1/21 10:0:3
+//		float mile2 = lbsDao.getCurrentMile("354188046608662","1453309203000","1453341603000");
 		
-		//1453309203000 2016/1/21 1:0:3
-		//1453341603000 2016/1/21 10:0:3
-		float mile2 = lbsDao.getCurrentMile("354188046608662","1453309203000","1453341603000");
-		
-		System.out.println(mile2);
 	}
 
 }

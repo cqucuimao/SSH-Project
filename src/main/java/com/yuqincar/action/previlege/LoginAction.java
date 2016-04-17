@@ -16,7 +16,7 @@ import com.yuqincar.service.privilege.UserService;
 @Controller
 @Scope("prototype")
 public class LoginAction extends BaseAction implements ModelDriven<User>{
-
+ 
 	@Inject("struts.devMode")
 	private String devMode;
 	private User model = new User();

@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
 	@Transactional
 	public void save(User user) {
 		// 默认密码是1234
-		String md5 = DigestUtils.md5Hex("1234"); // 密码要使用MD5摘要
+		String md5 = DigestUtils.md5Hex("123456"); // 密码要使用MD5摘要
 		user.setPassword(md5);
 
 		// 保存到数据库

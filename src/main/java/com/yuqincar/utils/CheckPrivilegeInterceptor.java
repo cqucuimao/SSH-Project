@@ -18,6 +18,8 @@ public class CheckPrivilegeInterceptor extends AbstractInterceptor {
 		System.out.println("invocation="+invocation);
 		String namespace = invocation.getProxy().getNamespace();
 		String actionName = invocation.getProxy().getActionName();
+		System.out.println("namespace="+namespace);
+		System.out.println("actionName="+actionName);
 		if (null == namespace || "".equals(namespace)) {
 			namespace = "/";
 		}

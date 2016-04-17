@@ -62,42 +62,12 @@
 				<td class="alignCenter">时间</td>
 				<td class="alignCenter" colspan="5" width="550">经过地点摘要</td>
 			</tr>
+			<s:iterator value="abstractTrackList">
 			<tr>
-				<td ></td>
-				<td colspan="5">　</td>
+				<td align="center">${abstractTime}</td>
+				<td colspan="5" align="center">${abstractAddress}</td>
 			</tr>
-			<tr>
-				<td>　</td>
-				<td colspan="5">　</td>
-			</tr>
-			<tr>
-				<td>　</td>
-				<td colspan="5">　</td>
-			</tr>
-			<tr>
-				<td>　</td>
-				<td colspan="5">　</td>
-			</tr>
-			<tr>
-				<td>　</td>
-				<td colspan="5">　</td>
-			</tr>
-			<tr>
-				<td>　</td>
-				<td colspan="5">　</td>
-			</tr>
-			<tr>
-				<td>　</td>
-				<td colspan="5">　</td>
-			</tr>
-			<tr>
-				<td>　</td>
-				<td colspan="5">　</td>
-			</tr>
-			<tr>
-				<td>　</td>
-				<td colspan="5">　</td>
-			</tr>
+			</s:iterator>
 			<tr>
 				<td class="alignCenter">过路停车</td>
 				<td width="150">　</td>
@@ -116,9 +86,9 @@
 			</tr>
 			<tr>
 				<td class="alignCenter">上车时间</td>
-				<td><s:date name="actualBeginDate" format="yyyy-MM-dd hh:mm"/></td>
+				<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/></td>
 				<td class="alignCenter">下车时间</td>
-				<td><s:date name="actualEndDate" format="yyyy-MM-dd hh:mm"/></td>
+				<td><s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
 				<td class="alignCenter">合计时间（h）</td>
 				<td style="padding-left:8px"></td>
 			</tr>

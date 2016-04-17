@@ -11,6 +11,7 @@
 		<spring.version>3.1.2.RELEASE</spring.version>
 		<dbunit.version>2.5.1</dbunit.version>
 		<hibernate.core.version>3.6.9.Final</hibernate.core.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<dependency>

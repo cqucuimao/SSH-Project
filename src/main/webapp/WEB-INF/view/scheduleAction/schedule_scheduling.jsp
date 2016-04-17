@@ -768,8 +768,8 @@
 											data : {
 												chargeMode : chargeMode,
 												serviceType : serviceType,
-												lng : lng,
-												lat : lat,
+												lng0 : lng,
+												lat0 : lat,
 												planBeginDate : planBeginDate,
 												planEndDate : planEndDate
 											},

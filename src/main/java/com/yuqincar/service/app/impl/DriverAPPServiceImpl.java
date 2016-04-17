@@ -200,7 +200,7 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		Date now = new Date();
 		order.setActualEndDate(now);
 		
-		order.setActualMile(lbsDao.getCurrentMile(sn, order.getActualBeginDate().getTime()+"", now.getTime()+""));
+		order.setActualMile(lbsDao.getStepMile(sn, order.getActualBeginDate().getTime()+"", now.getTime()+""));
 		int actualDay = DateUtils.elapseDays(order.getActualBeginDate(), order.getActualEndDate(),true,true);
 		order.setActualDay(actualDay);
 		order.setActualMoney(orderDao.calculateOrderMoney(order.getServiceType(), order.getChargeMode(), order.getActualMile(), order.getActualDay()));

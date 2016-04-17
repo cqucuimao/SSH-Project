@@ -425,14 +425,10 @@
 			<result name="taskList">/WEB-INF/view/scheduleAction/schedule_taskList.jsp
 			</result>
 		</action>
-
-
-
 	</package>
 
 	<!-- 给App使用 -->
 	<package name="appPackage" extends="struts-default" namespace="/app">
-
 		<interceptors>
 			<interceptor-stack name="defaultStackWithLogEnabled">
 				<interceptor-ref name="defaultStack">

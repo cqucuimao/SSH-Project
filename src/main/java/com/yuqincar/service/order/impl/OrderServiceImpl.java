@@ -865,7 +865,10 @@ public class OrderServiceImpl implements OrderService {
 		    //计算前缀的长度
 		    int prefix="renderReverse&&renderReverse(".length();
 		    String realAddressJson=addressJson.substring(prefix, addressJson.length()-1);
-		    String address=JSON.parseObject(realAddressJson).getJSONObject("result").getString("sematic_description");
+//		    System.out.println("result=");
+//		    System.out.println(JSON.parseObject(realAddressJson).getJSONObject("result"));
+		    JSONObject result=JSON.parseObject(realAddressJson).getJSONObject("result");
+		    String address=result.getString("formatted_address") + "（" + result.getString("sematic_description")+ "）";
 		    //生成address的list对象
 		    addresses.add(address);
 		}

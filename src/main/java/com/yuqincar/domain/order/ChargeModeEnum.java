@@ -20,7 +20,7 @@ public enum ChargeModeEnum {
 		else if(str.equals("protocol") || str.equals("按协议计费"))
 			return PROTOCOL;
 		return null;
-	}
+	} 
 	
 	public String toString(){
 		switch(this){

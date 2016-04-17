@@ -2,8 +2,6 @@ package com.yuqincar.action.receipt;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -11,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -36,6 +35,7 @@ import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatement;
 import com.yuqincar.domain.order.OrderStatementStatusEnum;
 import com.yuqincar.service.common.DiskFileService;
+import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.receipt.ReceiptService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
@@ -52,6 +52,9 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 
 	@Autowired
 	ReceiptService receiptService;
+	
+	@Autowired
+	OrderService orderService;
 	
 	@Autowired
 	private DiskFileService diskFileService;
@@ -206,7 +209,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		
 	   OrderStatement orderStatement = receiptService.getOrderStatementById(model.getId());
 	   List<Order> orders = receiptService.getOrderStatementById(model.getId()).getOrders();
-	   SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd hh:mm");//时间格式
+	   SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");//时间格式
 	   SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");//时间格式
 	   DecimalFormat df = new DecimalFormat("###");//浮点数显示格式
 	   DecimalFormat df1 = new DecimalFormat("0.0");//浮点数显示格式
@@ -316,11 +319,28 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   cell.setColspan (5);
 		   table.addCell (cell);
 		   //表格6到14行
-		   for(int i = 1;i < 10;i ++){
-			   table.addCell (new Paragraph (""+i,font));
-			   cell = new PdfPCell (new Paragraph ("",font));
-			   cell.setColspan (5);
-			   table.addCell (cell);
+		   TreeMap<Date, String> map=orderService.getOrderTrackAbstract(orders.get(0));
+		   if(map!=null){
+			   for(Date d:map.keySet()){
+				   table.addCell (new Paragraph (DateUtils.getYMDHMSString(d),font));
+				   cell = new PdfPCell (new Paragraph (map.get(d),font));
+				   cell.setColspan (5);
+				   table.addCell (cell);
+			   }
+			   if(map.keySet().size()<9)
+				   for(int i = 1;i <=9-map.keySet().size();i++){
+					   table.addCell (new Paragraph (""+i,font));
+					   cell = new PdfPCell (new Paragraph ("",font));
+					   cell.setColspan (5);
+					   table.addCell (cell);
+				   }
+		   }else{
+			   for(int i = 1;i <=9;i++){
+				   table.addCell (new Paragraph (""+i,font));
+				   cell = new PdfPCell (new Paragraph ("",font));
+				   cell.setColspan (5);
+				   table.addCell (cell);
+			   }
 		   }
 		   //表格第15行
 		   table.addCell (new Paragraph ("过路停车",font));

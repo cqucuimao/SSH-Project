@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yuqincar.dao.monitor.TemporaryWarningDao;
 import com.yuqincar.dao.monitor.WarningMessageDao;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.monitor.TemporaryWarning;
 import com.yuqincar.domain.monitor.WarningMessage;
 import com.yuqincar.domain.monitor.WarningMessageTypeEnum;
 import com.yuqincar.domain.order.OrderStatement;
@@ -33,11 +32,11 @@ public class WarningMessageServiceImpl implements WarningMessageService {
 	}
 
 	@Transactional
-	public void addWarningMessage(Long carId, WarningMessageTypeEnum pulledout) {
+	public void addWarningMessage(Long carId, Date date, WarningMessageTypeEnum pulledout) {
 		WarningMessage message=new WarningMessage();
 		message.setCar(carService.getCarById(carId));
 		message.setType(WarningMessageTypeEnum.PULLEDOUT);
-		message.setDate(new Date());
+		message.setDate(date);
 		message.setDealed(false);
 		warningMessageDao.save(message);
 	}

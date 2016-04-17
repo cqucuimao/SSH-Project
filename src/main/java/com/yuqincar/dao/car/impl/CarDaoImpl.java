@@ -202,5 +202,9 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 			   .setParameter(0, CarStatusEnum.NORMAL)//
 			   .list();
 	}
-	
+
+	public Car getCarByDeviceSN(String SN){
+		System.out.println("SN="+SN);
+		return (Car)getSession().createQuery("From Car c where c.device.SN=?").setParameter(0, SN).uniqueResult();
+	}
 }

@@ -221,4 +221,8 @@ public class CarServiceImpl implements CarService {
 		
 		deviceDao.save(device);
 	}
+	
+	public Car getCarByDeviceSN(String SN){
+		return carDao.getCarByDeviceSN(SN);
+	}
 }

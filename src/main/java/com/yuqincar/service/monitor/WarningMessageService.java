@@ -1,5 +1,6 @@
 package com.yuqincar.service.monitor;
 
+import java.util.Date;
 import java.util.List;
 
 import com.yuqincar.domain.common.PageBean;
@@ -13,7 +14,7 @@ public interface WarningMessageService {
 	PageBean<OrderStatement> getPageBean(int pageNum, QueryHelper helper);
 
 	//添加报警信息
-	void addWarningMessage(Long carId, WarningMessageTypeEnum pulledout);
+	void addWarningMessage(Long carId, Date date, WarningMessageTypeEnum pulledout);
 
 	//判断当前车辆的临时警告记录是否存在
 	boolean isTempMessageExist(Long carId);

@@ -128,4 +128,6 @@ public interface CarService {
 	 * @return
 	 */
 	public List<Car> getAllNormalCars();
+	
+	public Car getCarByDeviceSN(String SN);
 }

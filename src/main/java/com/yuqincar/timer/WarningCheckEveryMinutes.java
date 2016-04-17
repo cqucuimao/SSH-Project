@@ -1,5 +1,6 @@
 package com.yuqincar.timer;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.monitor.TemporaryWarning;
 import com.yuqincar.domain.monitor.WarningMessageTypeEnum;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.service.car.CarService;
@@ -21,9 +21,9 @@ import com.yuqincar.utils.HttpMethod;
 
 @Component
 public class WarningCheckEveryMinutes {
-	
-	private static final String BASEURL = "http://api.capcare.com.cn:1045/api/";
-	private static final String ENDURL = "&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";
+	private static final String PULL_OUT_WARNING_URL="http://api.capcare.com.cn:1045/api/alarm.all.do?begin=-1&end=-1&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN&_=1450765409539";
+	private static final String DELETE_PULL_OUT_WARNING_URL="http://api2.capcare.com.cn:1045/api/alarm.delete.do?alarm_id=%s-%s&app_name=M2616_BD&language=zh_CN&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&_=1460880585103";
+	private static final String UNPLANNED_RUNNING_URL = "http://api.capcare.com.cn:1045/api/device.get.do?device_sn=%s&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";
 	
 	@Autowired
 	public CarService carService;
@@ -32,51 +32,67 @@ public class WarningCheckEveryMinutes {
 	@Autowired
 	public OrderService orderService;
 	
-	@Scheduled(cron = "0 0/5 * * * ?") // 每5分钟执行一次
+	@Scheduled(cron = "10 * * * * ?")  //每分钟（第10秒）执行一次
 	@Transactional
-	public void checkWarning(){
-		List<Car> cars=carService.getAllNormalCars();
-		for(int i=0;i<cars.size();i++){
-			Long carId=cars.get(i).getId();
-			String device_sn=cars.get(i).getDevice().getSN();
-			StringBuffer deviceUrl=new StringBuffer();
-			deviceUrl.append(BASEURL);
-			deviceUrl.append("device.get.do?device_sn="+device_sn);
-			deviceUrl.append(ENDURL);
-			String json = HttpMethod.get(deviceUrl.toString());
-			//System.out.println("获取得到设备数据信息");
-			//System.out.println(json);
-			JSONObject result=JSON.parseObject(json);
-			//判断是否是  拔出报警，如果是  拔出报警，则直接将警告记录插入到数据库，否则判断是否是  异常行驶
-			try{
-				JSONArray alarms=result.getJSONArray("alarms");
-				if("拔出报警".equals(alarms.getJSONObject(0).getString("info"))){
-					warningService.addWarningMessage(carId, WarningMessageTypeEnum.PULLEDOUT);
+	public void checkPullOutWarning(){
+		System.out.println("in checkPullOutWarning");
+		String json = HttpMethod.get(PULL_OUT_WARNING_URL);
+		JSONObject result=JSON.parseObject(json);
+		JSONArray alarms=result.getJSONArray("alarms");
+		if(alarms!=null && alarms.size()>0){
+			for(int i=0;i<alarms.size();i++){
+				System.out.println("info="+alarms.getJSONObject(i).getString("info"));
+				System.out.println("id="+alarms.getJSONObject(i).getString("id"));
+				String sn=alarms.getJSONObject(i).getString("deviceSn");
+				if("拔出报警".equals(alarms.getJSONObject(i).getString("info"))){
+					Date date=new Date(Long.valueOf(alarms.getJSONObject(i).getString("time")));
+					warningService.addWarningMessage(carService.getCarByDeviceSN(sn).getId(), date, WarningMessageTypeEnum.PULLEDOUT);
 				}
-			}catch(Exception e){
-				JSONObject position=result.getJSONObject("device").getJSONObject("position");
-			    String status=position.getString("status");
-				String speed=position.getString("speed");
-				//System.out.println(status);
-				//System.out.println(speed);
-				//如果车辆处于行驶状态  行驶1 速度!=0
-				if("1".equals(status)&&!"0.0".equals(speed)){
-					//查看该行驶车辆是否有订单
-					Order order=orderService.getCurrentOrderByCarId(carId);
-					//订单为空  这说明该车是处于 异常行驶状态 或者 临时异常行驶状态   二次验证
-					if(order==null){
-						//如果当前警告记录存在 第一次验证的临时警告记录 则删除临时警告 并插入真实警告
-						if(warningService.isTempMessageExist(carId)){
-						   warningService.deleteTempMessage(carId);
-						   warningService.addWarningMessage(carId, WarningMessageTypeEnum.UNPLANNED_RUNNING);
-						}else{
-						   //否则插入临时警告
-						   warningService.addTempWarningMessage(carId);
-						}
+				//删除报警
+				String warningId=alarms.getJSONObject(i).getString("id");
+				String url=String.format(DELETE_PULL_OUT_WARNING_URL, sn,warningId);
+				String re = HttpMethod.get(url.toString());
+				System.out.println("re="+re);
+			}
+		}
+	}
+	
+	@Scheduled(cron = "0 0/1 * * * ?") // 每5分钟执行一次
+	@Transactional
+	public void checkUnplannedRunningWarning(){
+		System.out.println("in checkUnplannedRunningWarning");
+		List<Car> cars=carService.getAllNormalCars();
+		for(Car car:cars){
+			String url=String.format(UNPLANNED_RUNNING_URL, car.getDevice().getSN());
+			String json = HttpMethod.get(url.toString());
+			System.out.println("json="+json);
+			JSONObject result=JSON.parseObject(json);
+			System.out.println("result="+result);
+			System.out.println("device="+result.getJSONObject("device"));
+			System.out.println("position="+result.getJSONObject("device").getJSONObject("position"));
+			JSONObject position=result.getJSONObject("device").getJSONObject("position");
+		    String status=position.getString("status");
+			String speed=position.getString("speed");
+			//如果车辆处于行驶状态  行驶1 速度>0
+			if("1".equals(status) && Double.valueOf(speed)>0){
+				//查看该行驶车辆是否有订单
+				Order order=orderService.getCurrentOrderByCarId(car.getId());
+				//订单为空  这说明该车是处于 异常行驶状态 或者 临时异常行驶状态   二次验证
+				if(order==null){
+					//如果当前警告记录存在 第一次验证的临时警告记录 则删除临时警告 并插入真实警告
+					if(warningService.isTempMessageExist(car.getId())){
+					   warningService.deleteTempMessage(car.getId());
+					   warningService.addWarningMessage(car.getId(), new Date(), WarningMessageTypeEnum.UNPLANNED_RUNNING);
+					}else{
+					   //否则插入临时警告
+					   warningService.addTempWarningMessage(car.getId());
 					}
+				}else{
+					//如果上次有临时警告，本次没有出现，那么就应该删除临时警告
+					if(warningService.isTempMessageExist(car.getId()))
+						warningService.deleteTempMessage(car.getId());
 				}
 			}
 		}
 	}
-
 }

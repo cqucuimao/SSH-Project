@@ -1197,14 +1197,14 @@ public class InitTestData {
 		deviceDao.save(d1);
 
 		Device d2 = new Device();
-		d2.setSN("892620160125106");
+		d2.setSN("354188046608662");
 		d2.setPN("DPN00002");
 		d2.setDate(new Date());
 		d2.setManufacturer("跟屁虫");
 		deviceDao.save(d2);
 
 		Device d3 = new Device();
-		d3.setSN("892620160125106");
+		d3.setSN("354188048138338");
 		d3.setPN("DPN00003");
 		d3.setDate(new Date());
 		d3.setManufacturer("跟屁虫");

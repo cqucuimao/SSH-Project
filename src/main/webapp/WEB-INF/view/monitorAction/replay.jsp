@@ -467,6 +467,9 @@
     			  tracksPlayTimeAndPointLength[index][1]=trackPointsLength;
     			  tracksSpeed[index]=new Array(trackPointsLength);
     			  
+    			//定义百度地图上的point数组
+  		         BaiduPoints=new Array(trackPointsLength);
+    			  
     			  //百度地图的API坐标转换接口限制数
     	          var limitLen=98;
     	          //由于百度API的接口每次最多解析100个经纬度坐标，所以进行分段
@@ -503,10 +506,9 @@
          	    	         console.log(baiduTrackData);
          	    	         var pointsLength=baiduTrackData.result.length;
          	    	         console.log("====当前轨迹段的长度===== "+pointsLength);
-         	    	         //定义百度地图上的point数组
-     	    		         BaiduPoints=new Array(pointsLength);
+         	    	         
      	    		         for(var k=0;k<baiduTrackData.result.length;k++){
-     	    			         BaiduPoints[part*limitLen+k]=new BMap.Point(baiduTrackData.result[part*limitLen+k].x,baiduTrackData.result[part*limitLen+k].y);
+     	    			         BaiduPoints[part*limitLen+k]=new BMap.Point(baiduTrackData.result[k].x,baiduTrackData.result[k].y);
      	    		         }
      	                });
     	          }

@@ -275,7 +275,7 @@
     var allNormalCars;
     
     //警告信息查询间隔时间  单位 毫秒
-    var warningCheckInterval=5000;   //间隔时间5分钟   
+    var warningCheckInterval=15000;   //间隔时间15秒 
     
     //当前查询到的到车辆信息
     var carData;

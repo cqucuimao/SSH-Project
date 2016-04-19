@@ -74,10 +74,10 @@
         </div>
         <div class="pageToolbar" id="pageBar" style="display:none;">
 			    <span class="page" id="pageInfo"><span id="currentPageNum"></span>/<span id="totalPageNum"></span>&nbsp;&nbsp;
-			    	<a href="javascript: gotoPage('first')"><img src="skins/images/page/page_first_b.gif" alt="first page" /></a>
-			    	<a href="javascript: gotoPage('previous')"><img src="skins/images/page/page_pre_b.gif" alt="previous page"/></a>
-			    	<a href="javascript: gotoPage('next')"><img src="skins/images/page/page_next_a.gif" alt="next page"/></a>
-			    	<a href="javascript: gotoPage('last')"><img src="skins/images/page/page_last_a.gif" alt="last page"/></a>
+			    	<a href="javascript: gotoPage('first')"><img id="first" src="skins/images/page/page_first_b.gif" alt="first page" /></a>
+			    	<a href="javascript: gotoPage('previous')"><img id="previous" src="skins/images/page/page_pre_b.gif" alt="previous page"/></a>
+			    	<a href="javascript: gotoPage('next')"><img id="next" src="skins/images/page/page_next_a.gif" alt="next page"/></a>
+			    	<a href="javascript: gotoPage('last')"><img id="last" src="skins/images/page/page_last_a.gif" alt="last page"/></a>
 			    	转到： <select id="pageSkip" onchange="gotoPage(this.value)">
 			    	</select>
 			  	</span>
@@ -235,14 +235,11 @@
                	   	       num_entries = length;	  //获取记录总数，即轨迹数
                	   	       showCount = 3;             //每页显示记录数
                	   	       //计算分页数
-               	   	       var num1= num_entries/showCount;
-               	   	       var num2= parseInt(num_entries/showCount);
-               	   	       //判断总页数，设置最后一页的索引
-               	   	       if(num1==num2){
-               	   	          lastPage = num2;  //总页数 
-               	   	       }else{
-               	   	    	  lastPage = num2+1;
-               	   	       }
+                 	   	   lastPage=Math.ceil(num_entries/showCount);  //Math.ceil向上取整
+                 	   	   
+                 	   	   //初始化分页栏样式,realtime中此代码不再此位置,因为放在realtime相似位置时，无效，具体原因不明
+                           initPageBarStyle();
+                 	   	   
                	   	       //设置当前页
                	   	       currentPage=0;
                	   		   pageList();         //查询之后调用分页组件
@@ -267,6 +264,7 @@
         	$("#dataList").show();
       		//显示分页组件
       		$("#pageBar").show();
+      		
         });
         
         //全选按钮绑定单击事件响应
@@ -720,42 +718,91 @@
      	function fast(){
      		clearInterval(timer);
      		timer=setInterval(playAction, refreshInternal/2);
-     		alert("执行了快速播放");
-     		console.log("执行了快速播放");
+     		//alert("执行了快速播放");
+     		//console.log("执行了快速播放");
      	}
      	//使播放速度为原来的4倍
      	function faster(){
      		clearInterval(timer);
      		timer=setInterval(playAction, refreshInternal/4);
-     		alert("执行了超快播放");
-     		console.log("执行了超快播放");
+     		//alert("执行了超快播放");
+     		//console.log("执行了超快播放");
      	}
      	
-     	/**
-     	 * 转到指定的页码
-     	 */
+     	
+     	//每次查询操作都需要初始分页栏的样式
+     	function initPageBarStyle(){
+     		//如果总共只有1页 则所有跳转都置无效
+  			if(lastPage==1){
+  			   $("#first").attr("src","skins/images/page/page_first_b.gif"); 
+  			   $("#previous").attr("src","skins/images/page/page_pre_b.gif"); 
+  			   $("#next").attr("src","skins/images/page/page_next_b.gif"); 
+  			   $("#last").attr("src","skins/images/page/page_last_b.gif"); 
+  			}else{
+  			   $("#first").attr("src","skins/images/page/page_first_b.gif"); 
+   			   $("#previous").attr("src","skins/images/page/page_pre_b.gif"); 
+   			   $("#next").attr("src","skins/images/page/page_next_a.gif"); 
+   			   $("#last").attr("src","skins/images/page/page_last_a.gif"); 
+  			}
+     	}
+     	
+     	//转到指定的页码
     	function gotoPage(pageIndex){
+        	
     		 if(pageIndex=='first'){
-    			pageselectCallback(0);
+    			currentPage=0;
+    			pageselectCallback(currentPage);
     		 }
     		 if(pageIndex=='last'){
-    			pageselectCallback(lastPage-1);
+    			currentPage=lastPage-1;
+    			pageselectCallback(currentPage);
     		 }
     		 if(pageIndex=='previous'){
     			if(currentPage>0)
     				currentPage=currentPage-1;
     			pageselectCallback(currentPage);
+    			
     		 }
     		 if(pageIndex=='next'){
     			if(currentPage<lastPage-1)
     			   currentPage=currentPage+1;
     			pageselectCallback(currentPage);
-    		 }
+    		 }	 
     		 if(!isNaN(pageIndex)){
     			 currentPage=parseInt(pageIndex);
     			 pageselectCallback(currentPage);
     		 }
-    	}
+    	
+    		 //如果分页总数为1，则值所有项为失效
+    		 if(lastPage==1){
+    			$("#first").attr("src","skins/images/page/page_first_b.gif"); 
+     		    $("#previous").attr("src","skins/images/page/page_pre_b.gif"); 
+     		    $("#next").attr("src","skins/images/page/page_next_b.gif"); 
+     		    $("#last").attr("src","skins/images/page/page_last_b.gif"); 
+    		 }else{
+    			//如果总页数>1页
+        	     //当前页为首页，则下一页和尾页置有效
+        	     if(currentPage==0){
+        		    $("#first").attr("src","skins/images/page/page_first_b.gif"); 
+        		    $("#previous").attr("src","skins/images/page/page_pre_b.gif"); 
+        		    $("#next").attr("src","skins/images/page/page_next_a.gif"); 
+        		    $("#last").attr("src","skins/images/page/page_last_a.gif"); 
+        		 }else if(currentPage==lastPage-1){
+        			//如果当前页为尾页，则置上一页和首页有效
+        		    $("#first").attr("src","skins/images/page/page_first_a.gif"); 
+        		    $("#previous").attr("src","skins/images/page/page_pre_a.gif"); 
+        			$("#next").attr("src","skins/images/page/page_next_b.gif"); 
+        			$("#last").attr("src","skins/images/page/page_last_b.gif"); 
+        	     }else{
+        		    //如果当前页处于中间，则置所有跳转有效
+        			$("#first").attr("src","skins/images/page/page_first_a.gif"); 
+        			$("#previous").attr("src","skins/images/page/page_pre_a.gif"); 
+        			$("#next").attr("src","skins/images/page/page_next_a.gif"); 
+        			$("#last").attr("src","skins/images/page/page_last_a.gif"); 
+        		 }
+    		 }
+    		 
+    	} 
      	
         /**
          * 计算两日期时间差

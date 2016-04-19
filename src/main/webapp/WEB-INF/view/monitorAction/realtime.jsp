@@ -80,10 +80,10 @@
         </div>
         <div class="pageToolbar" id="pageBar" style="display:none;">
 			    <span class="page" id="pageInfo"><span id="currentPageNum"></span>/<span id="totalPageNum"></span>&nbsp;&nbsp;
-			    	<a href="javascript: gotoPage('first')"><img src="skins/images/page/page_first_b.gif" alt="first page" /></a>
-			    	<a href="javascript: gotoPage('previous')"><img src="skins/images/page/page_pre_b.gif" alt="previous page"/></a>
-			    	<a href="javascript: gotoPage('next')"><img src="skins/images/page/page_next_a.gif" alt="next page"/></a>
-			    	<a href="javascript: gotoPage('last')"><img src="skins/images/page/page_last_a.gif" alt="last page"/></a>
+			    	<a href="javascript: gotoPage('first')"><img id="first" src="skins/images/page/page_first_b.gif" alt="first page" /></a>
+			    	<a href="javascript: gotoPage('previous')"><img id="previous" src="skins/images/page/page_pre_b.gif" alt="previous page"/></a>
+			    	<a href="javascript: gotoPage('next')"><img id="next" src="skins/images/page/page_next_a.gif" alt="next page"/></a>
+			    	<a href="javascript: gotoPage('last')"><img id="last" src="skins/images/page/page_last_a.gif" alt="last page"/></a>
 			    	转到： <select id="pageSkip" onchange="gotoPage(this.value)">
 			    	</select>
 			  	</span>
@@ -262,6 +262,7 @@
         	map=sonWindow.map;
         	//sonWindow.flushTrack();
         } */
+        
     }
     
     //为百度地图添加左上角标签                
@@ -274,7 +275,7 @@
     var allNormalCars;
     
     //警告信息查询间隔时间  单位 毫秒
-    var warningCheckInterval=15000;  
+    var warningCheckInterval=5000;   //间隔时间5分钟   
     
     //当前查询到的到车辆信息
     var carData;
@@ -420,6 +421,8 @@
    	   		 
    	   		 //显示数据表
    	   		 $("#dataList").show();
+   	   		 //初始化分页栏样式
+   	   	     initPageBarStyle()
    	   		 //显示分页栏
    	   		 $("#pageBar").show();
    		 }else{
@@ -569,7 +572,7 @@
     
    //每隔10秒刷新位置
    //window.setInterval(flushByGroup,monitorInterval); 
-   //刷新警告
+   //每隔5分钟刷新位置
    window.setInterval(warningsCheckAndFill,warningCheckInterval); 
    
    /*
@@ -614,7 +617,9 @@
  		 	   			   allRecordedCars[carId][2]=2;
 				 });
 				 //如果当前的刷新组是第一组  当时 警报发生在最后一组的车中，为了即刻显示异常车辆  需要在这里直接刷新
-				 sonWindow.flushTrack();
+			   	 if(sonWindowFlag){
+			   		sonWindow.flushTrack();
+			   	 }
 				 //使警报灯闪烁
 				 $("#alarmImageId").attr("src","skins/images/alarm.gif");
 				 //发出报警声
@@ -1069,20 +1074,39 @@
         }
    	    
    	}  */
-   
+   	
+  //每次查询操作都需要初始分页栏的样式
+ 	function initPageBarStyle(){
+ 		//如果总共只有1页 则所有跳转都置无效
+			if(lastPage==1){
+			   $("#first").attr("src","skins/images/page/page_first_b.gif"); 
+			   $("#previous").attr("src","skins/images/page/page_pre_b.gif"); 
+			   $("#next").attr("src","skins/images/page/page_next_b.gif"); 
+			   $("#last").attr("src","skins/images/page/page_last_b.gif"); 
+			}else{
+			   $("#first").attr("src","skins/images/page/page_first_b.gif"); 
+			   $("#previous").attr("src","skins/images/page/page_pre_b.gif"); 
+			   $("#next").attr("src","skins/images/page/page_next_a.gif"); 
+			   $("#last").attr("src","skins/images/page/page_last_a.gif"); 
+			}
+ 	}
+   	
     //转到指定的页码
 	function gotoPage(pageIndex){
     	
 		 if(pageIndex=='first'){
-			pageselectCallback(0);
+			currentPage=0;
+			pageselectCallback(currentPage);
 		 }
 		 if(pageIndex=='last'){
-			pageselectCallback(lastPage-1);
+			currentPage=lastPage-1;
+			pageselectCallback(currentPage);
 		 }
 		 if(pageIndex=='previous'){
 			if(currentPage>0)
 				currentPage=currentPage-1;
 			pageselectCallback(currentPage);
+			
 		 }
 		 if(pageIndex=='next'){
 			if(currentPage<lastPage-1)
@@ -1093,6 +1117,36 @@
 			 currentPage=parseInt(pageIndex);
 			 pageselectCallback(currentPage);
 		 }
+	
+		 //如果分页总数为1，则值所有项为失效
+		 if(lastPage==1){
+			$("#first").attr("src","skins/images/page/page_first_b.gif"); 
+ 		    $("#previous").attr("src","skins/images/page/page_pre_b.gif"); 
+ 		    $("#next").attr("src","skins/images/page/page_next_b.gif"); 
+ 		    $("#last").attr("src","skins/images/page/page_last_b.gif"); 
+		 }else{
+			//如果总页数>1页
+    	     //当前页为首页，则下一页和尾页置有效
+    	     if(currentPage==0){
+    		    $("#first").attr("src","skins/images/page/page_first_b.gif"); 
+    		    $("#previous").attr("src","skins/images/page/page_pre_b.gif"); 
+    		    $("#next").attr("src","skins/images/page/page_next_a.gif"); 
+    		    $("#last").attr("src","skins/images/page/page_last_a.gif"); 
+    		 }else if(currentPage==lastPage-1){
+    			//如果当前页为尾页，则置上一页和首页有效
+    		    $("#first").attr("src","skins/images/page/page_first_a.gif"); 
+    		    $("#previous").attr("src","skins/images/page/page_pre_a.gif"); 
+    			$("#next").attr("src","skins/images/page/page_next_b.gif"); 
+    			$("#last").attr("src","skins/images/page/page_last_b.gif"); 
+    	     }else{
+    		    //如果当前页处于中间，则置所有跳转有效
+    			$("#first").attr("src","skins/images/page/page_first_a.gif"); 
+    			$("#previous").attr("src","skins/images/page/page_pre_a.gif"); 
+    			$("#next").attr("src","skins/images/page/page_next_a.gif"); 
+    			$("#last").attr("src","skins/images/page/page_last_a.gif"); 
+    		 }
+		 }
+		 
 	} 
    /*  //清除所有车辆
     function clearAllCars(){

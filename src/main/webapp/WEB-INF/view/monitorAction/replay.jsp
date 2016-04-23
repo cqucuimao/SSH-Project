@@ -864,7 +864,10 @@
         function numToTimeFormat(num){
         	var minute=Math.floor((num/60));
      	    var second=num%60;
-     	    return minute+":"+second;
+     	    if(second>=10)
+     	    	return minute+":"+second;
+     	    else
+     	    	return minute+":"+"0"+second;
          } 
         /**
          * 将时间格式x:x转化为整数y

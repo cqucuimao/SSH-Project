@@ -7,7 +7,6 @@
 <script language="javascript" src="<%=basePath %>js/jquery1.13.js"></script>
 <script language="javascript" src="<%=basePath %>js/jquery.pager.js"></script>
 <script language="javascript" src="<%=basePath %>js/popwin.js"></script>
-<link href="<%=basePath %>skins/Pager.css" rel="stylesheet" />
 <script type="text/javascript"
 	src="http://api.map.baidu.com/api?v=2.0&ak=hxTHFQNXApPMBdYM8CIfoS9x"></script>
 

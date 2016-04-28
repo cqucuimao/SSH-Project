@@ -37,7 +37,7 @@ function defaultEvent(){
     	if(phone=="" || phone.length==0)
     		alert("请指定手机号码！");
     	else{
-    		art.dialog.open('schedule_historyAddress.action?componentId='+x.target.id+'&phone='+phone,{
+    		art.dialog.open('schedule_historyAddress.action?componentId='+x.target.id.charAt(0)+'&phone='+phone,{
     			title: '常用地址选择', 
     			width: 420, 
     			height: 550,
@@ -462,8 +462,25 @@ $(function(){
 	});
 	
 	 $("#driverName").click(function(){
-         art.dialog.data('driverName', $("#driverName").val()); // 存储数据  
-         art.dialog.open('user_popup.action?popupDriverOnly=true',{
+         art.dialog.data('driverName', $("#driverName").val()); // 存储数据
+         var url;
+         //TODO 临时逻辑
+         if($("#driverName").attr("showContent")==null || $("#driverName").attr("showContent")=="")
+        	 url="user_popup.action?popupDriverOnly=true";
+         else if($("#driverName").attr("showContent")=="all")
+        	 url="user_popup.action";
+         else
+        	 url="user_popup.action";
+         art.dialog.open(url,{
+				title: '司机选择', 
+				width: 300, 
+				height: 530
+			});
+     });
+	 
+	 $("#schedulerName").click(function(){
+         art.dialog.data('driverName', $("#schedulerName").val()); // 存储数据  
+         art.dialog.open('user_popup.action',{
 				title: '司机选择', 
 				width: 300, 
 				height: 530

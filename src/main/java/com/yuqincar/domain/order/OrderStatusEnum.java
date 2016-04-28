@@ -30,4 +30,8 @@ public enum OrderStatusEnum {
 		}
 		return "";
 	}
+	
+	public String getString(){
+		return toString();
+	}
 }

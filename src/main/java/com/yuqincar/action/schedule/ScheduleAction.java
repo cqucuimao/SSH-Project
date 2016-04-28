@@ -440,9 +440,9 @@ public class ScheduleAction extends BaseAction {
 		System.out.println(order);
 		scheduleMode=OrderService.SCHEDULE_FROM_UPDATE;
 		initInputField(order);
-		selectCarDriverName=order.getCar().getDriver().getName();
+		selectCarDriverName=order.getDriver().getName();
 		selectCarPlateNumber=order.getCar().getPlateNumber();
-		selectCarDriverPhone=order.getCar().getDriver().getPhoneNumber();
+		selectCarDriverPhone=order.getDriver().getPhoneNumber();
 		selectCarId=String.valueOf(order.getCar().getId());
 		System.out.println("callForOther="+callForOther);
 		System.out.println("otherPassengerName="+otherPassengerName);

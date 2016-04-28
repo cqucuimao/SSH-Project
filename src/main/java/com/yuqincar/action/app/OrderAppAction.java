@@ -226,11 +226,9 @@ public class OrderAppAction extends BaseAction{
 	
 	private boolean checkForCalculatePrice(){
 		if(carServiceTypeId==0 || dayOrder==null || dayOrder.length()==0 ||
-				beginTime==0 || (dayOrder.equals("true") && endTime==0) ||
-				beginAddress==null || beginAddress.length()==0 ||
-				(dayOrder.equals("false") && (beginAddressDetail==null || beginAddressDetail.length()==0 ||
-				beginAddressLocationLongitude==0 || beginAddressLocationLatitude==0)) ||
-				(dayOrder.equals("false") && (endAddress==null || endAddress.length()==0 ||
+				beginTime==0 || (dayOrder.equals("true") && endTime==0) ||				
+				(dayOrder.equals("false") && (beginAddress==null || beginAddress.length()==0 || beginAddressDetail==null || beginAddressDetail.length()==0 ||
+				beginAddressLocationLongitude==0 || beginAddressLocationLatitude==0 || endAddress==null || endAddress.length()==0 ||
 						endAddressDetail==null || endAddressDetail.length()==0 ||
 								endAddressLocationLongitude==0 || endAddressLocationLatitude==0)))
 			return false;

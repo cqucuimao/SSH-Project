@@ -98,6 +98,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	public void EnQueue(Order order,List<Address> addresses, String baseSN,int copyNumber) {
+		System.out.println("in EnQueue");
 		//处理是否新建客户单位和客户		
 		List<BaseEntity> cc=dealCCP(order.getCustomerOrganization().getName(),order.getCustomer().getName(),order.getPhone());
 		order.setCustomerOrganization((CustomerOrganization)cc.get(0));
@@ -112,28 +113,31 @@ public class OrderServiceImpl implements OrderService {
 			copyOrderScheduled(order,copyNumber);
 		
 		if(watchKeeperService.getWatchKeeper().isOnDuty()){
-			List<String> sList=new ArrayList<String>(10);
-			sList.add(order.getSn());
-			sList.add(order.getCustomerOrganization().getName());
-			sList.add(order.getCustomer().getName());
-			sList.add(order.getPhone());
-			sList.add(getChargeModeString(order.getChargeMode()));
-			sList.add(String.valueOf(order.getPassengerNumber()));
-			sList.add(DateUtils.getYMDHMString(order.getPlanBeginDate()));
-			if(order.getChargeMode()==ChargeModeEnum.MILE)
-				sList.add("<空>");
-			else
-				sList.add(DateUtils.getYMDHMString(order.getPlanEndDate()));
-			sList.add(order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）");
-			if(order.getChargeMode()==ChargeModeEnum.MILE)
-				sList.add(order.getToAddress().getDescription()+"（"+order.getToAddress().getDetail()+"）");
-			else
-				sList.add("<空>");
+			Map<String,String> param=new HashMap<String,String>();
+			param.put("customer", order.getCustomer().getName());
+			param.put("customerOrganization",order.getCustomerOrganization().getName());
+			param.put("phoneNumber", order.getPhone());
+			param.put("chargeMode", order.getChargeMode().toString());
+			if(order.getChargeMode()==ChargeModeEnum.MILE){
+				param.put("time", DateUtils.getYMDHMString(order.getPlanBeginDate()));
+				param.put("address", order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）"
+						+" 到 "+order.getToAddress().getDescription()+"（"+order.getToAddress().getDetail()+"）");
+			}else{
+				param.put("time", DateUtils.getYMDHMString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDHMString(order.getPlanEndDate()));
+				param.put("address", order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）");
+			}
 			
-			StringBuffer sb=new StringBuffer();
-			sb.append("有新订单入队列。").append(order.getCustomer().getName()).append("，").append(order.getChargeMode().toString())
-				.append("，上车时间：").append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
-			appMessageService.sendMessageToSchedulerAPP(watchKeeperService.getWatchKeeper().getKeeper(), sb.toString(),null);
+			//给值班员发短信
+			System.out.println("keeper="+watchKeeperService.getWatchKeeper().getKeeper().getName());
+			System.out.println("keeper="+watchKeeperService.getWatchKeeper().getKeeper().getPhoneNumber());
+			smsService.sendTemplateSMS(watchKeeperService.getWatchKeeper().getKeeper().getPhoneNumber(), SMSService.SMS_TEMPLATE_ORDER_ENQUEUE, param);
+			
+			//给值班员发APP推送消息
+			//TODO 目前APP没有投入使用，先注释掉，以后使用。
+//			StringBuffer sb=new StringBuffer();
+//			sb.append("有新订单入队列。").append(order.getCustomer().getName()).append("，").append(order.getChargeMode().toString())
+//				.append("，上车时间：").append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
+//			appMessageService.sendMessageToSchedulerAPP(watchKeeperService.getWatchKeeper().getKeeper(), sb.toString(),null);
 		}
 	}
 
@@ -453,10 +457,8 @@ public class OrderServiceImpl implements OrderService {
 		
 		if(!order.getCar().equals(toUpdateOrder.getCar()))
 			sb.append("(").append(++n).append(")").append("车辆由：")
-				.append(toUpdateOrder.getCar().getPlateNumber()).append("（")
-				.append(toUpdateOrder.getCar().getDriver().getName()).append("）")
-				.append(" 改为 ").append(order.getCar().getPlateNumber()).append("（")
-				.append(order.getCar().getDriver().getName()).append("）").append("；");
+				.append(toUpdateOrder.getCar().getPlateNumber())
+				.append(" 改为 ").append(order.getCar().getPlateNumber()).append("；");
 		
 		if(n>0){
 			OrderOperationRecord orderOperation = new OrderOperationRecord();
@@ -645,11 +647,9 @@ public class OrderServiceImpl implements OrderService {
 		oor.setType(OrderOperationTypeEnum.RESCHEDULE);
 		oor.setDate(new Date());
 		oor.setUser(user);
-		oor.setDescription("将车辆由 "+ tempCar.getPlateNumber()+"（"+tempCar.getDriver().getName()+"）" 
-				+" 重新调度为 "+order.getCar().getPlateNumber()+"（"+order.getCar().getDriver().getName()
-				+"） 原因："+description);
+		oor.setDescription("将车辆由 "+ tempCar.getPlateNumber() +" 重新调度为 "+order.getCar().getPlateNumber()+" 原因："+description);
 		orderOperationRecordDao.save(oor);
-		
+		//TODO 注意：有可能只换车，也可能只换人，或者两个都换。目前只考虑了一起换，全面考察这个方法，进行修改。
 		appMessageService.sendMessageToDriverAPP(tempCar.getDriver(), "订单（"+order.getSn()+"）被重新调度给"+order.getCar().getDriver().getName(),null);
 		appMessageService.sendMessageToDriverAPP(order.getDriver(), "订单（"+order.getSn()+"）从"+tempCar.getDriver().getName()+"重新调度给了你。",null);
 		

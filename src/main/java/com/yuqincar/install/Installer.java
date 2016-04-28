@@ -318,12 +318,16 @@ public class Installer {
 		privilegeDao.save(new Privilege("","/refuelStatistic_weekList",refuelStatisticMenu));
 		privilegeDao.save(new Privilege("","/refuelStatistic_monthList",refuelStatisticMenu));
 		privilegeDao.save(new Privilege("","/refuelStatistic_query",refuelStatisticMenu));
+		privilegeDao.save(new Privilege("", "/refuelStatistic_MoMHistogram", refuelStatisticMenu));
+		privilegeDao.save(new Privilege("", "/refuelStatistic_YoYHistogram", refuelStatisticMenu));
 		
 		Privilege insuranceStatisticMenu = new Privilege("保险记录", "/insuranceStatistic_list", statisticMenu);
 		privilegeDao.save(insuranceStatisticMenu);
 		privilegeDao.save(new Privilege("", "/insuranceStatistic_weekList", insuranceStatisticMenu));
 		privilegeDao.save(new Privilege("", "/insuranceStatistic_monthList", insuranceStatisticMenu));
 		privilegeDao.save(new Privilege("", "/insuranceStatistic_query", insuranceStatisticMenu));
+		privilegeDao.save(new Privilege("", "/insuranceStatistic_MoMHistogram", insuranceStatisticMenu));
+		privilegeDao.save(new Privilege("", "/insuranceStatistic_YoYHistogram", insuranceStatisticMenu));
 		
 		Privilege careStatisticMenu = new Privilege("保养记录", "/careStatistic_list", statisticMenu);
 		privilegeDao.save(careStatisticMenu);
@@ -332,12 +336,16 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/careStatistic_query", careStatisticMenu));
 		privilegeDao.save(new Privilege("", "/careStatistic_care", careStatisticMenu));
 		privilegeDao.save(new Privilege("", "/careStatistic_showHistogram", careStatisticMenu));
+		privilegeDao.save(new Privilege("", "/careStatistic_MoMHistogram", careStatisticMenu));
+		privilegeDao.save(new Privilege("", "/careStatistic_YoYHistogram", careStatisticMenu));
 		
 		Privilege repairStatisticMenu = new Privilege("维修记录", "/repairStatistic_list", statisticMenu);
 		privilegeDao.save(repairStatisticMenu);
 		privilegeDao.save(new Privilege("", "/repairStatistic_weekList", repairStatisticMenu));
 		privilegeDao.save(new Privilege("", "/repairStatistic_monthList", repairStatisticMenu));
 		privilegeDao.save(new Privilege("", "/repairStatistic_query", repairStatisticMenu));
+		privilegeDao.save(new Privilege("", "/repairStatistic_MoMHistogram", repairStatisticMenu));
+		privilegeDao.save(new Privilege("", "/repairStatistic_YoYHistogram", repairStatisticMenu));
 		
 		// =======================================================================
 		// 3，角色数据

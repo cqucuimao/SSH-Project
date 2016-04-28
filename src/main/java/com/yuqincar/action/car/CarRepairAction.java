@@ -108,13 +108,13 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 				BaseEntity baseEntity = dayList.get(0);
 				haveTask = true;  //1订单  2 保养 3 年审 4 维修
 				if(baseEntity instanceof Order)
-					taskType=0;
-				else if(baseEntity instanceof CarCare)
 					taskType=1;
-				else if(baseEntity instanceof CarExamine)
+				else if(baseEntity instanceof CarCare)
 					taskType=2;
-				else if(baseEntity instanceof CarRepair)
+				else if(baseEntity instanceof CarExamine)
 					taskType=3;
+				else if(baseEntity instanceof CarRepair)
+					taskType=4;
 				break;
 			}
 		}

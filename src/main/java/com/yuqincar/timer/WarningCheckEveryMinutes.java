@@ -41,8 +41,6 @@ public class WarningCheckEveryMinutes {
 		JSONArray alarms=result.getJSONArray("alarms");
 		if(alarms!=null && alarms.size()>0){
 			for(int i=0;i<alarms.size();i++){
-				System.out.println("info="+alarms.getJSONObject(i).getString("info"));
-				System.out.println("id="+alarms.getJSONObject(i).getString("id"));
 				String sn=alarms.getJSONObject(i).getString("deviceSn");
 				if("拔出报警".equals(alarms.getJSONObject(i).getString("info"))){
 					Date date=new Date(Long.valueOf(alarms.getJSONObject(i).getString("time")));
@@ -52,7 +50,6 @@ public class WarningCheckEveryMinutes {
 				String warningId=alarms.getJSONObject(i).getString("id");
 				String url=String.format(DELETE_PULL_OUT_WARNING_URL, sn,warningId);
 				String re = HttpMethod.get(url.toString());
-				System.out.println("re="+re);
 			}
 		}
 	}
@@ -65,14 +62,21 @@ public class WarningCheckEveryMinutes {
 		for(Car car:cars){
 			String url=String.format(UNPLANNED_RUNNING_URL, car.getDevice().getSN());
 			String json = HttpMethod.get(url.toString());
-			System.out.println("json="+json);
 			JSONObject result=JSON.parseObject(json);
-			System.out.println("result="+result);
-			System.out.println("device="+result.getJSONObject("device"));
-			System.out.println("position="+result.getJSONObject("device").getJSONObject("position"));
-			JSONObject position=result.getJSONObject("device").getJSONObject("position");
+			if(result==null)
+				continue;
+			JSONObject device=result.getJSONObject("device");
+			if(device==null)
+				continue;
+			JSONObject position=device.getJSONObject("position");
+			if(position==null)
+				continue;
 		    String status=position.getString("status");
+		    if(status==null)
+		    	continue;
 			String speed=position.getString("speed");
+			if(speed==null)
+				continue;
 			//如果车辆处于行驶状态  行驶1 速度>0
 			if("1".equals(status) && Double.valueOf(speed)>0){
 				//查看该行驶车辆是否有订单

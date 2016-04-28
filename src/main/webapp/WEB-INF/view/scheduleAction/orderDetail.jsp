@@ -14,17 +14,21 @@
 ${order }
 <body class="p20 pt5">
     <div class="editBlock detailM">
-    	<s:iterator  value="orderList" status="status">
+    	<s:iterator  value="orderList" status="iteratorStatus">
         <table>
             <tbody>
             	<s:if test="#orderList.size>1">
             	<tr>
-            		<th colspan="2" align="center"><h2>第<s:property value="#status.index+1"/>个订单</h2></th>
+            		<th colspan="2" align="center"><h2>第<s:property value="#iteratorStatus.index+1"/>个订单</h2></th>
             	</tr>
             	</s:if>
                 <tr>
                     <th width="70">订单号：</th>
                     <td>${sn }</td>
+                </tr>
+                <tr>
+                    <th width="70">状态：</th>
+                    <td>${status.string }</td>
                 </tr>
                 <tr>
                     <th width="70">单位：</th>
@@ -82,7 +86,7 @@ ${order }
                 </tr>
             </tbody>
         </table>
-        <s:if test="!#status.last">
+        <s:if test="!#iteratorStatus.last">
         	</br></br>
         </s:if>
         </s:iterator>

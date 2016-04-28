@@ -55,7 +55,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		String pwd = request.getParameter("pwd");
 		System.out.println("in prepare");
 		System.out.println("username="+username+",pwd="+pwd);
-		user = userService.getByLoginNameAndPassword(username, pwd);
+		user = userService.getByLoginNameAndMD5Password(username, pwd);
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		this.writeJson(JSON.toJSONString(vo));
 	}
 
-	public void listDownOrder() {
+	public void listDoneOrder() {
 		if (user == null) {
 			this.writeJson("{\"status\":false}");
 			return;
@@ -284,7 +284,9 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			AppEndOrderVo vo = new AppEndOrderVo();
 			vo.orderId = o.getId();
 			vo.chargeMode = o.getChargeMode();
-			vo.fromAddress = o.getFromAddress();
+			vo.fromAddress = getAddressVO(o.getFromAddress());
+			if(o.getChargeMode()==ChargeModeEnum.MILE)
+				vo.toAddress=getAddressVO(o.getToAddress());
 			vo.actualBeginDate= o.getActualBeginDate();
 			vo.actualEndDate = o.getActualEndDate();
 			vo.customerName = o.getCustomer().getName();
@@ -311,7 +313,9 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		AppEndOrderVo vo = new AppEndOrderVo();
 		vo.orderId = order.getId();
 		vo.chargeMode = order.getChargeMode();
-		vo.fromAddress = order.getFromAddress();
+		vo.fromAddress = getAddressVO(order.getFromAddress());
+		if(order.getChargeMode()==ChargeModeEnum.MILE)
+			vo.toAddress=getAddressVO(order.getToAddress());
 		vo.actualBeginDate= order.getActualBeginDate();
 		vo.actualEndDate = order.getActualEndDate();
 		vo.customerName = order.getCustomer().getName();
@@ -322,10 +326,6 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	}
 	
 	public void updateDeviceToken(){
-		System.out.println("in updateDeviceToken");
-		System.out.println("user="+user);
-		System.out.println("deviceType="+deviceType);
-		System.out.println("Token="+deviceToken);
 		if (user == null || deviceType==null || deviceType.length()==0 ||
 				deviceToken == null || deviceToken.length()==0) {
 			this.writeJson("{\"status\":false}");
@@ -471,13 +471,13 @@ class AppEndOrderVo {
 	public ChargeModeEnum chargeMode;
 	public Date actualBeginDate;
 	public Date actualEndDate;
-	public Address fromAddress;
-	public Address toAddress;
-	public String customerOrganization = "";
-	public String customerName = "";
-	public String customerPhone = "";
+	public AddressVO fromAddress;
+	public AddressVO toAddress;
+	public String customerOrganization;
+	public String customerName;
+	public String customerPhone;
 	public OrderStatusEnum status;
-	public String sn = "";
+	public String sn;
 
 }
 

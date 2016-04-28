@@ -252,13 +252,13 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 				BaseEntity baseEntity=dayList.get(0);
 				haveTask=true;
 				if(baseEntity instanceof Order)
-					taskType=0;
-				else if(baseEntity instanceof CarCare)
 					taskType=1;
-				else if(baseEntity instanceof CarExamine)
+				else if(baseEntity instanceof CarCare)
 					taskType=2;
-				else if(baseEntity instanceof CarRepair)
+				else if(baseEntity instanceof CarExamine)
 					taskType=3;
+				else if(baseEntity instanceof CarRepair)
+					taskType=4;
 				break;
 			}
 		}

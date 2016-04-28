@@ -319,7 +319,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   cell.setColspan (5);
 		   table.addCell (cell);
 		   //表格6到14行
-		   TreeMap<Date, String> map=orderService.getOrderTrackAbstract(orders.get(0));
+		   TreeMap<Date, String> map=orderService.getOrderTrackAbstract(orders.get(k));
 		   if(map!=null){
 			   for(Date d:map.keySet()){
 				   table.addCell (new Paragraph (DateUtils.getYMDHMSString(d),font));

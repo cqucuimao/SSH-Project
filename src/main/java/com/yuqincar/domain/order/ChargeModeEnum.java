@@ -8,7 +8,9 @@ public enum ChargeModeEnum {
 	@Text("按天计费")
 	DAY,		//日租
 	@Text("协议计费")
-	PROTOCOL;	//协议价
+	PROTOCOL,	//协议价
+	@Text("接送机")
+	PLANE;	//接送机
 	
 	public static ChargeModeEnum fromString(String str){
 		if(str==null || str.length()==0)
@@ -19,6 +21,8 @@ public enum ChargeModeEnum {
 			return DAY;
 		else if(str.equals("protocol") || str.equals("按协议计费"))
 			return PROTOCOL;
+		else if(str.equals("plane") || str.equals("接送机"))
+			return PLANE;
 		return null;
 	} 
 	
@@ -27,6 +31,7 @@ public enum ChargeModeEnum {
 		case MILE:	return "按里程计费";
 		case DAY:	return "按天计费";
 		case PROTOCOL:	return "按协议计费";
+		case PLANE:	return "接送机";
 		}
 		return "";
 	}

@@ -107,5 +107,9 @@ public interface DriverAPPService {
 	 * @return
 	 */
 	public int orderAccept(Order order);
+	
+	public void customerGeton(Order order);
+	
+	public void customerGetoff(Order order);
 
 }

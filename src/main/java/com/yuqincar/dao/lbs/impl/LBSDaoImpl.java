@@ -1,5 +1,7 @@
 package com.yuqincar.dao.lbs.impl;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
@@ -26,6 +28,11 @@ public class LBSDaoImpl implements LBSDao{
 		System.out.println("location.lng"+location.getLongitude());
 		System.out.println("location.lat"+location.getLatitude());
 		return location;
+	}
+	
+	public float getMileAtMoment(String sn, Date date){
+		//TODO
+		return 0;
 	}
 
 	public float getCurrentMile(String sn) {

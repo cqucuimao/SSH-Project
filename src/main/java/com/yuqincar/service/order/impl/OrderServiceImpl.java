@@ -4,7 +4,6 @@
  */
 package com.yuqincar.service.order.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,14 +27,13 @@ import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.dao.order.OrderOperationRecordDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
-import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.monitor.Location;
 import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderOperationRecord;
 import com.yuqincar.domain.order.OrderOperationTypeEnum;
@@ -89,24 +87,14 @@ public class OrderServiceImpl implements OrderService {
 		return orderDao.getAllCarServiceType();
 	}
 
-	public BigDecimal calculateOrderMoney(CarServiceType serviceType,
-			ChargeModeEnum chargeMode, double mile, int days) {
-		System.out.println("in calculateOrderMoney");
-		return orderDao
-				.calculateOrderMoney(serviceType, chargeMode, mile, days);
-	}
-
 	@Transactional
-	public void EnQueue(Order order,List<Address> addresses, String baseSN,int copyNumber) {
+	public void EnQueue(Order order,String baseSN,int copyNumber) {
 		System.out.println("in EnQueue");
 		//处理是否新建客户单位和客户		
 		List<BaseEntity> cc=dealCCP(order.getCustomerOrganization().getName(),order.getCustomer().getName(),order.getPhone());
 		order.setCustomerOrganization((CustomerOrganization)cc.get(0));
 		order.setCustomer((Customer)cc.get(1));
-		
-		//保存地址
-		generateAddress(order,addresses);
-		
+				
 		orderDao.EnQueue(order,baseSN);
 		
 		if(copyNumber>0)
@@ -118,13 +106,12 @@ public class OrderServiceImpl implements OrderService {
 			param.put("customerOrganization",order.getCustomerOrganization().getName());
 			param.put("phoneNumber", order.getPhone());
 			param.put("chargeMode", order.getChargeMode().toString());
-			if(order.getChargeMode()==ChargeModeEnum.MILE){
+			if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
 				param.put("time", DateUtils.getYMDHMString(order.getPlanBeginDate()));
-				param.put("address", order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）"
-						+" 到 "+order.getToAddress().getDescription()+"（"+order.getToAddress().getDetail()+"）");
+				param.put("address", order.getFromAddress()+" 到 "+order.getToAddress());
 			}else{
 				param.put("time", DateUtils.getYMDHMString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDHMString(order.getPlanEndDate()));
-				param.put("address", order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）");
+				param.put("address", order.getFromAddress());
 			}
 			
 			//给值班员发短信
@@ -226,14 +213,10 @@ public class OrderServiceImpl implements OrderService {
 			o.setPlanBeginDate(order.getPlanBeginDate());
 			o.setPlanEndDate(order.getPlanEndDate());
 			o.setServiceType(order.getServiceType());
-			o.setPassengerNumber(order.getPassengerNumber());
 			o.setPhone(order.getPhone());
 			o.setOrderMoney(order.getOrderMoney());
 			o.setStatus(order.getStatus());
 			List<Address> addresses=new ArrayList<Address>(2);
-			addresses.add(order.getFromAddress());
-			addresses.add(order.getToAddress());
-			o.setOrderMile(order.getOrderMile());
 			o.setMemo(o.getMemo());
 			o.setCreateTime(new Date());
 			o.setCallForOther(order.isCallForOther());
@@ -241,7 +224,7 @@ public class OrderServiceImpl implements OrderService {
 			o.setOtherPhoneNumber(order.getOtherPhoneNumber());
 			o.setCallForOtherSendSMS(order.isCallForOtherSendSMS());
 			o.setOrderSource(order.getOrderSource());
-			EnQueue(o,addresses,baseSN,0);
+			EnQueue(o,baseSN,0);
 			baseSN=o.getSn();
 		}
 	}
@@ -275,86 +258,24 @@ public class OrderServiceImpl implements OrderService {
 			otherPassengerDao.save(otherPassenger);
 		}
 	}
-	
-	private void saveCustomerAddress(Order order){
-		if (order.getCustomer().getAddresses() == null
-				|| order.getCustomer().getAddresses().size() == 0) {
-			order.getCustomer().setAddresses(new ArrayList<Address>());
-			order.getCustomer().getAddresses().add(order.getFromAddress());
-			if(order.getChargeMode()==ChargeModeEnum.MILE)
-				order.getCustomer().getAddresses().add(order.getToAddress());
-			customerDao.update(order.getCustomer());
-		} else {
-			boolean exist=false;
-			for (Address uadd : order.getCustomer().getAddresses()) {
-				if(isAddressEquals(uadd,order.getFromAddress())){
-					exist=true;
-					break;
-				}
-			}
-			if(!exist){
-				order.getCustomer().getAddresses().add(order.getFromAddress());
-				customerDao.update(order.getCustomer());
-			}
-			if(order.getChargeMode()==ChargeModeEnum.MILE){
-				exist=false;
-				for (Address uadd : order.getCustomer().getAddresses()) {
-					if(isAddressEquals(uadd,order.getToAddress())){
-						exist=true;
-						break;
-					}
-				}
-				if(!exist){
-					order.getCustomer().getAddresses().add(order.getToAddress());
-					customerDao.update(order.getCustomer());
-				}
-			}
-		}
-	}
 		
-	private void generateAddress(Order order,List<Address> addresses){
-		Address ad=addressDao.getEqualAddress(addresses.get(0));
-		if(ad!=null)
-			order.setFromAddress(ad);
-		else{
-			locationDao.save(addresses.get(0).getLocation());
-			addressDao.save(addresses.get(0));
-			order.setFromAddress(addresses.get(0));
-		}
-		if(order.getChargeMode()==ChargeModeEnum.MILE){
-			ad=addressDao.getEqualAddress(addresses.get(1));
-			if(ad!=null)
-				order.setToAddress(ad);
-			else{
-				locationDao.save(addresses.get(1).getLocation());
-				addressDao.save(addresses.get(1));
-				order.setToAddress(addresses.get(1));
-			}
-		}
-	}
-	
 	@Transactional
-	public int scheduleOrder(String scheduleMode,Order order, String organizationName, String customerName, List<Address> addresses, Car car,int copyNumber,Order toUpdateOrder,User user) {
+	public int scheduleOrder(String scheduleMode,Order order, String organizationName, String customerName, Car car, User driver, int copyNumber,Order toUpdateOrder,User user) {
 		//处理是否新建客户单位和客户
 		List<BaseEntity> cc=dealCCP(organizationName,customerName,order.getPhone());
 		order.setCustomerOrganization((CustomerOrganization)cc.get(0));
 		order.setCustomer((Customer)cc.get(1));
-
-		//保存地址
-		generateAddress(order,addresses);
 			
-		int result= orderDao.scheduleOrder(scheduleMode,order, car, user);
+		int result= orderDao.scheduleOrder(scheduleMode, order, car, driver, user);
 		if(result==0){
 			//复制订单
 			if(copyNumber>0)
 				copyOrderScheduled(order,copyNumber);
-			//保存客户常用地址
-			saveCustomerAddress(order);
 			if(order.isCallForOther())
 				saveOtherPassenger(order);
 			if(scheduleMode==OrderService.SCHEDULE_FROM_NEW || scheduleMode==OrderService.SCHEDULE_FROM_QUEUE)
 				appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。上车时间："+DateUtils.getYMDHMString(order.getPlanBeginDate())
-						+ "；上车地点："+order.getFromAddress().getDescription(),null);
+						+ "；上车地点："+order.getFromAddress(),null);
 			else
 				checkUpdateData(order,toUpdateOrder,user);
 		}
@@ -422,37 +343,27 @@ public class OrderServiceImpl implements OrderService {
 				sb.append("(").append(++n).append(")").append("新增计划结束时间：")
 					.append(DateUtils.getYMDHMString(order.getPlanEndDate())).append("；");
 				
-		if(order.getPassengerNumber()!=toUpdateOrder.getPassengerNumber())
-			sb.append("(").append(++n).append(")").append("乘车人数由：")
-				.append(toUpdateOrder.getPassengerNumber())
-				.append(" 改为 ").append(order.getPassengerNumber()).append("；");
-		
 		if(!order.getServiceType().equals(toUpdateOrder.getServiceType()))
 			sb.append("(").append(++n).append(")").append("车型由：")
 				.append(toUpdateOrder.getServiceType().getTitle())
 				.append(" 改为 ").append(order.getServiceType().getTitle()).append("；");
 		
-		if(!isAddressEquals(order.getFromAddress(),toUpdateOrder.getFromAddress()))
+		if(!order.getFromAddress().equals(toUpdateOrder.getFromAddress()))
 			sb.append("(").append(++n).append(")").append("上车地点由：")
-				.append(toUpdateOrder.getFromAddress().getDescription())
-				.append("（").append(toUpdateOrder.getFromAddress().getDetail()).append("）")
-				.append(" 改为 ").append(order.getFromAddress().getDescription())
-				.append("（").append(order.getFromAddress().getDetail()).append("）").append("；");
+				.append(toUpdateOrder.getFromAddress())
+				.append(" 改为 ").append(order.getFromAddress()).append("；");
 		
 		if(order.getToAddress()==null){
 			if(toUpdateOrder.getToAddress()!=null)
 				sb.append("(").append(++n).append(")").append("删除了下车地点").append("；");
 		}else{
-			if(toUpdateOrder.getToAddress()!=null && !isAddressEquals(order.getToAddress(),toUpdateOrder.getToAddress()))
+			if(toUpdateOrder.getToAddress()!=null && !order.getToAddress().equals(toUpdateOrder.getToAddress()))
 				sb.append("(").append(++n).append(")").append("下车地点由：")
-					.append(toUpdateOrder.getToAddress().getDescription())
-					.append("（").append(toUpdateOrder.getToAddress().getDetail()).append("）")
-					.append(" 改为 ").append(order.getToAddress().getDescription())
-					.append("（").append(order.getToAddress().getDetail()).append("）").append("；");
+					.append(toUpdateOrder.getToAddress()).append(" 改为 ")
+					.append(order.getToAddress()).append("；");
 			else if(toUpdateOrder.getToAddress()==null)
 				sb.append("(").append(++n).append(")").append("新增下车地点：")
-					.append(order.getToAddress().getDescription())
-					.append("（").append(order.getToAddress().getDetail()).append("）").append("；");
+					.append(order.getToAddress()).append("；");
 		}
 		
 		if(!order.getCar().equals(toUpdateOrder.getCar()))
@@ -472,7 +383,7 @@ public class OrderServiceImpl implements OrderService {
 			appMessageService.sendMessageToDriverAPP(toUpdateOrder.getDriver(), "有订单（"+order.getSn()+"）发生了修改："+sb.toString(),null);
 			if(!toUpdateOrder.getDriver().equals(order.getDriver()))
 				appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。上车时间："+DateUtils.getYMDHMString(order.getPlanBeginDate())
-						+ "；上车地点："+order.getFromAddress().getDescription(),null);
+						+ "；上车地点："+order.getFromAddress(),null);
 		}
 	}
 
@@ -531,41 +442,6 @@ public class OrderServiceImpl implements OrderService {
 		return order.getStatus()==OrderStatusEnum.SCHEDULED || order.getStatus()==OrderStatusEnum.ACCEPTED;
 	}
 
-	@Transactional
-	public void modifyOrderMile(Order order, float newMile, User user){
-		order.setOrderMile(newMile);
-		order.setOrderMoney(calculateOrderMoney(order.getServiceType(),order.getChargeMode(),newMile,0));
-		orderDao.update(order);
-		
-		if(!new BigDecimal(order.getOrderMile()).setScale(1, BigDecimal.ROUND_HALF_UP)
-				.equals(new BigDecimal(newMile).setScale(1, BigDecimal.ROUND_HALF_UP))){//如果没有改动值，那么就不添加操作记录。
-			OrderOperationRecord oor=new OrderOperationRecord();
-			oor.setOrder(order);
-			oor.setType(OrderOperationTypeEnum.MODIFY_MILE);
-			oor.setDate(new Date());
-			oor.setUser(user);
-			oor.setDescription("设置订单里程为："+new BigDecimal(newMile).setScale(1, BigDecimal.ROUND_HALF_UP).toString());
-			orderOperationRecordDao.save(oor);
-		}
-	}
-
-	@Transactional
-	public void modifyOrderMoney(Order order, BigDecimal orderMoney, User user){
-		order.setOrderMoney(orderMoney);
-		orderDao.update(order);
-		
-		if(!order.getOrderMoney().setScale(1, BigDecimal.ROUND_HALF_UP)
-				.equals(orderMoney.setScale(1, BigDecimal.ROUND_HALF_UP))){//如果没有改动值，那么就不添加操作记录。
-			OrderOperationRecord oor=new OrderOperationRecord();
-			oor.setOrder(order);
-			oor.setType(OrderOperationTypeEnum.MODIFY_MONEY);
-			oor.setDate(new Date());
-			oor.setUser(user);
-			oor.setDescription("设置订单金额为："+orderMoney.setScale(1, BigDecimal.ROUND_HALF_UP).toString());
-			orderOperationRecordDao.save(oor);
-		}
-	}
-
 	public PageBean getPageBean(int pageNum, QueryHelper helper) {
 		return orderDao.getPageBean(pageNum, helper);
 	}
@@ -581,7 +457,7 @@ public class OrderServiceImpl implements OrderService {
 			return 2;
 		Date temp=order.getPlanEndDate();	//如果在不成功的情况，不使用temp来补救，不知为什么：不调用update的情况下，planEndDate还是会反应在数据库中。
 		order.setPlanEndDate(endDate);
-		if(isCarAvailable(order,order.getCar())!=0){
+		if(isCarAndDriverAvailable(order,order.getCar(),order.getDriver())!=0){
 			order.setPlanEndDate(temp);
 			return 1;
 		}
@@ -627,19 +503,20 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Transactional
-	public int orderReschedule(Order order, Car car, User user, String description){
+	public int orderReschedule(Order order, Car car, User driver, User user, String description){
 		if(!canOrderReschedule(order))
 			return 2;
 		Date temp=order.getPlanBeginDate();
 		order.setPlanBeginDate(new Date());
-		if(isCarAvailable(order,car)!=0){
+		if(isCarAndDriverAvailable(order,car,driver)!=0){
 			order.setPlanBeginDate(temp);
 			return 1;
 		}
 		order.setPlanBeginDate(temp);
 		Car tempCar=order.getCar();
+		User tempDriver=order.getDriver();
 		order.setCar(car);
-		order.setDriver(car.getDriver());
+		order.setDriver(driver);
 		orderDao.update(order);
 		
 		OrderOperationRecord oor=new OrderOperationRecord();
@@ -647,12 +524,20 @@ public class OrderServiceImpl implements OrderService {
 		oor.setType(OrderOperationTypeEnum.RESCHEDULE);
 		oor.setDate(new Date());
 		oor.setUser(user);
-		oor.setDescription("将车辆由 "+ tempCar.getPlateNumber() +" 重新调度为 "+order.getCar().getPlateNumber()+" 原因："+description);
-		orderOperationRecordDao.save(oor);
-		//TODO 注意：有可能只换车，也可能只换人，或者两个都换。目前只考虑了一起换，全面考察这个方法，进行修改。
-		appMessageService.sendMessageToDriverAPP(tempCar.getDriver(), "订单（"+order.getSn()+"）被重新调度给"+order.getCar().getDriver().getName(),null);
-		appMessageService.sendMessageToDriverAPP(order.getDriver(), "订单（"+order.getSn()+"）从"+tempCar.getDriver().getName()+"重新调度给了你。",null);
 		
+		StringBuffer sb=new StringBuffer();
+		if(!tempCar.equals(order.getCar()))
+			sb.append("将车辆由").append(tempCar.getPlateNumber()).append("改为").append(order.getCar().getPlateNumber()).append(";");
+		if(!tempDriver.equals(order.getDriver()))
+			sb.append("将司机由").append(tempDriver.getName()).append("改为").append(order.getDriver().getName()).append(";");
+		oor.setDescription(sb.toString()+"原因："+description);
+		orderOperationRecordDao.save(oor);
+		
+		String message="订单（"+order.getSn()+"）"+sb.toString();
+		if(!tempDriver.equals(order.getDriver())){
+			appMessageService.sendMessageToDriverAPP(tempDriver, message, null);
+			appMessageService.sendMessageToDriverAPP(order.getDriver(), message, null);
+		}
 		return 0;
 	}
 
@@ -669,8 +554,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public PageBean getRecommandedCar(CarServiceType serviceType,ChargeModeEnum chargeMode,
-			Location location, Date planBeginDate, Date planEndDate, int pageNum) {
-		return orderDao.getRecommandedCar(serviceType, chargeMode,location, planBeginDate,
+			Date planBeginDate, Date planEndDate, int pageNum) {
+		return orderDao.getRecommandedCar(serviceType, chargeMode,planBeginDate,
 				planEndDate, pageNum);
 	}
 
@@ -709,32 +594,6 @@ public class OrderServiceImpl implements OrderService {
 			Date beginDate, Date endDate) {
 		return orderDao.getUnpaidOrderByOrgNameAndTime(orgName, beginDate,
 				endDate);
-	}
-
-	/**
-	 * 计算两个位置的驾车路线最短距离
-	 * @param l1 起点
-	 * @param l2 终点
-	 * @return
-	 */
-	public double calculatePathDistance(Location l1, Location l2) {
-		String origins=new Double(l1.getLatitude()).toString()+","+new Double(l1.getLongitude()).toString();
-		String destinations=new Double(l2.getLatitude()).toString()+","+new Double(l2.getLongitude()).toString();
-		
-		StringBuffer url=new StringBuffer();
-		url.append("http://api.map.baidu.com/direction/v1/routematrix?output=json&origins=");
-		url.append(origins);
-		url.append("&&destinations=");
-		url.append(destinations);
-		url.append("&ak=XNcVScWmj4gRZeSvzIyWQ5TZ");
-		
-		String json = HttpMethod.get(url.toString());
-		JSONObject distanceObj=(JSONObject) JSON.parseObject(json).getJSONObject("result").getJSONArray("elements").get(0);
-		String value=distanceObj.getJSONObject("distance").getString("value");
-		
-		double distance=Math.round(Double.parseDouble(value)/100)/10.0;
-		
-		return distance;
 	}
 
 	/**
@@ -894,6 +753,8 @@ public class OrderServiceImpl implements OrderService {
 			return TextResolve.getText("order.ChargeModeEnum.DAY");
 		case PROTOCOL:
 			return TextResolve.getText("order.ChargeModeEnum.PROTOCOL");
+		case PLANE:
+			return TextResolve.getText("order.ChargeModeEnum.PLANE");
 		}
 		return null;
 	}
@@ -909,16 +770,14 @@ public class OrderServiceImpl implements OrderService {
 			return TextResolve.getText("order.OrderOperationTypeEnum.RESCHEDULE");
 		case CANCEL:
 			return TextResolve.getText("order.OrderOperationTypeEnum.CANCEL");
-		case MODIFY_MILE:
-			return TextResolve.getText("order.OrderOperationTypeEnum.MODIFY_MILE");
-		case MODIFY_MONEY:
-			return TextResolve.getText("order.OrderOperationTypeEnum.MODIFY_MONEY");
+		case MODIFY_SCHEDULE_FORM:
+			return TextResolve.getText("order.OrderOperationTypeEnum.MODIFY_SCHEDULE_FORM");
 		}
 		return null;
 	}
 	
-	public int isCarAvailable(Order order, Car car){
-		return orderDao.isCarAvailable(order, car);
+	public int isCarAndDriverAvailable(Order order, Car car, User driver){
+		return orderDao.isCarAndDriverAvailable(order, car, driver);
 	}
 	
 	public List<Order> getNeedRemindProtocolOrder(){
@@ -1060,22 +919,8 @@ public class OrderServiceImpl implements OrderService {
 		return cc;
 	}
 	
-	public double estimateMileage(Car car, Location from,Location to){
-		double mileage=0;
-		//业务点前往接客的距离
-		ServicePoint servicePoint=null;
-		if(car!=null)
-			servicePoint=car.getServicePoint();
-		else
-			servicePoint=orderDao.getAscendingDirectNearestServicePoints(from).get(0);
-		mileage+=calculatePathDistance(servicePoint.getPointAddress().getLocation(),from);
-		
-		//送客的距离
-		mileage+=calculatePathDistance(from,to);
-		
-		//送客结束后回到业务点的距离
-		mileage+=calculatePathDistance(to,servicePoint.getPointAddress().getLocation());
-		
-		return mileage;
+
+	public DayOrderDetail getDayOrderDetailByDate(Order order,Date date){
+		return orderDao.getDayOrderDetailByDate(order, date);
 	}
 }

@@ -1,6 +1,5 @@
 package com.yuqincar.service.order;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
@@ -9,9 +8,8 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.monitor.Location;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderOperationTypeEnum;
 import com.yuqincar.domain.privilege.User;
@@ -31,26 +29,13 @@ public interface OrderService extends BaseService {
 	public List<CarServiceType> getAllCarServiceType();
 
 	/**
-	 * 计算价格。 如果chargeMode==MILE， mile的值必须大于等于0，days没有意义。
-	 * 如果chargeMode==DAY，days的值必须大于等于1，mile没有意义。
-	 * 
-	 * @param serviceType
-	 * @param mile
-	 * @param days
-	 * @return 价格
-	 * @throws Exception
-	 */
-	public BigDecimal calculateOrderMoney(CarServiceType serviceType,
-			ChargeModeEnum chargeMode, double mile, int days);
-
-	/**
 	 * 进队列。实质是先保存订单，等待调度。 需要设置进队列时间queueTime。
 	 * 保存订单前，需要设置order的SN置，原则是"YYMMXXXXXX"
 	 * ,YY表示两位年，MM表示两位月，XXXXX表示每个月的流水号，每个月从00001开始。
 	 * 
 	 * @param order
 	 */
-	public void EnQueue(Order order,List<Address> addresses, String baseSN,int copyNumber);
+	public void EnQueue(Order order,String baseSN,int copyNumber);
 
 	/**
 	 * 得到推荐的汽车。并将满足条件的汽车按照匹配度降序排列，可分页。 推荐汽车的原则： 
@@ -66,7 +51,7 @@ public interface OrderService extends BaseService {
 	 * @return
 	 */
 	public PageBean getRecommandedCar(CarServiceType serviceType,ChargeModeEnum chargeMode,
-			Location location, Date planBeginDate, Date planEndDate, int pageNum);
+			Date planBeginDate, Date planEndDate, int pageNum);
 
 	/**
 	 * 返回车辆在一个时间段内的事务（包括订单、保养、维修、年审）。 必须要断言:fromDate!=null && toDate!=null &&
@@ -113,7 +98,7 @@ public interface OrderService extends BaseService {
 	 * 			8 乘车人数超过限定
 	 * 			9 超过调度时间，被剥夺调度权
 	 */
-	public int scheduleOrder(String scheduleMode,Order order,String organizationName, String customerName,List<Address> addresses, Car car, int copyNumber,Order toUpdateOrder,User user);
+	public int scheduleOrder(String scheduleMode,Order order,String organizationName, String customerName,Car car, User driver, int copyNumber,Order toUpdateOrder,User user);
 
 	/**
 	 * 得到队列中的所有订单，并按时间升序排列（距离现在时间较远的排前面）。也就是返回order.status==IN_QUEUE的所有订单。
@@ -149,20 +134,6 @@ public interface OrderService extends BaseService {
 	 * @return order.status==INQUEUE || order.status==SCHEDULED
 	 */
 	public boolean canUpdate(Order order);
-
-	/**
-	 * 修改订单里程。需要插入OrderOperationRecord来记录修改的内容，其type为MODIFY_MILE：
-	 * 将更改项的新旧值转换为文本写入description。 特别重要：应该先插入OrderOperationRecord实体，再修改Order。
-	 * 需要断言： order.staus!=PAYED && Order.status!=CANCELLED
-	 * 
-	 * @param order
-	 * @param newMile
-	 * @return 0 成功 1 失败
-	 * @throws Exception
-	 */
-	public void modifyOrderMile(Order order, float newMile, User user);
-	
-	public void modifyOrderMoney(Order order, BigDecimal orderMoney, User user);
 
 	/**
 	 * 查询满足条件的订单，并分页。查询条件包括： 1. 客户单位（模糊查询，包括名称和简称都要查） 2. 司机（即姓名，模糊查询） 3.
@@ -225,7 +196,7 @@ public interface OrderService extends BaseService {
 	 * 		   1 车辆不可用
 	 * 		   2 状态不对
 	 */
-	public int orderReschedule(Order order, Car car, User user,String description);
+	public int orderReschedule(Order order, Car car, User driver, User user,String description);
 
 	public Order getOrderById(long id);
 
@@ -265,14 +236,6 @@ public interface OrderService extends BaseService {
 			Date beginDate, Date endDate);
 	
 	/**
-	 * 计算两个位置的驾车路线最短距离
-	 * @param l1 起点
-	 * @param l2 终点
-	 * @return
-	 */
-	public double calculatePathDistance(Location l1,  Location l2);
-	
-	/**
 	 * 获取执行订单车辆的轨迹
 	 * @param order
 	 * @return
@@ -295,7 +258,7 @@ public interface OrderService extends BaseService {
 	 * @param car
 	 * @return
 	 */
-	public int isCarAvailable(Order order, Car car);
+	public int isCarAndDriverAvailable(Order order, Car car, User driver);
 	
 	public List<Order> getNeedRemindProtocolOrder();
 	
@@ -320,5 +283,5 @@ public interface OrderService extends BaseService {
 	 */
 	public List<BaseEntity> dealCCP(String customerOrganizationName,String customerName,String phoneNumber);
 	
-	public double estimateMileage(Car car, Location from,Location to);
+	public DayOrderDetail getDayOrderDetailByDate(Order order,Date date);
 }

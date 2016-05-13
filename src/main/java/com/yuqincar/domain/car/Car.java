@@ -45,7 +45,6 @@ public class Car extends BaseEntity {
 
 	@Text("司机")
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(nullable=false)
 	private User driver;	//司机
 
 	@Text("业务点")
@@ -78,6 +77,9 @@ public class Car extends BaseEntity {
 
 	@Text("车辆状态")
     private CarStatusEnum status; //车辆状态
+	
+	@Text("是否为备用车")
+	private boolean standbyCar;
 
 	public String getPlateNumber() {
 		return plateNumber;
@@ -206,6 +208,14 @@ public class Car extends BaseEntity {
     public void setStatus(CarStatusEnum status) {
         this.status = status;
     }
+
+	public boolean isStandbyCar() {
+		return standbyCar;
+	}
+
+	public void setStandbyCar(boolean standbyCar) {
+		this.standbyCar = standbyCar;
+	}
 	
 	
 }

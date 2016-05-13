@@ -31,11 +31,15 @@ public class OrderStatement extends BaseEntity {
 	private int orderNum;//所包含的订单数量
 	@Text("总金额")
 	private BigDecimal totalMoney;//所包含的订单总金额
+	@Text("实收金额")
+	private BigDecimal actualTotalMoney;//实际收款总金额
 	@Text("订单")
 	@OneToMany(mappedBy="orderStatement")
 	private List<Order> orders = new ArrayList<Order>();
 	@Text("对账单状态")
 	private OrderStatementStatusEnum status;
+	@Text("到账时间")
+	private Date actualPaidDate;
 	
 	public String getName() {
 		return name;
@@ -90,6 +94,18 @@ public class OrderStatement extends BaseEntity {
 	}
 	public void setStatus(OrderStatementStatusEnum status) {
 		this.status = status;
+	}
+	public BigDecimal getActualTotalMoney() {
+		return actualTotalMoney;
+	}
+	public void setActualTotalMoney(BigDecimal actualTotalMoney) {
+		this.actualTotalMoney = actualTotalMoney;
+	}
+	public Date getActualPaidDate() {
+		return actualPaidDate;
+	}
+	public void setActualPaidDate(Date actualPaidDate) {
+		this.actualPaidDate = actualPaidDate;
 	}	
 	
 }

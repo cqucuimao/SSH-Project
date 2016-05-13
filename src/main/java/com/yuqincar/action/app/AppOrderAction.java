@@ -2,6 +2,7 @@ package com.yuqincar.action.app;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,9 +13,10 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.Preparable;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.dao.lbs.LBSDao;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
@@ -30,7 +32,8 @@ import com.yuqincar.service.privilege.UserService;
 @Controller
 @Scope("prototype")
 public class AppOrderAction extends BaseAction implements Preparable {
-
+	@Autowired
+	private LBSDao lbsDao;
 	@Autowired
 	private DriverAPPService driverAPPService;
 	@Autowired
@@ -63,7 +66,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	 */
 	public void countUndoOrder() {
 		if (user == null) {
-			this.writeJson("{\"status\":false}");
+			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
 		int count = driverAPPService.getNumberOfUndoOrders(user);
@@ -72,8 +75,13 @@ public class AppOrderAction extends BaseAction implements Preparable {
 
 	
 	public void acceptOrder() {
-		if(user==null || orderId==null) {
-			this.writeJson("{\"status\":false}");
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
 		}
 		Order order = orderService.getOrderById(orderId);
 		if(driverAPPService.orderAccept(order) == 1) {
@@ -83,109 +91,56 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		}
 	}
 	
-	private AddressVO getAddressVO(Address address){
-		LocationVO location=new LocationVO();
-		location.setId(address.getLocation().getId());
-		location.setLongitude(address.getLocation().getLongitude());
-		location.setLatitude(address.getLocation().getLatitude());
-		AddressVO addressVO=new AddressVO();
-		addressVO.setId(address.getId());
-		addressVO.setDescription(address.getDescription());
-		addressVO.setDetail(address.getDetail());
-		addressVO.setLocation(location);
-		return addressVO;
+	private OrderVo getOrderVo(Order order){
+		OrderVo vo = new OrderVo();
+		vo.orderId = order.getId();
+		vo.chargeMode = order.getChargeMode();
+		vo.fromAddress = order.getFromAddress();
+		vo.beginDate = order.getPlanBeginDate();
+		if (order.getChargeMode() == ChargeModeEnum.MILE || order.getChargeMode() == ChargeModeEnum.PLANE)
+			vo.toAddress = order.getToAddress();
+		else
+			vo.endDate = order.getPlanEndDate();
+		vo.sn = order.getSn();			
+		vo.status = order.getStatus();
+		vo.customerName = order.getCustomer().getName();
+		vo.customerOrganization = order.getCustomerOrganization().getName();
+		vo.customerPhone = order.getPhone();
+		return vo;
 	}
-	
+		
 	/**
 	 * 获取某个用户执行中的订单
 	 * 应该只有一条记录返回
 	 */
 	public void getBeginOrder() { 
-		if(user == null) {
-			this.writeJson("{\"status\":false}");
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
 		Order o = driverAPPService.getBeginOrder(user);
-		List<AppUndoOrderVo> orders = new ArrayList<AppUndoOrderVo>();
+		List<OrderVo> orders = new ArrayList<OrderVo>();
 		
 		if(o==null) {
 			this.writeJson(JSON.toJSONString(orders));
 			return;
 		}
-		AppUndoOrderVo vo = new AppUndoOrderVo();
 		
-		vo.orderId = o.getId();
-		vo.chargeMode = o.getChargeMode();
-		vo.fromAddress = getAddressVO(o.getFromAddress());
-		vo.planBeginDate = o.getPlanBeginDate();
-		vo.planEndDate = o.getPlanEndDate();
-		vo.status = o.getStatus();
-		vo.sn = o.getSn();
-		
-
-		if (o.getActualBeginLocation() != null) {
-			vo.fromLatitude = o.getActualBeginLocation().getLatitude();
-			vo.fromLongitue = o.getActualBeginLocation().getLongitude();
-		}
-
-		if (vo.chargeMode == ChargeModeEnum.MILE) {
-			vo.toAddress = getAddressVO(o.getToAddress());
-			if (o.getActualEndLocation() != null) {
-				vo.toLatitude = o.getActualEndLocation().getLatitude();
-				vo.toLongitude = o.getActualEndLocation().getLongitude();
-			}
-		}
-		
-		vo.customerName = o.getCustomer().getName();
-		vo.customerOrganization = o.getCustomerOrganization().getName();
-		vo.customerPhone = o.getPhone();
-		orders.add(vo);
+		orders.add(getOrderVo(o));
 		this.writeJson(JSON.toJSONString(orders));
 		
 	}
 	
-	
-	/*
-	 * {orderId: **, chargeMode: **, planBeginDate: **， planEndDate:
-	 * **，fromAddress: **，toAddress: **, fromLongitue:**, fromLatitude: **,
-	 * toLongitude: **, toLatitude:
-	 */
 	public void listUndoOrder() {
-
 		if (user == null) {
-			this.writeJson("{\"status\":false}");
+			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
 		List<Order> orders = driverAPPService.getAllUndoOrders(user);
 		System.out.println(orders.size());
-		List<AppUndoOrderVo> appUndoOrders = new ArrayList<AppUndoOrderVo>();
+		List<OrderVo> appUndoOrders = new ArrayList<OrderVo>();
 		for (Order o : orders) {
-			AppUndoOrderVo vo = new AppUndoOrderVo();
-
-			vo.orderId = o.getId();
-			vo.chargeMode = o.getChargeMode();
-			vo.fromAddress = getAddressVO(o.getFromAddress());
-			vo.planBeginDate = o.getPlanBeginDate();
-			vo.planEndDate = o.getPlanEndDate();
-			vo.sn = o.getSn();
-			if (o.getActualBeginLocation() != null) {
-				vo.fromLatitude = o.getActualBeginLocation().getLatitude();
-				vo.fromLongitue = o.getActualBeginLocation().getLongitude();
-			}
-
-			if (vo.chargeMode == ChargeModeEnum.MILE) {
-				vo.toAddress = getAddressVO(o.getToAddress());
-				if (o.getActualEndLocation() != null) {
-					vo.toLatitude = o.getActualEndLocation().getLatitude();
-					vo.toLongitude = o.getActualEndLocation().getLongitude();
-				}
-			}
-			
-			vo.status = o.getStatus();
-			vo.customerName = o.getCustomer().getName();
-			vo.customerOrganization = o.getCustomerOrganization().getName();
-			vo.customerPhone = o.getPhone();
-			appUndoOrders.add(vo);
+			appUndoOrders.add(getOrderVo(o));
 		
 		}
 
@@ -194,39 +149,25 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	}
 
 	public void getUndoOrder() {
-		if (user == null || orderId == null) {
-			this.writeJson("{\"status\":false}");
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
-		Order o = driverAPPService.getUndoOrder(user, orderId);
-
-		AppUndoOrderVo vo = new AppUndoOrderVo();
-
-		vo.orderId = o.getId();
-		vo.chargeMode = o.getChargeMode();
-		vo.fromAddress = getAddressVO(o.getFromAddress());
-		vo.planBeginDate = o.getPlanBeginDate();
-		vo.planEndDate = o.getPlanEndDate();
-		vo.status = o.getStatus();
-		vo.sn = o.getSn();
-		if (o.getActualBeginLocation() != null) {
-			vo.fromLatitude = o.getActualBeginLocation().getLatitude();
-			vo.fromLongitue = o.getActualBeginLocation().getLongitude();
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
 		}
-
-		if (vo.chargeMode == ChargeModeEnum.MILE) {
-			vo.toAddress = getAddressVO(o.getToAddress());
-			if (o.getActualEndLocation() != null) {
-				vo.toLatitude = o.getActualEndLocation().getLatitude();
-				vo.toLongitude = o.getActualEndLocation().getLongitude();
-			}
-		}
-		this.writeJson(JSON.toJSONString(vo));
+		Order o = driverAPPService.getUndoOrder(user, orderId);				
+		this.writeJson(JSON.toJSONString(getOrderVo(o)));
 	}
 
 	public void beginOrder() {
-		if (user == null || orderId == null) {
-			this.writeJson("{\"status\":false}");
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
 			return;
 		}
 		Order o = orderService.getOrderById(orderId);
@@ -237,8 +178,12 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	}
 
 	public void endOrder() {
-		if (user == null || orderId == null) {
-			this.writeJson("{\"status\":false}");
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
 			return;
 		}
 		Order o = orderService.getOrderById(orderId);
@@ -249,8 +194,12 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	}
 
 	public void getOrderStatus() {
-		if (user == null || orderId == null) {
-			this.writeJson("{\"status\":false}");
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
 			return;
 		}
 		Order o = orderService.getOrderById(orderId);
@@ -263,7 +212,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 
 	public void listDoneOrder() {
 		if (user == null) {
-			this.writeJson("{\"status\":false}");
+			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
 		if(pageNum==0) pageNum = 1;
@@ -279,30 +228,20 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		
 		PageBean pageBean = (PageBean)orderMap.get("pageBean");
 		List<Order> orders = pageBean.getRecordList();
-		List<AppEndOrderVo> voOrders = new ArrayList();
-		for(Order o:orders) {
-			AppEndOrderVo vo = new AppEndOrderVo();
-			vo.orderId = o.getId();
-			vo.chargeMode = o.getChargeMode();
-			vo.fromAddress = getAddressVO(o.getFromAddress());
-			if(o.getChargeMode()==ChargeModeEnum.MILE)
-				vo.toAddress=getAddressVO(o.getToAddress());
-			vo.actualBeginDate= o.getActualBeginDate();
-			vo.actualEndDate = o.getActualEndDate();
-			vo.customerName = o.getCustomer().getName();
-			vo.customerOrganization = o.getCustomerOrganization().getName();
-			vo.customerPhone = o.getPhone();
-			vo.sn = o.getSn();
-			voOrders.add(vo);
-		}
-		pageBean.setRecordList(voOrders);
-		
+		List<OrderVo> voOrders = new ArrayList();
+		for(Order o:orders) 
+			voOrders.add(getOrderVo(o));
+		pageBean.setRecordList(voOrders);		
 		this.writeJson(JSON.toJSONString(orderMap));
 	}
 	
 	public void getDoneOrderDetail() {
-		if (user == null || orderId == null) {
-			this.writeJson("{\"status\":false}");
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
 			return;
 		}
 		Order order = driverAPPService.getDoneOrderDetailById(orderId);
@@ -310,25 +249,17 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			this.writeJson("{\"status\":not found}");
 			return;
 		}
-		AppEndOrderVo vo = new AppEndOrderVo();
-		vo.orderId = order.getId();
-		vo.chargeMode = order.getChargeMode();
-		vo.fromAddress = getAddressVO(order.getFromAddress());
-		if(order.getChargeMode()==ChargeModeEnum.MILE)
-			vo.toAddress=getAddressVO(order.getToAddress());
-		vo.actualBeginDate= order.getActualBeginDate();
-		vo.actualEndDate = order.getActualEndDate();
-		vo.customerName = order.getCustomer().getName();
-		vo.customerOrganization = order.getCustomerOrganization().getName();
-		vo.customerPhone = order.getPhone();
-		vo.sn = order.getSn();
-		this.writeJson(JSON.toJSONString(vo));
+		this.writeJson(JSON.toJSONString(getOrderVo(order)));
 	}
 	
 	public void updateDeviceToken(){
-		if (user == null || deviceType==null || deviceType.length()==0 ||
-				deviceToken == null || deviceToken.length()==0) {
-			this.writeJson("{\"status\":false}");
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(deviceType==null || deviceType.length()==0 ||
+				deviceToken == null || deviceToken.length()==0){
+			writeJson("{\"status\":\"badParameter\"}");
 			return;
 		}
 		if(deviceType.equals("ios"))
@@ -340,6 +271,155 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		userService.update(user);
 		
 		this.writeJson("{\"status\":true}");
+	}
+	
+	public void canBeginOrder(){
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		Order order = orderService.getOrderById(orderId);
+		if(order.getStatus()==OrderStatusEnum.ACCEPTED)
+			writeJson("{\"status\":true}");
+		else
+			writeJson("{\"status\":false}");
+	}
+	
+	public void canEndOrder(){
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		Order order = orderService.getOrderById(orderId);
+		if(order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETOFF)
+			writeJson("{\"status\":true}");
+		else
+			writeJson("{\"status\":false}");
+	}
+	
+	public void canCustomerGeton(){
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		Order order = orderService.getOrderById(orderId);
+		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
+			if(order.getStatus()==OrderStatusEnum.BEGIN){
+				writeJson("{\"status\":true}");
+				return;
+			}else{
+				writeJson("{\"status\":false}");
+				return;
+			}
+		}else{			
+			if(order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETOFF){
+				DayOrderDetail dod=orderService.getDayOrderDetailByDate(order, new Date());
+				if(dod!=null){
+					writeJson("{\"status\":false}");
+					return;
+				}else{
+					writeJson("{\"status\":true}");
+					return;
+				}
+			}else{
+				writeJson("{\"status\":false}");
+				return;
+			}
+		}
+	}
+	
+	public void canCustomerGetoff(){
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		Order order = orderService.getOrderById(orderId);
+		if(order.getStatus()==OrderStatusEnum.GETON)
+			writeJson("{\"status\":true}");
+		else
+			writeJson("{\"status\":false}");
+	}
+	
+	public void customerGeton(){
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		Order order = orderService.getOrderById(orderId);
+		driverAPPService.customerGeton(order);
+		writeJson("{\"status\":true}");
+	}
+	
+	public void customerGetoff(){
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		Order order = orderService.getOrderById(orderId);
+		driverAPPService.customerGetoff(order);
+		writeJson("{\"status\":true}");
+	}
+	
+	public void canCustomerSign(){
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		Order order = orderService.getOrderById(orderId);
+		if(order.getStatus()==OrderStatusEnum.GETOFF)
+			writeJson("{\"status\":true}");
+		else
+			writeJson("{\"status\":false}");
+	}
+	
+	public void getMileInfo(){
+		if (user == null) {
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(orderId==null){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		Order order = orderService.getOrderById(orderId);
+		Date beginDate=order.getDayDetails().get(0).getGetonDate();
+		Date endDate=order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate();
+		float getonMile=lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), beginDate);
+		float getoffMile=lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), endDate);
+		float serviceMile=getoffMile-getonMile;
+		Map<String,Float> map=new HashMap<String,Float>();
+		map.put("getonMile", getonMile);
+		map.put("getoffMile", getoffMile);
+		map.put("serviceMile", serviceMile);
+		this.writeJson(JSON.toJSONString(map));
 	}
 
 	public Long getOrderId() {
@@ -447,32 +527,13 @@ class AddressVO {
 	}	
 }
 
-class AppUndoOrderVo {
+class OrderVo {
 	public Long orderId;
 	public ChargeModeEnum chargeMode;
-	public Date planBeginDate;
-	public Date planEndDate;
-	public AddressVO fromAddress ;
-	public AddressVO toAddress;
-	public double fromLongitue;
-	public double fromLatitude;
-	public double toLongitude;
-	public double toLatitude;
-	public String customerOrganization = "";
-	public String customerName = "";
-	public String customerPhone = "";
-	public OrderStatusEnum status;
-	public String sn = "";
-
-}
-
-class AppEndOrderVo {
-	public Long orderId;
-	public ChargeModeEnum chargeMode;
-	public Date actualBeginDate;
-	public Date actualEndDate;
-	public AddressVO fromAddress;
-	public AddressVO toAddress;
+	public Date beginDate;
+	public Date endDate;
+	public String fromAddress;
+	public String toAddress;
 	public String customerOrganization;
 	public String customerName;
 	public String customerPhone;

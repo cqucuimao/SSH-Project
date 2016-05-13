@@ -4,8 +4,10 @@ import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -14,7 +16,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,10 @@ import com.yuqincar.dao.customer.OtherPassengerDao;
 import com.yuqincar.dao.monitor.DeviceDao;
 import com.yuqincar.dao.monitor.LocationDao;
 import com.yuqincar.dao.order.AddressDao;
+import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.dao.order.OrderDao;
+import com.yuqincar.dao.order.PriceDao;
+import com.yuqincar.dao.order.PriceTableDao;
 import com.yuqincar.dao.orderStatement.OrderStatementDao;
 import com.yuqincar.dao.privilege.DepartmentDao;
 import com.yuqincar.dao.privilege.UserDao;
@@ -44,6 +48,7 @@ import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.car.CarInsurance;
 import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarRepair;
+import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.DriverLicense;
@@ -59,6 +64,8 @@ import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatement;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
+import com.yuqincar.domain.order.Price;
+import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.privilege.Department;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
@@ -68,6 +75,7 @@ import com.yuqincar.service.common.DiskFileService;
 import com.yuqincar.service.privilege.RoleService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
+import com.yuqincar.utils.ExcelUtil;
 
 @Component
 public class InitTestData {
@@ -130,6 +138,15 @@ public class InitTestData {
 	
 	@Resource
 	private OrderStatementDao orderStatementDao;
+	
+	@Resource
+	private PriceDao priceDao;
+	
+	@Resource
+	private PriceTableDao priceTableDao;
+	
+	@Resource
+	private CarServiceSuperTypeDao carServiceSuperTypeDao;
 
 	@Autowired
 	private DiskFileService diskFileService;
@@ -145,13 +162,13 @@ public class InitTestData {
 		Session session = sessionFactory.getCurrentSession();
 
 		initServicePoint();
-		initCarServiceType();
+		initPriceTable();
 		initUser();
 		initDriver();
 		initDevice();
 		initCar();
 		initCustomer();
-		initOrder();
+		//initOrder();
 		initCarCare();
 		initCarExamine();
 		initCarRepair();
@@ -159,10 +176,53 @@ public class InitTestData {
 		initCarInsurance();
 		initOrderStatement();
 	}
+	
+	private void initPriceTable(){
+		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\价格表.xls","价格表");
+		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\商社协议价格表.xls","商社协议价");
+	}
+	
+	private void initPriceTable(String fileName,String tableName){
+		Map<CarServiceType,Price> map=new HashMap<CarServiceType,Price>();
+		
+		List<List<String>> tableContent=ExcelUtil.getLinesFromExcel(fileName, 2, 23, 1, 7, 0);
+		for(List<String> line:tableContent){
+			CarServiceSuperType superType=carServiceSuperTypeDao.getCarServiceSuperTypeByTitle(line.get(0));
+			if(superType==null){
+				superType=new CarServiceSuperType();
+				superType.setTitle(line.get(0));
+				carServiceSuperTypeDao.save(superType);
+			}
+			
+			CarServiceType carServiceType=carServiceTypeDao.getCarServiceTypeByTitle(line.get(1));
+			if(carServiceType==null){
+				carServiceType=new CarServiceType();
+				carServiceType.setTitle(line.get(1));
+				carServiceType.setSuperType(superType);
+				carServiceTypeDao.save(carServiceType);
+			}
+			
+			Price price=new Price();
+			price.setPerDay(new BigDecimal(Float.valueOf(line.get(2))));
+			price.setPerHalfDay(new BigDecimal(Float.valueOf(line.get(3))));
+			price.setPerMileAfterLimit(new BigDecimal(Float.valueOf(line.get(4))));
+			price.setPerHourAfterLimit(new BigDecimal(Float.valueOf(line.get(5))));
+			price.setPerPlaneTime(new BigDecimal(Float.valueOf(line.get(6))));
+			priceDao.save(price);
+			
+			map.put(carServiceType, price);
+		}
+
+		PriceTable priceTable=new PriceTable();
+		priceTable.setTitle(tableName);
+		priceTable.setCarServiceType(map);
+		priceTableDao.save(priceTable);
+	}
 
 	private void initCarRepair() {
 		CarRepair cr1 = new CarRepair();
 		cr1.setCar(carDao.getById(1L));
+		cr1.setDriver(cr1.getCar().getDriver());
 		cr1.setFromDate(DateUtils.getYMD("2016-01-31"));
 		cr1.setAppointment(false);
 		cr1.setMemo(null);
@@ -172,6 +232,7 @@ public class InitTestData {
 
 		CarRepair cr2 = new CarRepair();
 		cr2.setCar(carDao.getById(2L));
+		cr2.setDriver(cr2.getCar().getDriver());
 		cr2.setFromDate(DateUtils.getYMD("2016-02-01"));
 		cr2.setAppointment(false);
 		cr2.setMemo(null);
@@ -181,6 +242,7 @@ public class InitTestData {
 
 		CarRepair cr3 = new CarRepair();
 		cr3.setCar(carDao.getById(3L));
+		cr3.setDriver(cr3.getCar().getDriver());
 		cr3.setFromDate(DateUtils.getYMD("2016-02-01"));
 		cr3.setAppointment(false);
 		cr3.setMemo(null);
@@ -190,6 +252,7 @@ public class InitTestData {
 		
 		CarRepair cr4 = new CarRepair();
 		cr4.setCar(carDao.getById(4L));
+		cr4.setDriver(cr4.getCar().getDriver());
 		cr4.setFromDate(DateUtils.getYMD("2016-02-01"));
 		cr4.setAppointment(false);
 		cr4.setMemo(null);
@@ -199,6 +262,7 @@ public class InitTestData {
 		
 		CarRepair cr5 = new CarRepair();
 		cr5.setCar(carDao.getById(5L));
+		cr5.setDriver(userDao.getByLoginName("司机2"));
 		cr5.setFromDate(DateUtils.getYMD("2016-02-01"));
 		cr5.setAppointment(false);
 		cr5.setMemo(null);
@@ -210,6 +274,7 @@ public class InitTestData {
 	private void initCarExamine() {
 		CarExamine ce1 = new CarExamine();
 		ce1.setCar(carDao.getById(1L));
+		ce1.setDriver(ce1.getCar().getDriver());
 		ce1.setDate(DateUtils.getYMD("2016-01-28"));
 		ce1.setAppointment(true);
 		ce1.setMemo(null);
@@ -217,6 +282,7 @@ public class InitTestData {
 
 		CarExamine ce2 = new CarExamine();
 		ce2.setCar(carDao.getById(2L));
+		ce2.setDriver(ce2.getCar().getDriver());
 		ce2.setDate(DateUtils.getYMD("2016-01-29"));
 		ce2.setAppointment(true);
 		ce2.setMemo(null);
@@ -224,6 +290,7 @@ public class InitTestData {
 
 		CarExamine ce3 = new CarExamine();
 		ce3.setCar(carDao.getById(3L));
+		ce3.setDriver(ce3.getCar().getDriver());
 		ce3.setDate(DateUtils.getYMD("2016-01-30"));
 		ce3.setAppointment(true);
 		ce3.setMemo(null);
@@ -232,7 +299,8 @@ public class InitTestData {
 
 	private void initCarCare() {
 		CarCare cc1 = new CarCare();
-		cc1.setCar(carDao.getById(1L));
+		cc1.setCar(carDao.getById(1L));		
+		cc1.setDriver(cc1.getCar().getDriver());
 		cc1.setDate(DateUtils.getYMD("2016-01-01"));
 		cc1.setMileInterval(7500);
 		cc1.setMoney(new BigDecimal(30));
@@ -242,6 +310,7 @@ public class InitTestData {
 
 		CarCare cc2 = new CarCare();
 		cc2.setCar(carDao.getById(2L));
+		cc2.setDriver(cc2.getCar().getDriver());
 		cc2.setDate(DateUtils.getYMD("2016-02-02"));
 		cc2.setMileInterval(7500);
 		cc2.setMoney(new BigDecimal(150));
@@ -251,6 +320,7 @@ public class InitTestData {
 
 		CarCare cc3 = new CarCare();
 		cc3.setCar(carDao.getById(3L));
+		cc3.setDriver(cc3.getCar().getDriver());
 		cc3.setDate(DateUtils.getYMD("2016-03-03"));
 		cc3.setMileInterval(7500);
 		cc3.setMoney(new BigDecimal(300));
@@ -260,6 +330,7 @@ public class InitTestData {
 
 		CarCare cc4 = new CarCare();
 		cc4.setCar(carDao.getById(4L));
+		cc4.setDriver(cc4.getCar().getDriver());
 		cc4.setDate(DateUtils.getYMD("2016-04-04"));
 		cc4.setMileInterval(7500);
 		cc4.setMoney(new BigDecimal(200));
@@ -269,6 +340,7 @@ public class InitTestData {
 
 		CarCare cc5 = new CarCare();
 		cc5.setCar(carDao.getById(5L));
+		cc5.setDriver(userDao.getByLoginName("司机2"));
 		cc5.setDate(DateUtils.getYMD("2016-05-24"));
 		cc5.setAppointment(false);
 		cc5.setMoney(new BigDecimal(100));
@@ -277,6 +349,7 @@ public class InitTestData {
 
 		CarCare cc6 = new CarCare();
 		cc6.setCar(carDao.getById(6L));
+		cc6.setDriver(cc6.getCar().getDriver());
 		cc6.setDate(DateUtils.getYMD("2016-06-25"));
 		cc6.setAppointment(false);
 		cc6.setMoney(new BigDecimal(600));
@@ -285,6 +358,7 @@ public class InitTestData {
 
 		CarCare cc7 = new CarCare();
 		cc7.setCar(carDao.getById(7L));
+		cc7.setDriver(cc7.getCar().getDriver());
 		cc7.setDate(DateUtils.getYMD("2016-07-26"));
 		cc7.setAppointment(false);
 		cc7.setMoney(new BigDecimal(70));
@@ -293,6 +367,7 @@ public class InitTestData {
 
 		CarCare cc8 = new CarCare();
 		cc8.setCar(carDao.getById(8L));
+		cc8.setDriver(cc8.getCar().getDriver());
 		cc8.setDate(DateUtils.getYMD("2016-08-27"));
 		cc8.setAppointment(false);
 		cc8.setMoney(new BigDecimal(280));
@@ -303,65 +378,51 @@ public class InitTestData {
 	private void initCarRefuel(){
 		CarRefuel cr1 = new CarRefuel();
 		cr1.setCar(carDao.getById(1L));
-		cr1.setRefuelingCharge(50);
+		cr1.setDriver(cr1.getCar().getDriver());
 		cr1.setDate(DateUtils.getYMD("2016-01-20"));
 		cr1.setMoney(new BigDecimal(110));
-		cr1.setMemo("车辆1的加油");
-		cr1.setRefuelingSite("沙坪坝");
 		carRefuelDao.save(cr1);
 		
 		CarRefuel cr2 = new CarRefuel();
 		cr2.setCar(carDao.getById(2L));
-		cr2.setRefuelingCharge(100);
+		cr2.setDriver(cr2.getCar().getDriver());
 		cr2.setDate(DateUtils.getYMD("2016-02-21"));
 		cr2.setMoney(new BigDecimal(170));
-		cr2.setMemo("车辆2的加油");
-		cr2.setRefuelingSite("大坪");
 		carRefuelDao.save(cr2);
 		
 		CarRefuel cr3 = new CarRefuel();
 		cr3.setCar(carDao.getById(3L));
-		cr3.setRefuelingCharge(150);
+		cr3.setDriver(cr3.getCar().getDriver());
 		cr3.setDate(DateUtils.getYMD("2016-03-22"));
 		cr3.setMoney(new BigDecimal(30));
-		cr3.setMemo("车辆3的加油");
-		cr3.setRefuelingSite("解放碑");
 		carRefuelDao.save(cr3);
 		
 		CarRefuel cr4 = new CarRefuel();
 		cr4.setCar(carDao.getById(4L));
-		cr4.setRefuelingCharge(200);
+		cr4.setDriver(cr4.getCar().getDriver());
 		cr4.setDate(DateUtils.getYMD("2016-04-23"));
 		cr4.setMoney(new BigDecimal(400));
-		cr4.setMemo("车辆4的加油");
-		cr4.setRefuelingSite("菜园坝");
 		carRefuelDao.save(cr4);
 		
 		CarRefuel cr5 = new CarRefuel();
 		cr5.setCar(carDao.getById(5L));
-		cr5.setRefuelingCharge(250);
+		cr5.setDriver(userDao.getByLoginName("司机2"));
 		cr5.setDate(DateUtils.getYMD("2016-05-24"));
 		cr5.setMoney(new BigDecimal(240));
-		cr5.setMemo("车辆5的加油");
-		cr5.setRefuelingSite("龙头寺");
 		carRefuelDao.save(cr5);
 		
 		CarRefuel cr6 = new CarRefuel();
 		cr6.setCar(carDao.getById(6L));
-		cr6.setRefuelingCharge(300);
+		cr6.setDriver(cr6.getCar().getDriver());
 		cr6.setDate(DateUtils.getYMD("2016-06-25"));
 		cr6.setMoney(new BigDecimal(400));
-		cr6.setMemo("车辆6的加油");
-		cr6.setRefuelingSite("火车站寺");
 		carRefuelDao.save(cr6);
 		
 		CarRefuel cr7 = new CarRefuel();
 		cr7.setCar(carDao.getById(7L));
-		cr7.setRefuelingCharge(350);
+		cr7.setDriver(cr7.getCar().getDriver());
 		cr7.setDate(DateUtils.getYMD("2016-07-26"));
 		cr7.setMoney(new BigDecimal(70));
-		cr7.setMemo("车辆7的加油");
-		cr7.setRefuelingSite("江北机场");
 		carRefuelDao.save(cr7);
 	}
 	
@@ -479,30 +540,13 @@ public class InitTestData {
 		order1.setSn("16010001");
 		order1.setCustomerOrganization(customerOrganizationDao
 				.getByAbbreviation("重大"));
-		System.out.println(customerOrganizationDao
-				.getByAbbreviation("重大").getName());
-		System.out.println(customerOrganizationDao
-				.getByAbbreviation("重大").getId());
 		order1.setCustomer(order1.getCustomerOrganization().getCustomers()
 				.get(0));
-		System.out.println(order1.getCustomerOrganization().getCustomers()
-				.get(0).getName());
-		System.out.println(order1.getCustomerOrganization().getCustomers()
-				.get(0).getId());
-		System.out.println(order1.getCustomerOrganization().getCustomers()
-				.get(1).getName());
-		System.out.println(order1.getCustomerOrganization().getCustomers()
-				.get(1).getId());
 		order1.setPhone(order1.getCustomer().getPhones().get(0));
 		order1.setChargeMode(ChargeModeEnum.MILE);
 		order1.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-20 12:15:00"));
 		order1.setPlanEndDate(null);
-		order1.setPassengerNumber(2);
 		order1.setServiceType(carServiceTypeDao.getById(1L));
-		order1.setFromAddress(order1.getCustomerOrganization().getpAddress());
-		order1.setToAddress(customerOrganizationDao.getByAbbreviation("重师")
-				.getpAddress());
-		order1.setOrderMile(3);
 		order1.setOrderMoney(new BigDecimal(5));
 		order1.setQueueTime(DateUtils.getYMDHMS("2016-01-20 12:00:00"));
 		order1.setMemo(null);
@@ -537,9 +581,7 @@ public class InitTestData {
 		order2.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-21 00:00:00"));
 		order2.setPlanEndDate(DateUtils.getYMDHMS("2016-01-23 00:00:00"));
 		order2.setOrderMoney(new BigDecimal(600));
-		order2.setPassengerNumber(1);
 		order2.setServiceType(carServiceTypeDao.getById(1L));
-		order2.setFromAddress(order2.getCustomerOrganization().getpAddress());
 		order2.setQueueTime(DateUtils.getYMDHMS("2016-01-20 12:15:00"));
 		order2.setMemo(null);
 		order2.setStatus(OrderStatusEnum.INQUEUE);
@@ -572,12 +614,7 @@ public class InitTestData {
 		order3.setChargeMode(ChargeModeEnum.MILE);
 		order3.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-20 12:45:00"));
 		order3.setPlanEndDate(null);
-		order3.setPassengerNumber(1);
 		order3.setServiceType(carServiceTypeDao.getById(2L));
-		order3.setFromAddress(order3.getCustomerOrganization().getpAddress());
-		order3.setToAddress(customerOrganizationDao.getByAbbreviation("市委")
-				.getpAddress());
-		order3.setOrderMile(15);
 		order3.setOrderMoney(new BigDecimal(60));
 		order3.setQueueTime(null);
 		order3.setScheduleTime(DateUtils.getYMDHMS("2016-01-20 12:25:00"));
@@ -600,9 +637,7 @@ public class InitTestData {
 		order4.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-21 00:00:00"));
 		order4.setPlanEndDate(DateUtils.getYMDHMS("2016-01-21 00:00:00"));
 		order4.setOrderMoney(new BigDecimal(200));
-		order4.setPassengerNumber(1);
 		order4.setServiceType(carServiceTypeDao.getById(1L));
-		order4.setFromAddress(order4.getCustomerOrganization().getpAddress());
 		order4.setQueueTime(DateUtils.getYMDHMS("2016-01-20 12:24:00"));
 		order4.setScheduleTime(DateUtils.getYMDHMS("2016-01-20 12:25:00"));
 		order4.setCar(carDao.getById(1L));
@@ -623,12 +658,7 @@ public class InitTestData {
 		order5.setChargeMode(ChargeModeEnum.MILE);
 		order5.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-20 13:00:00"));
 		order5.setPlanEndDate(null);
-		order5.setPassengerNumber(2);
 		order5.setServiceType(carServiceTypeDao.getById(1L));
-		order5.setFromAddress(order5.getCustomerOrganization().getpAddress());
-		order5.setToAddress(customerOrganizationDao.getByAbbreviation("重师")
-				.getpAddress());
-		order5.setOrderMile(10);
 		order5.setOrderMoney(new BigDecimal(15));
 		order5.setQueueTime(null);
 		order5.setScheduleTime(DateUtils.getYMDHMS("2016-01-20 12:00:00"));
@@ -652,9 +682,7 @@ public class InitTestData {
 		order6.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-22 13:04:24"));
 		order6.setPlanEndDate(DateUtils.getYMDHMS("2016-01-23 13:04:24"));
 		order6.setOrderMoney(new BigDecimal(400));
-		order6.setPassengerNumber(3);
 		order6.setServiceType(carServiceTypeDao.getById(1L));
-		order6.setFromAddress(order6.getCustomerOrganization().getpAddress());
 		order6.setQueueTime(DateUtils.getYMDHMS("2016-01-20 11:03:21"));
 		order6.setScheduleTime(DateUtils.getYMDHMS("2016-01-20 12:04:00"));
 		order6.setAcceptedTime(DateUtils.getYMDHMS("2016-01-20 12:08:00"));
@@ -676,15 +704,8 @@ public class InitTestData {
 		order7.setChargeMode(ChargeModeEnum.MILE);
 		order7.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-20 12:30:17"));
 		order7.setPlanEndDate(null);
-		order7.setPassengerNumber(1);
 		order7.setServiceType(carServiceTypeDao.getById(1L));
-		order7.setFromAddress(order7.getCustomerOrganization().getpAddress());
-		order7.setToAddress(customerOrganizationDao.getByAbbreviation("市府")
-				.getpAddress());
-		order7.setOrderMile(20);
 		order7.setOrderMoney(new BigDecimal(30));
-		order7.setActualBeginDate(DateUtils.getYMDHMS("2016-01-20 12:31:56"));
-		order7.setActualBeginLocation(order7.getFromAddress().getLocation());
 		order7.setQueueTime(DateUtils.getYMDHMS("2016-01-20 12:07:32"));
 		order7.setScheduleTime(DateUtils.getYMDHMS("2016-01-20 12:00:00"));
 		order7.setAcceptedTime(DateUtils.getYMDHMS("2016-01-20 12:02:00"));
@@ -706,15 +727,8 @@ public class InitTestData {
 		order8.setChargeMode(ChargeModeEnum.MILE);
 		order8.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-20 12:45:17"));
 		order8.setPlanEndDate(null);
-		order8.setPassengerNumber(1);
 		order8.setServiceType(carServiceTypeDao.getById(1L));
-		order8.setFromAddress(order8.getCustomerOrganization().getpAddress());
-		order8.setToAddress(customerOrganizationDao.getByAbbreviation("重大")
-				.getpAddress());
-		order8.setOrderMile(30);
 		order8.setOrderMoney(new BigDecimal(45));
-		order8.setActualBeginDate(DateUtils.getYMDHMS("2016-01-20 12:48:33"));
-		order8.setActualBeginLocation(order8.getFromAddress().getLocation());
 		order8.setQueueTime(DateUtils.getYMDHMS("2016-01-20 12:06:32"));
 		order8.setScheduleTime(DateUtils.getYMDHMS("2016-01-20 12:08:00"));
 		order8.setAcceptedTime(DateUtils.getYMDHMS("2016-01-20 12:22:00"));
@@ -736,20 +750,9 @@ public class InitTestData {
 		order9.setChargeMode(ChargeModeEnum.MILE);
 		order9.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-19 13:10:00"));
 		order9.setPlanEndDate(null);
-		order9.setPassengerNumber(2);
 		order9.setServiceType(carServiceTypeDao.getById(3L));
-		order9.setFromAddress(order9.getCustomerOrganization().getpAddress());
-		order9.setToAddress(customerOrganizationDao.getByAbbreviation("安监局")
-				.getpAddress());
-		order9.setOrderMile(40);
-		order9.setActualMile(16);
-		order9.setActualDay(0);
 		order9.setOrderMoney(new BigDecimal(200));
 		order9.setActualMoney(new BigDecimal(90));
-		order9.setActualBeginDate(DateUtils.getYMDHMS("2016-01-19 13:11:00"));
-		order9.setActualEndDate(DateUtils.getYMDHMS("2016-01-19 14:01:27"));
-		order9.setActualBeginLocation(order9.getFromAddress().getLocation());
-		order9.setActualEndLocation(order9.getToAddress().getLocation());
 		order9.setQueueTime(null);
 		order9.setScheduleTime(DateUtils.getYMDHMS("2016-01-19 12:15:00"));
 		order9.setAcceptedTime(DateUtils.getYMDHMS("2016-01-19 12:23:00"));
@@ -771,15 +774,9 @@ public class InitTestData {
 		order10.setChargeMode(ChargeModeEnum.DAY);
 		order10.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-16 13:10:00"));
 		order10.setPlanEndDate(DateUtils.getYMDHMS("2016-01-19 13:10:00"));
-		order10.setPassengerNumber(1);
 		order10.setServiceType(carServiceTypeDao.getById(1L));
-		order10.setFromAddress(order10.getCustomerOrganization().getpAddress());
-		order10.setActualDay(4);
 		order10.setOrderMoney(new BigDecimal(1600));
 		order10.setActualMoney(new BigDecimal(1600));
-		order10.setActualBeginDate(DateUtils.getYMDHMS("2016-01-16 13:11:00"));
-		order10.setActualEndDate(DateUtils.getYMDHMS("2016-01-19 23:06:50"));
-		order10.setActualBeginLocation(order10.getFromAddress().getLocation());
 		order10.setQueueTime(null);
 		order10.setScheduleTime(DateUtils.getYMDHMS("2016-01-16 18:15:00"));
 		order10.setAcceptedTime(DateUtils.getYMDHMS("2016-01-16 19:21:11"));
@@ -801,20 +798,9 @@ public class InitTestData {
 		order11.setChargeMode(ChargeModeEnum.MILE);
 		order11.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-18 15:20:00"));
 		order11.setPlanEndDate(null);
-		order11.setPassengerNumber(4);
 		order11.setServiceType(carServiceTypeDao.getById(1L));
-		order11.setFromAddress(order11.getCustomerOrganization().getpAddress());
-		order11.setToAddress(customerOrganizationDao.getByAbbreviation("海关")
-				.getpAddress());
-		order11.setOrderMile(10);
-		order11.setActualMile(6);
-		order11.setActualDay(0);
 		order11.setOrderMoney(new BigDecimal(15));
 		order11.setActualMoney(new BigDecimal(9));
-		order11.setActualBeginDate(DateUtils.getYMDHMS("2016-01-18 15:18:00"));
-		order11.setActualEndDate(DateUtils.getYMDHMS("2016-01-18 15:53:24"));
-		order11.setActualBeginLocation(order11.getFromAddress().getLocation());
-		order11.setActualEndLocation(order11.getToAddress().getLocation());
 		order11.setQueueTime(null);
 		order11.setScheduleTime(DateUtils.getYMDHMS("2016-01-18 13:11:47"));
 		order11.setAcceptedTime(DateUtils.getYMDHMS("2016-01-18 13:15:29"));
@@ -836,20 +822,9 @@ public class InitTestData {
 		order12.setChargeMode(ChargeModeEnum.MILE);
 		order12.setPlanBeginDate(DateUtils.getYMDHMS("2016-01-17 16:15:00"));
 		order12.setPlanEndDate(null);
-		order12.setPassengerNumber(1);
 		order12.setServiceType(carServiceTypeDao.getById(1L));
-		order12.setFromAddress(order12.getCustomerOrganization().getpAddress());
-		order12.setToAddress(customerOrganizationDao.getByAbbreviation("重大")
-				.getpAddress());
-		order12.setOrderMile(30);
-		order12.setActualMile(18);
-		order12.setActualDay(0);
 		order12.setOrderMoney(new BigDecimal(45));
 		order12.setActualMoney(new BigDecimal(27));
-		order12.setActualBeginDate(DateUtils.getYMDHMS("2016-01-17 16:18:00"));
-		order12.setActualEndDate(DateUtils.getYMDHMS("2016-01-17 16:55:24"));
-		order12.setActualBeginLocation(order12.getFromAddress().getLocation());
-		order12.setActualEndLocation(order12.getToAddress().getLocation());
 		order12.setQueueTime(null);
 		order12.setScheduleTime(DateUtils.getYMDHMS("2016-01-17 15:57:47"));
 		order12.setAcceptedTime(DateUtils.getYMDHMS("2016-01-17 15:59:29"));
@@ -1253,7 +1228,7 @@ public class InitTestData {
 		car1.setModel("帕萨特");
 		car1.setVIN("SVN000001");
 		car1.setEngineSN("ESN00001");
-		car1.setServiceType(carServiceTypeDao.getById(1L));
+		car1.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("大众帕萨特"));
 		car1.setDriver(userService.getByLoginName("司机1"));
 		car1.setServicePoint(servicePointDao.getById(1L));
 		car1.setDevice(deviceDao.getById(1L));
@@ -1264,15 +1239,16 @@ public class InitTestData {
 		car1.setInsuranceExpiredDate(DateUtils.getYMD("2017-01-20"));
 		car1.setNextExaminateDate(DateUtils.getYMD("2018-01-20"));
 		car1.setStatus(CarStatusEnum.NORMAL);
+		car1.setStandbyCar(false);
 		carDao.save(car1);
 
 		Car car2 = new Car();
 		car2.setPlateNumber("渝A00002");
 		car2.setBrand("大众");
-		car2.setModel("CC");
+		car2.setModel("迈腾");
 		car2.setVIN("SVN000002");
 		car2.setEngineSN("ESN00002");
-		car2.setServiceType(carServiceTypeDao.getById(1L));
+		car2.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("大众迈腾"));
 		car2.setDriver(userService.getByLoginName("司机2"));
 		car2.setServicePoint(servicePointDao.getById(1L));
 		car2.setDevice(deviceDao.getById(2L));
@@ -1283,6 +1259,7 @@ public class InitTestData {
 		car2.setInsuranceExpiredDate(DateUtils.getYMD("2017-02-20"));
 		car2.setNextExaminateDate(DateUtils.getYMD("2018-02-20"));
 		car2.setStatus(CarStatusEnum.NORMAL);
+		car2.setStandbyCar(false);
 		carDao.save(car2);
 
 		Car car3 = new Car();
@@ -1291,8 +1268,8 @@ public class InitTestData {
 		car3.setModel("蒙迪欧");
 		car3.setVIN("SVN000003");
 		car3.setEngineSN("ESN00003");
-		car3.setServiceType(carServiceTypeDao.getById(1L));
-		car3.setDriver(userService.getByLoginName("司机3"));
+		car3.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("蒙迪欧致胜"));
+		car3.setDriver(userService.getByLoginName("司机2"));
 		car3.setServicePoint(servicePointDao.getById(1L));
 		car3.setDevice(deviceDao.getById(3L));
 		car3.setMileage(100000);
@@ -1302,15 +1279,16 @@ public class InitTestData {
 		car3.setInsuranceExpiredDate(DateUtils.getYMD("2017-03-20"));
 		car3.setNextExaminateDate(DateUtils.getYMD("2018-03-20"));
 		car3.setStatus(CarStatusEnum.NORMAL);
+		car3.setStandbyCar(false);
 		carDao.save(car3);
 
 		Car car4 = new Car();
 		car4.setPlateNumber("渝A00004");
-		car4.setBrand("福特");
-		car4.setModel("金牛座");
+		car4.setBrand("沃尔沃");
+		car4.setModel("S80");
 		car4.setVIN("SVN000004");
 		car4.setEngineSN("ESN00004");
-		car4.setServiceType(carServiceTypeDao.getById(1L));
+		car4.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("沃尔沃S80/2.5"));
 		car4.setDriver(userService.getByLoginName("司机4"));
 		car4.setServicePoint(servicePointDao.getById(2L));
 		car4.setDevice(deviceDao.getById(4L));
@@ -1321,16 +1299,16 @@ public class InitTestData {
 		car4.setInsuranceExpiredDate(DateUtils.getYMD("2017-04-20"));
 		car4.setNextExaminateDate(DateUtils.getYMD("2018-04-20"));
 		car4.setStatus(CarStatusEnum.NORMAL);
+		car4.setStandbyCar(false);
 		carDao.save(car4);
 
 		Car car5 = new Car();
 		car5.setPlateNumber("渝A00005");
-		car5.setBrand("长安");
-		car5.setModel("睿骋");
+		car5.setBrand("日产");
+		car5.setModel("凯美瑞");
 		car5.setVIN("SVN000005");
 		car5.setEngineSN("ESN00005");
-		car5.setServiceType(carServiceTypeDao.getById(1L));
-		car5.setDriver(userService.getByLoginName("司机5"));
+		car5.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("凯美瑞"));
 		car5.setServicePoint(servicePointDao.getById(2L));
 		car5.setDevice(deviceDao.getById(5L));
 		car5.setMileage(120000);
@@ -1340,6 +1318,7 @@ public class InitTestData {
 		car5.setInsuranceExpiredDate(DateUtils.getYMD("2017-05-20"));
 		car5.setNextExaminateDate(DateUtils.getYMD("2018-05-20"));
 		car5.setStatus(CarStatusEnum.NORMAL);
+		car5.setStandbyCar(true);
 		carDao.save(car5);
 
 		Car car6 = new Car();
@@ -1348,7 +1327,7 @@ public class InitTestData {
 		car6.setModel("GL8");
 		car6.setVIN("SVN000006");
 		car6.setEngineSN("ESN00006");
-		car6.setServiceType(carServiceTypeDao.getById(2L));
+		car6.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("商务别克"));
 		car6.setDriver(userService.getByLoginName("司机6"));
 		car6.setServicePoint(servicePointDao.getById(2L));
 		car6.setDevice(deviceDao.getById(6L));
@@ -1359,6 +1338,7 @@ public class InitTestData {
 		car6.setInsuranceExpiredDate(DateUtils.getYMD("2017-06-20"));
 		car6.setNextExaminateDate(DateUtils.getYMD("2018-06-20"));
 		car6.setStatus(CarStatusEnum.NORMAL);
+		car6.setStandbyCar(false);
 		carDao.save(car6);
 
 		Car car7 = new Car();
@@ -1367,7 +1347,7 @@ public class InitTestData {
 		car7.setModel("君威");
 		car7.setVIN("SVN000007");
 		car7.setEngineSN("ESN00007");
-		car7.setServiceType(carServiceTypeDao.getById(1L));
+		car7.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("别克"));
 		car7.setDriver(userService.getByLoginName("司机7"));
 		car7.setServicePoint(servicePointDao.getById(3L));
 		car7.setDevice(deviceDao.getById(7L));
@@ -1378,15 +1358,16 @@ public class InitTestData {
 		car7.setInsuranceExpiredDate(DateUtils.getYMD("2017-07-20"));
 		car7.setNextExaminateDate(DateUtils.getYMD("2018-07-20"));
 		car7.setStatus(CarStatusEnum.NORMAL);
+		car7.setStandbyCar(false);
 		carDao.save(car7);
 
 		Car car8 = new Car();
 		car8.setPlateNumber("渝A00008");
-		car8.setBrand("宝马");
-		car8.setModel("5系");
+		car8.setBrand("丰田");
+		car8.setModel("RAV4");
 		car8.setVIN("SVN000008");
 		car8.setEngineSN("ESN00008");
-		car8.setServiceType(carServiceTypeDao.getById(3L));
+		car8.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("丰田RAV4、CRV越野"));
 		car8.setDriver(userService.getByLoginName("司机8"));
 		car8.setServicePoint(servicePointDao.getById(3L));
 		car8.setDevice(deviceDao.getById(8L));
@@ -1397,15 +1378,16 @@ public class InitTestData {
 		car8.setInsuranceExpiredDate(DateUtils.getYMD("2017-08-20"));
 		car8.setNextExaminateDate(DateUtils.getYMD("2018-08-20"));
 		car8.setStatus(CarStatusEnum.NORMAL);
+		car8.setStandbyCar(false);
 		carDao.save(car8);
 
 		Car car9 = new Car();
 		car9.setPlateNumber("渝A00009");
-		car9.setBrand("现代");
-		car9.setModel("索纳塔7代");
+		car9.setBrand("奥迪");
+		car9.setModel("A6");
 		car9.setVIN("SVN000009");
 		car9.setEngineSN("ESN00009");
-		car9.setServiceType(carServiceTypeDao.getById(1L));
+		car9.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("2.4奥迪"));
 		car9.setDriver(userService.getByLoginName("司机8"));
 		car9.setServicePoint(servicePointDao.getById(3L));
 		car9.setDevice(deviceDao.getById(8L));
@@ -1416,6 +1398,7 @@ public class InitTestData {
 		car9.setInsuranceExpiredDate(DateUtils.getYMD("2017-09-20"));
 		car9.setNextExaminateDate(DateUtils.getYMD("2018-09-20"));
 		car9.setStatus(CarStatusEnum.SCRAPPED);// 这辆车是报废了的。
+		car9.setStandbyCar(false);
 		carDao.save(car9);
 	}
 
@@ -1624,45 +1607,6 @@ public class InitTestData {
 		user7.getRoles().add(roleService.getRoleByName("公司领导"));
 		userDao.save(user7);
 		}
-
-	private void initCarServiceType() {
-		try {
-			String path = this.getClass().getClassLoader().getResource("")
-					.getPath()
-					+ "../test-classes/data/init/";
-			CarServiceType cst1 = new CarServiceType();
-			cst1.setTitle("公务轿车");
-			cst1.setPricePerKM(new BigDecimal(1.5));
-			cst1.setPricePerDay(new BigDecimal(400));
-			cst1.setPriceDescription("公务轿车的价格描述：每公里1.5元，每天400元");
-			cst1.setPersonLimit(4);
-			cst1.setPicture(diskFileService.insertDiskFile(new FileInputStream(
-					path + "公务轿车.png"), "公务轿车.png"));
-			carServiceTypeDao.save(cst1);
-
-			CarServiceType cst2 = new CarServiceType();
-			cst2.setTitle("商务7座");
-			cst2.setPricePerKM(new BigDecimal(3));
-			cst2.setPricePerDay(new BigDecimal(800));
-			cst2.setPriceDescription("商务7座的价格描述：每公里3元，每天800元");
-			cst2.setPersonLimit(6);
-			cst2.setPicture(diskFileService.insertDiskFile(new FileInputStream(
-					path + "商务7座.png"), "商务7座.png"));
-			carServiceTypeDao.save(cst2);
-
-			CarServiceType cst3 = new CarServiceType();
-			cst3.setTitle("豪华轿车");
-			cst3.setPricePerKM(new BigDecimal(5));
-			cst3.setPricePerDay(new BigDecimal(1000));
-			cst3.setPriceDescription("豪华轿车的价格描述：每公里5元，每天1000元");
-			cst3.setPersonLimit(4);
-			cst3.setPicture(diskFileService.insertDiskFile(new FileInputStream(
-					path + "豪华轿车.png"), "豪华轿车.png"));
-			carServiceTypeDao.save(cst3);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	private void initServicePoint() {
 		ServicePoint p1 = new ServicePoint();

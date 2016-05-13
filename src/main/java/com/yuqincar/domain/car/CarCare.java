@@ -7,11 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.yuqincar.domain.common.BaseEntity;
-import com.yuqincar.utils.DateUtils;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.Text;
 
 /*
@@ -24,6 +23,10 @@ public class CarCare extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
 	private Car car;	//车辆
+	@Text("司机")
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(nullable=false)
+	private User driver;
 	@Text("保养日期")
 	@Column(nullable = false)
 	private Date date;	//保养日期
@@ -72,5 +75,11 @@ public class CarCare extends BaseEntity {
 	}
 	public void setAppointment(boolean appointment) {
 		this.appointment = appointment;
+	}
+	public User getDriver() {
+		return driver;
+	}
+	public void setDriver(User driver) {
+		this.driver = driver;
 	}	
 }

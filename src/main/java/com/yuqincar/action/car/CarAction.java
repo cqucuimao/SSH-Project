@@ -40,9 +40,9 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private Long carServiceTypeId;
 	private Long servicePointId;
 	private Long driverId;
-	private Long deviceId;
-	
+	private Long deviceId;	
 	private String driverName;
+	private String carSelectorId;
 	
 	/** 列表 */
 	public String list() throws Exception {
@@ -221,10 +221,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));
 		
 
-		System.out.println("in popup");
-		System.out.println(ActionContext.getContext().getValueStack().peek().getClass());
 		Car car = (Car) ActionContext.getContext().getValueStack().peek();
-		System.out.println(car);
+		ActionContext.getContext().put("carSelectorId", carSelectorId);
 		
 		return "popup";
 	}
@@ -272,6 +270,12 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 	public void setDriverName(String driverName) {
 		this.driverName = driverName;
+	}
+	public String getCarSelectorId() {
+		return carSelectorId;
+	}
+	public void setCarSelectorId(String carSelectorId) {
+		this.carSelectorId = carSelectorId;
 	}
 	
 	

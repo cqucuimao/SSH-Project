@@ -219,7 +219,9 @@ public class OrderAction extends BaseAction {
 		Order order=orderService.getOrderById(orderId);
 		Car car=carService.getCarByPlateNumber(plateNumber);
 		ActionContext.getContext().getValueStack().push(order);
-		int result=orderService.orderReschedule(order, car, (User)ActionContext.getContext().getSession().get("user"), rescheduleReason);
+		int result=0;
+		//TODO 还应该多传一个driver对象
+		//result=orderService.orderReschedule(order, car, (User)ActionContext.getContext().getSession().get("user"), rescheduleReason);
 		if(result==1){
 			addFieldError("rescheduleError", "车辆在此时间段不可用");
 			return "reschedule";
@@ -266,7 +268,7 @@ public class OrderAction extends BaseAction {
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
-			orderMileString=new BigDecimal(order.getOrderMile()).setScale(1, BigDecimal.ROUND_HALF_UP).toString();
+			orderMileString=new BigDecimal(order.getTotalChargeMile()).setScale(1, BigDecimal.ROUND_HALF_UP).toString();
 		}
 		return "modifyMile";
 	}
@@ -275,7 +277,7 @@ public class OrderAction extends BaseAction {
 		System.out.println("modifyMileDo");
 		System.out.println("orderId="+orderId);
 		Order order=orderService.getOrderById(orderId);
-		orderService.modifyOrderMile(order, Float.parseFloat(orderMileString), (User)ActionContext.getContext().getSession().get("user"));
+		//orderService.modifyOrderMile(order, Float.parseFloat(orderMileString), (User)ActionContext.getContext().getSession().get("user"));
 		ActionContext.getContext().getValueStack().push(order);
 		return "view";
 	}
@@ -294,7 +296,7 @@ public class OrderAction extends BaseAction {
 		System.out.println("modifyMoneyDo");
 		System.out.println("orderId="+orderId);
 		Order order=orderService.getOrderById(orderId);
-		orderService.modifyOrderMoney(order, new BigDecimal(orderMoneyString), (User)ActionContext.getContext().getSession().get("user"));
+		//orderService.modifyOrderMoney(order, new BigDecimal(orderMoneyString), (User)ActionContext.getContext().getSession().get("user"));
 		ActionContext.getContext().getValueStack().push(order);
 		return "view";
 	}

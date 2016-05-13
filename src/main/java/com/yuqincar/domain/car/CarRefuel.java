@@ -10,34 +10,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.Text;
 
 @Entity
 public class CarRefuel extends BaseEntity {
+	@Text("订单")
+	@OneToOne(fetch=FetchType.LAZY)
+	private Order order;
 
 	@Text("车辆")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
 	private Car car;
 
+	@Text("司机")
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(nullable=false)
+	private User driver;
+
 	@Text("加油时间")
 	@Column(nullable=false)
-	private Date date;	//加油日期
-
+	private Date date;
+	
 	@Text("加油金额")
 	@Column(nullable=false)
-	private BigDecimal money;	//加油金额
+	private BigDecimal money;
 
-	@Text("加油地点")
-	private String refuelingSite;   //加油地点
-
-	@Text("加油量")
-	private int RefuelingCharge;   //加油量
-
-	@Text("备注")
-	private String memo;	//备注
-	
 	public Car getCar() {
 		return car;
 	}
@@ -62,28 +62,11 @@ public class CarRefuel extends BaseEntity {
 		this.money = money;
 	}
 
-	public String getMemo() {
-		return memo;
+	public User getDriver() {
+		return driver;
 	}
 
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
-
-	public String getRefuelingSite() {
-		return refuelingSite;
-	}
-
-	public void setRefuelingSite(String refuelingSite) {
-		this.refuelingSite = refuelingSite;
-	}
-
-
-	public int getRefuelingCharge() {
-		return RefuelingCharge;
-	}
-
-	public void setRefuelingCharge(int refuelingCharge) {
-		RefuelingCharge = refuelingCharge;
+	public void setDriver(User driver) {
+		this.driver = driver;
 	}	
 }

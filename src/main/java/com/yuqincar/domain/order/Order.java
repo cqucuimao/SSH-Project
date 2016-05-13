@@ -12,10 +12,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.DiskFile;
-import com.yuqincar.domain.monitor.Location;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.Text;
 
@@ -49,86 +49,73 @@ public class Order extends BaseEntity {
 
 	@Text("计划开始时间")
 	@Column
-	private Date planBeginDate; // 预计开始时间
+	private Date planBeginDate;
 
 	@Text("计划结束时间")
-	private Date planEndDate; // 预计结束时间。如果是按里程租车，则为null。
+	private Date planEndDate;
+	
+	@Text("实际开始时间")
+	@Column
+	private Date actualBeginDate;
 
-	@Text("乘车人数")
-	@Column(nullable = false)
-	private int passengerNumber; // 乘车人数
+	@Text("实际结束时间")
+	private Date actualEndDate;
 
 	@Text("车型")
 	@OneToOne(fetch=FetchType.LAZY)
 	private CarServiceType serviceType; // 车型
 
 	@Text("出发地")
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-	private Address fromAddress; // 上车地点
+	private String fromAddress; // 上车地点
 
 	@Text("目的地")
-    @OneToOne(fetch = FetchType.LAZY)
-	private Address toAddress; // 下车地点
+	private String toAddress; // 下车地点
+	
+	@Text("每天行程细节")
+	@OneToMany(mappedBy="order")
+	private List<DayOrderDetail> dayDetails;
 
-	@Text("订单里程")
-    private float orderMile; // 订单里程数。初始时，等于按照计划估算的里程数，调度员可修改此值
+	@Text("出库路码")
+	private float beginMile; 
+	
+	@Text("客户上车路码")
+	private float customerGetonMile;
+	
+	@Text("客户下车路码")
+	private float customerGetoffMile;
 
-	@Text("开始时里程")
-	private float actualBeginMile; // 实际开始时的里程数
+	@Text("回库路码")
+	private float endMile;
 
-	@Text("结束时里程")
-	private float actualEndMile; // 实际结束时的里程数
+	@Text("计费路码")
+	private float totalChargeMile;
 
-	@Text("实际里程")
-	private float actualMile; // 实际里程数。根据司机点击APP中的“开始”和“结束”时间点，由车载设备上传的里程数相减得到。
+	@Text("核算金额")
+	private BigDecimal orderMoney;
 
-	@Text("订单金额")
-	@Column(nullable = false, precision = 19, scale = 6)
-	private BigDecimal orderMoney; // 订单价格。
-
-	@Text("实际金额")
-	@Column(precision = 19, scale = 6)
-	private BigDecimal actualMoney; // 实际价格。根据实际里程数或实际发生天数计算的实际价格。
-
-	@Text("实际开始时间")
-	private Date actualBeginDate; // 实际开始时间。司机点击“开始”时的时间
-
-	@Text("实际结束时间")
-	private Date actualEndDate; // 实际结束时间。司机点击“结束”时的时间
-
-	@Text("实际天数")
-	@Column(columnDefinition="int default 0")
-	private int actualDay = 0; // 实际发生的天数
-
-	@Text("实际开始位置")
-	@OneToOne(fetch=FetchType.LAZY)
-	private Location actualBeginLocation; // 实际开始位置
-
-	@Text("实际结束位置")
-	@OneToOne(fetch=FetchType.LAZY)
-	private Location actualEndLocation; // 实际结束位置
+	@Text("实收金额")
+	private BigDecimal actualMoney;
 
 	@Text("进队列时间")
-	private Date queueTime; // 进队列的时间。如果没有进队列，就为null。
+	private Date queueTime; 
 
 	@Text("调度时间")
-	private Date scheduleTime; // 调度时间
+	private Date scheduleTime;
 
 	@Text("接受时间")
-	private Date acceptedTime; //接受时间
+	private Date acceptedTime;
 
 	@Text("执行车辆")
 	@OneToOne(fetch=FetchType.LAZY)
-	private Car car; // 执行订单的车辆
+	private Car car;
 
 	@Text("执行司机")
 	@OneToOne(fetch=FetchType.LAZY)
-	private User driver; // 执行订单的司机
+	private User driver;
 
 	@Text("订单状态")
 	@Column(nullable = false)
-	private OrderStatusEnum status; // 订单状态
+	private OrderStatusEnum status;
 
 	@Text("备注")
 	private String memo; // 备注
@@ -175,6 +162,28 @@ public class Order extends BaseEntity {
 	
 	@Text("评价分数")
 	private int grade;
+	
+	@Text("油费")
+	private BigDecimal refuelMoney;
+	
+	@Text("加油记录")
+	@OneToOne(fetch=FetchType.LAZY)
+	private CarRefuel refuel;
+	
+	@Text("洗车费")
+	private BigDecimal washingFee;
+	
+	@Text("停车费")
+	private BigDecimal parkingFee;
+	
+	@Text("过路费")
+	private BigDecimal toll;
+	
+	@Text("食宿费")
+	private BigDecimal roomAndBoardFee;
+	
+	@Text("其它费用")
+	private BigDecimal otherFee;
 
 	public OrderStatement getOrderStatement() {
 		return orderStatement;
@@ -241,68 +250,12 @@ public class Order extends BaseEntity {
 		this.planEndDate = planEndDate;
 	}
 
-	public int getPassengerNumber() {
-		return passengerNumber;
-	}
-
-	public void setPassengerNumber(int passengerNumber) {
-		this.passengerNumber = passengerNumber;
-	}
-
 	public CarServiceType getServiceType() {
 		return serviceType;
 	}
 
 	public void setServiceType(CarServiceType serviceType) {
 		this.serviceType = serviceType;
-	}
-
-	public Address getFromAddress() {
-		return fromAddress;
-	}
-
-	public void setFromAddress(Address fromAddress) {
-		this.fromAddress = fromAddress;
-	}
-
-	public Address getToAddress() {
-		return toAddress;
-	}
-
-	public void setToAddress(Address toAddress) {
-		this.toAddress = toAddress;
-	}
-
-	public float getOrderMile() {
-		return orderMile;
-	}
-
-	public void setOrderMile(float orderMile) {
-		this.orderMile = orderMile;
-	}
-
-	public float getActualBeginMile() {
-		return actualBeginMile;
-	}
-
-	public void setActualBeginMile(float actualBeginMile) {
-		this.actualBeginMile = actualBeginMile;
-	}
-
-	public float getActualEndMile() {
-		return actualEndMile;
-	}
-
-	public void setActualEndMile(float actualEndMile) {
-		this.actualEndMile = actualEndMile;
-	}
-
-	public float getActualMile() {
-		return actualMile;
-	}
-
-	public void setActualMile(float actualMile) {
-		this.actualMile = actualMile;
 	}
 
 	public BigDecimal getOrderMoney() {
@@ -319,46 +272,6 @@ public class Order extends BaseEntity {
 
 	public void setActualMoney(BigDecimal actualMoney) {
 		this.actualMoney = actualMoney;
-	}
-
-	public Date getActualBeginDate() {
-		return actualBeginDate;
-	}
-
-	public void setActualBeginDate(Date actualBeginDate) {
-		this.actualBeginDate = actualBeginDate;
-	}
-
-	public Date getActualEndDate() {
-		return actualEndDate;
-	}
-
-	public void setActualEndDate(Date actualEndDate) {
-		this.actualEndDate = actualEndDate;
-	}
-
-	public int getActualDay() {
-		return actualDay;
-	}
-
-	public void setActualDay(int actualDay) {
-		this.actualDay = actualDay;
-	}
-
-	public Location getActualBeginLocation() {
-		return actualBeginLocation;
-	}
-
-	public void setActualBeginLocation(Location actualBeginLocation) {
-		this.actualBeginLocation = actualBeginLocation;
-	}
-
-	public Location getActualEndLocation() {
-		return actualEndLocation;
-	}
-
-	public void setActualEndLocation(Location actualEndLocation) {
-		this.actualEndLocation = actualEndLocation;
 	}
 
 	public Date getQueueTime() {
@@ -511,5 +424,141 @@ public class Order extends BaseEntity {
 
 	public void setGrade(int grade) {
 		this.grade = grade;
+	}
+
+	public String getFromAddress() {
+		return fromAddress;
+	}
+
+	public void setFromAddress(String fromAddress) {
+		this.fromAddress = fromAddress;
+	}
+
+	public String getToAddress() {
+		return toAddress;
+	}
+
+	public void setToAddress(String toAddress) {
+		this.toAddress = toAddress;
+	}
+
+	public List<DayOrderDetail> getDayDetails() {
+		return dayDetails;
+	}
+
+	public void setDayDetails(List<DayOrderDetail> dayDetails) {
+		this.dayDetails = dayDetails;
+	}
+
+	public float getBeginMile() {
+		return beginMile;
+	}
+
+	public void setBeginMile(float beginMile) {
+		this.beginMile = beginMile;
+	}
+
+	public float getCustomerGetonMile() {
+		return customerGetonMile;
+	}
+
+	public void setCustomerGetonMile(float customerGetonMile) {
+		this.customerGetonMile = customerGetonMile;
+	}
+
+	public float getCustomerGetoffMile() {
+		return customerGetoffMile;
+	}
+
+	public void setCustomerGetoffMile(float customerGetoffMile) {
+		this.customerGetoffMile = customerGetoffMile;
+	}
+
+	public float getEndMile() {
+		return endMile;
+	}
+
+	public void setEndMile(float endMile) {
+		this.endMile = endMile;
+	}
+
+	public float getTotalChargeMile() {
+		return totalChargeMile;
+	}
+
+	public void setTotalChargeMile(float totalChargeMile) {
+		this.totalChargeMile = totalChargeMile;
+	}
+
+	public CarRefuel getRefuel() {
+		return refuel;
+	}
+
+	public void setRefuel(CarRefuel refuel) {
+		this.refuel = refuel;
+	}
+
+	public BigDecimal getRefuelMoney() {
+		return refuelMoney;
+	}
+
+	public void setRefuelMoney(BigDecimal refuelMoney) {
+		this.refuelMoney = refuelMoney;
+	}
+
+	public BigDecimal getWashingFee() {
+		return washingFee;
+	}
+
+	public void setWashingFee(BigDecimal washingFee) {
+		this.washingFee = washingFee;
+	}
+
+	public BigDecimal getParkingFee() {
+		return parkingFee;
+	}
+
+	public void setParkingFee(BigDecimal parkingFee) {
+		this.parkingFee = parkingFee;
+	}
+
+	public BigDecimal getToll() {
+		return toll;
+	}
+
+	public void setToll(BigDecimal toll) {
+		this.toll = toll;
+	}
+
+	public BigDecimal getRoomAndBoardFee() {
+		return roomAndBoardFee;
+	}
+
+	public void setRoomAndBoardFee(BigDecimal roomAndBoardFee) {
+		this.roomAndBoardFee = roomAndBoardFee;
+	}
+
+	public BigDecimal getOtherFee() {
+		return otherFee;
+	}
+
+	public void setOtherFee(BigDecimal otherFee) {
+		this.otherFee = otherFee;
+	}
+
+	public Date getActualBeginDate() {
+		return actualBeginDate;
+	}
+
+	public void setActualBeginDate(Date actualBeginDate) {
+		this.actualBeginDate = actualBeginDate;
+	}
+
+	public Date getActualEndDate() {
+		return actualEndDate;
+	}
+
+	public void setActualEndDate(Date actualEndDate) {
+		this.actualEndDate = actualEndDate;
 	}
 }

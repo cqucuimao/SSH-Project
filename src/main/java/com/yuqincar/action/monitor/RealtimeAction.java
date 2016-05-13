@@ -180,9 +180,9 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		orderVo.setTime(order.getPlanBeginDate().toString());
 		orderVo.setType(order.getServiceType().getTitle());
 		orderVo.setNumber(order.getCar().getPlateNumber());
-		orderVo.setFrom(order.getFromAddress().getDescription());
-		orderVo.setTo(order.getToAddress().getDescription());
-		orderVo.setMiles(new Float(order.getOrderMile()).toString());
+		orderVo.setFrom(order.getFromAddress());
+		orderVo.setTo(order.getToAddress());
+		orderVo.setMiles(new Float(order.getTotalChargeMile()).toString());
 		orderVo.setMoney(order.getOrderMoney().toString());
 		
 		return orderVo;

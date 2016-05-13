@@ -63,7 +63,6 @@ public class CarServiceTypeAction extends BaseAction implements ModelDriven<CarS
 	
 	/** 添加页面 */
 	public String addUI() throws Exception {
-		model.setPersonLimit(4);
 		return "saveUI";
 	}
 	
@@ -105,10 +104,6 @@ public class CarServiceTypeAction extends BaseAction implements ModelDriven<CarS
 		CarServiceType carServiceType = carService.getCarServiceTypeById(model.getId());
 		//设置要修改的属性
 		carServiceType.setTitle(model.getTitle());
-		carServiceType.setPricePerKM(model.getPricePerKM());
-		carServiceType.setPricePerDay(model.getPricePerDay());
-		carServiceType.setPersonLimit(model.getPersonLimit());
-		carServiceType.setPriceDescription(model.getPriceDescription());
 		diskFileService.updateDiskFileData(carServiceType.getPicture(), new FileInputStream(getUpload()), uploadFileName);
 		
 		//更新到数据库

@@ -82,13 +82,16 @@
 										<td>
 											<div class="filter">
 												<label class="mr10">
-													<input type="radio" name="radio" value="mileage" checked /><s:property value="tr.getText('order.ChargeModeEnum.MILE')" />
-												</label>
-												<label class="mr10">
-													<input type="radio" name="radio" value="days" /><s:property value="tr.getText('order.ChargeModeEnum.DAY')" />
+													<input type="radio" name="radio" value="days" checked /><s:property value="tr.getText('order.ChargeModeEnum.DAY')" />
 												</label>
 												<label class="mr10">
 													<input type="radio" name="radio" value="protocol" /><s:property value="tr.getText('order.ChargeModeEnum.PROTOCOL')" />
+												</label>												
+												<label class="mr10">
+													<input type="radio" name="radio" value="plane"/><s:property value="tr.getText('order.ChargeModeEnum.PLANE')" />
+												</label>												
+												<label class="mr10">
+													<input type="radio" name="radio" value="mileage"/><s:property value="tr.getText('order.ChargeModeEnum.MILE')" />
 												</label>
 											</div>
 										</td>
@@ -97,52 +100,39 @@
 										<th>起止时间<span class="required">*</span></th>
 										<td><input class="Wdate half" type="text"
 											id="planBeginDate" name="planBeginDate"
-											onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})" /> <span
+											onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" /> <span
 											class="filter_days filter_protocol"> - <input
 												class="Wdate half" type="text" id="planEndDate"
 												name="planEndDate"
-												onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})" />
+												onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 										</span></td>
 									</tr>
 									<tr>
-										<th>乘车人数<span class="required">*</span></th>
+										<th>用车类型<span class="required">*</span></th>
 										<td>
-											<input class="inputText" type="text" style="width: 84px;" placeholder="请输入" id="passengerNumber" name="passengerNumber" />
-											<span class="th">用车类型</span>
-												<s:select name="serviceType" id="serviceType" list="serviceTypes" listKey="id" listValue="title" style="width:178px;"></s:select>
-											</td>
+											<s:select name="serviceType" id="serviceType" list="serviceTypes" listKey="id" listValue="title" style="width:178px;"></s:select>
+										</td>
 									</tr>
 									<tr>
 										<th>上车地点<span class="required">*</span></th>
 										<td>
-											<jsp:include page="../addressComponmentAction/addressComponmentMap.jsp">
-												<jsp:param value="0" name="id" />
-												<jsp:param value="true" name="showHistory"/>
-											</jsp:include>
+											<s:textfield class="inputText" type="text" placeholder="上车地点" name="fromAddress" id="fromAddress" />
 										</td>
 									</tr>
-									<tr class="filter_mileage">
+									<tr class="filter_mileage filter_plane">
 										<th>下车地点<span class="required">*</span></th>
 										<td>
-											<jsp:include page="../addressComponmentAction/addressComponmentMap.jsp">
-												<jsp:param value="1" name="id" />
-												<jsp:param value="true" name="showHistory"/>
-											</jsp:include>
+											<s:textfield class="inputText" type="text" placeholder="下车地点" name="toAddress" id="toAddress" />
 										</td>
-									</tr>
-									<tr>
-										<th>估算里程</th>
-										<td><input type="button" class="btn" value="估算" /> <span
-											class="mileage">
-										</span></td>
 									</tr>
 									<tr>
 										<th></th>
 										<td>
 											<s:if test="!fromUpdate">
 												<label><input type="checkbox" class="m10" id="needCopy" name="needCopy"/>复制该订单</label>
-												<input class="inputText" type="text" style="width: 50px;" id="copyNumber" name="copyNumber"	placeholder="数量" /> 份</td>
+												<input class="inputText" type="text" style="width: 50px;" id="copyNumber" name="copyNumber"	placeholder="数量" /> 份
 											</s:if>
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -154,21 +144,11 @@
 							<input class="inputButton floatR" type="button" value="推荐司机"
 								name="getDriver" />
 							<table>
-								<colgroup>
-									<col width="50" />
-									<col />
-									<col width="50" />
-									<col />
-								</colgroup>
 								<tbody>
 								<tr>
-									<th>司机</th>
-									<td><s:textfield class="inputText" id="driverName" type="text" name="driver.name"/>
-										<s:textfield id="driverId" name="driverId" type="hidden"/>
-									</td>
 									<th>车牌号</th>
 									<td>
-										<s:textfield id="car_platenumber" class="inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" />
+										<s:textfield id="carSelector1" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
 										<input class="inputButton" type="button" value="查询" name="button" id="findCar" />
 									</td>
 								</tr>
@@ -192,8 +172,8 @@
 									<thead>
 										<tr>
 											<th></th>
-											<th>姓名</th>
 											<th>车牌号</th>
+											<th>司机</th>
 											<th>联系方式</th>
 										</tr>
 									</thead>
@@ -204,11 +184,24 @@
 								</table>
 							</div>
 						</div>
-						<div class="driverChoice">
-							<div class="note" style="color: red;">
-								<s:property value="errors['selectCarError']" />
-							</div>
-						</div> <textarea style="height:100px;" class="w" name="memo" placeholder="请输入备注信息"></textarea>
+						<div class="editBlock search">
+							<table style="margin-top:10px;">
+								<tbody>
+								<tr>
+									<th>调度的车</th>
+									<td>
+										<s:textfield id="selectCarPlateNumber" name="selectCarPlateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
+									</td>
+									<th>调度的司机</th>
+									<td>
+										<s:textfield class="inputText" id="driverName" type="text" name="driver.name"/>
+								 		<s:textfield id="selectCarDriverId" name="selectCarDriverId" type="hidden"/>
+									</td>
+								</tr>
+								</tbody>
+							</table>                             
+						</div> 
+						<textarea class="w" name="memo" placeholder="请输入备注信息"></textarea>
 						<div class="bottomBar borderT">
 							<input type="button" id="schedule" class="inputButton" value="调度" />
 							<input type="button" id="inQueue" class="inputButton" value="进入队列" />
@@ -235,12 +228,13 @@
 			if("filter_mileage"=="${chargeMode}"){
 				$("input[type=radio][value=mileage]").attr("checked", "checked");
 				$("input[type=radio][value=mileage]").click();
-			}
-			else if("filter_days"=="${chargeMode}"){
+			}else if("filter_plane"=="${chargeMode}"){
+				$("input[type=radio][value=plane]").attr("checked", "checked");
+				$("input[type=radio][value=plane]").click();
+			}else if("filter_days"=="${chargeMode}"){
 				$("input[type=radio][value=days]").attr("checked", "checked");
 				$("input[type=radio][value=days]").click();
-			}
-			else if("filter_protocol"=="${chargeMode}"){
+			}else if("filter_protocol"=="${chargeMode}"){
 				$("input[type=radio][value=protocol]").attr("checked", "checked");
 				$("input[type=radio][value=protocol]").click();
 			}
@@ -257,7 +251,6 @@
 			
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
-			$("#passengerNumber").val("${passengerNumber}");
 			$("#serviceType").find("option[value='${serviceType}']").attr("selected","selected");
 			
 			$("input[type=button][value=进入队列]").hide();
@@ -267,12 +260,13 @@
 			if("filter_mileage"=="${chargeMode}"){
 				$("input[type=radio][value=mileage]").attr("checked", "checked");
 				$("input[type=radio][value=mileage]").click();
-			}
-			else if("filter_days"=="${chargeMode}"){
+			}else if("filter_plane"=="${chargeMode}"){
+				$("input[type=radio][value=plane]").attr("checked", "checked");
+				$("input[type=radio][value=plane]").click();
+			}else if("filter_days"=="${chargeMode}"){
 				$("input[type=radio][value=days]").attr("checked", "checked");
 				$("input[type=radio][value=days]").click();
-			}
-			else if("filter_protocol"=="${chargeMode}"){
+			}else if("filter_protocol"=="${chargeMode}"){
 				$("input[type=radio][value=protocol]").attr("checked", "checked");
 				$("input[type=radio][value=protocol]").click();
 			}
@@ -289,27 +283,15 @@
 			
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
-			$("#passengerNumber").val("${passengerNumber}");
 			$("#serviceType").find("option[value='${serviceType}']").attr("selected","selected");
 			
 			$("#schedule").val("确认修改");
 			$("#inQueue").hide();
 			$("#reset").hide();
 			
-			//$(".driverChoice").empty();
-			$(".driverChoice").append('调度给：'
-							+ '<span class="driverInfo">'
-							+ '<em>'
-							+ '${selectCarDriverName}'
-							+ '</em>'
-							+ '<em>'
-							+ '${selectCarPlateNumber}'
-							+ '</em>'
-							+ '<em>'
-							+ '${selectCarDriverPhone}'
-							+ '</em>'
-							+ '<input type="hidden" id="selectCarId" name="selectCarId" value="${selectCarId}" ></input>'
-							+ '</span>');
+			$("#selectCarPlateNumber").val("selectCarPlateNumber");
+			$("#driverName").val("selectCarDriverName");
+			$("#selectCarDriverId").val("selectCarDriverId");
 		}
 	
 	
@@ -357,25 +339,12 @@
 					return false;
 				}
 			}
-			if ($("#passengerNumber").val() == "") {
-				alert("乘车人数不能为空！");
-				return false;
-			}
-			if(isNaN($("#passengerNumber").val())){
-				alert("乘车人数填写有误！");
-				return false;
-			}
 			if ($("#planBeginDate").val() == "") {
 				alert("上车时间不能为空！");
 				return false;
 			}
-			if ($("#0location").val() == ""
-					|| $("#0detailLocation").val() == "") {
+			if ($("#fromAddress").val() == "") {
 				alert("上车地点不能为空！");
-				return false;
-			}
-			if ($("#0lng").val() == "" || $("#0lat").val() == "") {
-				alert("上车地点不能手动输入，请从搜索结果中选取！")
 				return false;
 			}
 			if ($("#chargeMode").val() == "filter_days"
@@ -390,59 +359,20 @@
 					return false;
 				}
 			}
-			if ($("#chargeMode").val() == "filter_mileage") {
-				if (($("#1location").val() == "" || $("#1detailLocation").val() == "")) {
+
+			if ($("#chargeMode").val() == "filter_mileage" || $("#chargeMode").val() == "filter_plane") {
+				if ($("#toAddress").val() == "") {
 					alert("下车地点不能为空!");
-					return;
-				}
-				if ($("#1lng").val() == "" || $("#1lat").val() == "") {
-					alert("下车地点不能手动输入，请从搜索结果中选取！")
+					return false;
 				}
 			}
 			return true;
 		}
 
 		function checkDriver() {
-			if($("#selectCarId").length==0){
+			if($("#selectCarPlateNumber").val()==""){
 				alert("还没有选择调度的车辆！");
 				return false;
-			}
-			return true;
-		}
-
-		function checkEstimate() {
-			if ($("#chargeMode").val() == "filter_mileage") {
-				if ($("#0location").val() == ""
-						|| $("#0detailLocation").val() == "") {
-					alert("上车地点不能为空！");
-					return false;
-				}
-				if ($("#0lng").val() == "" || $("#0lat").val() == "") {
-					alert("上车地点不能手动输入，请从搜索结果中选取！")
-					return false;
-				}
-				if (($("#1location").val() == "" || $("#1detailLocation").val() == "")) {
-					alert("下车地点不能为空!");
-					return;
-				}
-				if ($("#1lng").val() == "" || $("#1lat").val() == "") {
-					alert("下车地点不能手动输入，请从搜索结果中选取！")
-				}
-			} else if ($("#chargeMode").val() == "filter_days"
-					|| $("#chargeMode").val() == "filter_protocol") {
-				if ($("#planBeginDate").val() == "") {
-					alert("上车时间不能为空！");
-					return false;
-				}
-				if ($("#planEndDate").val() == "") {
-					alert("下车时间不能为空！");
-					return false;
-				}
-				if (!checkEndTime($("#planBeginDate").val(), $("#planEndDate")
-						.val())) {
-					alert("下车时间晚于了上车时间！")
-					return false;
-				}
 			}
 			return true;
 		}
@@ -464,7 +394,7 @@
 					return false;
 				}
 			}
-			if($("#driverName").val()=="" && $("#car_platenumber").val()==""){
+			if($("#carSelectorId1").val()==""){
 				alert("必须输入至少一个查询条件！");
 				return false;
 			}
@@ -476,13 +406,8 @@
 				alert("上车时间不能为空！");
 				return false;
 			}
-			if ($("#0location").val() == ""
-					|| $("#0detailLocation").val() == "") {
+			if ($("#fromAddress").val() == "") {
 				alert("上车地点不能为空！");
-				return false;
-			}
-			if ($("#0lng").val() == "" || $("#0lat").val() == "") {
-				alert("上车地点不能手动输入，请从搜索结果中选取！")
 				return false;
 			}
 			if ($("#chargeMode").val() == "filter_days"
@@ -651,8 +576,7 @@
 			$(".inputButton[value=进入队列]").click(
 					function() {
 						if (checkMain())
-							$("#myForm").attr("action",
-									"schedule_inQueue.action").submit();
+							$("#myForm").attr("action","schedule_inQueue.action").submit();
 					});
 			$(".inputButton[value=重置]").click(
 					function() {
@@ -669,27 +593,26 @@
 							var chargeMode = $("#chargeMode").val();
 							var planBeginDate = $("#planBeginDate").val();
 							var planEndDate = $("#planEndDate").val();
-							var selectCarId = $("#selectCarId").val();
+							var selectCarPlateNumber = $("#selectCarPlateNumber").val();
+							var selectCarDriverId = $("#selectCarDriverId").val();
 							var serviceType = $("#serviceType").val();
-							var passengerNumber = $("#passengerNumber").val();
 							var scheduleFromUpdateOrderId = $("#scheduleFromUpdateOrderId").val();
 							$.ajax({
-								url : 'schedule_isCarAvailable.action',// 跳转到 action  
+								url : 'schedule_isCarAndDriverAvailable.action',// 跳转到 action  
 								data : {
 								chargeMode : chargeMode,
 								planBeginDate : planBeginDate,
 								planEndDate : planEndDate,
 								serviceType : serviceType,
-								selectCarId : selectCarId,
-								passengerNumber : passengerNumber,
+								selectCarPlateNumber : selectCarPlateNumber,
+								selectCarDriverId : selectCarDriverId,
 								scheduleFromUpdateOrderId : scheduleFromUpdateOrderId
 								},
 								type : 'post',
 								dataType : 'json',
 								success : function(data) {
 									if (data.result == 0) {
-										$("#myForm").attr("action",
-										"schedule_startSchedule.action").submit();
+										$("#myForm").attr("action","schedule_startSchedule.action").submit();
 									} else if (data.result == 1) {
 										alert("订单已经被调度");
 									} else if (data.result == 2) {
@@ -715,328 +638,151 @@
 							
 						}
 					});
-			$(".btn[value=估算]").click(
-					function() {
-						if (!checkEstimate())
+			$('input[name="getDriver"]').click(
+					function(x) {
+						if (!checkRecommend())
 							return;
 						var chargeMode = $("#chargeMode").val();
+						var serviceType = $("#serviceType").val();
 						var planBeginDate = $("#planBeginDate").val();
 						var planEndDate = $("#planEndDate").val();
-						var serviceType = $("#serviceType").val();
-						var lng0 = $("#0lng").val();
-						var lat0 = $("#0lat").val();
-						var lng1 = $("#1lng").val();
-						var lat1 = $("#1lat").val();
-						var selectCarId=$("#selectCarId").val();
 						$.ajax({
-							url : 'schedule_estimate.action',// 跳转到 action  
+							url : 'schedule_getRecommandDriver.action',// 跳转到 action  
 							data : {
-							chargeMode : chargeMode,
-							planBeginDate : planBeginDate,
-							planEndDate : planEndDate,
-							serviceType : serviceType,
-							lng0 : lng0,
-							lat0 : lat0,
-							lng1 : lng1,
-							lat1 : lat1,
-							selectCarId : selectCarId
-							},
+										chargeMode : chargeMode,
+										serviceType : serviceType,
+										planBeginDate : planBeginDate,
+										planEndDate : planEndDate
+									},
 							type : 'post',
 							dataType : 'json',
 							success : function(data) {
-								$(".mileage").html("&nbsp;&nbsp;&nbsp;&nbsp;￥"+data.money);
+								var header = $("#carInfoHeader");
+								//填充表头
+								$(".dataGrid").find("thead").find('th[class="alignCenter"]').remove();
+				    			jQuery.each(data[0].carInfo,function(i, val){
+									$(".dataGrid").find("thead").find("tr").append('<th class="alignCenter">'+ i+ '</th>');
+								});
+								//填充数据项
+								$(".tableHover").find("td").remove();
+								for (var i = 0; i < data.length; i++) {
+									$(".tableHover").append('<tr>');
+									$(".tableHover").append('<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
+									if (typeof (data[i].driverName) != "undefined") {
+										$(".tableHover").append('<td>'+ data[i].driverName + '</td>');
+										$(".tableHover").append("<input type='hidden'>" + data[i].driverId + "</input>")
+									}else{
+										$(".tableHover").append('<td></td>');
+										$(".tableHover").append("<input type='hidden'></input>");
+									}
+									if (typeof (data[i].carNumber) != "undefined") {
+										$(".tableHover").append('<td>'+ data[i].carNumber+ '</td>');
+									} else {
+										$(".tableHover").append('<td></td>');
+									}
+									if (typeof (data[i].phone) != "undefined") {
+										$(".tableHover").append('<td>'+ data[i].phone+ '</td>');
+									} else {
+										$(".tableHover").append('<td></td>');
+									}
+									jQuery.each(data[i].carInfo,function(date,val) {
+										if (val == 0) {
+											$(".tableHover").append('<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
+										} else if (val == 1) {
+											$(".tableHover").append('<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
+										} else if (val == 2) {
+											$(".tableHover").append('<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
+										} else if (val == 3) {
+											$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
+										} else {
+											$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
+										}
+									});
+									$(".tableHover").append('</tr>');
+								}
+								console.log(data);
 							},
-							error : function(msg) {  			         
-						    	console.log("异常"+msg);  
-						    } 
+							error : function(data) {
+								console.log(data);
+							}
 						});
-					});
-			$('input[name="getDriver"]')
-					.click(
-							function(x) {
-								if (!checkRecommend())
-									return;
-								var chargeMode = $("#chargeMode").val();
-								var serviceType = $("#serviceType").val();
-								var lng = $("#0lng").val();
-								var lat = $("#0lat").val();
-								var planBeginDate = $("#planBeginDate").val();
-								var planEndDate = $("#planEndDate").val();
-								$
-										.ajax({
-											url : 'schedule_getRecommandDriver.action',// 跳转到 action  
-											data : {
-												chargeMode : chargeMode,
-												serviceType : serviceType,
-												lng0 : lng,
-												lat0 : lat,
-												planBeginDate : planBeginDate,
-												planEndDate : planEndDate
-											},
-											type : 'post',
-											dataType : 'json',
-											success : function(data) {
-												var header = $("#carInfoHeader");
-												//填充表头
-												$(".dataGrid").find("thead").find('th[class="alignCenter"]').remove();
-				    							jQuery
-														.each(
-																data[0].carInfo,
-																function(i, val) {
-																	$(
-																			".dataGrid")
-																			.find(
-																					"thead")
-																			.find(
-																					"tr")
-																			.append(
-																					'<th class="alignCenter">'
-																							+ i
-																							+ '</th>');
-																});
-												//填充数据项
-												$(".tableHover").find("td")
-														.remove();
-												for (var i = 0; i < data.length; i++) {
-													$(".tableHover").append(
-															'<tr>');
-													$(".tableHover")
-															.append(
-																	'<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
-													if (typeof (data[i].driverName) != "undefined") {
-														$(".tableHover")
-																.append(
-																		'<td>'
-																				+ data[i].driverName
-																				+ '</td>');
-													} else {
-														$(".tableHover")
-																.append(
-																		'<td></td>');
-													}
-													if (typeof (data[i].carNumber) != "undefined") {
-														$(".tableHover")
-																.append(
-																		'<td>'
-																				+ data[i].carNumber
-																				+ '</td>');
-													} else {
-														$(".tableHover")
-																.append(
-																		'<td></td>');
-													}
-													if (typeof (data[i].phone) != "undefined") {
-														$(".tableHover")
-																.append(
-																		'<td>'
-																				+ data[i].phone
-																				+ '</td>');
-													} else {
-														$(".tableHover")
-																.append(
-																		'<td></td>');
-													}
-													jQuery
-															.each(
-																	data[i].carInfo,
-																	function(date,
-																			val) {
-																		if (val == 0) {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
-																		} else if (val == 1) {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
-																		} else if (val == 2) {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
-																		} else if (val == 3) {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
-																		} else {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
-																		}
-																	});
-													$(".tableHover").append(
-															'</tr>');
-												}
-												console.log(data);
-											},
-											error : function(data) {
-												console.log(data);
-											}
-										});
+			});
+			$('.tableHover').find("input:radio").live('click',function(x) {
+				var plateNumber = x.target.parentNode.nextElementSibling.innerText;
+				var driverName = x.target.parentNode.nextElementSibling.nextElementSibling.innerText;
+				var driverId = x.target.parentNode.nextElementSibling.nextElementSibling.innerHTML;
+				driverId=driverId.split(";")[1];
+				$("#selectCarPlateNumber").val(plateNumber);
+				$("#driverName").val(driverName);
+				$("#selectCarDriverId").val(driverId);
+			});
 
+			$(".inputButton[id=findCar]").click(function() {
+				if(!checkQueryCar())
+					return;
+				var chargeMode = $("#chargeMode").val();
+				var planBeginDate = $("#planBeginDate").val();
+				var planEndDate = $("#planEndDate").val();
+				var queryCarPlateNumber = $("#carSelector1").val();
+				$.ajax({
+					url : 'schedule_getCar.action',// 跳转到 action  
+					data : {
+								chargeMode : chargeMode,
+								planBeginDate : planBeginDate,
+								planEndDate : planEndDate,
+								queryCarPlateNumber : queryCarPlateNumber
+							},
+					type : 'post',
+					dataType : 'json',
+					success : function(data) {
+						var header = $("#carInfoHeader");
+						//填充表头
+						$(".dataGrid").find("thead").find('th[class="alignCenter"]').remove();
+						jQuery.each(data[0].carInfo,function(i, val) {
+							$(".dataGrid").find("thead").find("tr").append('<th class="alignCenter">'+ i+ '</th>');
+						});
+						//填充数据项
+						$(".tableHover").find("td").remove();
+						for (var i = 0; i < data.length; i++) {
+							$(".tableHover").append('<tr>');
+							$(".tableHover").append('<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
+							if (typeof (data[i].carNumber) != "undefined") {
+								$(".tableHover").append('<td>'+ data[i].carNumber+ '</td>');
+							} else {
+								$(".tableHover").append('<td></td>');
+							}
+							if (typeof (data[i].driverName) != "undefined") {
+								$(".tableHover").append("<td>"+ data[i].driverName + "<input type='hidden' value=';"+data[i].driverId+";'></input></td>");
+							}else{
+								$(".tableHover").append("<td><input type='hidden'></input></td>");
+							}							
+							if (typeof (data[i].phone) != "undefined") {
+								$(".tableHover").append('<td>'+ data[i].phone+ '</td>');
+							} else {
+								$(".tableHover").append('<td></td>');
+							}
+							jQuery.each(data[i].carInfo,function(date,val) {
+								if (val == 0) {
+									$(".tableHover").append('<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
+								} else if (val == 1) {
+									$(".tableHover").append('<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
+								} else if (val == 2) {
+									$(".tableHover").append('<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
+								} else if (val == 3) {
+									$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
+								} else {
+									$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
+								}
 							});
-			$('.tableHover')
-					.find("input:radio")
-					.live(
-							'click',
-							function(x) {
-
-								$(".driverChoice").empty();
-								var driverName = x.target.parentNode.nextElementSibling.innerText;
-								var carNumber = x.target.parentNode.nextElementSibling.nextElementSibling.innerText;
-								var phone = x.target.parentNode.nextElementSibling.nextElementSibling.nextElementSibling.innerText;
-								$(".driverChoice")
-										.append(
-												'调度给：'
-														+ '<span class="driverInfo">'
-														+ '<em>'
-														+ driverName
-														+ '</em>'
-														+ '<em>'
-														+ carNumber
-														+ '</em>'
-														+ '<em>'
-														+ phone
-														+ '</em>'
-														+ '<!-- <i class="icon-delete"></i> -->'
-														+ '<input type="hidden" id="selectCarId" name="selectCarId" value='+x.target.value+' ></input>'
-														+ '</span>');
-							});
-
-			$(".inputButton[id=findCar]")
-					.click(
-							function() {
-								if(!checkQueryCar())
-									return;
-								var chargeMode = $("#chargeMode").val();
-								var planBeginDate = $("#planBeginDate").val();
-								var planEndDate = $("#planEndDate").val();
-								var driverId = $("#driverId").val();
-								var carNumber = $("#car_platenumber").val();
-								$
-										.ajax({
-											url : 'schedule_getCar.action',// 跳转到 action  
-											data : {
-												chargeMode : chargeMode,
-												planBeginDate : planBeginDate,
-												planEndDate : planEndDate,
-												driverId : driverId,
-												carNumber : carNumber
-											},
-											type : 'post',
-											dataType : 'json',
-											success : function(data) {
-												var header = $("#carInfoHeader");
-												//填充表头
-												$(".dataGrid")
-														.find("thead")
-														.find(
-																'th[class="alignCenter"]')
-														.remove();
-												jQuery
-														.each(
-																data[0].carInfo,
-																function(i, val) {
-																	$(
-																			".dataGrid")
-																			.find(
-																					"thead")
-																			.find(
-																					"tr")
-																			.append(
-																					'<th class="alignCenter">'
-																							+ i
-																							+ '</th>');
-																});
-												//填充数据项
-												$(".tableHover").find("td")
-														.remove();
-												for (var i = 0; i < data.length; i++) {
-													$(".tableHover").append(
-															'<tr>');
-													$(".tableHover")
-															.append(
-																	'<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
-													if (typeof (data[i].driverName) != "undefined") {
-														$(".tableHover")
-																.append(
-																		'<td>'
-																				+ data[i].driverName
-																				+ '</td>');
-													} else {
-														$(".tableHover")
-																.append(
-																		'<td></td>');
-													}
-													if (typeof (data[i].carNumber) != "undefined") {
-														$(".tableHover")
-																.append(
-																		'<td>'
-																				+ data[i].carNumber
-																				+ '</td>');
-													} else {
-														$(".tableHover")
-																.append(
-																		'<td></td>');
-													}
-													if (typeof (data[i].phone) != "undefined") {
-														$(".tableHover")
-																.append(
-																		'<td>'
-																				+ data[i].phone
-																				+ '</td>');
-													} else {
-														$(".tableHover")
-																.append(
-																		'<td></td>');
-													}
-													jQuery
-															.each(
-																	data[i].carInfo,
-																	function(date,
-																			val) {
-																		if (val == 0) {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
-																		} else if (val == 1) {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
-																		} else if (val == 2) {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
-																		} else if (val == 3) {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
-																		} else {
-																			$(
-																					".tableHover")
-																					.append(
-																							'<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
-																		}
-																	});
-													$(".tableHover").append(
-															'</tr>');
-												}
-												console.log(data);
-											},
-											error : function(data) {
-												console.log(data);
-											}
-										});
-							});
-
+							$(".tableHover").append('</tr>');
+						}
+						console.log(data);
+					},
+					error : function(data) {
+						console.log(data);
+					}
+				});
+			});
 			filter();
 			$("#otherInfoTD").hide();
 			$("#otherSMSTD").hide();

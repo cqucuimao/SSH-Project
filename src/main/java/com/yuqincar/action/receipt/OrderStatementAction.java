@@ -296,7 +296,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   cell.setColspan(2);
 		   table.addCell (cell);
 		   table.addCell (new Paragraph ("定车地点",font));
-		   cell = new PdfPCell (new Paragraph (orders.get(k).getFromAddress().getDescription(),font));
+		   cell = new PdfPCell (new Paragraph (orders.get(k).getFromAddress(),font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
 		   //表格第3行
@@ -355,7 +355,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   table.addCell (new Paragraph ("回站路码",font));
 		   table.addCell (new Paragraph ("",font));//默认不填
 		   table.addCell (new Paragraph ("合计里程(KM)",font));
-		   table.addCell (new Paragraph (orders.get(k).getActualMile()+"",font));
+		   table.addCell (new Paragraph (orders.get(k).getTotalChargeMile()+"",font));
 		   //表格第17行
 		   table.addCell (new Paragraph ("上车时间",font));
 		   String actualBeginDate = sdf1.format(orders.get(k).getActualBeginDate());

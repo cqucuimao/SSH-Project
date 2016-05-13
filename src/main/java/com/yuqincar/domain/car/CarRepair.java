@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.Text;
 
 /*
@@ -22,7 +23,10 @@ public class CarRepair extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
 	private Car car;	//车辆
-
+	@Text("司机")
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(nullable=false)
+	private User driver;
 	@Text("维修原因")
 	private String reason;	//维修原因
 	
@@ -102,5 +106,11 @@ public class CarRepair extends BaseEntity {
 	}
 	public void setRepairLocation(String repairLocation) {
 		this.repairLocation = repairLocation;
+	}
+	public User getDriver() {
+		return driver;
+	}
+	public void setDriver(User driver) {
+		this.driver = driver;
 	}	
 }

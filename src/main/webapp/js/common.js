@@ -364,8 +364,8 @@ function tabContentShow(){
 function filter(){
 	$(".filter").each(function(){
 		var me = $(this),
-			radio = me.find("input:radio");
-			show();
+		radio = me.find("input:radio");
+		show();
 		radio.click(function(){
 			show();
 		});
@@ -377,6 +377,10 @@ function filter(){
 				$(".filter_"+radio.eq(i).val()).hide();
 			} 
 			$("."+checked).show();
+			if(checked=="filter_plane" || checked=="filter_mileage")
+				$("#planBeginDate").attr("onfocus","new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})");
+			else if(checked=="filter_days" || checked=="filter_protocol")
+				$("#planBeginDate").attr("onfocus","new WdatePicker({dateFmt:'yyyy-MM-dd'})");
 		}
 	});
 }
@@ -452,12 +456,14 @@ function setMapH(){
     $(".map").height(h);
 }
 $(function(){
-	$("#car_platenumber").click(function(){
-	    art.dialog.data('car_platenumber', $("#car_platenumber").val()); // 存储数据  
-	    art.dialog.open('car_popup.action',{
-			title: '车辆选择', 
-			width: 300, 
-			height: 530
+	$(".carSelector").each(function (i){
+		$(this).click(function(){
+			art.dialog.data('plateNumber', this.value); 
+			art.dialog.open('car_popup.action?carSelectorId='+this.id,{
+				title: '车辆选择', 
+				width: 300, 
+				height: 530
+			});
 		});
 	});
 	

@@ -13,6 +13,7 @@ import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.monitor.Location;
 import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
@@ -74,10 +75,11 @@ public interface OrderDao extends BaseDao<Order> {
      *          5 车辆在年审 
      *          6 车辆在保养
      *          7 车型不匹配
-     *          8 乘车人数超过限定
+     *          8 司机不可用
+     *          9 队列订单不能被当前用户调度
      *          （2-8是由isCarAvailable返回的）
      */
-    public int scheduleOrder(String scheduleMode,Order order, Car car, User user);
+    public int scheduleOrder(String scheduleMode,Order order, Car car, User driver, User user);
 
     /**
      * 得到队列中的所有订单，并按时间升序排列（距离现在时间较远的排前面）。也就是返回order.status==IN_QUEUE的所有订单。
@@ -85,18 +87,6 @@ public interface OrderDao extends BaseDao<Order> {
      * @return
      */
     public List<Order> getOrderQueue();
-
-    /**
-     * 计算价格。 如果chargeMode==MILE， mile的值必须大于等于0，days没有意义。
-     * 如果chargeMode==DAY，days的值必须大于等于1，mile没有意义。
-     * 
-     * @param serviceType
-     * @param mile
-     * @param days
-     * @return 价格
-     */
-    public BigDecimal calculateOrderMoney(CarServiceType serviceType, ChargeModeEnum chargeMode,
-                                          double mile, int days);
     
     /**
      * 按照距离location最近的直线距离升序排序的业务点列表
@@ -112,7 +102,7 @@ public interface OrderDao extends BaseDao<Order> {
      *            分页
      * @return
      */
-    public PageBean getRecommandedCar(CarServiceType serviceType, ChargeModeEnum chargeMode,Location location,
+    public PageBean getRecommandedCar(CarServiceType serviceType, ChargeModeEnum chargeMode,
                                       Date planBeginDate, Date planEndDate, int pageNum);
 
     public Order getOrderById(long id);
@@ -166,9 +156,9 @@ public interface OrderDao extends BaseDao<Order> {
      *          5 车辆在年审 
      *          6 车辆在保养
      *          7 车型不匹配
-     *          8 乘车人数超过限定
+     *          8 司机有其它订单任务
      */
-	public int isCarAvailable(Order order, Car car);
+	public int isCarAndDriverAvailable(Order order, Car car, User driver);
 	
 	/**
 	 * 
@@ -185,5 +175,7 @@ public interface OrderDao extends BaseDao<Order> {
 
 	public boolean canDistributeOrderToUser(User user);
 	
-	public Order getOrderDistributed(User user);
+	public Order getOrderDistributed(User user);	
+	
+	public DayOrderDetail getDayOrderDetailByDate(Order order,Date date);
 }

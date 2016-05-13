@@ -92,8 +92,6 @@ public class Installer {
 		Privilege schedulingMenu=new Privilege("调度","/schedule_scheduling",scheduleMenu);
 		privilegeDao.save(schedulingMenu);
 		privilegeDao.save(new Privilege("","/schedule_getCar",schedulingMenu));
-		privilegeDao.save(new Privilege("","/schedule_map",schedulingMenu));
-		privilegeDao.save(new Privilege("","/schedule_historyAddress",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_getCustomerOrganization",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_getCustomer",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_getPhoneNumber",schedulingMenu));
@@ -101,11 +99,10 @@ public class Installer {
 		privilegeDao.save(new Privilege("","/schedule_getOtherPhoneNumbers",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_getChargeModeString",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_inQueue",schedulingMenu));
-		privilegeDao.save(new Privilege("","/schedule_isCarAvailable",schedulingMenu));
+		privilegeDao.save(new Privilege("","/schedule_isCarAndDriverAvailable",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_isOrderDeprived",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_showDeprived",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_startSchedule",schedulingMenu));
-		privilegeDao.save(new Privilege("","/schedule_estimate",schedulingMenu));
 		privilegeDao.save(new Privilege("","/schedule_getRecommandDriver",schedulingMenu));
 		
 		Privilege queueMenu=new Privilege("待调度队列","/schedule_queue",scheduleMenu);
@@ -127,10 +124,6 @@ public class Installer {
 		privilegeDao.save(new Privilege("","/order_rescheduleDo",orderMenu));
 		privilegeDao.save(new Privilege("","/order_postpone",orderMenu));
 		privilegeDao.save(new Privilege("","/order_postponeDo",orderMenu));
-		privilegeDao.save(new Privilege("","/order_modifyMile",orderMenu));
-		privilegeDao.save(new Privilege("","/order_modifyMileDo",orderMenu));
-		privilegeDao.save(new Privilege("","/order_modifyMoney",orderMenu));
-		privilegeDao.save(new Privilege("","/order_modifyMoneyDo",orderMenu));
 		privilegeDao.save(new Privilege("","/order_info",orderMenu));
 		privilegeDao.save(new Privilege("","/order_protocolOrderRemind",orderMenu));
 		privilegeDao.save(new Privilege("","/order_unAcceptedOrderRemind",orderMenu));

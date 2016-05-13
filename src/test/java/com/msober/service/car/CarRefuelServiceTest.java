@@ -38,14 +38,12 @@ public class CarRefuelServiceTest extends BaseTest {
 		CarRefuel carRefuel = new CarRefuel();
 		carRefuel.setCar(carService.getCarById(2L));
 		carRefuel.setDate(date);
-		carRefuel.setMemo("今天你加油了吗？");
 		carRefuel.setMoney(new BigDecimal(800));
 		carRefuelService.saveCarRefuel(carRefuel);
 		
 		CarRefuel carRefuel2 = carRefuelService.getCarRefuelById(carRefuel.getId());
 		assertEquals(carRefuel2.getCar().getId().longValue(), 2L);
 		assertEquals(carRefuel2.getDate(), date);
-		assertEquals(carRefuel2.getMemo(), "今天你加油了吗？");
 		assertEquals(carRefuel2.getMoney().intValue(), 800);
 	}
 	

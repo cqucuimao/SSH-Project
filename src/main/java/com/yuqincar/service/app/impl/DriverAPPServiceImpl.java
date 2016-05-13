@@ -1,6 +1,5 @@
 package com.yuqincar.service.app.impl;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yuqincar.dao.lbs.LBSDao;
 import com.yuqincar.dao.monitor.APPRemindMessageDao;
 import com.yuqincar.dao.monitor.LocationDao;
+import com.yuqincar.dao.order.DayOrderDetailDao;
 import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.domain.common.DiskFile;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.monitor.Location;
 import com.yuqincar.domain.order.APPRemindMessage;
 import com.yuqincar.domain.order.ChargeModeEnum;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
@@ -40,6 +41,8 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 	private LBSDao lbsDao;
 	@Autowired
 	private LocationDao locationDao;
+	@Autowired
+	private DayOrderDetailDao dayOrderDetailDao;
 	@Autowired
 	private SMSService smsService;
 	@Autowired
@@ -104,10 +107,10 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			params.put("driverName", order.getDriver().getName());
 			params.put("plateNumber", order.getCar().getPlateNumber());
 			params.put("driverPhoneNumber", order.getDriver().getPhoneNumber());
-			params.put("fromAddress", order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）");
+			params.put("fromAddress", order.getFromAddress());
 			if(order.getChargeMode()==ChargeModeEnum.MILE){
 				params.put("planBeginDate", DateUtils.getYMDHMString(order.getPlanBeginDate()));
-				params.put("toAddress", order.getToAddress().getDescription()+"（"+order.getToAddress().getDetail()+"）");
+				params.put("toAddress", order.getToAddress());
 				if(order.getOrderSource()!=OrderSourceEnum.APP)
 					smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
 				if(order.isCallForOther() && order.isCallForOtherSendSMS())
@@ -155,15 +158,6 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			return 1;
 		}
 		order.setActualBeginDate(new Date());
-		
-		String sn =  order.getCar().getDevice().getSN();
-		
-		Location actualBeginLocation = lbsDao.getCurrentLocation(sn);
-		locationDao.save(actualBeginLocation);
-
-		order.setActualBeginLocation(actualBeginLocation);
-		order.setActualBeginMile(lbsDao.getCurrentMile(sn));
-		
 		orderDao.update(order);
 		return 0;
 	}
@@ -194,30 +188,12 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		Location endLocation = lbsDao.getCurrentLocation(sn);
 		locationDao.save(endLocation);
 		
-		order.setActualEndLocation(endLocation);
-		order.setActualEndMile(lbsDao.getCurrentMile(sn));
 		//设置结束时间
 		Date now = new Date();
 		order.setActualEndDate(now);
 		
-		order.setActualMile(lbsDao.getStepMile(sn, order.getActualBeginDate().getTime()+"", now.getTime()+""));
-		int actualDay = DateUtils.elapseDays(order.getActualBeginDate(), order.getActualEndDate(),true,true);
-		order.setActualDay(actualDay);
-		order.setActualMoney(orderDao.calculateOrderMoney(order.getServiceType(), order.getChargeMode(), order.getActualMile(), order.getActualDay()));
+		//TODO 计算每一个计价周期的价格，并汇总总价格
 		
-		if(order.getChargeMode().equals(ChargeModeEnum.MILE)) {
-			if(order.getOrderMile()==0){
-				order.setOrderMile(order.getActualMile());
-				order.setOrderMoney(order.getActualMoney());
-			}				
-		} else if(order.getChargeMode().equals(ChargeModeEnum.DAY) 
-				|| order.getChargeMode().equals(ChargeModeEnum.PROTOCOL)) {	//设置实际天数
-			order.setOrderMile(order.getActualMile());
-			if(order.getOrderMoney()==null || 
-					order.getOrderMoney().compareTo(new BigDecimal(0))==0)
-				order.setOrderMoney(order.getActualMoney());
-		}
-
 		orderDao.update(order);
 		return 0;
 	}
@@ -260,34 +236,36 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		queryHelper.addOrderByProperty("planEndDate", false);
 	
 		PageBean<Order> pageBean = orderDao.getPageBean(pageNum, queryHelper);
-		
-		List<Order> recordList = pageBean.getRecordList();
-		int sumActualMile = 0;
-		int sumActualDay = 0;
-		for(Order o : recordList) {
-			sumActualMile += o.getActualMile();
-			sumActualDay += o.getActualDay();
-		}
-		
-		map.put("sumActualMile", sumActualMile);
-		map.put("sumActualDay", sumActualDay);
 		map.put("pageBean", pageBean);
 		return map;
-	}
-	
-	public static void main(String[] args) {
-		
-		System.out.println(new DriverAPPServiceImpl().queryEndOrder(1, null, null, null));
 	}
 
 	public Order getDoneOrderDetailById(Long orderId) {
 		return orderDao.getDoneOrderDetailById(orderId);
 	}
 
-	public Order getBeginOrder(User user) {
-		
+	public Order getBeginOrder(User user) {		
 		return orderDao.getBeginOrder(user);
 	}
-	
-	
+
+	@Transactional
+	public void customerGeton(Order order){
+		DayOrderDetail dayOrderDetail=new DayOrderDetail();
+		dayOrderDetail.setOrder(order);
+		dayOrderDetail.setGetonDate(new Date());
+		dayOrderDetailDao.save(dayOrderDetail);
+		
+		order.setStatus(OrderStatusEnum.GETON);
+		orderDao.update(order);
+	}
+
+	@Transactional
+	public void customerGetoff(Order order){
+		DayOrderDetail dayOrderDetail=dayOrderDetailDao.getUngetoffDayOrderDetail(order);
+		dayOrderDetail.setGetoffDate(new Date());
+		dayOrderDetailDao.update(dayOrderDetail);
+		
+		order.setStatus(OrderStatusEnum.GETOFF);
+		orderDao.update(order);
+	}
 }

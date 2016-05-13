@@ -11,6 +11,10 @@ public enum OrderStatusEnum {
 	ACCEPTED, //接受，下一步是BEGIN
 	@Text("已开始")
 	BEGIN,	//已开始
+	@Text("客户已上车")
+	GETON,
+	@Text("客户已下车")
+	GETOFF,
 	@Text("已结束")
 	END,	//已结束
 	@Text("已付费")

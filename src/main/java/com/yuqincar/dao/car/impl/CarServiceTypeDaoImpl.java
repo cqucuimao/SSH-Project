@@ -26,4 +26,8 @@ public class CarServiceTypeDaoImpl extends BaseDaoImpl<CarServiceType> implement
 			return true;
 		}
 	
+	public CarServiceType getCarServiceTypeByTitle(String title){
+		return (CarServiceType)getSession().createQuery("from CarServiceType where title=?").
+				setParameter(0, title).uniqueResult();
+	}
 }

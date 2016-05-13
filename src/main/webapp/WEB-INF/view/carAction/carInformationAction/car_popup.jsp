@@ -87,7 +87,7 @@
                    	}
                 }
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById('car_platenumber');
+            	var input = origin.document.getElementById("${carSelectorId}");
             	console.info(input);
             	input.value = newVal;
             	input.select();
@@ -96,7 +96,7 @@
             
             $("#clear").click(function(){
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById('car_platenumber');
+            	var input = origin.document.getElementById("${carSelectorId}");
             	input.value = "";
             	input.select();
             	art.dialog.close();

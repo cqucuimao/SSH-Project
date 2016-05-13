@@ -294,10 +294,10 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 				tvo.setPhoneNumber(order.getPhone());
 				tvo.setChargeMode(order.getChargeMode()==ChargeModeEnum.MILE ? "按里程计费" : "按天计费");
 				if(order.getChargeMode()==ChargeModeEnum.MILE){
-					tvo.setAddress("从 "+order.getFromAddress().getDescription()+" 到 "+order.getToAddress().getDescription());
+					tvo.setAddress("从 "+order.getFromAddress()+" 到 "+order.getToAddress());
 					tvo.setTime(DateUtils.getYMDHMString(order.getPlanBeginDate()));
 				}else{
-					tvo.setAddress(order.getFromAddress().getDescription());
+					tvo.setAddress(order.getFromAddress());
 					tvo.setTime("从 "+DateUtils.getYMDHMString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
 				}
 				tvo.setStatus(order.getStatus().toString());;
@@ -326,52 +326,14 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			_toDate.setTime(toDate);
 			_toDate=DateUtils.getMaxDate(_toDate);
 		}
-		Location location=new Location();
-		location.setLongitude(fromAddressLongitude);
-		location.setLatitude(fromAddressLatitude);
 		List<Car> cars = orderService.getRecommandedCar(
 				carService.getCarServiceTypeById(carServiceTypeId),ChargeModeEnum.fromString(chargeMode),
-				location, _fromDate, _toDate, 1).getRecordList();
+				_fromDate, _toDate, 1).getRecordList();
 				
 		String json = JSON.toJSONString(getCarTaskVOList(cars,_fromDate,_toDate));
 		writeJson(json);
 	}
-	
-	public void estimatePrice(){
-		if(user==null || carServiceTypeId<=0 || chargeMode==null || chargeMode.length()==0 || (!chargeMode.equals("mile") && !chargeMode.equals("day"))
-				|| planBeginDate<=0 || (!chargeMode.equals("mile") && planEndDate<=0) || fromAddressLongitude<=0 || fromAddressLatitude<=0
-				|| (chargeMode.equals("mile") &&(toAddressLongitude<=0 || toAddressLatitude==0))){
-			writeJson("{\"status\":false}");
-			return;
-		}
-		CarServiceType cst = carService.getCarServiceTypeById(carServiceTypeId);
-		ChargeModeEnum cme = ChargeModeEnum.fromString(chargeMode);
-		double mileage = 0;
-		int days = 0;
-		if (cme == ChargeModeEnum.MILE){
-			Location l0=new Location();
-			l0.setLongitude(fromAddressLongitude);
-			l0.setLatitude(fromAddressLatitude);
-			Location l1=new Location();
-			l1.setLongitude(toAddressLongitude);
-			l1.setLatitude(toAddressLatitude);			
-			mileage = orderService.calculatePathDistance(l0,l1);
-		}
-		if (cme == ChargeModeEnum.DAY || cme == ChargeModeEnum.PROTOCOL){
-			Date _fromDate=new Date();
-			_fromDate.setTime(planBeginDate);
-			Date _toDate=new Date();
-			_toDate.setTime(planEndDate);
-			days = DateUtils.elapseDays(_fromDate,_toDate, true, true);
-		}
-		BigDecimal money = orderService.calculateOrderMoney(cst, cme, mileage,
-				days);
 		
-		writeJson("{money:" + money.setScale(1, BigDecimal.ROUND_HALF_UP) + ",quantity:"
-							+(cme==ChargeModeEnum.MILE ? new BigDecimal(mileage).setScale(1,
-									BigDecimal.ROUND_HALF_UP) : days)+"}");
-	}
-	
 	private int SSMOrder(Order order, Order toUpdateOrder, String scheduleMode){
 		ChargeModeEnum chargeModeEnum = ChargeModeEnum.fromString(chargeMode);
 		CarServiceType carServiceType = null;
@@ -389,7 +351,6 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			order.setPlanEndDate(endDate);
 		}
 		carServiceType = carService.getCarServiceTypeById(carServiceTypeId);
-		order.setPassengerNumber(passengerNumber);
 		order.setPhone(phoneNumber);
 		
 		if(order.getOrderMoney()==null)
@@ -397,25 +358,7 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		if(order.getCreateTime()==null)
 			order.setCreateTime(new Date());
 		
-		List<Address> addresses=new ArrayList<Address>(2);
-		Address fromAddress=new Address();
-		fromAddress.setDescription(fromAddressDescription);
-		fromAddress.setDetail(fromAddressDetail);
-		fromAddress.setLocation(new Location());
-		fromAddress.getLocation().setLongitude(fromAddressLongitude);
-		fromAddress.getLocation().setLatitude(fromAddressLatitude);
-		addresses.add(fromAddress);
-		if (order.getChargeMode()==ChargeModeEnum.MILE) {
-			Address toAddress=new Address();
-			toAddress.setDescription(toAddressDescription);
-			toAddress.setDetail(toAddressDetail);
-			toAddress.setLocation(new Location());
-			toAddress.getLocation().setLongitude(toAddressLongitude);
-			toAddress.getLocation().setLatitude(toAddressLatitude);
-			addresses.add(toAddress);
-		}
 		order.setMemo(memo);
-		order.setOrderMile(0L);
 		
 		int result = 0;
 		String str=null;
@@ -426,7 +369,8 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			str=OrderService.SCHEDULE_FROM_QUEUE;
 		else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE))
 			str=OrderService.SCHEDULE_FROM_UPDATE;
-		result = orderService.scheduleOrder(str, order,customerOrganization,customer,addresses, car,copyOrderCount,toUpdateOrder,user);
+		//TODO
+		//result = orderService.scheduleOrder(str, order,customerOrganization,customer,car,copyOrderCount,toUpdateOrder,user);
 		return result;
 	}
 	
@@ -463,7 +407,6 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			toUpdateOrder.setChargeMode(order.getChargeMode());
 			toUpdateOrder.setPlanBeginDate(order.getPlanBeginDate());
 			toUpdateOrder.setPlanEndDate(order.getPlanEndDate());
-			toUpdateOrder.setPassengerNumber(order.getPassengerNumber());
 			toUpdateOrder.setServiceType(order.getServiceType());
 			toUpdateOrder.setFromAddress(order.getFromAddress());
 			toUpdateOrder.setToAddress(order.getToAddress());
@@ -512,7 +455,6 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		}
 		CarServiceType carServiceType = carService.getCarServiceTypeById(carServiceTypeId);
 		order.setServiceType(carServiceType);
-		order.setPassengerNumber(passengerNumber);
 		order.setPhone(phoneNumber);
 		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
@@ -535,10 +477,9 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			addresses.add(toAddress);
 		}
 		order.setMemo(memo);
-		order.setOrderMile(0L);
 		order.setCreateTime(new Date());
 		order.setOrderSource(OrderSourceEnum.SCHEDULER);
-		orderService.EnQueue(order,addresses,null,copyOrderCount);
+		orderService.EnQueue(order,null,copyOrderCount);
 	}
 	
 	public void getOrdersInQueue(){
@@ -582,19 +523,14 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			ovo.setChargeMode("protocol");
 			break;
 		}
-		ovo.setPassengerNumber(order.getPassengerNumber());
 		ovo.setPlanBeginDate(order.getPlanBeginDate().getTime());
 		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
 			ovo.setPlanEndDate(order.getPlanEndDate().getTime());
-		ovo.setFromAddressDescription(order.getFromAddress().getDescription());
-		ovo.setFromAddressDetail(order.getFromAddress().getDetail());
-		ovo.setFromAddressLongitude(order.getFromAddress().getLocation().getLongitude());
-		ovo.setFromAddressLatitude(order.getFromAddress().getLocation().getLatitude());
+		ovo.setFromAddressDescription(order.getFromAddress());
+		ovo.setFromAddressDetail(order.getFromAddress());
 		if(order.getChargeMode()==ChargeModeEnum.MILE){
-			ovo.setToAddressDescription(order.getToAddress().getDescription());
-			ovo.setToAddressDetail(order.getToAddress().getDetail());
-			ovo.setToAddressLongitude(order.getToAddress().getLocation().getLongitude());
-			ovo.setToAddressLatitude(order.getToAddress().getLocation().getLatitude());
+			ovo.setToAddressDescription(order.getToAddress());
+			ovo.setToAddressDetail(order.getToAddress());
 		}
 		ovo.setMemo(order.getMemo());
 		return ovo;
@@ -712,7 +648,6 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		ovvo.setCustomerOrganization(order.getCustomerOrganization().getName());
 		ovvo.setCustomer(order.getCustomer().getName());
 		ovvo.setChargeMode(order.getChargeMode().toString());
-		ovvo.setPassengerNumber(order.getPassengerNumber());
 		ovvo.setCarServiceType(order.getServiceType().getTitle());
 		ovvo.setStatus(order.getStatus().toString());
 		if(order.getChargeMode()==ChargeModeEnum.MILE)
@@ -723,9 +658,9 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			ovvo.setActualDate(DateUtils.getYMDHMString(order.getActualBeginDate())+ " 至 " + DateUtils.getYMDHMString(order.getActualEndDate()));
 		else
 			ovvo.setActualDate(null);
-		ovvo.setFromAddress(order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）");
+		ovvo.setFromAddress(order.getFromAddress());
 		if(order.getChargeMode()==ChargeModeEnum.MILE)
-			ovvo.setToAddress(order.getToAddress().getDescription()+"（"+order.getToAddress().getDetail()+"）");
+			ovvo.setToAddress(order.getToAddress());
 		else
 			ovvo.setToAddress(null);
 		ovvo.setDriverName(order.getDriver().getName());
@@ -734,8 +669,6 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		ovvo.setScheduleDate(order.getScheduleTime().getTime());
 		ovvo.setScheduler(order.getScheduler().getName());
 		ovvo.setAcceptedDate(order.getAcceptedTime().getTime());
-		ovvo.setActualMile(order.getActualMile());
-		ovvo.setOrderMile(order.getOrderMile());
 		ovvo.setActualMoney(order.getActualMoney());
 		ovvo.setOrderMoney(order.getOrderMoney());
 		ovvo.setMemo(order.getMemo());
@@ -813,21 +746,16 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			omvo.setChargeMode("protocol");
 			break;
 		}
-		omvo.setPassengerNumber(order.getPassengerNumber());
 		omvo.setCarServiceTypeId(order.getServiceType().getId());
 		omvo.setPlanBeginDate(order.getPlanBeginDate().getTime());
 		if(order.getChargeMode()!=ChargeModeEnum.MILE)
 			omvo.setPlanEndDate(order.getPlanEndDate().getTime());
-		omvo.setFromAddressDescription(order.getFromAddress().getDescription());
-		omvo.setFromAddressDetail(order.getFromAddress().getDetail());
-		omvo.setFromAddressLongitude(order.getFromAddress().getLocation().getLongitude());
-		omvo.setFromAddressLatitude(order.getFromAddress().getLocation().getLatitude());
+		omvo.setFromAddressDescription(order.getFromAddress());
+		omvo.setFromAddressDetail(order.getFromAddress());
 		if(order.getChargeMode()==ChargeModeEnum.MILE)
 		{
-			omvo.setToAddressDescription(order.getToAddress().getDescription());
-			omvo.setToAddressDetail(order.getToAddress().getDetail());
-			omvo.setToAddressLongitude(order.getToAddress().getLocation().getLongitude());
-			omvo.setToAddressLatitude(order.getToAddress().getLocation().getLatitude());
+			omvo.setToAddressDescription(order.getToAddress());
+			omvo.setToAddressDetail(order.getToAddress());
 		}
 		omvo.setDriverName(order.getDriver().getName());
 		omvo.setCarPlateNumber(order.getCar().getPlateNumber());
@@ -861,8 +789,9 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		}
 		Order order=orderService.getOrderById(orderId);
 		Car car=carService.getCarById(carId);
-		int result=orderService.orderReschedule(order, car, user, reason);
-		writeJson("{\"status\":"+result+"}");
+		//TODO 需要再传入一个driver
+		//int result=orderService.orderReschedule(order, car, user, reason);
+		//writeJson("{\"status\":"+result+"}");
 	}
 	
 	public void cancelOrder(){

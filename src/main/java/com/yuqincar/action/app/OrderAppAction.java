@@ -203,7 +203,7 @@ public class OrderAppAction extends BaseAction{
 			CarServiceTypeVO cstvo=new CarServiceTypeVO();
 			cstvo.setId(cst.getId().intValue());
 			cstvo.setName(cst.getTitle());
-			cstvo.setPriceDescription(cst.getPriceDescription());
+			//cstvo.setPriceDescription(cst.getPriceDescription());
 			list.add(cstvo);
 		}
 		String json = JSON.toJSONString(list);
@@ -234,54 +234,6 @@ public class OrderAppAction extends BaseAction{
 			return false;
 		else
 			return true;
-	}
-	
-	public void calculatePrice(){
-		System.out.println("in calculatePrice");
-		if(!checkForCalculatePrice()){
-			System.out.println("1");
-			writeJson("{\"status\":\"badParameter\"}");
-			return;
-		}
-		
-		if(!checkPrivilege()){
-			System.out.println("2");
-			writeJson("{\"status\":\"unauthorized\"}");
-			return;
-		}
-
-		System.out.println("3");
-		CarServiceType cst=carService.getCarServiceTypeById(carServiceTypeId);
-		double mileage = 0;
-		int days = 0;
-		ChargeModeEnum cme;
-		if (dayOrder.equals("false")){
-			System.out.println("4");
-			cme=ChargeModeEnum.MILE;
-			
-			Location from=new Location();
-			from.setLongitude(beginAddressLocationLongitude);
-			from.setLatitude(beginAddressLocationLatitude);
-			Location to=new Location();
-			to.setLongitude(endAddressLocationLongitude);
-			to.setLatitude(endAddressLocationLatitude);
-							
-			mileage=orderService.estimateMileage(null, from, to);
-			
-		}else{
-			System.out.println("5");
-			cme=ChargeModeEnum.DAY;
-			days = DateUtils.elapseDays(new Date(beginTime),new Date(endTime), true, true);
-		}
-		BigDecimal money = orderService.calculateOrderMoney(cst, cme, mileage,days);
-
-		System.out.println("6");
-		if (cme == ChargeModeEnum.MILE)
-			writeJson("{\"price\":" + money.setScale(0, BigDecimal.ROUND_HALF_UP).toString() + 
-					",\"quantity\":" + new BigDecimal(mileage).setScale(0,BigDecimal.ROUND_HALF_UP).toString()+"}");
-		else
-			writeJson("{\"price\":" + money.setScale(0, BigDecimal.ROUND_HALF_UP).toString() + 
-					",\"quantity\":" + days + "}");
 	}
 	
 	public void getAllHistoryPassengers(){
@@ -349,7 +301,6 @@ public class OrderAppAction extends BaseAction{
 			order.setPlanEndDate(new Date(endTime));
 		order.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
 		//客户端下单功能中没有指定乘车人数
-		order.setPassengerNumber(1);
 		order.setPhone(phoneNumber);
 		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
@@ -375,12 +326,12 @@ public class OrderAppAction extends BaseAction{
 			addresses.add(toAddress);
 		}
 		order.setMemo("");
-		order.setOrderMile(0L);
+		//order.setOrderMile(0L);
 		order.setCreateTime(new Date());
 		
 		order.setOrderSource(OrderSourceEnum.APP);
 		
-		orderService.EnQueue(order,addresses, null,0);
+		//orderService.EnQueue(order,addresses, null,0);
 		
 		writeJson("{\"status\":true}");
 	}
@@ -472,9 +423,9 @@ public class OrderAppAction extends BaseAction{
 				time.append(" 到 ").append(DateUtils.getYMDHMString(order.getPlanEndDate()));
 			ovo.setTime(time.toString());
 			
-			ovo.setFromAddress(order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）");
+			ovo.setFromAddress(order.getFromAddress());
 			if(order.getChargeMode()==ChargeModeEnum.MILE)
-				ovo.setToAddress(order.getToAddress().getDescription()+"（"+order.getToAddress().getDetail()+"）");
+				ovo.setToAddress(order.getToAddress());
 			
 			if(order.isCallForOther())
 				ovo.setOtherPassenger(order.getOtherPassengerName()+"（"+order.getOtherPhoneNumber()+"）");
@@ -523,9 +474,9 @@ public class OrderAppAction extends BaseAction{
 			time.append(" 到 ").append(DateUtils.getYMDHMString(order.getPlanEndDate()));
 		odvo.setTime(time.toString());
 		
-		odvo.setFromAddress(order.getFromAddress().getDescription()+"（"+order.getFromAddress().getDetail()+"）");
+		odvo.setFromAddress(order.getFromAddress());
 		if(order.getChargeMode()==ChargeModeEnum.MILE)
-			odvo.setToAddress(order.getToAddress().getDescription()+"（"+order.getToAddress().getDetail()+"）");
+			odvo.setToAddress(order.getToAddress());
 		
 		odvo.setCarServiceType(order.getServiceType().getTitle());
 		

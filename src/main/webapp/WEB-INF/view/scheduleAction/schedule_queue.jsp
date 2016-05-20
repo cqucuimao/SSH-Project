@@ -75,10 +75,10 @@
 							<td>${customer.name}</td>
 							<td>${customerOrganization.name}</td>
 							<td>${chargeModeString }</td>
-							<td><s:date name="planBeginDate" format="yyyy-MM-dd HH:mm"/></td>
+							<td>${planBeginDateString }</td>
 							<td>${serviceType.title}</td>
-							<td>${fromAddress.description}</td>
-							<td>${toAddress.description}</td>
+							<td>${fromAddress}</td>
+							<td>${toAddress}</td>
 							<td class="alignCenter">
 								<s:a action="schedule_scheduleFromQueue?scheduleFromQueueOrderId=%{id}"><i class="icon-operate-schedule" title="调度"></i></s:a>
 								<s:a action="schedule_cancelOrder?cancelOrderId=%{id}" onclick="return confirm('确认要取消该订单吗？');"><i class="icon-operate-delete" title="取消"></i></s:a>

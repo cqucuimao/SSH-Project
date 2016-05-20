@@ -7,6 +7,7 @@ package com.yuqincar.service.order.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,6 +24,7 @@ import com.yuqincar.dao.customer.CustomerDao;
 import com.yuqincar.dao.customer.OtherPassengerDao;
 import com.yuqincar.dao.monitor.LocationDao;
 import com.yuqincar.dao.order.AddressDao;
+import com.yuqincar.dao.order.DayOrderDetailDao;
 import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.dao.order.OrderOperationRecordDao;
 import com.yuqincar.domain.car.Car;
@@ -34,6 +36,7 @@ import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.domain.order.DayOrderDetail;
+import com.yuqincar.domain.order.DriverActionVO;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderOperationRecord;
 import com.yuqincar.domain.order.OrderOperationTypeEnum;
@@ -42,6 +45,7 @@ import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.app.APPMessageService;
+import com.yuqincar.service.app.DriverAPPService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.order.WatchKeeperService;
 import com.yuqincar.service.sms.SMSService;
@@ -75,6 +79,9 @@ public class OrderServiceImpl implements OrderService {
 	private OrderOperationRecordDao orderOperationRecordDao;
 	
 	@Autowired
+	private DayOrderDetailDao dayOrderDetailDao;
+	
+	@Autowired
 	private WatchKeeperService watchKeeperService;
 	
 	@Autowired
@@ -82,6 +89,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private APPMessageService appMessageService;
+	
+	@Autowired
+	private DriverAPPService driverAPPService;
 
 	public List<CarServiceType> getAllCarServiceType() {
 		return orderDao.getAllCarServiceType();
@@ -218,7 +228,6 @@ public class OrderServiceImpl implements OrderService {
 			o.setStatus(order.getStatus());
 			List<Address> addresses=new ArrayList<Address>(2);
 			o.setMemo(o.getMemo());
-			o.setCreateTime(new Date());
 			o.setCallForOther(order.isCallForOther());
 			o.setOtherPassengerName(order.getOtherPassengerName());
 			o.setOtherPhoneNumber(order.getOtherPhoneNumber());
@@ -922,5 +931,313 @@ public class OrderServiceImpl implements OrderService {
 
 	public DayOrderDetail getDayOrderDetailByDate(Order order,Date date){
 		return orderDao.getDayOrderDetailByDate(order, date);
+	}
+	
+	private DayOrderDetail getDayOrderDetailById(long id){
+		return dayOrderDetailDao.getById(id);
+	}
+	
+	public boolean canEditDriverAction(Order order){
+		return order.getStatus()==OrderStatusEnum.SCHEDULED || order.getStatus()==OrderStatusEnum.ACCEPTED
+				|| order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETON
+				|| order.getStatus()==OrderStatusEnum.GETOFF || order.getStatus()==OrderStatusEnum.END;
+	}
+	
+	private String getDriverActionVOId(Order order,OrderStatusEnum status, DayOrderDetail dayOrderDetail){
+		StringBuffer sb=new StringBuffer();
+		sb.append(order.getId()).append("-");
+		sb.append(status.getId()).append("-");
+		if(dayOrderDetail!=null)
+			sb.append(dayOrderDetail.getId());
+		else
+			sb.append("0");
+		return sb.toString();
+	}
+	
+	private Order getOrderFromActionVOId(String id){
+		return getOrderById(Long.valueOf(id.split("-")[0]));
+	}
+	
+	private OrderStatusEnum getStatusFromActionVOId(String id){
+		return OrderStatusEnum.getById(Integer.valueOf(id.split("-")[1]));
+	}
+	
+	private DayOrderDetail getDayOrderDetailFromActionVOId(String id){
+		long dodId=Long.valueOf(id.split("-")[2]);
+		if(dodId==0)
+			return null;
+		else
+			return getDayOrderDetailById(dodId);
+	}
+	
+	public List<DriverActionVO> getDriverActions(Order order){
+		List<DriverActionVO> actionList=new LinkedList<DriverActionVO>();
+		switch(order.getStatus()){
+		case CANCELLED:
+		case PAYED:
+			break;
+		case END:
+			DriverActionVO davo=new DriverActionVO();
+			davo.setId(getDriverActionVOId(order,OrderStatusEnum.END,null));
+			davo.setDate(order.getActualEndDate());
+			actionList.add(0,davo);
+		case GETOFF:
+		case GETON:
+			for(int n=order.getDayDetails().size()-1;n>=0;n--){
+				DayOrderDetail dod=order.getDayDetails().get(n);
+				if(dod.getGetoffDate()!=null){
+					davo=new DriverActionVO();
+					davo.setId(getDriverActionVOId(order,OrderStatusEnum.GETOFF,dod));
+					davo.setDate(dod.getGetoffDate());
+					actionList.add(0,davo);
+				}
+				if(dod.getGetonDate()!=null){
+					davo=new DriverActionVO();
+					davo.setId(getDriverActionVOId(order,OrderStatusEnum.GETON,dod));
+					davo.setDate(dod.getGetonDate());
+					actionList.add(0,davo);
+				}
+			}
+		case BEGIN:
+			davo=new DriverActionVO();
+			davo.setId(getDriverActionVOId(order,OrderStatusEnum.BEGIN,null));
+			davo.setDate(order.getActualBeginDate());
+			actionList.add(0,davo);
+		case ACCEPTED:
+			davo=new DriverActionVO();
+			davo.setId(getDriverActionVOId(order,OrderStatusEnum.ACCEPTED,null));
+			davo.setDate(order.getAcceptedTime());
+			actionList.add(0,davo);
+		case SCHEDULED:
+		case INQUEUE:
+			break;
+		}
+		return actionList;
+	}
+	
+	private boolean isDateValidForDriverAction(Date date, Order order, OrderStatusEnum status,DayOrderDetail dod){
+		switch(status){
+		case ACCEPTED:
+			if(date.before(order.getScheduleTime()))
+				return false;
+			if(order.getActualBeginDate()!=null && date.after(order.getActualBeginDate()))
+				return false;
+			break;
+		case BEGIN:
+			if(date.before(order.getAcceptedTime()))
+				return false;
+			if(order.getDayDetails().size()>0 && date.after(order.getDayDetails().get(0).getGetonDate()))
+				return false;
+			break;
+		case GETON:
+			Date date1=null,date2=null;
+			if(dod!=null){//编辑动作时间
+				int index=order.getDayDetails().indexOf(dod);
+				if(index==0)
+					date1=order.getActualBeginDate();
+				else
+					date1=order.getDayDetails().get(index-1).getGetoffDate();
+				if(dod.getGetoffDate()!=null)
+					date2=dod.getGetoffDate();
+			}else{//新建动作
+				if(order.getDayDetails()==null || order.getDayDetails().size()==0)
+					date1=order.getActualBeginDate();
+				else
+					date1=order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate();
+			}
+			if(date.before(date1))
+				return false;
+			if(date2!=null && date.after(date2))
+				return false;
+			break;
+		case GETOFF:
+			date1=null;
+			date2=null;
+			date1=dod.getGetonDate();
+			int index=order.getDayDetails().indexOf(dod);
+			if(index==order.getDayDetails().size()-1){
+				if(order.getActualEndDate()!=null)
+					date2=order.getActualEndDate();
+			}else
+				date2=order.getDayDetails().get(index+1).getGetonDate();
+			if(date.before(date1))
+				return false;
+			if(date2!=null && date.after(date2))
+				return false;
+			break;
+		case END:
+			//TODO 应该考虑结束时间不应该晚于收款时间
+			return date.after(order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate());
+		}
+		return true;
+	}
+	
+	@Transactional
+	public void EditDriverAction(String actionId, Date date, User user){
+		Order order=getOrderFromActionVOId(actionId);
+		OrderStatusEnum status=getStatusFromActionVOId(actionId);
+		DayOrderDetail dod=getDayOrderDetailFromActionVOId(actionId);
+		String description=null;		
+
+		if(!isDateValidForDriverAction(date,order,status,dod))
+			return;
+		
+		if(status==OrderStatusEnum.ACCEPTED){
+			description="将订单接受时间由 "+DateUtils.getYMDHMSString(order.getAcceptedTime())+" 改为了 "+DateUtils.getYMDHMSString(date);
+			order.setAcceptedTime(date);
+			orderDao.update(order);
+		}else if(status==OrderStatusEnum.BEGIN){
+			description="将订单开始时间由 "+DateUtils.getYMDHMSString(order.getActualBeginDate())+" 改为了 "+DateUtils.getYMDHMSString(date);
+			order.setActualBeginDate(date);
+			orderDao.update(order);
+		}else if(status==OrderStatusEnum.GETON){
+			description="将订单上车时间由 "+DateUtils.getYMDHMSString(dod.getGetonDate())+" 改为了 "+DateUtils.getYMDHMSString(date);
+			dod.setGetonDate(date);
+			dayOrderDetailDao.update(dod);
+		}else if(status==OrderStatusEnum.GETOFF){
+			description="将订单下车时间由 "+DateUtils.getYMDHMSString(dod.getGetoffDate())+" 改为了 "+DateUtils.getYMDHMSString(date);
+			dod.setGetoffDate(date);
+			dayOrderDetailDao.update(dod);
+		}else if(status==OrderStatusEnum.END){
+			description="将订单完成时间由 "+DateUtils.getYMDHMSString(order.getActualEndDate())+" 改为了 "+DateUtils.getYMDHMSString(date);
+			order.setActualEndDate(date);
+			orderDao.update(order);
+		}
+		
+		OrderOperationRecord oor=new OrderOperationRecord();
+		oor.setOrder(order);
+		oor.setType(OrderOperationTypeEnum.EDIT_DRIVER_ACTION);
+		oor.setDate(new Date());
+		oor.setUser(user);
+		oor.setDescription(description);
+		orderOperationRecordDao.save(oor);
+	}
+	
+	private boolean canDeleteDriverAction(String actionId){
+		Order order=getOrderFromActionVOId(actionId);
+		List<DriverActionVO> voList=getDriverActions(order);
+		return voList.get(voList.size()-1).getId().equals(actionId);
+	}
+	
+	@Transactional
+	public void deleteDriverAction(String actionId,User user){
+		if(!canDeleteDriverAction(actionId))
+			return;
+		
+		Order order=getOrderFromActionVOId(actionId);
+		OrderStatusEnum status=getStatusFromActionVOId(actionId);
+		DayOrderDetail dod=getDayOrderDetailFromActionVOId(actionId);
+		String description=null;
+		
+		if(status==OrderStatusEnum.ACCEPTED){
+			description="删除“接受”动作，原动作时间： "+DateUtils.getYMDHMSString(order.getAcceptedTime());
+			order.setStatus(OrderStatusEnum.SCHEDULED);
+			order.setAcceptedTime(null);
+			orderDao.update(order);
+		}else if(status==OrderStatusEnum.BEGIN){
+			description="删除“开始”动作，原动作时间： "+DateUtils.getYMDHMSString(order.getActualBeginDate());
+			order.setStatus(OrderStatusEnum.ACCEPTED);
+			order.setActualBeginDate(null);
+			orderDao.update(order);
+		}else if(status==OrderStatusEnum.GETON){
+			description="删除“上车”动作，原动作时间： "+DateUtils.getYMDHMSString(dod.getGetonDate());
+			if(order.getDayDetails().size()==1)
+				order.setStatus(OrderStatusEnum.BEGIN);
+			else
+				order.setStatus(OrderStatusEnum.GETOFF);
+			orderDao.update(order);
+			
+			dayOrderDetailDao.delete(dod.getId());
+		}else if(status==OrderStatusEnum.GETOFF){
+			description="删除“下车”动作，原动作时间： "+DateUtils.getYMDHMSString(dod.getGetoffDate());
+			order.setStatus(OrderStatusEnum.GETON);
+			orderDao.update(order);
+			
+			dod.setGetoffDate(null);
+			dayOrderDetailDao.update(dod);
+		}else if(status==OrderStatusEnum.END){
+			description="删除“结束”动作，原动作时间： "+DateUtils.getYMDHMSString(order.getActualEndDate());
+			order.setStatus(OrderStatusEnum.GETOFF);
+			order.setActualEndDate(null);
+			orderDao.update(order);
+		}
+			
+		OrderOperationRecord oor=new OrderOperationRecord();
+		oor.setOrder(order);
+		oor.setType(OrderOperationTypeEnum.EDIT_DRIVER_ACTION);
+		oor.setDate(new Date());
+		oor.setUser(user);
+		oor.setDescription(description);
+		orderOperationRecordDao.save(oor);
+	}
+	
+	public boolean canAddAcceptAction(Order order){
+		return order.getStatus()==OrderStatusEnum.SCHEDULED;
+	}
+	
+	public boolean canAddBeginAction(Order order){
+		return driverAPPService.canBeginOrder(order);
+	}
+	
+	public boolean canAddGetonAction(Order order){
+		return driverAPPService.canCustomerGeton(order);
+	}
+	
+	public boolean canAddGetoffAction(Order order){
+		return driverAPPService.canCustomerGetoff(order);
+	}
+	
+	public boolean canAddEndAction(Order order){
+		return driverAPPService.canEndOrder(order);
+	}
+	
+	@Transactional
+	public void addAcceptAction(Order order,User user,Date date){
+		if(order.getStatus() == OrderStatusEnum.SCHEDULED) {
+			order.setStatus(OrderStatusEnum.ACCEPTED);
+			order.setAcceptedTime(date);
+			orderDao.update(order);
+			
+			OrderOperationRecord oor=new OrderOperationRecord();
+			oor.setOrder(order);
+			oor.setType(OrderOperationTypeEnum.EDIT_DRIVER_ACTION);
+			oor.setDate(new Date());
+			oor.setUser(user);
+			oor.setDescription("增加了司机“接受”操作，指定的操作时间是："+DateUtils.getYMDHMSString(date));
+			orderOperationRecordDao.save(oor);
+		}
+	}
+	
+	@Transactional
+	public void addBeginAction(Order order,User user,Date date){
+		driverAPPService.orderBegin(order, user, date);
+	}
+	
+	@Transactional
+	public void addGetonAction(Order order,User user,Date date){
+		driverAPPService.customerGeton(order, user, date);
+	}
+	
+	@Transactional
+	public void addGetoffAction(Order order,User user,Date date){
+		driverAPPService.customerGetoff(order, user, date);
+	}
+
+	@Transactional
+	public void addEndAction(Order order,User user,Date date){
+		driverAPPService.orderEnd(order, user, date);
+	}
+	
+	/********************************************
+	 * 编辑派车单
+	 ********************************************/
+	@Transactional
+	public boolean canEditOrderBill(Order order){
+		return order.getStatus()==OrderStatusEnum.END;
+	}
+	
+	@Transactional
+	public void editOrderBill(Order order){
+		
 	}
 }

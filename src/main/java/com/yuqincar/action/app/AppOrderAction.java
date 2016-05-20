@@ -171,7 +171,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order o = orderService.getOrderById(orderId);
-		if (driverAPPService.orderBegin(o) == 0)
+		if (driverAPPService.orderBegin(o,null,null) == 0)
 			this.writeJson("{\"status\":true}");
 		else
 			this.writeJson("{\"status\":false}");
@@ -187,7 +187,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order o = orderService.getOrderById(orderId);
-		if (driverAPPService.orderEnd(o) == 0)
+		if (driverAPPService.orderEnd(o,null,null) == 0)
 			this.writeJson("{\"status\":true}");
 		else
 			this.writeJson("{\"status\":false}");
@@ -283,7 +283,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order order = orderService.getOrderById(orderId);
-		if(order.getStatus()==OrderStatusEnum.ACCEPTED)
+		if(driverAPPService.canBeginOrder(order))
 			writeJson("{\"status\":true}");
 		else
 			writeJson("{\"status\":false}");
@@ -299,7 +299,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order order = orderService.getOrderById(orderId);
-		if(order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETOFF)
+		if(driverAPPService.canEndOrder(order))
 			writeJson("{\"status\":true}");
 		else
 			writeJson("{\"status\":false}");
@@ -315,28 +315,12 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order order = orderService.getOrderById(orderId);
-		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
-			if(order.getStatus()==OrderStatusEnum.BEGIN){
-				writeJson("{\"status\":true}");
-				return;
-			}else{
-				writeJson("{\"status\":false}");
-				return;
-			}
-		}else{			
-			if(order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETOFF){
-				DayOrderDetail dod=orderService.getDayOrderDetailByDate(order, new Date());
-				if(dod!=null){
-					writeJson("{\"status\":false}");
-					return;
-				}else{
-					writeJson("{\"status\":true}");
-					return;
-				}
-			}else{
-				writeJson("{\"status\":false}");
-				return;
-			}
+		if(driverAPPService.canCustomerGeton(order)){
+			writeJson("{\"status\":true}");
+			return;
+		}else{
+			writeJson("{\"status\":false}");
+			return;
 		}
 	}
 	
@@ -350,7 +334,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order order = orderService.getOrderById(orderId);
-		if(order.getStatus()==OrderStatusEnum.GETON)
+		if(driverAPPService.canCustomerGetoff(order))
 			writeJson("{\"status\":true}");
 		else
 			writeJson("{\"status\":false}");
@@ -366,8 +350,11 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order order = orderService.getOrderById(orderId);
-		driverAPPService.customerGeton(order);
-		writeJson("{\"status\":true}");
+		if(driverAPPService.customerGeton(order,null,null)==0)
+			writeJson("{\"status\":true}");
+		else
+			writeJson("{\"status\":false}");
+				
 	}
 	
 	public void customerGetoff(){
@@ -380,8 +367,10 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order order = orderService.getOrderById(orderId);
-		driverAPPService.customerGetoff(order);
-		writeJson("{\"status\":true}");
+		if(driverAPPService.customerGetoff(order,null,null)==0)
+			writeJson("{\"status\":true}");
+		else
+			writeJson("{\"status\":false}");
 	}
 	
 	public void canCustomerSign(){

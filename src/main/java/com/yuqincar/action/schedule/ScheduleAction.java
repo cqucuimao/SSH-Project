@@ -253,6 +253,14 @@ public class ScheduleAction extends BaseAction {
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
 		return orderService.getChargeModeString(order.getChargeMode());
 	}
+	
+	public String getPlanBeginDateString(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+			return DateUtils.getYMDString(order.getPlanBeginDate());
+		else
+			return DateUtils.getYMDHMString(order.getPlanBeginDate());
+	}
 
 	public String inQueue() {
 		System.out.println("in inQueue");
@@ -279,9 +287,13 @@ public class ScheduleAction extends BaseAction {
 		
 		chargeModeEnum = getChargeMode(chargeMode);
 		order.setChargeMode(chargeModeEnum);
-		order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
-		if (order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
-			order.setPlanEndDate(DateUtils.getYMDHM(planEndDate));
+		
+		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL){
+			order.setPlanBeginDate(DateUtils.getYMD(planBeginDate));
+			order.setPlanEndDate(DateUtils.getYMD(planEndDate));
+		}else
+			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
+		
 		order.setFromAddress(fromAddress);
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			order.setToAddress(toAddress);
@@ -290,7 +302,6 @@ public class ScheduleAction extends BaseAction {
 		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
 		order.setMemo(memo);
-		order.setCreateTime(new Date());
 		order.setOrderSource(OrderSourceEnum.SCHEDULER);
 		System.out.println("needCopy="+needCopy);
 		if(needCopy==null || needCopy.equals("off"))
@@ -339,10 +350,11 @@ public class ScheduleAction extends BaseAction {
 		if(scheduleFromUpdateOrderId>0)	//修改订单。
 			order.setId(scheduleFromUpdateOrderId);   //修改订单时，设置id的目的是为了在查询数据库时，把本订单排除在外。
 		order.setChargeMode(getChargeMode(chargeMode));
-		if (planBeginDate != null && planBeginDate.length() > 0)
+		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL){
+			order.setPlanBeginDate(DateUtils.getYMD(planBeginDate));
+			order.setPlanEndDate(DateUtils.getYMD(planEndDate));
+		}else
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
-		if (order.getChargeMode()!=ChargeModeEnum.MILE && planEndDate != null && planEndDate.length() > 0)
-			order.setPlanEndDate(DateUtils.getYMDHM(planEndDate));
 		order.setServiceType(carService.getCarServiceTypeById(Long
 					.parseLong(serviceType)));
 		Car car = carService.getCarByPlateNumber(selectCarPlateNumber);

@@ -66,11 +66,11 @@ ${order }
                 </tr>
                 <tr>
                     <th>始发地：</th>
-                    <td>${fromAddress.description }&nbsp;<s:if test="fromAddress!=null">(${fromAddress.detail })</s:if></td>
+                    <td>${fromAddress}&nbsp;</td>
                 </tr>
                 <tr>
                     <th>目的地：</th>
-                    <td>${toAddress.description }&nbsp;<s:if test="toAddress!=null">(${toAddress.detail })</s:if></td>
+                    <td>${toAddress}&nbsp;</td>
                 </tr>                
                 <tr>
                     <th>车牌：</th>

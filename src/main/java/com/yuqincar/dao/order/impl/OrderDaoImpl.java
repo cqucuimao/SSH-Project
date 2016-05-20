@@ -63,7 +63,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		order.setQueueTime(new Date());
 		// 设置订单状态,状态设置为进队列
 		order.setStatus(OrderStatusEnum.INQUEUE);
-		getSession().save(order);
+		save(order);
 	}
 
 	public Order getOrderBySN(String sn) {
@@ -163,7 +163,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			order.setDriver(car.getDriver());
 			order.setScheduler(user);
 			order.setScheduleTime(new Date());
-			getSession().save(order);
+			save(order);
 		}else if(scheduleMode==OrderService.SCHEDULE_FROM_QUEUE){
 			order.setCar(car);
 			order.setDriver(car.getDriver());
@@ -171,12 +171,12 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			order.setScheduler(user);
 			order.setScheduleTime(new Date());
 			order.setScheduling(false);
-			getSession().update(order);
+			update(order);
 		}else if(scheduleMode==OrderService.SCHEDULE_FROM_UPDATE){
 			order.setCar(car);
 			order.setDriver(car.getDriver());
 			order.setScheduler(user);
-			getSession().update(order);
+			update(order);
 		}
 		
 		return 0;
@@ -699,8 +699,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					+ (mm.length() < 2 ? "0" + mm : mm);
 			// 通过createTime判断,降序排列
 			String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by sn*1 desc";
-			Query query = getSession().createQuery(sql).setParameter(0,
-					order.getCreateTime());
+			Query query = getSession().createQuery(sql).setParameter(0,new Date());
 			List list = query.list();
 			if (list.size() == 0) {
 				sn = yearMonth + "00001";

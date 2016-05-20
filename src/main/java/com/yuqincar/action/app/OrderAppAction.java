@@ -327,7 +327,6 @@ public class OrderAppAction extends BaseAction{
 		}
 		order.setMemo("");
 		//order.setOrderMile(0L);
-		order.setCreateTime(new Date());
 		
 		order.setOrderSource(OrderSourceEnum.APP);
 		

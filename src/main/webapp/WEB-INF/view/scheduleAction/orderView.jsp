@@ -65,11 +65,11 @@
                     </tr>                    
                     <tr>
                         <th>始发地：</th>
-                        <td>${fromAddress.description }（${fromAddress.detail }）</td>
+                        <td>${fromAddress }（${fromAddress.detail }）</td>
                         <th>目的地：</th>
                         <td>
                         	<s:if test="toAddress!=null">
-                        		${toAddress.description }（${toAddress.detail }）
+                        		${toAddress }（${toAddress.detail }）
                         	</s:if>
                         </td>
                     </tr>

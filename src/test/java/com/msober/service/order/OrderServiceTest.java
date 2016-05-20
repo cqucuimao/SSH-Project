@@ -156,7 +156,6 @@ public class OrderServiceTest extends BaseTest {
 
 		// 2、当月已经有数据
 		Order order3 = orderService.getOrderById(2L);
-		order.setCreateTime(order3.getCreateTime());
 		orderService.EnQueue(order,null,0);
 		Order order4 = orderService.getOrderById(order.getId());
 		Assert.assertTrue(
@@ -684,7 +683,6 @@ public class OrderServiceTest extends BaseTest {
 		order.setOrderMoney(new BigDecimal(120));
 		order.setActualMoney(new BigDecimal(120));
 		order.setStatus(OrderStatusEnum.BEGIN);
-		order.setCreateTime(new Date());
 		order.setOrderSource(OrderSourceEnum.SCHEDULER);
 		order.setCallForOther(false);
 

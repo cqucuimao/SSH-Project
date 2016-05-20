@@ -184,6 +184,9 @@ public class Order extends BaseEntity {
 	
 	@Text("其它费用")
 	private BigDecimal otherFee;
+	
+	@Text("意见及建议")
+	private String options;
 
 	public OrderStatement getOrderStatement() {
 		return orderStatement;
@@ -561,4 +564,12 @@ public class Order extends BaseEntity {
 	public void setActualEndDate(Date actualEndDate) {
 		this.actualEndDate = actualEndDate;
 	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public void setOptions(String options) {
+		this.options = options;
+	}	
 }

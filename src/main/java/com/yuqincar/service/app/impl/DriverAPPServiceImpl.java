@@ -14,6 +14,7 @@ import com.yuqincar.dao.monitor.APPRemindMessageDao;
 import com.yuqincar.dao.monitor.LocationDao;
 import com.yuqincar.dao.order.DayOrderDetailDao;
 import com.yuqincar.dao.order.OrderDao;
+import com.yuqincar.dao.order.OrderOperationRecordDao;
 import com.yuqincar.domain.common.DiskFile;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.monitor.Location;
@@ -21,6 +22,8 @@ import com.yuqincar.domain.order.APPRemindMessage;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.order.OrderOperationRecord;
+import com.yuqincar.domain.order.OrderOperationTypeEnum;
 import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
@@ -47,6 +50,8 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 	private SMSService smsService;
 	@Autowired
 	private APPMessageService appMessageService;
+	@Autowired
+	private OrderOperationRecordDao orderOperationRecordDao;
 	
 	/**
 	 * 获取某个待执行的订单
@@ -138,63 +143,55 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		}
 	}
 	
-	/**
-	 * 司机点击“开始”按钮。
-	 * 1. 设置属性 //这在Action中实现
-	 * 	actualBeginDate
-	 *	actualBeginLocation
-	 *	actualBeginMile
-	 * 2. 设置status为BEGIN
-	 * 3. 需要断言：order.status==SCHEDULED
-	 * @param order
-	 * @return  0	成功
-	 * 			1	失败
-	 */
 	@Transactional
-	public int orderBegin(Order order){
-		if(order.getStatus() == OrderStatusEnum.ACCEPTED)
-			order.setStatus(OrderStatusEnum.BEGIN);
-		else {
+	public int orderBegin(Order order,User user,Date date){
+		if(!canBeginOrder(order))
 			return 1;
-		}
-		order.setActualBeginDate(new Date());
+		
+		order.setStatus(OrderStatusEnum.BEGIN);			
+		if(user!=null && date!=null)
+			order.setActualBeginDate(date);
+		else
+			order.setActualBeginDate(new Date());
 		orderDao.update(order);
+		
+		if(user!=null && date!=null){
+			OrderOperationRecord oor=new OrderOperationRecord();
+			oor.setOrder(order);
+			oor.setType(OrderOperationTypeEnum.EDIT_DRIVER_ACTION);
+			oor.setDate(new Date());
+			oor.setUser(user);
+			oor.setDescription("增加了司机“开始”操作，指定的操作时间是："+DateUtils.getYMDHMSString(date));
+			orderOperationRecordDao.save(oor);
+		}
+		
 		return 0;
 	}
 	
-	/**
-	 * 司机点击“结束”按钮。
-	 * 1. 设置属性
-	 * 	actualEndDate
-	 *	actualEndLocation
-	 *	actualEndMile
-	 *	actualMile(如果chargeMode==MILE)
-	 *	RctualDay(如果chargeMode==DAY)
-	 * 2. 置status为END
-	 * 3. 需要断言：order.status==BEGIN
-	 * @param order
-	 * @return  0	成功
-	 * 			1	失败
-	 */
 	@Transactional
-	public int orderEnd(Order order){
-		if(order.getStatus() == OrderStatusEnum.BEGIN)
-			order.setStatus(OrderStatusEnum.END);
-		else {
+	public int orderEnd(Order order,User user, Date date){
+		if(!canEndOrder(order))
 			return 1;
+
+		order.setStatus(OrderStatusEnum.END);		
+		if(user!=null && date!=null)
+			order.setActualEndDate(date);
+		else
+			order.setActualEndDate(new Date());
+		orderDao.update(order);
+		
+		if(user!=null && date!=null){
+			OrderOperationRecord oor=new OrderOperationRecord();
+			oor.setOrder(order);
+			oor.setType(OrderOperationTypeEnum.EDIT_DRIVER_ACTION);
+			oor.setDate(new Date());
+			oor.setUser(user);
+			oor.setDescription("增加了司机“结束”操作，指定的操作时间是："+DateUtils.getYMDHMSString(date));
+			orderOperationRecordDao.save(oor);
 		}
-		
-		String sn =  order.getCar().getDevice().getSN();		//设备sn
-		Location endLocation = lbsDao.getCurrentLocation(sn);
-		locationDao.save(endLocation);
-		
-		//设置结束时间
-		Date now = new Date();
-		order.setActualEndDate(now);
 		
 		//TODO 计算每一个计价周期的价格，并汇总总价格
 		
-		orderDao.update(order);
 		return 0;
 	}
 	
@@ -249,23 +246,77 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 	}
 
 	@Transactional
-	public void customerGeton(Order order){
+	public int customerGeton(Order order,User user, Date date){
+		if(!canCustomerGeton(order))
+			return 1;
+		
 		DayOrderDetail dayOrderDetail=new DayOrderDetail();
 		dayOrderDetail.setOrder(order);
-		dayOrderDetail.setGetonDate(new Date());
-		dayOrderDetailDao.save(dayOrderDetail);
-		
+		if(user!=null && date!=null)
+			dayOrderDetail.setGetonDate(date);
+		else
+			dayOrderDetail.setGetonDate(new Date());
+		dayOrderDetailDao.save(dayOrderDetail);		
 		order.setStatus(OrderStatusEnum.GETON);
 		orderDao.update(order);
+		
+		if(user!=null && date!=null){
+			OrderOperationRecord oor=new OrderOperationRecord();
+			oor.setOrder(order);
+			oor.setType(OrderOperationTypeEnum.EDIT_DRIVER_ACTION);
+			oor.setDate(new Date());
+			oor.setUser(user);
+			oor.setDescription("增加了司机“客户上车”操作，指定的操作时间是："+DateUtils.getYMDHMSString(date));
+			orderOperationRecordDao.save(oor);
+		}
+		
+		return 0;
 	}
 
 	@Transactional
-	public void customerGetoff(Order order){
-		DayOrderDetail dayOrderDetail=dayOrderDetailDao.getUngetoffDayOrderDetail(order);
-		dayOrderDetail.setGetoffDate(new Date());
-		dayOrderDetailDao.update(dayOrderDetail);
+	public int customerGetoff(Order order,User user, Date date){
+		if(!canCustomerGetoff(order))
+			return 1;
 		
+		DayOrderDetail dayOrderDetail=dayOrderDetailDao.getUngetoffDayOrderDetail(order);
+		if(user!=null && date!=null)
+			dayOrderDetail.setGetoffDate(date);
+		else
+			dayOrderDetail.setGetoffDate(new Date());
+		dayOrderDetailDao.update(dayOrderDetail);		
 		order.setStatus(OrderStatusEnum.GETOFF);
 		orderDao.update(order);
+		
+		if(user!=null && date!=null){
+			OrderOperationRecord oor=new OrderOperationRecord();
+			oor.setOrder(order);
+			oor.setType(OrderOperationTypeEnum.EDIT_DRIVER_ACTION);
+			oor.setDate(new Date());
+			oor.setUser(user);
+			oor.setDescription("增加了司机“客户下车”操作，指定的操作时间是："+DateUtils.getYMDHMSString(date));
+			orderOperationRecordDao.save(oor);
+		}
+		
+		return 0;
+	}
+
+	public boolean canBeginOrder(Order order){
+		return order.getStatus()==OrderStatusEnum.ACCEPTED;
+	}
+	
+	public boolean canEndOrder(Order order){
+		return order.getStatus()==OrderStatusEnum.GETOFF;
+	}
+	
+	public boolean canCustomerGeton(Order order){
+		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+			//TODO 需要判断订单是否已经没有可用天数。
+			return order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETOFF;
+		else
+			return order.getStatus()==OrderStatusEnum.BEGIN;
+	}
+	
+	public boolean canCustomerGetoff(Order order){
+		return order.getStatus()==OrderStatusEnum.GETON;
 	}
 }

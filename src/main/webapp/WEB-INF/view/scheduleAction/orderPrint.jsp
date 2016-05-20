@@ -46,7 +46,7 @@
 				<td class="alignCenter">订车时间</td>
 				<td colspan="2">&nbsp;&nbsp;<s:date name="scheduleTime" format="yyyy-MM-dd hh:mm"/></td>
 				<td class="alignCenter">定车地点</td>
-				<td colspan="2">&nbsp;&nbsp;${fromAddress.description }</td>
+				<td colspan="2">&nbsp;&nbsp;${fromAddress}</td>
 			</tr>
 			<tr>
 				<td class="alignCenter">车型</td>

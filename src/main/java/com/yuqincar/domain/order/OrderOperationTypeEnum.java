@@ -15,5 +15,7 @@ public enum OrderOperationTypeEnum {
 	@Text("取消")
 	CANCEL,
 	@Text("修改派车单")
-	MODIFY_SCHEDULE_FORM
+	MODIFY_SCHEDULE_FORM,
+	@Text("编辑司机动作")
+	EDIT_DRIVER_ACTION
 }

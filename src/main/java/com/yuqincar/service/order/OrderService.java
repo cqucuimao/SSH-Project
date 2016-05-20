@@ -10,6 +10,7 @@ import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.DayOrderDetail;
+import com.yuqincar.domain.order.DriverActionVO;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderOperationTypeEnum;
 import com.yuqincar.domain.privilege.User;
@@ -284,4 +285,43 @@ public interface OrderService extends BaseService {
 	public List<BaseEntity> dealCCP(String customerOrganizationName,String customerName,String phoneNumber);
 	
 	public DayOrderDetail getDayOrderDetailByDate(Order order,Date date);
+	
+	/********************************************
+	 * 调度人员编辑司机动作
+	 ********************************************/
+	public boolean canEditDriverAction(Order order);
+	
+	public List<DriverActionVO> getDriverActions(Order order);
+	
+	public void EditDriverAction(String actionId, Date date, User user);
+	
+	public void deleteDriverAction(String actionId,User user);
+	
+	public boolean canAddAcceptAction(Order order);
+	
+	public boolean canAddBeginAction(Order order);
+	
+	public boolean canAddGetonAction(Order order); 
+	
+	public boolean canAddGetoffAction(Order order);
+	
+	public boolean canAddEndAction(Order order);
+	
+	public void addAcceptAction(Order order,User user,Date date);
+	
+	public void addBeginAction(Order order,User user,Date date);
+	
+	public void addGetonAction(Order order,User user,Date date);
+	
+	public void addGetoffAction(Order order,User user,Date date);
+	
+	public void addEndAction(Order order,User user,Date date);
+	
+	/********************************************
+	 * 编辑派车单
+	 ********************************************/
+	public boolean canEditOrderBill(Order order);
+	
+	public void editOrderBill(Order order);
+	
 }

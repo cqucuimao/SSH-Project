@@ -34,7 +34,7 @@ public class TemporaryWarningDaoImpl extends BaseDaoImpl<TemporaryWarning> imple
 		TemporaryWarning temp=new TemporaryWarning();
 		temp.setCar(carDao.getById(carId));
 		temp.setType(WarningMessageTypeEnum.UNPLANNED_RUNNING); //临时记录默认都是异常行驶
-		getSession().save(temp);
+		save(temp);
 	}
 
 }

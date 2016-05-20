@@ -30,6 +30,4 @@ public interface CustomerOrganizationDao extends BaseDao<CustomerOrganization> {
 
 	boolean isAbbreviationExist(long selfId, String abbreviation);
 
-	void saveLocation(Location location);
-
 }

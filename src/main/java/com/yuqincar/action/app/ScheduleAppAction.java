@@ -355,8 +355,6 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		
 		if(order.getOrderMoney()==null)
 			order.setOrderMoney(new BigDecimal(0));
-		if(order.getCreateTime()==null)
-			order.setCreateTime(new Date());
 		
 		order.setMemo(memo);
 		
@@ -477,7 +475,6 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			addresses.add(toAddress);
 		}
 		order.setMemo(memo);
-		order.setCreateTime(new Date());
 		order.setOrderSource(OrderSourceEnum.SCHEDULER);
 		orderService.EnQueue(order,null,copyOrderCount);
 	}

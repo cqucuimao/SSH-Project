@@ -4,16 +4,14 @@
  */
 package com.yuqincar.service.CustomerOrganization.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.CustomerOrganization.CustomerOrganizationDao;
+import com.yuqincar.dao.monitor.LocationDao;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.monitor.Location;
-import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.utils.QueryHelper;
@@ -31,6 +29,9 @@ public class CustomerOrganizationServiceImpl implements
 
 	@Autowired
 	private CustomerOrganizationDao customerOrganizationDao;
+	
+	@Autowired
+	private LocationDao locationDao;
 
 	public PageBean<CustomerOrganization> queryCustomerOrganizationByKeyword(String keyword) {
 		return customerOrganizationDao.queryCustomerOrganizationByKeyword(keyword);
@@ -87,6 +88,6 @@ public class CustomerOrganizationServiceImpl implements
 
 	@Transactional
 	public void saveLocation(Location location) {
-		customerOrganizationDao.saveLocation(location);
+		locationDao.save(location);
 	}
 }

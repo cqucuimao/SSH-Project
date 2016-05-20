@@ -76,7 +76,7 @@
                 			</td>
 							<td>${carServiceType.title}</td>
 							<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
-							<td>${fromAddress.description}-${fromAddress.description}</td>
+							<td>${fromAddress}-${fromAddress}</td>
 							<td>${actualMile}</td>
                 			<td>${actualDay}</td>
 							<td><fmt:formatNumber value="${actualMoney}" pattern="#.0"/></td>

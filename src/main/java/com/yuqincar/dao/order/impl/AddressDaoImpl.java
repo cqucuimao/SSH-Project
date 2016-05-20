@@ -26,13 +26,6 @@ public class AddressDaoImpl extends BaseDaoImpl<Address> implements AddressDao {
 				.uniqueResult();
 	}
 
-	public void saveAddresses(List<Address> addresses) {
-		for (Address address : addresses) {
-			getSession().save(address.getLocation());
-			getSession().save(address);
-		}
-	}
-
 	public Address getEqualAddress(Address address) {
 		return (Address)getSession()
 				.createQuery(

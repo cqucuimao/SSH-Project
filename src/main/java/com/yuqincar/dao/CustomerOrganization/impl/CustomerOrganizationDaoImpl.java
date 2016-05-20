@@ -92,10 +92,6 @@ public class CustomerOrganizationDaoImpl extends
 		return false;
 	}
 
-	public void saveLocation(Location location) {
-		getSession().save(location);
-	}
-
 	public CustomerOrganization getByAbbreviation(String abbreviation) {
 		return (CustomerOrganization) getSession()
 				.createQuery(

@@ -6,7 +6,10 @@ import java.util.Map;
 
 import com.yuqincar.domain.common.DiskFile;
 import com.yuqincar.domain.order.APPRemindMessage;
+import com.yuqincar.domain.order.ChargeModeEnum;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 
 	
@@ -42,35 +45,9 @@ public interface DriverAPPService {
 	 */
 	public void setRemindMessageSended(APPRemindMessage message);
 	
-	/**
-	 * 司机点击“开始”按钮。
-	 * 1. 设置属性
-	 * 	actualBeginDate
-	 *	actualBeginLocation
-	 *	actualBeginMile
-	 * 2. 设置status为BEGIN
-	 * 3. 需要断言：order.status==SCHEDULED
-	 * @param order
-	 * @return  0	成功
-	 * 			1	失败
-	 */
-	public int orderBegin(Order order);
+	public int orderBegin(Order order, User user, Date date);
 	
-	/**
-	 * 司机点击“结束”按钮。
-	 * 1. 设置属性
-	 * 	actualEndDate
-	 *	actualEndLocation
-	 *	actualEndMile
-	 *	actualMile(如果chargeMode==MILE)
-	 *	actualDay(如果chargeMode==DAY)
-	 * 2. 置status为END
-	 * 3. 需要断言：order.status==BEGIN
-	 * @param order
-	 * @return  0	成功
-	 * 			1	失败
-	 */
-	public int orderEnd(Order order);
+	public int orderEnd(Order order, User user, Date date);
 	
 	/**
 	 * 保存用户签名
@@ -108,8 +85,15 @@ public interface DriverAPPService {
 	 */
 	public int orderAccept(Order order);
 	
-	public void customerGeton(Order order);
+	public int customerGeton(Order order, User user, Date date);
 	
-	public void customerGetoff(Order order);
+	public int customerGetoff(Order order, User user, Date date);
 
+	public boolean canBeginOrder(Order order);
+	
+	public boolean canEndOrder(Order order);
+	
+	public boolean canCustomerGeton(Order order);
+	
+	public boolean canCustomerGetoff(Order order);
 }

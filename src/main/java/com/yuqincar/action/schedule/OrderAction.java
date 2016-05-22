@@ -181,6 +181,20 @@ public class OrderAction extends BaseAction {
 		return "view";
 	}
 	
+	/*
+	 * 执行司机动作
+	 */
+	public String operate() {
+		
+		System.out.println(ActionContext.getContext().getValueStack().peek().getClass().toString());
+		System.out.println("orderForView="+ActionContext.getContext().get("orderForView"));
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);
+		}
+		return "operate";
+	}
+	
 	public String cancel(){
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);

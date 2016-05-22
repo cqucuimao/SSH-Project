@@ -111,7 +111,7 @@
 							<td class="alignCenter">
 							<s:a action="order_view.action?orderId=%{id}"><i class="icon-operate-detail" title="查看"></i></s:a>
 							<s:a action="order_print.action?orderId=%{id}"><i class="icon-operate-print" title="打印"></i></s:a>
-							<s:a action="order_operate.action?orderId=%{id}"><i class="icon-operate-modify" title="执行司机动作"></i></s:a>
+							<s:a action="order_operate.action?orderId=%{id}"><i class="icon-operate-modify" title="编辑司机动作"></i></s:a>
 							</td>
 						</tr>
 						</s:iterator>

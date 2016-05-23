@@ -22,6 +22,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
+import com.yuqincar.domain.order.DriverActionVO;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderOperationRecord;
 import com.yuqincar.domain.order.OrderStatusEnum;
@@ -93,6 +94,35 @@ public class OrderAction extends BaseAction {
 		return orderService.canCancelOrder(order);
 	}
 	
+	public boolean isCanEditDriverAction(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		return orderService.canEditDriverAction(order);
+	}
+	
+	public boolean isCanAddAcceptAction(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		return orderService.canAddAcceptAction(order);
+	}
+	
+	public boolean isCanAddBeginAction(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		return orderService.canAddBeginAction(order);
+	}
+	
+	public boolean isCanAddGetonAction(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		return orderService.canAddGetonAction(order);
+	}
+	
+	public boolean isCanAddGetoffAction(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		return orderService.canAddGetoffAction(order);
+	}
+	
+	public boolean isCanAddEndAction(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		return orderService.canAddEndAction(order);
+	}
 	public void getDriverJson() {
 
 		QueryHelper helper = new QueryHelper(User.class, "u");
@@ -182,15 +212,20 @@ public class OrderAction extends BaseAction {
 	}
 	
 	/*
-	 * 执行司机动作
+	 * 编辑司机动作
 	 */
 	public String operate() {
-		
+		Date date =new Date();
+		System.out.println("date="+DateUtils.getYMDHMSString(date));
 		System.out.println(ActionContext.getContext().getValueStack().peek().getClass().toString());
 		System.out.println("orderForView="+ActionContext.getContext().get("orderForView"));
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
+			
+			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
+			System.out.println("List="+driverActionVOList);
+			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 		return "operate";
 	}

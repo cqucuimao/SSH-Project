@@ -18,7 +18,7 @@
             <h1>编辑司机动作</h1>
         </div>
         <div class="editBlock detail p30">
-            <table>
+            <table border="1">
                 <tbody>
                     <tr>
                         <th width="15%">订单号：</th>
@@ -60,13 +60,19 @@
                         	</s:if>
                         </td>
                         <td></td><td></td>
-                    </tr>
-                    <tr>
-                    	<td></td><td></td><td></td><td></td>
-                    </tr>
+                    </tr>            
                 </tbody>
              </table>
-             
+             <table>
+             	<tbody>
+             		<s:iterator value="driverActionVOList">
+             		<tr>
+             			<td>${status }</td>
+             			<td>${date }</td>
+             		</tr>
+             		</s:iterator>
+             	</tbody>
+             </table>
              
              <s:iterator value="operationRecord" status="status">
              	<div class="title">
@@ -105,30 +111,31 @@
                     <tr>
                         <td colspan="4">
                         	<form id="myForm">
-                        		
-                        			<s:a action="schedule_updateOrder?scheduleFromUpdateOrderId=%{id}">
+                        		<s:if test="canAddAcceptAction">
+                        			<s:a action="order_addAcceptAction?scheduleFromUpdateOrderId=%{id}">
                         				<input type="button" class="inputButton" value="接受订单"/>
                         			</s:a>
-                        			&nbsp;&nbsp;&nbsp;&nbsp;
-                        		
-                        			<s:a action="order_postpone?orderId=%{id}">
+                        		</s:if>  
+                        		<s:if test="canAddBeginAction">                      		
+                        			<s:a action="order_addBeginAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="开始订单"/>
                         			</s:a>
-                        			&nbsp;&nbsp;&nbsp;&nbsp;
-                        		
-                        			<s:a action="order_reschedule?orderId=%{id}">
+                        		</s:if>
+                        		<s:if test="canAddGetonAction"> 
+                        			<s:a action="order_addGetonAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="客户上车"/>
                         			</s:a>
-                        			&nbsp;&nbsp;&nbsp;&nbsp;
-                        		
-                        			<s:a action="order_cancel?orderId=%{id}">
+                        		</s:if>
+                        		<s:if test="canAddGetoffAction"> 
+                        			<s:a action="order_addGetoffAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="客户下车"/>
                         			</s:a>
-                        			&nbsp;&nbsp;&nbsp;&nbsp;
-                        			<s:a action="order_cancel?orderId=%{id}">
+                        		</s:if>
+                        		<s:if test="canAddEndAction"> 
+                        			<s:a action="order_addEndAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="结束订单"/>
                         			</s:a>
-                        			&nbsp;&nbsp;&nbsp;&nbsp;
+                        		</s:if>
                             	<a class="p15" href="javascript:history.go(-1);">返回</a>
                             </form>
                         </td>

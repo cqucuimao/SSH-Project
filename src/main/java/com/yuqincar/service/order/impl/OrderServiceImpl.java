@@ -781,6 +781,8 @@ public class OrderServiceImpl implements OrderService {
 			return TextResolve.getText("order.OrderOperationTypeEnum.CANCEL");
 		case MODIFY_SCHEDULE_FORM:
 			return TextResolve.getText("order.OrderOperationTypeEnum.MODIFY_SCHEDULE_FORM");
+		case EDIT_DRIVER_ACTION:
+			return TextResolve.getText("order.OrderOperationTypeEnum.EDIT_DRIVER_ACTION");
 		}
 		return null;
 	}

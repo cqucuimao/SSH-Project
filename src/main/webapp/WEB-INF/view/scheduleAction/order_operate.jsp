@@ -14,27 +14,35 @@
 <body class="minW">
     <div class="space">
         <!-- 标题 -->
-        <div class="title">
+        <div class="title" style="">
             <h1>编辑司机动作</h1>
         </div>
         <div class="editBlock detail p30">
+
             <table border="1">
                 <tbody>
                     <tr>
                         <th width="15%">订单号：</th>
                         <td width="35%">${sn }</td>
+                        <td width="50%" style="border:none"></td>
+                    </tr>
+                    <tr>
                         <th width="15%">用车单位：</th>
                         <td width="35%">${customerOrganization.abbreviation }</td>
                     </tr>
                     <tr>
                         <th>联系电话：</th>
                         <td>${customer.name}：${phone }</td>
+                     </tr>
+                     <tr>
                         <th>定车时间：</th>
                     	<td>${planDateString }</td>
                     </tr>
                     <tr>               	
                         <th>上车地点：</th>
                         <td>${fromAddress }</td>
+                    </tr>
+                    <tr>
                         <th>车型：</th>
                         <td>${serviceType.title }</td>
                     </tr>
@@ -45,6 +53,8 @@
                         		${car.plateNumber }
                         	</s:if>
 						</td>
+					</tr>
+                    <tr>
 						<th>驾驶员/电话：</th>
                         <td>
                         	<s:if test="driver!=null">
@@ -59,22 +69,33 @@
                         		${toAddress }（${toAddress.detail }）
                         	</s:if>
                         </td>
-                        <td></td><td></td>
+                        
                     </tr>            
                 </tbody>
-             </table>
-             <table>
+             </table><br><br><br><br>
+             <table border="1">
              	<tbody>
-             		<s:iterator value="driverActionVOList">
              		<tr>
-             			<td>${status }</td>
-             			<td>${date }</td>
+             			<th width="10%">动作</th><th width="30%">时间</th><th width="10%">编辑</th><td width="50%" style="border:none"></td>
+             		</tr>
+             		<s:iterator value="driverActionVOList" status="status">
+             		<tr>   
+             			 			   			
+             			<td id="+status.index+">${id}</td>
+             			<td><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
+             			<td>
+             				<a href="" class="modify"><i class="icon-operate-modify" title="修改"></i></a>
+             				<!-- 当前是否为最后一个元素 -->
+             				<s:if test="#status.last">
+             					<s:a action="order_deleteDriverAction?actionId=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+             				</s:if>
+             			</td>
              		</tr>
              		</s:iterator>
              	</tbody>
              </table>
              
-             <s:iterator value="operationRecord" status="status">
+             <%-- <s:iterator value="operationRecord" status="status">
              	<div class="title">
              		<br/>
             		<h2>第<s:property value="#status.index+1"/>条操作记录</h2>
@@ -99,7 +120,7 @@
              			</tr>
              		</tbody>
              	</table>
-             </s:iterator>
+             </s:iterator> --%>
           	<table>
                 <tfoot>                    
                     <tr>
@@ -112,7 +133,7 @@
                         <td colspan="4">
                         	<form id="myForm">
                         		<s:if test="canAddAcceptAction">
-                        			<s:a action="order_addAcceptAction?scheduleFromUpdateOrderId=%{id}">
+                        			<s:a action="order_addAcceptAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="接受订单"/>
                         			</s:a>
                         		</s:if>  
@@ -146,5 +167,14 @@
     </div>
     <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
+    <script type="text/javascript">
+    var actionId = $("td[id='+status.index+']").text();
+    console.log("actionId="+actionId);
+    
+    $(".modify").click(function(){
+            popup("修改时间","order_popupModify.action?actionId="+actionId,330,200,"popupModify");
+		})
+		
+	</script>
 </body>
 </html>

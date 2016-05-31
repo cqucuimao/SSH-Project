@@ -57,6 +57,7 @@ public class OrderAction extends BaseAction {
 	private Date planEndDate;
 	private String status;
 	private long orderId;
+	private String actionId;
 	private String reason;
 	private String actualEndDate;
 	private String keyWord;
@@ -215,8 +216,7 @@ public class OrderAction extends BaseAction {
 	 * 编辑司机动作
 	 */
 	public String operate() {
-		Date date =new Date();
-		System.out.println("date="+DateUtils.getYMDHMSString(date));
+		
 		System.out.println(ActionContext.getContext().getValueStack().peek().getClass().toString());
 		System.out.println("orderForView="+ActionContext.getContext().get("orderForView"));
 		if(orderId>0){
@@ -228,6 +228,134 @@ public class OrderAction extends BaseAction {
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 		return "operate";
+	}
+	
+	public String getStatusLabel(){
+		DriverActionVO vo=(DriverActionVO)ActionContext.getContext().getValueStack().peek();
+		System.out.println("订单状态="+vo.getStatus());
+		return orderService.getDriverActionStatusLabel(vo.getStatus());
+	}
+	
+	//添加  接收订单操作
+	public String addAcceptAction(){
+		Date date =new Date();
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		//System.out.println("date="+DateUtils.getYMDHMSString(date));
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);
+			
+			orderService.addAcceptAction(order, user, date);
+			
+			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
+			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
+			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
+		}
+		
+		return "operate";
+	}
+	
+	//添加  开始订单操作
+	public String addBeginAction(){
+		Date date =new Date();
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		//System.out.println("date="+DateUtils.getYMDHMSString(date));
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);
+			
+			orderService.addBeginAction(order, user, date);
+			
+			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
+			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
+			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
+		}
+		
+		return "operate";
+	}
+	
+	//添加  客户上车操作
+	public String addGetonAction(){
+		Date date =new Date();
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		//System.out.println("date="+DateUtils.getYMDHMSString(date));
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);
+			
+			orderService.addGetonAction(order, user, date);
+			
+			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
+			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
+			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
+		}
+		
+		return "operate";
+	}
+	
+	//添加  客户下车操作
+	public String addGetoffAction(){
+		Date date =new Date();
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		//System.out.println("date="+DateUtils.getYMDHMSString(date));
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);
+			
+			orderService.addGetoffAction(order, user, date);
+			
+			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
+			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
+			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
+		}
+		
+		return "operate";
+	}
+	
+	//添加  开始订单操作
+	public String addEndAction(){
+		Date date =new Date();
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		//System.out.println("date="+DateUtils.getYMDHMSString(date));
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);
+			
+			orderService.addEndAction(order, user, date);
+			
+			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
+			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
+			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
+		}
+		
+		return "operate";
+	}
+	
+	//删除司机操作
+	public String deleteDriverAction() throws Exception{
+		
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		System.out.println("actionId="+actionId);
+		System.out.println("orderId="+orderId);
+		orderService.deleteDriverAction(actionId, user);
+		
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);		
+			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
+			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
+			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
+		}
+
+		return "operateList";
+	}
+	
+	//修改时间 弹出框
+	public String popupModify(){
+		
+		System.out.println("In modify actionId="+actionId);
+		
+		return "popupModify";
 	}
 	
 	public String cancel(){
@@ -561,6 +689,14 @@ public class OrderAction extends BaseAction {
 
 	public long getOrderId() {
 		return orderId;
+	}
+
+	public String getActionId() {
+		return actionId;
+	}
+
+	public void setActionId(String actionId) {
+		this.actionId = actionId;
 	}
 
 	public void setOrderId(long orderId) {

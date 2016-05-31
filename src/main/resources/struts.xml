@@ -387,6 +387,7 @@
 			</result>
 			<result name="operate">/WEB-INF/view/scheduleAction/order_operate.jsp
 			</result>
+			<result name="operateList" type="redirectAction">order_operate</result>
 			<result name="cancel">/WEB-INF/view/scheduleAction/order_cancel.jsp
 			</result>
 			<result name="postpone">/WEB-INF/view/scheduleAction/order_postpone.jsp
@@ -400,6 +401,8 @@
 			<result name="protocolOrderRemind">/WEB-INF/view/scheduleAction/order_protocolOrderRemind.jsp
 			</result>
 			<result name="unAcceptedOrderRemind">/WEB-INF/view/scheduleAction/order_unAcceptedOrderRemind.jsp
+			</result>
+			<result name="popupModify">/WEB-INF/view/scheduleAction/popupModify.jsp
 			</result>
 		</action>
 

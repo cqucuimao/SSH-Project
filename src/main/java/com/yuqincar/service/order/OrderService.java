@@ -13,6 +13,7 @@ import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.DriverActionVO;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderOperationTypeEnum;
+import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.base.BaseService;
 import com.yuqincar.utils.QueryHelper;
@@ -289,6 +290,10 @@ public interface OrderService extends BaseService {
 	/********************************************
 	 * 调度人员编辑司机动作
 	 ********************************************/
+
+	//获取编辑司机操作的的中文说明
+	public String getDriverActionStatusLabel(OrderStatusEnum status);
+	
 	public boolean canEditDriverAction(Order order);
 	
 	public List<DriverActionVO> getDriverActions(Order order);

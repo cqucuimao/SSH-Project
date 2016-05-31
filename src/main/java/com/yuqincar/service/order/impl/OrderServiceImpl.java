@@ -787,6 +787,31 @@ public class OrderServiceImpl implements OrderService {
 		return null;
 	}
 	
+	public String getDriverActionStatusLabel(OrderStatusEnum status){
+		System.out.println("in getDriverActionStatusLabel in serviceImpl");
+		switch(status){
+		case INQUEUE:
+			return TextResolve.getText("order.OrderStatusEnum.INQUEUE");
+		case SCHEDULED:
+			return TextResolve.getText("order.OrderStatusEnum.SCHEDULED");
+		case ACCEPTED:
+			return TextResolve.getText("order.OrderStatusEnum.ACCEPTED");
+		case BEGIN:
+			return TextResolve.getText("order.OrderStatusEnum.BEGIN");
+		case GETON:
+			return TextResolve.getText("order.OrderStatusEnum.GETON");
+		case GETOFF:
+			return TextResolve.getText("order.OrderStatusEnum.GETOFF");
+		case END:
+			return TextResolve.getText("order.OrderStatusEnum.END");
+		case PAYED:
+			return TextResolve.getText("order.OrderStatusEnum.PAYED");
+		case CANCELLED:
+			return TextResolve.getText("order.OrderStatusEnum.CANCELLED");
+		}
+		return null;
+	}
+	
 	public int isCarAndDriverAvailable(Order order, Car car, User driver){
 		return orderDao.isCarAndDriverAvailable(order, car, driver);
 	}

@@ -16,9 +16,10 @@
 	  <div class="editBlock p20 pt10"><br>
 		        <table class="showInfo">	           
 		            <tr>
-		                <th>XXX</th>
+		                <th>${actionId }</th>
 		                <td >
-								<input class="Wdate half" name="registDate" id="registDateId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<input class="Wdate half" name="actionTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<input name="time" type="text"  value="${time }"/>
 						</td>
 		            </tr>
 		            
@@ -38,7 +39,8 @@
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
-	
+	var newTime = new Date($("input[name=time]").val());
+	alert(newTime);
 	</script>
 </body>
 </html>

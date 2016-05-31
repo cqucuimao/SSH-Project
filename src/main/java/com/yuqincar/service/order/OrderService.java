@@ -290,9 +290,6 @@ public interface OrderService extends BaseService {
 	/********************************************
 	 * 调度人员编辑司机动作
 	 ********************************************/
-
-	//获取编辑司机操作的的中文说明
-	public String getDriverActionStatusLabel(OrderStatusEnum status);
 	
 	public boolean canEditDriverAction(Order order);
 	

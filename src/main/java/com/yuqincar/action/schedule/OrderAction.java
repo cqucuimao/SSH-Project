@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.dbunit.dataset.stream.StreamingDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,7 @@ public class OrderAction extends BaseAction {
 	private String status;
 	private long orderId;
 	private String actionId;
+	private Date time;
 	private String reason;
 	private String actualEndDate;
 	private String keyWord;
@@ -232,8 +234,8 @@ public class OrderAction extends BaseAction {
 	
 	public String getStatusLabel(){
 		DriverActionVO vo=(DriverActionVO)ActionContext.getContext().getValueStack().peek();
-		System.out.println("订单状态="+vo.getStatus());
-		return orderService.getDriverActionStatusLabel(vo.getStatus());
+		
+		return vo.getStatus().getLabel();
 	}
 	
 	//添加  接收订单操作
@@ -336,14 +338,14 @@ public class OrderAction extends BaseAction {
 		
 		User user = (User)ActionContext.getContext().getSession().get("user");
 		System.out.println("actionId="+actionId);
-		System.out.println("orderId="+orderId);
-		orderService.deleteDriverAction(actionId, user);
 		
+		orderService.deleteDriverAction(actionId, user);
+		orderId = Long.parseLong(actionId.substring(0, 1));
+		System.out.println("orderId="+orderId);
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);		
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
-			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 
@@ -353,8 +355,9 @@ public class OrderAction extends BaseAction {
 	//修改时间 弹出框
 	public String popupModify(){
 		
-		System.out.println("In modify actionId="+actionId);
-		
+		System.out.println("In modify actionTime="+time);
+		ActionContext.getContext().getValueStack().push(actionId);
+		ActionContext.getContext().getValueStack().push(time);
 		return "popupModify";
 	}
 	
@@ -697,6 +700,15 @@ public class OrderAction extends BaseAction {
 
 	public void setActionId(String actionId) {
 		this.actionId = actionId;
+	}
+	
+	
+	public Date getTime() {
+		return time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
 	}
 
 	public void setOrderId(long orderId) {

@@ -787,31 +787,6 @@ public class OrderServiceImpl implements OrderService {
 		return null;
 	}
 	
-	public String getDriverActionStatusLabel(OrderStatusEnum status){
-		System.out.println("in getDriverActionStatusLabel in serviceImpl");
-		switch(status){
-		case INQUEUE:
-			return TextResolve.getText("order.OrderStatusEnum.INQUEUE");
-		case SCHEDULED:
-			return TextResolve.getText("order.OrderStatusEnum.SCHEDULED");
-		case ACCEPTED:
-			return TextResolve.getText("order.OrderStatusEnum.ACCEPTED");
-		case BEGIN:
-			return TextResolve.getText("order.OrderStatusEnum.BEGIN");
-		case GETON:
-			return TextResolve.getText("order.OrderStatusEnum.GETON");
-		case GETOFF:
-			return TextResolve.getText("order.OrderStatusEnum.GETOFF");
-		case END:
-			return TextResolve.getText("order.OrderStatusEnum.END");
-		case PAYED:
-			return TextResolve.getText("order.OrderStatusEnum.PAYED");
-		case CANCELLED:
-			return TextResolve.getText("order.OrderStatusEnum.CANCELLED");
-		}
-		return null;
-	}
-	
 	public int isCarAndDriverAvailable(Order order, Car car, User driver){
 		return orderDao.isCarAndDriverAvailable(order, car, driver);
 	}
@@ -1006,6 +981,7 @@ public class OrderServiceImpl implements OrderService {
 		case END:
 			DriverActionVO davo=new DriverActionVO();
 			davo.setId(getDriverActionVOId(order,OrderStatusEnum.END,null));
+			davo.setStatus(OrderStatusEnum.END);
 			davo.setDate(order.getActualEndDate());
 			actionList.add(0,davo);
 		case GETOFF:
@@ -1015,12 +991,14 @@ public class OrderServiceImpl implements OrderService {
 				if(dod.getGetoffDate()!=null){
 					davo=new DriverActionVO();
 					davo.setId(getDriverActionVOId(order,OrderStatusEnum.GETOFF,dod));
+					davo.setStatus(OrderStatusEnum.GETOFF);
 					davo.setDate(dod.getGetoffDate());
 					actionList.add(0,davo);
 				}
 				if(dod.getGetonDate()!=null){
 					davo=new DriverActionVO();
 					davo.setId(getDriverActionVOId(order,OrderStatusEnum.GETON,dod));
+					davo.setStatus(OrderStatusEnum.GETON);
 					davo.setDate(dod.getGetonDate());
 					actionList.add(0,davo);
 				}
@@ -1028,11 +1006,13 @@ public class OrderServiceImpl implements OrderService {
 		case BEGIN:
 			davo=new DriverActionVO();
 			davo.setId(getDriverActionVOId(order,OrderStatusEnum.BEGIN,null));
+			davo.setStatus(OrderStatusEnum.BEGIN);
 			davo.setDate(order.getActualBeginDate());
 			actionList.add(0,davo);
 		case ACCEPTED:
 			davo=new DriverActionVO();
 			davo.setId(getDriverActionVOId(order,OrderStatusEnum.ACCEPTED,null));
+			davo.setStatus(OrderStatusEnum.ACCEPTED);
 			davo.setDate(order.getAcceptedTime());
 			actionList.add(0,davo);
 		case SCHEDULED:

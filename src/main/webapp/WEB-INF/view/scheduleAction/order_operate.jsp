@@ -19,30 +19,23 @@
         </div>
         <div class="editBlock detail p30">
 
-            <table border="1">
+            <table>
                 <tbody>
                     <tr>
                         <th width="15%">订单号：</th>
                         <td width="35%">${sn }</td>
-                        <td width="50%" style="border:none"></td>
-                    </tr>
-                    <tr>
                         <th width="15%">用车单位：</th>
                         <td width="35%">${customerOrganization.abbreviation }</td>
                     </tr>
                     <tr>
                         <th>联系电话：</th>
                         <td>${customer.name}：${phone }</td>
-                     </tr>
-                     <tr>
                         <th>定车时间：</th>
                     	<td>${planDateString }</td>
-                    </tr>
+                     </tr>
                     <tr>               	
                         <th>上车地点：</th>
                         <td>${fromAddress }</td>
-                    </tr>
-                    <tr>
                         <th>车型：</th>
                         <td>${serviceType.title }</td>
                     </tr>
@@ -53,15 +46,13 @@
                         		${car.plateNumber }
                         	</s:if>
 						</td>
-					</tr>
-                    <tr>
 						<th>驾驶员/电话：</th>
                         <td>
                         	<s:if test="driver!=null">
                         		${driver.name }：${driver.phoneNumber}
                         	</s:if>
                         </td> 
-                    </tr>
+					</tr>
                     <tr>    
                         <th>目的地：</th>
                         <td>
@@ -73,23 +64,25 @@
                     </tr>            
                 </tbody>
              </table><br><br><br><br>
-             <table border="1">
+             <div class="title" style="">
+            	<h2>已有操作</h2>
+        	</div>
+             <table>
              	<tbody>
-             		<tr>
-             			<th width="10%">动作</th><th width="30%">时间</th><th width="10%">编辑</th><td width="50%" style="border:none"></td>
-             		</tr>
+           
              		<s:iterator value="driverActionVOList" status="status">
              		<tr>   
              			 			   			
-             			<td id="+status.index+">${id}</td>
-             			<td><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
-             			<td>
-             				<a href="" class="modify"><i class="icon-operate-modify" title="修改"></i></a>
+             			<td width="15%">${statusLabel}</td>
+             			<td width="35%"><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
+             			<td width="15%">
+             				<a href="#" class="modify" onclick="modify('${id}','${date }')"><i class="icon-operate-modify" title="修改"></i></a>
              				<!-- 当前是否为最后一个元素 -->
              				<s:if test="#status.last">
              					<s:a action="order_deleteDriverAction?actionId=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
-             				</s:if>
+             				</s:if>             				
              			</td>
+             			<td width="35%"></td>
              		</tr>
              		</s:iterator>
              	</tbody>
@@ -136,27 +129,57 @@
                         			<s:a action="order_addAcceptAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="接受订单"/>
                         			</s:a>
-                        		</s:if>  
+                        		</s:if>
+                        		<s:else>
+                        			<s:a action="order_addAcceptAction?orderId=%{id}">
+                        				<input disabled="disabled" type="button" class="inputButton" value="接受订单"/>
+                        			</s:a>
+                        		</s:else>
+                        		  
                         		<s:if test="canAddBeginAction">                      		
                         			<s:a action="order_addBeginAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="开始订单"/>
                         			</s:a>
                         		</s:if>
+                        		<s:else>                      		
+                        			<s:a action="order_addBeginAction?orderId=%{id}">
+                        				<input disabled="disabled" type="button" class="inputButton" value="开始订单"/>
+                        			</s:a>
+                        		</s:else>
+                        		
                         		<s:if test="canAddGetonAction"> 
                         			<s:a action="order_addGetonAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="客户上车"/>
                         			</s:a>
                         		</s:if>
+                        		<s:else> 
+                        			<s:a action="order_addGetonAction?orderId=%{id}">
+                        				<input disabled="disabled" type="button" class="inputButton" value="客户上车"/>
+                        			</s:a>
+                        		</s:else>
+                        		
                         		<s:if test="canAddGetoffAction"> 
                         			<s:a action="order_addGetoffAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="客户下车"/>
                         			</s:a>
                         		</s:if>
+                        		<s:else> 
+                        			<s:a action="order_addGetoffAction?orderId=%{id}">
+                        				<input disabled="disabled" type="button" class="inputButton" value="客户下车"/>
+                        			</s:a>
+                        		</s:else>
+                        		
                         		<s:if test="canAddEndAction"> 
                         			<s:a action="order_addEndAction?orderId=%{id}">
                         				<input type="button" class="inputButton" value="结束订单"/>
                         			</s:a>
                         		</s:if>
+                        		<s:else> 
+                        			<s:a action="order_addEndAction?orderId=%{id}">
+                        				<input disabled="disabled" type="button" class="inputButton" value="结束订单"/>
+                        			</s:a>
+                        		</s:else>
+                        		
                             	<a class="p15" href="javascript:history.go(-1);">返回</a>
                             </form>
                         </td>
@@ -168,12 +191,11 @@
     <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
     <script type="text/javascript">
-    var actionId = $("td[id='+status.index+']").text();
-    console.log("actionId="+actionId);
+    function modify(actionId,time){
+
+    	popup("修改时间","order_popupModify.action?actionId="+actionId+"&time="+time,330,200,"popupModify");
+    }
     
-    $(".modify").click(function(){
-            popup("修改时间","order_popupModify.action?actionId="+actionId,330,200,"popupModify");
-		})
 		
 	</script>
 </body>

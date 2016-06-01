@@ -16,10 +16,13 @@
 	  <div class="editBlock p20 pt10"><br>
 		        <table class="showInfo">	           
 		            <tr>
-		                <th>${actionId }</th>
+		                <th class="driverAction">
+		                		<input name="actionId" type="hidden"  value="${actionId }"/>	
+		                		
+		                </th>       
 		                <td >
 								<input class="Wdate half" name="actionTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
-								<input name="time" type="text"  value="${time }"/>
+								<input name="time" type="hidden"  value="${time }"/>
 						</td>
 		            </tr>
 		            
@@ -39,8 +42,28 @@
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
-	var newTime = new Date($("input[name=time]").val());
-	alert(newTime);
+		var actionId = $("input[name=actionId]").val();
+		var id = actionId.substr(2,1);
+		
+		if(id == 0){
+			$(".driverAction").text("在队列");
+		}else if(id == 1){
+			$(".driverAction").text("已调度");
+		}else if(id == 2){
+			$(".driverAction").text("已接受");
+		}else if(id == 3){
+			$(".driverAction").text("已开始");
+		}else if(id == 4){
+			$(".driverAction").text("客户已上车");
+		}else if(id == 5){
+			$(".driverAction").text("客户已下车");
+		}else if(id == 6){
+			$(".driverAction").text("已结束");
+		}else if(id == 7){
+			$(".driverAction").text("已付费");
+		}else if(id == 8){
+			$(".driverAction").text("已取消");
+		}
 	</script>
 </body>
 </html>

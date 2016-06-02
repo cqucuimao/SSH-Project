@@ -70,15 +70,20 @@
              <table>
              	<tbody>
            
-             		<s:iterator value="driverActionVOList" status="status">
+             		<s:iterator value="driverActionVOList" status="iteratorStatus">
              		<tr>   
              			 			   			
              			<td width="15%">${statusLabel}</td>
-             			<td width="35%"><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
+             			<s:if test="#iteratorStatus.last">
+             				<td width="35%" class="last" id="TD${iteratorStatus.index }"><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
+             			</s:if>
+             			<s:else>
+             				<td width="35%" id="TD${iteratorStatus.index }"><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
+             			</s:else>
              			<td width="15%">
              				<a href="#" class="modify" onclick="modify('${id}','${date }')"><i class="icon-operate-modify" title="修改"></i></a>
              				<!-- 当前是否为最后一个元素 -->
-             				<s:if test="#status.last">
+             				<s:if test="#iteratorStatus.last">
              					<s:a action="order_deleteDriverAction?actionId=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
              				</s:if>             				
              			</td>
@@ -87,33 +92,6 @@
              		</s:iterator>
              	</tbody>
              </table>
-             
-             <%-- <s:iterator value="operationRecord" status="status">
-             	<div class="title">
-             		<br/>
-            		<h2>第<s:property value="#status.index+1"/>条操作记录</h2>
-        		</div>
-             	<table>
-             		<tbody>
-             			<tr>
-             				<th width="15%">操作类型</th>
-             				<td>${typeString }</td>
-             			</tr>
-             			<tr>
-             				<th>操作日期</th>
-             				<td><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
-             			</tr>
-             			<tr>
-             				<th>操作人</th>
-             				<td>${user.name }</td>
-             			</tr>
-             			<tr>
-             				<th>操作内容</th>
-             				<td>${description }</td>
-             			</tr>
-             		</tbody>
-             	</table>
-             </s:iterator> --%>
           	<table>
                 <tfoot>                    
                     <tr>
@@ -123,63 +101,41 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td colspan="4">
-                        	<form id="myForm">
-                        		<s:if test="canAddAcceptAction">
-                        			<s:a action="order_addAcceptAction?orderId=%{id}">
-                        				<input type="button" class="inputButton" value="接受订单"/>
-                        			</s:a>
+                        <td colspan="4">  
+                        <form id="actionForm" action="">                   
+                        		操作时间：
+                        		<input class="Wdate half" name="actionTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /><span class="required">*</span>&nbsp;&nbsp;
+                        		<input type="hidden" name="orderId" value="${id }">
+                        		<s:if test="canAddAcceptAction">                       			
+                        				<input type="submit" id="accept" class="inputButton" value="接受订单"/>                      		
                         		</s:if>
-                        		<s:else>
-                        			<s:a action="order_addAcceptAction?orderId=%{id}">
-                        				<input disabled="disabled" type="button" class="inputButton" value="接受订单"/>
-                        			</s:a>
-                        		</s:else>
-                        		  
-                        		<s:if test="canAddBeginAction">                      		
-                        			<s:a action="order_addBeginAction?orderId=%{id}">
-                        				<input type="button" class="inputButton" value="开始订单"/>
-                        			</s:a>
+                        		<s:else>                      			
+                        				<input disabled="disabled" type="button" class="inputButton" value="接受订单"/>                      			
+                        		</s:else>                        		  
+                        		<s:if test="canAddBeginAction">                      		                       			
+                        				<input type="submit" id="begin" class="inputButton" value="开始订单"/>                      			
                         		</s:if>
-                        		<s:else>                      		
-                        			<s:a action="order_addBeginAction?orderId=%{id}">
-                        				<input disabled="disabled" type="button" class="inputButton" value="开始订单"/>
-                        			</s:a>
-                        		</s:else>
-                        		
-                        		<s:if test="canAddGetonAction"> 
-                        			<s:a action="order_addGetonAction?orderId=%{id}">
-                        				<input type="button" class="inputButton" value="客户上车"/>
-                        			</s:a>
+                        		<s:else>                      		                      			
+                        				<input disabled="disabled" type="button" class="inputButton" value="开始订单"/>                      		
+                        		</s:else>                      		
+                        		<s:if test="canAddGetonAction">                       			
+                        				<input type="submit" id="geton" class="inputButton" value="客户上车"/>                     			
                         		</s:if>
-                        		<s:else> 
-                        			<s:a action="order_addGetonAction?orderId=%{id}">
-                        				<input disabled="disabled" type="button" class="inputButton" value="客户上车"/>
-                        			</s:a>
-                        		</s:else>
-                        		
-                        		<s:if test="canAddGetoffAction"> 
-                        			<s:a action="order_addGetoffAction?orderId=%{id}">
-                        				<input type="button" class="inputButton" value="客户下车"/>
-                        			</s:a>
+                        		<s:else>                        			
+                        				<input disabled="disabled" type="button" class="inputButton" value="客户上车"/>                      			
+                        		</s:else>                      		
+                        		<s:if test="canAddGetoffAction">                       			
+                       				<input type="submit" id="getoff" class="inputButton" value="客户下车"/>                        			
                         		</s:if>
-                        		<s:else> 
-                        			<s:a action="order_addGetoffAction?orderId=%{id}">
-                        				<input disabled="disabled" type="button" class="inputButton" value="客户下车"/>
-                        			</s:a>
-                        		</s:else>
-                        		
-                        		<s:if test="canAddEndAction"> 
-                        			<s:a action="order_addEndAction?orderId=%{id}">
-                        				<input type="button" class="inputButton" value="结束订单"/>
-                        			</s:a>
+                        		<s:else>                        			
+                        				<input disabled="disabled" type="button" class="inputButton" value="客户下车"/>                       			
+                        		</s:else>                       		
+                        		<s:if test="canAddEndAction">                       			
+                        				<input type="submit" id="end" class="inputButton" value="结束订单"/>                      			
                         		</s:if>
-                        		<s:else> 
-                        			<s:a action="order_addEndAction?orderId=%{id}">
-                        				<input disabled="disabled" type="button" class="inputButton" value="结束订单"/>
-                        			</s:a>
-                        		</s:else>
-                        		
+                        		<s:else>                        			
+                        				<input disabled="disabled" type="button" class="inputButton" value="结束订单"/>                       			
+                        		</s:else>                        		
                             	<a class="p15" href="javascript:history.go(-1);">返回</a>
                             </form>
                         </td>
@@ -189,8 +145,48 @@
           </div>
     </div>
     <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
+    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+    
+   	
+   	$(".inputButton").click(function(){
+   		var last = $(".last").text();
+   		var actionTime = $("input[name=actionTime]").val();
+   		if(actionTime == ""){
+   	   		alert("操作时间不能为空！");
+   	   		return false;
+   	   	}
+   		if(Date.parse(last)>Date.parse(actionTime)){
+   			alert("操作时间不合法！");
+   	   		return false;
+   		}
+   	})
+   	
+   	$("#accept").click(function(){
+   		
+   		$("#actionForm").attr("action","order_addAcceptAction.action");
+   	})
+   	$("#begin").click(function(){
+   		
+   		$("#actionForm").attr("action","order_addBeginAction.action");
+   	})
+   	$("#geton").click(function(){
+   		
+   		$("#actionForm").attr("action","order_addGetonAction.action");
+   	})
+   	$("#getoff").click(function(){
+   		
+   		$("#actionForm").attr("action","order_addGetoffAction.action");
+   	})
+   	$("#end").click(function(){
+   		
+   		$("#actionForm").attr("action","order_addEndAction.action");
+   	})
+   
+    
     function modify(actionId,time){
 
     	popup("修改时间","order_popupModify.action?actionId="+actionId+"&time="+time,330,200,"popupModify");

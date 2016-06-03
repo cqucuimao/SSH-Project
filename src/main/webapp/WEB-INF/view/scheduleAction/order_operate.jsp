@@ -81,7 +81,7 @@
              				<td width="35%" id="TD${iteratorStatus.index }"><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
              			</s:else>
              			<td width="15%">
-             				<a href="#" class="modify" onclick="modify('${id}','${date }')"><i class="icon-operate-modify" title="修改"></i></a>
+             				<a href="#" class="modify" onclick="modify('${id}','${date }','${iteratorStatus.index }')"><i class="icon-operate-modify" title="修改"></i></a>
              				<!-- 当前是否为最后一个元素 -->
              				<s:if test="#iteratorStatus.last">
              					<s:a action="order_deleteDriverAction?actionId=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
@@ -187,8 +187,14 @@
    	})
    
     
-    function modify(actionId,time){
-    	popup("修改时间","order_popupModify.action?actionId="+actionId+"&time="+time,330,200,"popupModify");
+    function modify(actionId,time,index){
+   		
+   		var beforeTime = $("#TD"+(index-1)).text();
+   		var afterTime = $("#TD"+(index+1)).text();
+   		alert($("#TD"+(index+1)));
+   		alert("afterTime="+afterTime);
+   		alert("beforeTime="+beforeTime);
+    	popup("修改时间","order_popupModify.action?actionId="+actionId+"&time="+time+"&beforeTime="+beforeTime+"&afterTime="+afterTime,330,200,"popupModify");
     }
     
 		

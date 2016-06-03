@@ -20,9 +20,11 @@
 		                		<input name="actionId" type="hidden"  value="${actionId }"/>	
 		                		
 		                </th>       
-		                <td >
-								<input class="Wdate half" name="actionTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+		                <td>
+								<input class="Wdate half" name="inputTime" id="timeId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
 								<input name="time" type="hidden"  value="${time }"/>
+								<input name="beforeTime" type="hidden"  value="${beforeTime }"/>
+								<input name="afterTime" type="hidden"  value="${afterTime }"/>
 						</td>
 		            </tr>
 		            
@@ -42,12 +44,8 @@
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
-		var time = $("input[name=time]").val();
-		var actionTime = time.substr(0,19);
-		$("input[name=actionTime]").attr("value",actionTime);
-	
 		var actionId = $("input[name=actionId]").val();
-		var id = actionId.substr(2,1);
+		var id = actionId.substr(2,1);	
 		
 		if(id == 0){
 			$(".driverAction").text("在队列");
@@ -68,6 +66,26 @@
 		}else if(id == 8){
 			$(".driverAction").text("已取消");
 		}
+		
+		var time = $("input[name=time]").val();
+		var beforeTime = $("input[name=beforeTime]").val();
+		var afterTime = $("input[name=afterTime]").val();
+		//alert("beforeTime="+beforeTime);
+		//alert("afterTime="+afterTime);
+		$("#timeId").val(time.substr(0,19));
+		
+		$("#btn").click(function(){
+			var inputTime = $("#timeId").val();	
+			//alert("inputTime="+inputTime+"beforeTime="+beforeTime+"afterTime="+afterTime);
+			if(Date.parse(inputTime)-Date.parse(beforeTime)<0){
+				alert("时间不合法！");
+				return false;
+			}
+			if(Date.parse(inputTime)-Date.parse(afterTime)>0){
+				alert("时间不合法！");
+				return false;
+			}
+		}) 
 	</script>
 </body>
 </html>

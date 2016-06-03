@@ -61,6 +61,8 @@ public class OrderAction extends BaseAction {
 	private String actionId;
 	private Date actionTime;
 	private String time;
+	private String beforeTime;
+	private String afterTime;
 	private String reason;
 	private String actualEndDate;
 	private String keyWord;
@@ -356,9 +358,10 @@ public class OrderAction extends BaseAction {
 	//修改时间 弹出框
 	public String popupModify(){
 		
-		System.out.println("In modify actionTime="+time);
 		ActionContext.getContext().getValueStack().push(actionId);
 		ActionContext.getContext().getValueStack().push(time);
+		ActionContext.getContext().getValueStack().push(beforeTime);
+		ActionContext.getContext().getValueStack().push(afterTime);
 		return "popupModify";
 	}
 	
@@ -710,9 +713,7 @@ public class OrderAction extends BaseAction {
 
 	public void setActionTime(Date actionTime) {
 		this.actionTime = actionTime;
-	}
-
-	
+	}	
 
 	public String getTime() {
 		return time;
@@ -720,6 +721,24 @@ public class OrderAction extends BaseAction {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+	
+	
+
+	public String getBeforeTime() {
+		return beforeTime;
+	}
+
+	public void setBeforeTime(String beforeTime) {
+		this.beforeTime = beforeTime;
+	}
+
+	public String getAfterTime() {
+		return afterTime;
+	}
+
+	public void setAfterTime(String afterTime) {
+		this.afterTime = afterTime;
 	}
 
 	public void setOrderId(long orderId) {

@@ -188,7 +188,6 @@
    
     
     function modify(actionId,time){
-
     	popup("修改时间","order_popupModify.action?actionId="+actionId+"&time="+time,330,200,"popupModify");
     }
     

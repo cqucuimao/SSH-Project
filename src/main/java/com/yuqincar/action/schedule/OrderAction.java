@@ -60,7 +60,7 @@ public class OrderAction extends BaseAction {
 	private long orderId;
 	private String actionId;
 	private Date actionTime;
-	private Date time;
+	private String time;
 	private String reason;
 	private String actualEndDate;
 	private String keyWord;
@@ -712,11 +712,13 @@ public class OrderAction extends BaseAction {
 		this.actionTime = actionTime;
 	}
 
-	public Date getTime() {
+	
+
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 

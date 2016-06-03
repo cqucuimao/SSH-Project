@@ -42,6 +42,10 @@
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
+		var time = $("input[name=time]").val();
+		var actionTime = time.substr(0,19);
+		$("input[name=actionTime]").attr("value",actionTime);
+	
 		var actionId = $("input[name=actionId]").val();
 		var id = actionId.substr(2,1);
 		

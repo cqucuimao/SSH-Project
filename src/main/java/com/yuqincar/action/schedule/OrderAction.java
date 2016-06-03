@@ -5,6 +5,8 @@
 package com.yuqincar.action.schedule;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -61,6 +63,7 @@ public class OrderAction extends BaseAction {
 	private String actionId;
 	private Date actionTime;
 	private String time;
+	private String inputTime;
 	private String beforeTime;
 	private String afterTime;
 	private String reason;
@@ -363,6 +366,26 @@ public class OrderAction extends BaseAction {
 		ActionContext.getContext().getValueStack().push(beforeTime);
 		ActionContext.getContext().getValueStack().push(afterTime);
 		return "popupModify";
+	}
+	
+	//修改时间
+	public String editDriverAction() throws ParseException{
+		System.out.println("++++");
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		System.out.println("actionId="+actionId);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = sdf.parse(inputTime);
+		System.out.println("date="+date);
+		orderService.EditDriverAction(actionId, date, user);
+		orderId = Long.parseLong(actionId.substring(0, 1));
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);		
+			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
+			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
+		}
+		
+		return "operateList";
 	}
 	
 	public String cancel(){
@@ -724,6 +747,14 @@ public class OrderAction extends BaseAction {
 	}
 	
 	
+
+	public String getInputTime() {
+		return inputTime;
+	}
+
+	public void setInputTime(String inputTime) {
+		this.inputTime = inputTime;
+	}
 
 	public String getBeforeTime() {
 		return beforeTime;

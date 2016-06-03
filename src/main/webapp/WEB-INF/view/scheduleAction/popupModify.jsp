@@ -14,14 +14,15 @@
 <body>
 			
 	  <div class="editBlock p20 pt10"><br>
+		        <form id="timeForm" name="myForm" action="">
 		        <table class="showInfo">	           
 		            <tr>
 		                <th class="driverAction">
-		                		<input name="actionId" type="hidden"  value="${actionId }"/>	
-		                		
+		                		<input name="actionId" type="hidden"  value="${actionId }"/>			                		
 		                </th>       
 		                <td>
 								<input class="Wdate half" name="inputTime" id="timeId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<input name="actionId" type="hidden"  value="${actionId }"/>
 								<input name="time" type="hidden"  value="${time }"/>
 								<input name="beforeTime" type="hidden"  value="${beforeTime }"/>
 								<input name="afterTime" type="hidden"  value="${afterTime }"/>
@@ -38,6 +39,7 @@
 		                </tr>
 		            </tfoot>
 		        </table>
+		        </form>
     </div>
 		
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
@@ -85,6 +87,9 @@
 				alert("时间不合法！");
 				return false;
 			}
+			$("#timeForm").attr("action","order_editDriverAction.action");
+			//top.location.href="order_editDriverAction.action";
+			//popdown("popupModify");
 		}) 
 	</script>
 </body>

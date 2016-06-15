@@ -467,22 +467,18 @@ $(function(){
 		});
 	});
 	
-	 $("#driverName").click(function(){
-         art.dialog.data('driverName', $("#driverName").val()); // 存储数据
-         var url;
-         //TODO 临时逻辑
-         if($("#driverName").attr("showContent")==null || $("#driverName").attr("showContent")=="")
-        	 url="user_popup.action?popupDriverOnly=true";
-         else if($("#driverName").attr("showContent")=="all")
-        	 url="user_popup.action";
-         else
-        	 url="user_popup.action";
-         art.dialog.open(url,{
-				title: '司机选择', 
-				width: 300, 
-				height: 530
-			});
-     });
+	$(".userSelector").each(function (i){
+		$(this).click(function(){
+			art.dialog.data('userName', this.value); 
+			var url;
+	        if($(this).attr("driverOnly")!=null)
+	        	url="user_popup.action?driverOnly=true&userSelectorId="+this.id;
+	        else
+	        	url="user_popup.action?userSelectorId="+this.id;
+	        art.dialog.open(url,{title: '员工选择', width: 300, height: 530});
+		});
+	});
+	
 	 
 	 $("#schedulerName").click(function(){
          art.dialog.data('driverName', $("#schedulerName").val()); // 存储数据  

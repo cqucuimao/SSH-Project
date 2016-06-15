@@ -53,8 +53,8 @@
 					<th>保险类型:</th>
 					<td>
 						<!-- 
-						<s:textfield cssClass="inputText" name="driverName" type="text"/>
-						 <s:textfield cssClass="inputText" id="driverName" type="text" name="driver.name"/>
+						<s:textfield class="userSelector inputChoose inputText" name="driverName" type="text"/>
+						 <s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driver.name"/>
 							<s:textfield id="driverId" name="driverId" type="hidden"/>
 						-->
 						<s:textfield cssClass="inputText" name="insureType" type="text"></s:textfield>

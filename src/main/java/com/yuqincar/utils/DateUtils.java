@@ -34,6 +34,8 @@ public class DateUtils {
 
 	private static final SimpleDateFormat HMS = new SimpleDateFormat("HH:mm:ss");
 
+	private static final SimpleDateFormat HM = new SimpleDateFormat("HH:mm");
+
 	/**
 	 * 将形如"yyyy-MM-dd"的字符串转换为Date
 	 * @param s
@@ -220,6 +222,18 @@ public class DateUtils {
 	public static String getHMSString(Date date) {
 		if (date != null)
 			return HMS.format(date);
+		else
+			return "";
+	}
+	
+	/**
+	 * 将Date转换为形如"HH:mm"的字符串
+	 * @param date
+	 * @return
+	 */
+	public static String getHMString(Date date) {
+		if (date != null)
+			return HM.format(date);
 		else
 			return "";
 	}
@@ -603,5 +617,10 @@ public class DateUtils {
        cal.add(Calendar.DATE, 6);         
        Date toDate=cal.getTime();
        return new DateRange(fromDate,toDate);
+   }
+   
+   public static float elapseHours(Date begin, Date end){
+	   long step=end.getTime()-begin.getTime();
+	   return step/(1000*60*60.0f);
    }
 }

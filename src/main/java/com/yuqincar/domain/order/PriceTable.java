@@ -1,5 +1,6 @@
 package com.yuqincar.domain.order;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Entity;
@@ -10,10 +11,15 @@ import javax.persistence.OneToMany;
 
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.utils.Text;
 
 @Entity
 public class PriceTable extends BaseEntity {
 	private String title;
+	
+	@Text("客户单位")
+	@OneToMany(mappedBy="priceTable")
+	private List<CustomerOrganization> organizations;
 	
 	@OneToMany
     @JoinTable(name="pricetable_price",
@@ -36,5 +42,13 @@ public class PriceTable extends BaseEntity {
 
 	public void setCarServiceType(Map<CarServiceType, Price> carServiceType) {
 		this.carServiceType = carServiceType;
-	}	
+	}
+
+	public List<CustomerOrganization> getOrganizations() {
+		return organizations;
+	}
+
+	public void setOrganizations(List<CustomerOrganization> organizations) {
+		this.organizations = organizations;
+	}		
 }

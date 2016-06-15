@@ -194,7 +194,7 @@
 									</td>
 									<th>调度的司机</th>
 									<td>
-										<s:textfield class="inputText" id="driverName" type="text" name="driver.name"/>
+										<s:textfield class="userSelector inputText inputChoose" id="driverName" type="text" driverOnly="true"/>
 								 		<s:textfield id="selectCarDriverId" name="selectCarDriverId" type="hidden"/>
 									</td>
 								</tr>
@@ -289,9 +289,9 @@
 			$("#inQueue").hide();
 			$("#reset").hide();
 			
-			$("#selectCarPlateNumber").val("selectCarPlateNumber");
-			$("#driverName").val("selectCarDriverName");
-			$("#selectCarDriverId").val("selectCarDriverId");
+			$("#selectCarPlateNumber").val("${selectCarPlateNumber}");
+			$("#driverName").val("${selectCarDriverName}");
+			$("#selectCarDriverId").val("${selectCarDriverId}");
 		}
 	
 	
@@ -374,6 +374,10 @@
 				alert("还没有选择调度的车辆！");
 				return false;
 			}
+			if($("#driverName").val()=="" || $("#selectCarDriverId").val()==""){
+				alert("还没有选择调度的司机！");
+				return false;
+			}
 			return true;
 		}
 		
@@ -394,7 +398,7 @@
 					return false;
 				}
 			}
-			if($("#carSelectorId1").val()==""){
+			if($("#carSelector1").val()==""){
 				alert("必须输入至少一个查询条件！");
 				return false;
 			}
@@ -628,7 +632,9 @@
 									} else if (data.result == 7) {
 										alert("车型不匹配");
 									} else if (data.result == 8) {
-										alert("乘车人数超过限定");
+										alert("司机不可用");
+									} else if (data.result == 9) {
+										alert("队列订单不能被当前用户调度")
 									}
 								},
 								error : function(msg) {  			         

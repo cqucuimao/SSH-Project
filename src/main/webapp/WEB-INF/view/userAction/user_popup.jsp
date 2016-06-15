@@ -78,8 +78,14 @@
                    	}
                 }
             	var origin = artDialog.open.origin;
-            	var driverName = origin.document.getElementById('driverName');
-            	var driverId = origin.document.getElementById('driverId');
+            	var driverName = origin.document.getElementById('${userSelectorId}');
+            	var driverId = driverName.nextSibling;
+            	while(driverId!="[object HTMLInputElement]")
+            	{
+            		driverId=driverId.nextSibling;
+            	}
+            	if(driverId.type!="hidden")
+            		return;
 		
             	if(newVal != null && newVal !="")
                 	driverName.value = newVal;

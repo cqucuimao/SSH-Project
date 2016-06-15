@@ -56,8 +56,6 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	public void prepare() throws Exception {
 		String username = request.getParameter("username");
 		String pwd = request.getParameter("pwd");
-		System.out.println("in prepare");
-		System.out.println("username="+username+",pwd="+pwd);
 		user = userService.getByLoginNameAndMD5Password(username, pwd);
 	}
 
@@ -96,11 +94,13 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		vo.orderId = order.getId();
 		vo.chargeMode = order.getChargeMode();
 		vo.fromAddress = order.getFromAddress();
-		vo.beginDate = order.getPlanBeginDate();
+		vo.planBeginDate = order.getPlanBeginDate();
 		if (order.getChargeMode() == ChargeModeEnum.MILE || order.getChargeMode() == ChargeModeEnum.PLANE)
 			vo.toAddress = order.getToAddress();
 		else
-			vo.endDate = order.getPlanEndDate();
+			vo.planEndDate = order.getPlanEndDate();
+		vo.actualBeginDate=order.getActualBeginDate();
+		vo.actualEndDate=order.getActualEndDate();
 		vo.sn = order.getSn();			
 		vo.status = order.getStatus();
 		vo.customerName = order.getCustomer().getName();
@@ -519,8 +519,10 @@ class AddressVO {
 class OrderVo {
 	public Long orderId;
 	public ChargeModeEnum chargeMode;
-	public Date beginDate;
-	public Date endDate;
+	public Date planBeginDate;
+	public Date planEndDate;
+	public Date actualBeginDate;
+	public Date actualEndDate;
 	public String fromAddress;
 	public String toAddress;
 	public String customerOrganization;

@@ -1,7 +1,10 @@
 package com.yuqincar.install;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -13,9 +16,17 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yuqincar.dao.car.CarServiceTypeDao;
+import com.yuqincar.dao.order.CarServiceSuperTypeDao;
+import com.yuqincar.dao.order.PriceDao;
+import com.yuqincar.dao.order.PriceTableDao;
 import com.yuqincar.dao.privilege.PrivilegeDao;
 import com.yuqincar.dao.privilege.RoleDao;
 import com.yuqincar.dao.privilege.UserDao;
+import com.yuqincar.domain.car.CarServiceSuperType;
+import com.yuqincar.domain.car.CarServiceType;
+import com.yuqincar.domain.order.Price;
+import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.order.WatchKeeper;
 import com.yuqincar.domain.privilege.Privilege;
 import com.yuqincar.domain.privilege.Role;
@@ -23,6 +34,7 @@ import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.order.WatchKeeperService;
+import com.yuqincar.utils.ExcelUtil;
 
 /**
  * 安装程序（初始化数据）
@@ -41,6 +53,18 @@ public class Installer {
 	
 	@Resource 
 	public PrivilegeDao privilegeDao;
+	
+	@Resource
+	public CarServiceSuperTypeDao carServiceSuperTypeDao;
+	
+	@Resource
+	public CarServiceTypeDao carServiceTypeDao;
+	
+	@Resource
+	public PriceTableDao priceTableDao;
+	
+	@Resource
+	public PriceDao priceDao;
 	
 	@Resource
 	public WatchKeeperService watchKeeperService;
@@ -395,6 +419,49 @@ public class Installer {
 		roleDao.save(companyLeaderRole);
 		
 		installWatchKeeper();
+		initPriceTable();
+	}
+		
+	private void initPriceTable(){
+		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\价格表.xls","价格表");
+		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\商社协议价格表.xls","商社协议价");
+	}
+	
+	private void initPriceTable(String fileName,String tableName){
+		Map<CarServiceType,Price> map=new HashMap<CarServiceType,Price>();
+		
+		List<List<String>> tableContent=ExcelUtil.getLinesFromExcel(fileName, 2, 23, 1, 7, 0);
+		for(List<String> line:tableContent){
+			CarServiceSuperType superType=carServiceSuperTypeDao.getCarServiceSuperTypeByTitle(line.get(0));
+			if(superType==null){
+				superType=new CarServiceSuperType();
+				superType.setTitle(line.get(0));
+				carServiceSuperTypeDao.save(superType);
+			}
+			
+			CarServiceType carServiceType=carServiceTypeDao.getCarServiceTypeByTitle(line.get(1));
+			if(carServiceType==null){
+				carServiceType=new CarServiceType();
+				carServiceType.setTitle(line.get(1));
+				carServiceType.setSuperType(superType);
+				carServiceTypeDao.save(carServiceType);
+			}
+			
+			Price price=new Price();
+			price.setPerDay(new BigDecimal(Float.valueOf(line.get(2))));
+			price.setPerHalfDay(new BigDecimal(Float.valueOf(line.get(3))));
+			price.setPerMileAfterLimit(new BigDecimal(Float.valueOf(line.get(4))));
+			price.setPerHourAfterLimit(new BigDecimal(Float.valueOf(line.get(5))));
+			price.setPerPlaneTime(new BigDecimal(Float.valueOf(line.get(6))));
+			priceDao.save(price);
+			
+			map.put(carServiceType, price);
+		}
+
+		PriceTable priceTable=new PriceTable();
+		priceTable.setTitle(tableName);
+		priceTable.setCarServiceType(map);
+		priceTableDao.save(priceTable);
 	}
 	
 	private void installWatchKeeper(){

@@ -26,8 +26,6 @@ import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.monitor.Location;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
@@ -40,11 +38,9 @@ import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.customer.CustomerService;
-import com.yuqincar.service.order.AddressService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.order.WatchKeeperService;
 import com.yuqincar.service.privilege.UserService;
-import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
@@ -57,8 +53,6 @@ public class ScheduleAction extends BaseAction {
 	private CarService carService;
 	@Autowired
 	private CustomerService customerService;
-	@Autowired
-	private AddressService addressService;
 	@Autowired
 	private CustomerOrganizationService customerOrganizationService;
 	@Autowired

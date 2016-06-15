@@ -242,7 +242,7 @@ public interface OrderService extends BaseService {
 	 * @param order
 	 * @return
 	 */
-	public TreeMap<Date,String> getOrderTrackAbstract(Order order);
+	public String getOrderTrackAbstract(String sn, Date beginDate, Date endDate);
 	
 	/**
 	 * 获取计费方式的中文说明
@@ -287,6 +287,12 @@ public interface OrderService extends BaseService {
 	
 	public DayOrderDetail getDayOrderDetailByDate(Order order,Date date);
 	
+	/**
+	 * 结算订单。根据订单开始时间、上车时间、下车时间、结束时间，计算每天的实际公里、收费公里，以及整个订单的收费情况。
+	 * @param order
+	 */
+	public void orderCheckout(Order order);
+	
 	/********************************************
 	 * 调度人员编辑司机动作
 	 ********************************************/
@@ -324,6 +330,6 @@ public interface OrderService extends BaseService {
 	 ********************************************/
 	public boolean canEditOrderBill(Order order);
 	
-	public void editOrderBill(Order order);
+	public void editOrderBill(Order order, User user);
 	
 }

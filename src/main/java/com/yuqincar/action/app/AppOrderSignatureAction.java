@@ -202,7 +202,7 @@ public class AppOrderSignatureAction extends BaseAction{
 	
 	public void prepare() throws Exception {
 		if(username!=null && pwd!=null)
-			user = userService.getByLoginNameAndPassword(username, pwd);
+			user = userService.getByLoginNameAndMD5Password(username, pwd);
 		if(orderId!=null)
 			order = orderService.getOrderById(orderId);
 	}

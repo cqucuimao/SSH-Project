@@ -15,13 +15,10 @@ import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSON;
 import com.yuqincar.action.common.BaseAction;
-import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.VerificationCode;
-import com.yuqincar.domain.monitor.Location;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
@@ -59,27 +56,17 @@ public class OrderAppAction extends BaseAction{
 	
 	private int carServiceTypeId;
 	
-	private String dayOrder;
+	private String chargeMode;
 	
 	private long beginTime;
 	
 	private long endTime;
 	
-	private String beginAddress;
+	private String fromAddress;
 	
-	private String beginAddressDetail;
+	private String toAddress;
 	
-	private double beginAddressLocationLongitude;
-	
-	private double beginAddressLocationLatitude;
-	
-	private String endAddress;
-	
-	private String endAddressDetail;
-	
-	private double endAddressLocationLongitude;
-	
-	private double endAddressLocationLatitude;
+	private String address;
 	
 	private String callForOther;
 	
@@ -198,12 +185,14 @@ public class OrderAppAction extends BaseAction{
 			return;
 		}
 		
+		Customer customer=customerService.getCustomerByPhoneNumber(phoneNumber);
 		List<CarServiceTypeVO> list=new LinkedList<CarServiceTypeVO>();
 		for(CarServiceType cst:carService.getAllCarServiceType()){
 			CarServiceTypeVO cstvo=new CarServiceTypeVO();
 			cstvo.setId(cst.getId().intValue());
 			cstvo.setName(cst.getTitle());
-			//cstvo.setPriceDescription(cst.getPriceDescription());
+			cstvo.setPriceDescription(customer.getCustomerOrganization().getPriceTable().
+					getCarServiceType().get(cst).toPriceDescription());
 			list.add(cstvo);
 		}
 		String json = JSON.toJSONString(list);
@@ -211,6 +200,8 @@ public class OrderAppAction extends BaseAction{
 	}
 	
 	public void getCarServiceTypeImage(){
+		//由于接口废除，注释下面的代码
+		/*
 		if(carServiceTypeId==0){
 			writeJson("{\"status\":\"badParameter\"}");
 			return;
@@ -222,18 +213,7 @@ public class OrderAppAction extends BaseAction{
 		
 		CarServiceType cst=carService.getCarServiceTypeById(carServiceTypeId);
 		diskFileService.downloadDiskFile(cst.getPicture(), response);
-	}
-	
-	private boolean checkForCalculatePrice(){
-		if(carServiceTypeId==0 || dayOrder==null || dayOrder.length()==0 ||
-				beginTime==0 || (dayOrder.equals("true") && endTime==0) ||				
-				(dayOrder.equals("false") && (beginAddress==null || beginAddress.length()==0 || beginAddressDetail==null || beginAddressDetail.length()==0 ||
-				beginAddressLocationLongitude==0 || beginAddressLocationLatitude==0 || endAddress==null || endAddress.length()==0 ||
-						endAddressDetail==null || endAddressDetail.length()==0 ||
-								endAddressLocationLongitude==0 || endAddressLocationLatitude==0)))
-			return false;
-		else
-			return true;
+		*/
 	}
 	
 	public void getAllHistoryPassengers(){
@@ -258,8 +238,11 @@ public class OrderAppAction extends BaseAction{
 	}
 	
 	public void submitOrder(){
-		//同估算价格相同的验证
-		if(!checkForCalculatePrice()){
+		if(carServiceTypeId==0 || chargeMode==null || chargeMode.length()==0 ||
+				(!chargeMode.equals("DAY") && !chargeMode.equals("MILE") &&!chargeMode.equals("PLANE")) ||
+				beginTime==0 || (chargeMode.equals("DAY") && endTime==0) ||
+				fromAddress==null || fromAddress.length()==0 ||
+				((chargeMode.equals("MILE") || chargeMode.equals("PLANE")) && (toAddress==null || toAddress.length()==0))){
 			writeJson("{\"status\":\"badParameter\"}");
 			return;
 		}
@@ -291,46 +274,30 @@ public class OrderAppAction extends BaseAction{
 		}else
 			order.setCallForOther(false);
 		
-		if(dayOrder.equals("true"))
+		if(chargeMode.equals("DAY"))
 			chargeModeEnum = ChargeModeEnum.DAY;
-		else
+		else if(chargeMode.equals("MILE"))
 			chargeModeEnum = ChargeModeEnum.MILE;
+		else if(chargeMode.equals("PLANE"))
+			chargeModeEnum = ChargeModeEnum.PLANE;		
 		order.setChargeMode(chargeModeEnum);
+		
 		order.setPlanBeginDate(new Date(beginTime));
 		if (order.getChargeMode()==ChargeModeEnum.DAY)
 			order.setPlanEndDate(new Date(endTime));
+		
+		order.setFromAddress(fromAddress);
+		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
+			order.setToAddress(toAddress);
+		
 		order.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
-		//客户端下单功能中没有指定乘车人数
 		order.setPhone(phoneNumber);
 		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
-		
-		List<Address> addresses=new ArrayList<Address>();
-		Address fromAddress=new Address();		
-		fromAddress.setDescription(beginAddress);
-		fromAddress.setDetail(beginAddressDetail);
-		Location l0=new Location();
-		l0.setLongitude(beginAddressLocationLongitude);
-		l0.setLatitude(beginAddressLocationLatitude);
-		fromAddress.setLocation(l0);
-		addresses.add(fromAddress);
-		
-		if (order.getChargeMode()==ChargeModeEnum.MILE) {
-			Address toAddress=new Address();
-			toAddress.setDescription(endAddress);
-			toAddress.setDetail(endAddressDetail);
-			Location l1=new Location();
-			l1.setLongitude(endAddressLocationLongitude);
-			l1.setLatitude(endAddressLocationLatitude);
-			toAddress.setLocation(l1);
-			addresses.add(toAddress);
-		}
-		order.setMemo("");
-		//order.setOrderMile(0L);
-		
+		order.setMemo("");		
 		order.setOrderSource(OrderSourceEnum.APP);
 		
-		//orderService.EnQueue(order,addresses, null,0);
+		orderService.EnQueue(order, null,0);
 		
 		writeJson("{\"status\":true}");
 	}
@@ -394,7 +361,7 @@ public class OrderAppAction extends BaseAction{
 			helper.addWhereCondition("o.customer=? and (o.status=? or o.status=? or o.status=?)", 
 					customer,OrderStatusEnum.INQUEUE,OrderStatusEnum.SCHEDULED,OrderStatusEnum.ACCEPTED);
 		}else if(orderStatus.equals("BEGIN")){
-			helper.addWhereCondition("o.customer=? and o.status=?", customer, OrderStatusEnum.BEGIN);
+			helper.addWhereCondition("o.customer=? and (o.status=? or o.status=? or o.status=?)", customer, OrderStatusEnum.BEGIN, OrderStatusEnum.GETON, OrderStatusEnum.GETOFF);
 		}else if(orderStatus.equals("END")){
 			helper.addWhereCondition("o.customer=? and o.status=?", customer, OrderStatusEnum.END);
 		}else if(orderStatus.equals("CANCELLED")){
@@ -486,6 +453,8 @@ public class OrderAppAction extends BaseAction{
 			odvo.setOrderStatus("等待服务");
 			break;
 		case BEGIN:
+		case GETON:
+		case GETOFF:
 			odvo.setOrderStatus("服务中");
 			break;
 		case END:
@@ -511,24 +480,12 @@ public class OrderAppAction extends BaseAction{
 		}
 		
 		Customer customer=customerService.getCustomerByPhoneNumber(phoneNumber);
-		List<HistoryAddressVO> havoList=new ArrayList<HistoryAddressVO>(customer.getAddresses().size());
-		int n=0;
-		for(Address address:customer.getAddresses()){
-			HistoryAddressVO havo=new HistoryAddressVO();
-			havo.setIndex(++n);
-			havo.setDescription(address.getDescription());
-			havo.setDetail(address.getDetail());
-			havo.setLongitude(address.getLocation().getLongitude());
-			havo.setLatitude(address.getLocation().getLatitude());
-			havoList.add(havo);
-		}
-		
-		String json = JSON.toJSONString(havoList);
+		String json = JSON.toJSONString(customer.getAddresses());
 		writeJson(json);
 	}
 	
 	public void deleteHistoryAddress(){
-		if(addressIndex==0){
+		if(address==null || address.length()==0){
 			writeJson("{\"status\":\"badParameter\"}");
 			return;
 		}
@@ -539,7 +496,7 @@ public class OrderAppAction extends BaseAction{
 		}
 		
 		Customer customer=customerService.getCustomerByPhoneNumber(phoneNumber);
-		customer.getAddresses().remove(addressIndex-1);
+		customer.getAddresses().remove(address);
 		customerService.updateCustomer(customer);
 
 		writeJson("{\"status\":true}");
@@ -726,15 +683,7 @@ public class OrderAppAction extends BaseAction{
 	public void setCarServiceTypeId(int carServiceTypeId) {
 		this.carServiceTypeId = carServiceTypeId;
 	}
-
-	public String getDayOrder() {
-		return dayOrder;
-	}
-
-	public void setDayOrder(String dayOrder) {
-		this.dayOrder = dayOrder;
-	}
-
+	
 	public long getBeginTime() {
 		return beginTime;
 	}
@@ -749,71 +698,6 @@ public class OrderAppAction extends BaseAction{
 
 	public void setEndTime(long endTime) {
 		this.endTime = endTime;
-	}
-
-	public String getBeginAddress() {
-		return beginAddress;
-	}
-
-	public void setBeginAddress(String beginAddress) throws UnsupportedEncodingException{
-		this.beginAddress = URLDecoder.decode(beginAddress,"UTF-8");
-	}
-
-	public String getBeginAddressDetail() {
-		return beginAddressDetail;
-	}
-
-	public void setBeginAddressDetail(String beginAddressDetail) throws UnsupportedEncodingException{
-		this.beginAddressDetail = URLDecoder.decode(beginAddressDetail,"UTF-8");
-	}
-
-	public double getBeginAddressLocationLongitude() {
-		return beginAddressLocationLongitude;
-	}
-
-	public void setBeginAddressLocationLongitude(
-			double beginAddressLocationLongitude) {
-		this.beginAddressLocationLongitude = beginAddressLocationLongitude;
-	}
-
-	public double getBeginAddressLocationLatitude() {
-		return beginAddressLocationLatitude;
-	}
-
-	public void setBeginAddressLocationLatitude(double beginAddressLocationLatitude) {
-		this.beginAddressLocationLatitude = beginAddressLocationLatitude;
-	}
-
-	public String getEndAddress() {
-		return endAddress;
-	}
-
-	public void setEndAddress(String endAddress) throws UnsupportedEncodingException{
-		this.endAddress = URLDecoder.decode(endAddress,"UTF-8");
-	}
-
-	public String getEndAddressDetail() {
-		return endAddressDetail;
-	}
-
-	public void setEndAddressDetail(String endAddressDetail) throws UnsupportedEncodingException{
-		this.endAddressDetail = URLDecoder.decode(endAddressDetail,"UTF-8");
-	}
-
-	public double getEndAddressLocationLongitude() {
-		return endAddressLocationLongitude;
-	}
-
-	public void setEndAddressLocationLongitude(double endAddressLocationLongitude) {
-		this.endAddressLocationLongitude = endAddressLocationLongitude;
-	}
-
-	public double getEndAddressLocationLatitude() {
-		return endAddressLocationLatitude;
-	}
-
-	public void setEndAddressLocationLatitude(double endAddressLocationLatitude) {
-		this.endAddressLocationLatitude = endAddressLocationLatitude;
 	}
 
 	public String getCallForOther() {
@@ -934,6 +818,38 @@ public class OrderAppAction extends BaseAction{
 
 	public void setDeviceToken(String deviceToken) {
 		this.deviceToken = deviceToken;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getChargeMode() {
+		return chargeMode;
+	}
+
+	public void setChargeMode(String chargeMode) {
+		this.chargeMode = chargeMode;
+	}
+
+	public String getFromAddress() {
+		return fromAddress;
+	}
+
+	public void setFromAddress(String fromAddress) {
+		this.fromAddress = fromAddress;
+	}
+
+	public String getToAddress() {
+		return toAddress;
+	}
+
+	public void setToAddress(String toAddress) {
+		this.toAddress = toAddress;
 	}
 
 	class CarServiceTypeVO{
@@ -1116,44 +1032,6 @@ public class OrderAppAction extends BaseAction{
 		}
 		public void setDriver(String driver) {
 			this.driver = driver;
-		}		
-	}
-	
-	class HistoryAddressVO{
-		private int index;
-		private String description;
-		private String detail;
-		private double longitude;
-		private double latitude;
-		public int getIndex() {
-			return index;
-		}
-		public void setIndex(int index) {
-			this.index = index;
-		}
-		public String getDescription() {
-			return description;
-		}
-		public void setDescription(String description) {
-			this.description = description;
-		}
-		public String getDetail() {
-			return detail;
-		}
-		public void setDetail(String detail) {
-			this.detail = detail;
-		}
-		public double getLongitude() {
-			return longitude;
-		}
-		public void setLongitude(double longitude) {
-			this.longitude = longitude;
-		}
-		public double getLatitude() {
-			return latitude;
-		}
-		public void setLatitude(double latitude) {
-			this.latitude = latitude;
 		}		
 	}
 	

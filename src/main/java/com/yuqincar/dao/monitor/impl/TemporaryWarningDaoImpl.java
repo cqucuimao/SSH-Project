@@ -1,5 +1,7 @@
 package com.yuqincar.dao.monitor.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,18 +18,20 @@ public class TemporaryWarningDaoImpl extends BaseDaoImpl<TemporaryWarning> imple
 	private CarDao carDao;
 
 	public boolean isTempMessageExist(Long carId) {
-		TemporaryWarning temp=(TemporaryWarning)getSession().createQuery("from TemporaryWarning t where t.car.id=?")//
-				.setParameter(0, carId).uniqueResult();
-		if(temp==null)
+		List<TemporaryWarning> tempList=(List<TemporaryWarning>)getSession().createQuery("from TemporaryWarning t where t.car.id=?")//
+				.setParameter(0, carId).list();
+		if(tempList==null || tempList.size()==0)
 		   return false;
 		else
 		   return true;
 	}
 
 	public void deleteTempMessage(Long carId) {
-		TemporaryWarning temp=(TemporaryWarning)getSession().createQuery("from TemporaryWarning t where t.car.id=?")//
-				.setParameter(0, carId).uniqueResult();
-		getSession().delete(temp);
+		List<TemporaryWarning> tempList=(List<TemporaryWarning>)getSession().createQuery("from TemporaryWarning t where t.car.id=?")//
+				.setParameter(0, carId).list();
+		if(tempList!=null && tempList.size()>0)
+			for(TemporaryWarning temp:tempList)
+				getSession().delete(temp);
 	}
 
 	public void addTempWarningMessage(Long carId) {

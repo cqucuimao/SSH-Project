@@ -52,9 +52,9 @@ public class LBSDaoImpl implements LBSDao{
 	}
 	
 	
-	public float getStepMile(String sn, String beginTime, String endTime) {
+	public float getStepMile(String sn, Date beginTime, Date endTime) {
 		String api = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="
-				+sn+"&begin="+beginTime+"&end="+endTime+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN&_=1450765172310";
+				+sn+"&begin="+beginTime.getTime()+"&end="+endTime.getTime()+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN&_=1450765172310";
 		String json = HttpMethod.get(api);
 		JSONObject data = (JSONObject) JSON.parse(json);
 		JSONArray track = (JSONArray) data.get("track");
@@ -72,8 +72,8 @@ public class LBSDaoImpl implements LBSDao{
 //		Location location=lbsDao.getCurrentLocation("892620160125106");
 //		System.out.println("location.lng"+location.getLongitude());
 //		System.out.println("location.lat"+location.getLatitude());
-		String from=String.valueOf(DateUtils.getYMDHMS("2016-04-15 08:20:00").getTime());
-		String to=String.valueOf(DateUtils.getYMDHMS("2016-04-15 22:00:00").getTime());
+		Date from=DateUtils.getYMDHMS("2016-04-15 08:20:00");
+		Date to=DateUtils.getYMDHMS("2016-04-15 22:00:00");
 		System.out.println("from="+from);
 		System.out.println("to="+to);
 		float mile = lbsDao.getStepMile("892620160125106",from,to);

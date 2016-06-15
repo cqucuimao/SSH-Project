@@ -4,6 +4,7 @@
  */
 package com.yuqincar.service.order.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,8 +23,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.yuqincar.dao.CustomerOrganization.CustomerOrganizationDao;
 import com.yuqincar.dao.customer.CustomerDao;
 import com.yuqincar.dao.customer.OtherPassengerDao;
+import com.yuqincar.dao.lbs.LBSDao;
 import com.yuqincar.dao.monitor.LocationDao;
-import com.yuqincar.dao.order.AddressDao;
 import com.yuqincar.dao.order.DayOrderDetailDao;
 import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.dao.order.OrderOperationRecordDao;
@@ -31,7 +32,6 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
@@ -43,6 +43,7 @@ import com.yuqincar.domain.order.OrderOperationTypeEnum;
 import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
+import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.app.APPMessageService;
 import com.yuqincar.service.app.DriverAPPService;
@@ -61,10 +62,10 @@ public class OrderServiceImpl implements OrderService {
 	private OrderDao orderDao;
 	
 	@Autowired
-	private AddressDao addressDao;
+	private LocationDao locationDao;
 	
 	@Autowired
-	private LocationDao locationDao;
+	private LBSDao lbsDao;
 	
 	@Autowired
 	private CustomerDao customerDao;
@@ -201,17 +202,6 @@ public class OrderServiceImpl implements OrderService {
 			return customerList.get(0);
 		}
 	}
-
-	private boolean isAddressEquals(Address address1, Address address2) {
-		boolean description = (address1.getDescription() == null && address2
-				.getDescription() == null)
-				|| (address1.getDescription() != null && address1
-						.getDescription().equals(address2.getDescription()));
-		boolean detail = (address1.getDetail() == null && address2.getDetail() == null)
-				|| (address1.getDetail() != null && address1.getDetail()
-						.equals(address2.getDetail()));
-		return description && detail;
-	}
 	
 	private void copyOrderScheduled(Order order, int n) {
 		String baseSN=order.getSn();
@@ -226,8 +216,7 @@ public class OrderServiceImpl implements OrderService {
 			o.setPhone(order.getPhone());
 			o.setOrderMoney(order.getOrderMoney());
 			o.setStatus(order.getStatus());
-			List<Address> addresses=new ArrayList<Address>(2);
-			o.setMemo(o.getMemo());
+			o.setMemo(order.getMemo());
 			o.setCallForOther(order.isCallForOther());
 			o.setOtherPassengerName(order.getOtherPassengerName());
 			o.setOtherPhoneNumber(order.getOtherPhoneNumber());
@@ -267,6 +256,42 @@ public class OrderServiceImpl implements OrderService {
 			otherPassengerDao.save(otherPassenger);
 		}
 	}
+	
+	private void saveCustomerAddress(Order order){
+		boolean exist=false;
+		List<String> addresses=null;
+		if(order.getCustomer().getAddresses()!=null && order.getCustomer().getAddresses().size()>0){
+			addresses=order.getCustomer().getAddresses();
+			
+			for(String address:order.getCustomer().getAddresses()){
+				if(address.equals(order.getFromAddress())){
+					exist=true;
+					break;
+				}
+			}
+			if(!exist)
+				addresses.add(order.getFromAddress());
+			
+			if(order.getToAddress()!=null && order.getToAddress().length()>0){
+				for(String address:order.getCustomer().getAddresses()){
+					if(address.equals(order.getToAddress())){
+						exist=true;
+						break;
+					}
+				}
+				if(!exist)
+					addresses.add(order.getToAddress());
+			}
+		}else{
+			addresses=new ArrayList<String>();
+			addresses.add(order.getFromAddress());
+			if(order.getToAddress()!=null && order.getToAddress().length()>0)
+				addresses.add(order.getToAddress());
+		}
+		
+		order.getCustomer().setAddresses(addresses);
+		customerDao.save(order.getCustomer());
+	}
 		
 	@Transactional
 	public int scheduleOrder(String scheduleMode,Order order, String organizationName, String customerName, Car car, User driver, int copyNumber,Order toUpdateOrder,User user) {
@@ -280,6 +305,9 @@ public class OrderServiceImpl implements OrderService {
 			//复制订单
 			if(copyNumber>0)
 				copyOrderScheduled(order,copyNumber);
+
+			saveCustomerAddress(order);
+			
 			if(order.isCallForOther())
 				saveOtherPassenger(order);
 			if(scheduleMode==OrderService.SCHEDULE_FROM_NEW || scheduleMode==OrderService.SCHEDULE_FROM_QUEUE)
@@ -610,27 +638,18 @@ public class OrderServiceImpl implements OrderService {
 	 * @param order
 	 * @return
 	 */
-	public TreeMap<Date, String> getOrderTrackAbstract(Order order) {
-		//如果订单未结束，返回null
-    	if(order.getStatus()!=OrderStatusEnum.END&&order.getStatus()!=OrderStatusEnum.PAYED)
-    		return null;
-    	
+	public String getOrderTrackAbstract(String sn, Date beginDate, Date endDate){    	
     	//轨迹提取的长度，即轨迹中序列的最大点数
-    	int trackLenth=9;
+    	int TRACK_LENGTH=9;
     	//百度地图服务的ak账号
     	String baiduMapAk="XNcVScWmj4gRZeSvzIyWQ5TZ";
-		//获取执行订单车辆的设备sn
-		String device_sn=order.getCar().getDevice().getSN();
-		//获取订单执行的实际开始时间和结束时间
-		Date beginDate=order.getActualBeginDate();
-		Date endDate=order.getActualEndDate();
 		//获取开始时间和结束时间的时间戳
 		String begin=new Long(beginDate.getTime()).toString();
 		String end=new Long(endDate.getTime()).toString();
 		//拼接获取轨迹序列的url请求
 		StringBuffer rawTrackUrl=new StringBuffer();
 		rawTrackUrl.append("http://api.capcare.com.cn:1045/api/get.track.do?device_sn=");
-		rawTrackUrl.append(device_sn);
+		rawTrackUrl.append(sn);
 		rawTrackUrl.append("&begin=");
 		rawTrackUrl.append(begin);
 		rawTrackUrl.append("&end=");
@@ -639,12 +658,9 @@ public class OrderServiceImpl implements OrderService {
 		//得到的json格式字符串
 		String rawTrackJson = HttpMethod.get(rawTrackUrl.toString());
 		
-		//存储轨迹序列的所有时间点
-		List<Date> allDates=new ArrayList<Date>();
 		//存储轨迹序列的所有位置信息   经度,纬度
 		List<String> allLocations=new ArrayList<String>();
 		//存放选中的时间序列和相应的location序列，大于trackLenth个则均匀选取，否则直接全选
-		List<Date> selectedDates=new ArrayList<Date>();
 		List<String> selectedLocations=new ArrayList<String>();
 		
         //解析轨迹的json数据
@@ -656,37 +672,32 @@ public class OrderServiceImpl implements OrderService {
 			//由于轨迹序列是倒序的 所以进行倒序处理
 			for(int i=track.size()-1;i>0;i--){
 				JSONObject obj=(JSONObject) track.get(i);
-				String dateLong=obj.getString("receive");
-				Date date=new Date(Long.parseLong(dateLong));
 				String lng=obj.getString("lng");
 				String lat=obj.getString("lat");
 				String location=lng+","+lat;
-				allDates.add(date);
 				allLocations.add(location);
 			}
 			//获取轨迹的点数
-			int num=allDates.size();
+			int num=allLocations.size();
 			//存放均匀分布的trackLenth个点，并保证起点和终点对应是一一对应的
-			int[] indexArray=new int[trackLenth];
-			if(num>9){
+			int[] indexArray=new int[TRACK_LENGTH];
+			if(num>TRACK_LENGTH){
 				//计算均匀分布的点的索引
-				float rate=num/trackLenth;
-				for(int i=1;i<=trackLenth;i++){
+				float rate=num/TRACK_LENGTH;
+				for(int i=1;i<=TRACK_LENGTH;i++){
 					if(i==1){
 						indexArray[i-1]=0;
-					}else if(i==trackLenth){
-						indexArray[trackLenth-1]=num-1;
+					}else if(i==TRACK_LENGTH){
+						indexArray[TRACK_LENGTH-1]=num-1;
 					}else{
 						indexArray[i-1]=Math.round(rate*i)-1;   //这里没有直接取到最后一个值，不确定原因，先直接手动设置
 					}
 				}
-				for(int i=0;i<trackLenth;i++){
-					selectedDates.add(allDates.get(indexArray[i]));
+				for(int i=0;i<TRACK_LENGTH;i++){
 					selectedLocations.add(allLocations.get(indexArray[i]));
 				}
-			}else if(num>=1&&num<=trackLenth){
+			}else if(num>=1&&num<=TRACK_LENGTH){
 				for(int i=0;i<num;i++){
-					selectedDates.add(allDates.get(i));
 					selectedLocations.add(allLocations.get(i));
 				}
 			}else{
@@ -724,6 +735,7 @@ public class OrderServiceImpl implements OrderService {
 		//地址解析的url
 		StringBuffer addressUrl=new StringBuffer();
 		//百度接口每次只能解析一个点，循环解析
+		StringBuffer sb=new StringBuffer();
 		for(int i=0;i<baiduLocations.size();i++){
 			addressUrl.append("http://api.map.baidu.com/geocoder/v2/?ak="+baiduMapAk+"&callback=renderReverse&location=");
 		    addressUrl.append(baiduLocations.get(i));
@@ -737,20 +749,12 @@ public class OrderServiceImpl implements OrderService {
 //		    System.out.println(JSON.parseObject(realAddressJson).getJSONObject("result"));
 		    JSONObject result=JSON.parseObject(realAddressJson).getJSONObject("result");
 		    String address=result.getString("formatted_address") + "（" + result.getString("sematic_description")+ "）";
-		    //生成address的list对象
-		    addresses.add(address);
+		    sb.append(address).append(" - ");
 		}
-		//存储轨迹序列的有序集合
-		TreeMap<Date,String> trackAbstract=new TreeMap<Date,String>();
-		//在解析addresses的过程中可能发生服务器错误,增加这个条件，在地址解析发生错误时，返回null
-		if(selectedDates.size()==addresses.size()){
-			for(int i=0;i<selectedDates.size();i++){
-				trackAbstract.put(selectedDates.get(i), addresses.get(i));
-			}
-		}else{
+		if(sb.length()>0)
+			return sb.substring(0, sb.length()-3);
+		else
 			return null;
-		}
-		return trackAbstract;
 	}
 
 	public String getChargeModeString(ChargeModeEnum chargeMode) {
@@ -779,7 +783,7 @@ public class OrderServiceImpl implements OrderService {
 			return TextResolve.getText("order.OrderOperationTypeEnum.RESCHEDULE");
 		case CANCEL:
 			return TextResolve.getText("order.OrderOperationTypeEnum.CANCEL");
-		case MODIFY_SCHEDULE_FORM:
+		case MODIFY_ORDER_CHECK:
 			return TextResolve.getText("order.OrderOperationTypeEnum.MODIFY_SCHEDULE_FORM");
 		case EDIT_DRIVER_ACTION:
 			return TextResolve.getText("order.OrderOperationTypeEnum.EDIT_DRIVER_ACTION");
@@ -939,6 +943,82 @@ public class OrderServiceImpl implements OrderService {
 		return dayOrderDetailDao.getById(id);
 	}
 	
+	@Transactional
+	public void orderCheckout(Order order){
+		if(order.getStatus()!=OrderStatusEnum.END)
+			return;
+		float mile,chargeMile,totalChargeMile,chargeMoney,totalChargeMoney;
+		float hours;
+		float getonDistance,getoffDistance;
+		boolean inMiddleDay;
+		Price price;
+		
+		
+		getonDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getActualBeginDate(), order.getDayDetails().get(0).getGetonDate());
+		getoffDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate(), order.getActualEndDate());
+		
+		totalChargeMile=0;
+		totalChargeMoney=0;
+		price=order.getCustomerOrganization().getPriceTable().getCarServiceType().get(order.getServiceType());
+		for(int i=0;i<order.getDayDetails().size();i++){
+			DayOrderDetail dod=order.getDayDetails().get(i);
+			hours=DateUtils.elapseHours(dod.getGetonDate(), dod.getGetoffDate());
+			mile=lbsDao.getStepMile(order.getCar().getDevice().getSN(), dod.getGetonDate(), dod.getGetoffDate());
+			if(i==0 && getonDistance>10)
+				mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
+			if(i==order.getDayDetails().size()-1 && getoffDistance>10)
+				mile=mile+(getoffDistance-10);	//如果下车地点超过10公里远，超出部分列入行驶公里数
+			inMiddleDay=(i>0) && (i<order.getDayDetails().size()-1);
+			
+			chargeMile=0;
+			chargeMoney=0;
+			if(mile<=10 && inMiddleDay){
+				chargeMile=100;
+				chargeMoney=price.getPerDay().floatValue()*0.8f;
+			}else if(mile<=50 && !inMiddleDay){
+				//按半天计
+				chargeMile=50;
+				chargeMoney=price.getPerHalfDay().floatValue();
+				if(hours>4){
+					if(hours-4>3)
+						chargeMoney+=price.getPerHalfDay().floatValue();
+					else
+						chargeMoney+=(hours-4)*price.getPerHourAfterLimit().floatValue();
+				}
+			}else if(mile<=100){
+				//按全天计
+				chargeMile=100;
+				chargeMoney=price.getPerDay().floatValue();
+				if(hours>8){
+					if(hours-8>3)
+						chargeMoney+=price.getPerHalfDay().floatValue();
+					else
+						chargeMoney+=(hours-8)*price.getPerHourAfterLimit().floatValue();
+				}
+			}else{
+				chargeMile=mile;
+				chargeMoney =price.getPerDay().floatValue()+(mile-100)*price.getPerMileAfterLimit().floatValue();
+			}
+			
+			dod.setActualMile(mile);
+			dod.setChargeMile(chargeMile);
+			dod.setChargeMoney(new BigDecimal(chargeMoney));
+			dod.setPathAbstract(getOrderTrackAbstract(order.getCar().getDevice().getSN(),dod.getGetonDate(),dod.getGetoffDate()));
+			dayOrderDetailDao.update(dod);
+
+			totalChargeMile+=chargeMile;
+			totalChargeMoney+=chargeMoney;
+		}
+		order.setBeginMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getActualBeginDate()));
+		order.setEndMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(),order.getActualEndDate()));
+		order.setCustomerGetonMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(0).getGetonDate()));
+		order.setCustomerGetoffMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate()));
+		order.setTotalChargeMile(totalChargeMile);
+		order.setOrderMoney(new BigDecimal(totalChargeMoney));
+		order.setActualMoney(new BigDecimal(totalChargeMoney));
+		orderDao.update(order);
+	}
+	
 	public boolean canEditDriverAction(Order order){
 		return order.getStatus()==OrderStatusEnum.SCHEDULED || order.getStatus()==OrderStatusEnum.ACCEPTED
 				|| order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETON
@@ -983,6 +1063,7 @@ public class OrderServiceImpl implements OrderService {
 			davo.setId(getDriverActionVOId(order,OrderStatusEnum.END,null));
 			davo.setStatus(OrderStatusEnum.END);
 			davo.setDate(order.getActualEndDate());
+			davo.setStatus(OrderStatusEnum.END);
 			actionList.add(0,davo);
 		case GETOFF:
 		case GETON:
@@ -993,6 +1074,7 @@ public class OrderServiceImpl implements OrderService {
 					davo.setId(getDriverActionVOId(order,OrderStatusEnum.GETOFF,dod));
 					davo.setStatus(OrderStatusEnum.GETOFF);
 					davo.setDate(dod.getGetoffDate());
+					davo.setStatus(OrderStatusEnum.GETOFF);
 					actionList.add(0,davo);
 				}
 				if(dod.getGetonDate()!=null){
@@ -1000,6 +1082,7 @@ public class OrderServiceImpl implements OrderService {
 					davo.setId(getDriverActionVOId(order,OrderStatusEnum.GETON,dod));
 					davo.setStatus(OrderStatusEnum.GETON);
 					davo.setDate(dod.getGetonDate());
+					davo.setStatus(OrderStatusEnum.GETON);
 					actionList.add(0,davo);
 				}
 			}
@@ -1008,12 +1091,14 @@ public class OrderServiceImpl implements OrderService {
 			davo.setId(getDriverActionVOId(order,OrderStatusEnum.BEGIN,null));
 			davo.setStatus(OrderStatusEnum.BEGIN);
 			davo.setDate(order.getActualBeginDate());
+			davo.setStatus(OrderStatusEnum.BEGIN);
 			actionList.add(0,davo);
 		case ACCEPTED:
 			davo=new DriverActionVO();
 			davo.setId(getDriverActionVOId(order,OrderStatusEnum.ACCEPTED,null));
 			davo.setStatus(OrderStatusEnum.ACCEPTED);
 			davo.setDate(order.getAcceptedTime());
+			davo.setStatus(OrderStatusEnum.ACCEPTED);
 			actionList.add(0,davo);
 		case SCHEDULED:
 		case INQUEUE:
@@ -1238,13 +1323,85 @@ public class OrderServiceImpl implements OrderService {
 	/********************************************
 	 * 编辑派车单
 	 ********************************************/
-	@Transactional
 	public boolean canEditOrderBill(Order order){
 		return order.getStatus()==OrderStatusEnum.END;
 	}
 	
 	@Transactional
-	public void editOrderBill(Order order){
+	public void editOrderBill(Order order, User user){
+		Order oldOrder=orderDao.getById(order.getId());
+		StringBuffer sb=new StringBuffer();
+		for(int i=0;i<oldOrder.getDayDetails().size();i++){
+			DayOrderDetail dod=order.getDayDetails().get(i);
+			DayOrderDetail oldDod=oldOrder.getDayDetails().get(i);
+			if(!DateUtils.getHMString(dod.getGetonDate()).equals(DateUtils.getHMString(oldDod.getGetonDate())))
+				sb.append("将").append(DateUtils.getYMDString(dod.getGetonDate())).append("的上车时间由： ")
+					.append(DateUtils.getHMString(oldDod.getGetonDate())).append(" 改为了： ")
+					.append(DateUtils.getHMString(dod.getGetonDate())).append("；");
+			if(!DateUtils.getHMString(dod.getGetoffDate()).equals(DateUtils.getHMString(oldDod.getGetoffDate())))
+				sb.append("将").append(DateUtils.getYMDString(dod.getGetonDate())).append("的下车时间由： ")
+					.append(DateUtils.getHMString(oldDod.getGetoffDate())).append(" 改为了： ")
+					.append(DateUtils.getHMString(dod.getGetoffDate())).append("；");
+			if(!dod.getPathAbstract().equals(oldDod.getPathAbstract()))
+				sb.append("将").append(DateUtils.getYMDString(dod.getGetonDate())).append("的经过地点摘要由： ")
+					.append(oldDod.getPathAbstract()!=null ? oldDod.getPathAbstract() : "<空>").append(" 改为了： ").append(dod.getPathAbstract()!=null ? dod.getPathAbstract() : "<空>").append("；");
+			if(dod.getActualMile()!=oldDod.getActualMile())
+				sb.append("将").append(DateUtils.getYMDString(dod.getGetonDate())).append("的实际公里由： ")
+					.append(oldDod.getActualMile()).append(" 改为了： ").append(dod.getActualMile()).append("；");
+			if(dod.getChargeMile()!=oldDod.getChargeMile())
+				sb.append("将").append(DateUtils.getYMDString(dod.getGetonDate())).append("的收费公里由： ")
+					.append(oldDod.getChargeMile()).append(" 改为了： ").append(dod.getChargeMile()).append("；");
+		}
 		
+		if(order.getBeginMile()!=oldOrder.getBeginMile())
+			sb.append("将出库路码由： ").append(oldOrder.getBeginMile()).append(" 改为了： ").append(order.getBeginMile()).append("；");
+		if(order.getCustomerGetonMile()!=oldOrder.getCustomerGetonMile())
+			sb.append("将客户上车路码由： ").append(oldOrder.getCustomerGetonMile()).append(" 改为了： ").append(order.getCustomerGetonMile()).append("；");
+		if(order.getCustomerGetoffMile()!=oldOrder.getCustomerGetoffMile())
+			sb.append("将客户下车路码由： ").append(oldOrder.getCustomerGetoffMile()).append(" 改为了： ").append(order.getCustomerGetoffMile()).append("；");
+		if(order.getEndMile()!=oldOrder.getEndMile())
+			sb.append("将回库路码由： ").append(oldOrder.getEndMile()).append(" 改为了： ").append(order.getEndMile()).append("；");
+		if((order.getRefuelMoney()==null && oldOrder.getRefuelMoney()!=null) || (!order.getRefuelMoney().equals(oldOrder.getRefuelMoney())))
+			sb.append("将油费由： ").append(oldOrder.getRefuelMoney()!=null ? oldOrder.getRefuelMoney() : "<空>").append(" 改为了： ")
+				.append(order.getRefuelMoney()!=null ? order.getRefuelMoney() : "<空>").append("；");
+		if((order.getWashingFee()==null && oldOrder.getWashingFee()!=null) || (!order.getWashingFee().equals(oldOrder.getWashingFee())))
+			sb.append("将洗车费由： ").append(oldOrder.getWashingFee()!=null ? oldOrder.getWashingFee() : "<空>").append(" 改为了： ")
+				.append(order.getWashingFee()!=null ? order.getWashingFee() : "<空>").append("；");
+		if((order.getParkingFee()==null && oldOrder.getParkingFee()!=null) || (!order.getParkingFee().equals(oldOrder.getParkingFee())))
+			sb.append("将停车费由： ").append(oldOrder.getParkingFee()!=null ? oldOrder.getParkingFee() : "<空>").append(" 改为了： ")
+				.append(order.getParkingFee()!=null ? order.getParkingFee() : "<空>").append("；");
+		if(order.getTotalChargeMile()!=oldOrder.getTotalChargeMile())
+			sb.append("将计费路码由： ").append(oldOrder.getTotalChargeMile()).append(" 改为了： ").append(order.getTotalChargeMile()).append("；");
+		if((order.getToll()==null && oldOrder.getToll()!=null) || (!order.getToll().equals(oldOrder.getToll())))
+			sb.append("将过路费由： ").append(oldOrder.getToll()!=null ? oldOrder.getToll() : "<空>").append(" 改为了： ")
+				.append(order.getToll()!=null ? order.getToll() : "<空>").append("；");
+		if((order.getRoomAndBoardFee()==null && oldOrder.getRoomAndBoardFee()!=null) || (!order.getRoomAndBoardFee().equals(oldOrder.getRoomAndBoardFee())))
+			sb.append("将食宿费由： ").append(oldOrder.getRoomAndBoardFee()!=null ? oldOrder.getRoomAndBoardFee() : "<空>").append(" 改为了： ")
+				.append(order.getRoomAndBoardFee()!=null ? order.getRoomAndBoardFee() : "<空>").append("；");
+		if((order.getOtherFee()==null && oldOrder.getOtherFee()!=null) || (!order.getOtherFee().equals(oldOrder.getOtherFee())))
+			sb.append("将其它费用由： ").append(oldOrder.getOtherFee()!=null ? oldOrder.getOtherFee() : "<空>").append(" 改为了： ")
+				.append(order.getOtherFee()!=null ? order.getOtherFee() : "<空>").append("；");
+		if((order.getOrderMoney()==null && oldOrder.getOrderMoney()!=null) || (!order.getOrderMoney().equals(oldOrder.getOrderMoney())))
+			sb.append("将核算金额由： ").append(oldOrder.getOrderMoney()!=null ? oldOrder.getOrderMoney() : "<空>").append(" 改为了： ")
+				.append(order.getOrderMoney()!=null ? order.getOrderMoney() : "<空>").append("；");
+		if((order.getActualMoney()==null && oldOrder.getActualMoney()!=null) || (!order.getActualMoney().equals(oldOrder.getActualMoney())))
+			sb.append("将实收金额由： ").append(oldOrder.getActualMoney()!=null ? oldOrder.getActualMoney() : "<空>").append(" 改为了： ")
+				.append(order.getActualMoney()!=null ? order.getActualMoney() : "<空>").append("；");
+		if(order.getGrade()!=oldOrder.getGrade())
+			sb.append("将服务评价由： ").append(oldOrder.getGrade()).append(" 改为了： ").append(order.getGrade()).append("；");
+		if((order.getOptions()==null && oldOrder.getOptions()!=null) || (!order.getOptions().equals(oldOrder.getOptions())))
+			sb.append("将服务评价由： ").append(oldOrder.getOptions()!=null ? oldOrder.getOptions() : "<空>").append(" 改为了： ").append(order.getOptions()!=null ? order.getOptions() : "<空>").append("；");
+		
+		if(sb.length()>0){
+			OrderOperationRecord oor=new OrderOperationRecord();
+			oor.setOrder(order);
+			oor.setType(OrderOperationTypeEnum.MODIFY_ORDER_CHECK);
+			oor.setDate(new Date());
+			oor.setUser(user);
+			oor.setDescription(sb.toString());
+			orderOperationRecordDao.save(oor);
+		}
+				
+		orderDao.update(order);
 	}
 }

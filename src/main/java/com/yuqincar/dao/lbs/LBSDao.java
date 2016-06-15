@@ -15,6 +15,6 @@ public interface LBSDao {
 	public float getCurrentMile(String sn);
 	
 	//得到beginTime和endTime之间的里程数。
-	public float getStepMile(String sn, String beginTime, String endTime);
+	public float getStepMile(String sn, Date beginTime, Date endTime);
 
 }

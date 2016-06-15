@@ -1,12 +1,12 @@
 package com.yuqincar.domain.order;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
-import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.utils.Text;
 
@@ -29,6 +29,8 @@ public class DayOrderDetail extends BaseEntity {
 	private float actualMile;
 	
 	private float chargeMile;
+	
+	private BigDecimal chargeMoney;
 
 	public Date getGetonDate() {
 		return getonDate;
@@ -76,5 +78,13 @@ public class DayOrderDetail extends BaseEntity {
 
 	public void setOrder(Order order) {
 		this.order = order;
-	}	
+	}
+
+	public BigDecimal getChargeMoney() {
+		return chargeMoney;
+	}
+
+	public void setChargeMoney(BigDecimal chargeMoney) {
+		this.chargeMoney = chargeMoney;
+	}		
 }

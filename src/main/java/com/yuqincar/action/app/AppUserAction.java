@@ -42,7 +42,7 @@ public class AppUserAction extends BaseAction implements Preparable{
 	public void prepare() throws Exception {
 		String username = request.getParameter("username");
 		String password = request.getParameter("pwd");
-		user = userService.getByLoginNameAndPassword(username, password);
+		user = userService.getByLoginNameAndMD5Password(username, password);
 	}
 
 	

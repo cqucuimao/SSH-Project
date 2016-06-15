@@ -27,7 +27,7 @@
                     <tr>
                         <th>值班人员：<span class="required">*</span></th>
                         <td>
-                        	<s:textfield class="inputText" id="driverName" type="text" name="driverName" showContent="all"/>
+                        	<s:textfield class="userSelector inputText" id="driverName" type="text"/>
 							<s:textfield id="driverId" name="driverId" type="hidden"/>
 						</td>
                     </tr>

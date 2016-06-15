@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.utils.Text;
+import com.yuqincar.utils.TextResolve;
 
 @Entity
 public class Price extends BaseEntity {
@@ -63,4 +64,13 @@ public class Price extends BaseEntity {
 	public void setPerPlaneTime(BigDecimal perPlaneTime) {
 		this.perPlaneTime = perPlaneTime;
 	}	
+	public String toPriceDescription(){
+		StringBuffer sb=new StringBuffer();
+		sb.append(TextResolve.getText("order.Price.perDay")).append("：").append(perDay.toString()).append("；");
+		sb.append(TextResolve.getText("order.Price.perHalfDay")).append("：").append(perHalfDay.toString()).append("；");
+		sb.append(TextResolve.getText("order.Price.perMileAfterLimit")).append("：").append(perMileAfterLimit.toString()).append("；");
+		sb.append(TextResolve.getText("order.Price.perHourAfterLimit")).append("：").append(perHourAfterLimit.toString()).append("；");
+		sb.append(TextResolve.getText("order.Price.perPlaneTime")).append("：").append(perPlaneTime.toString()).append("；");
+		return sb.toString();
+	}
 }

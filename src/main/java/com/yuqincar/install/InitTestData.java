@@ -1,13 +1,10 @@
 package com.yuqincar.install;
 
-import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -34,7 +31,6 @@ import com.yuqincar.dao.customer.CustomerDao;
 import com.yuqincar.dao.customer.OtherPassengerDao;
 import com.yuqincar.dao.monitor.DeviceDao;
 import com.yuqincar.dao.monitor.LocationDao;
-import com.yuqincar.dao.order.AddressDao;
 import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.dao.order.PriceDao;
@@ -48,14 +44,10 @@ import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.car.CarInsurance;
 import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarRepair;
-import com.yuqincar.domain.car.CarServiceSuperType;
-import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.monitor.Device;
-import com.yuqincar.domain.monitor.Location;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
@@ -64,7 +56,6 @@ import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatement;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
-import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.privilege.Department;
 import com.yuqincar.domain.privilege.Role;
@@ -75,7 +66,6 @@ import com.yuqincar.service.common.DiskFileService;
 import com.yuqincar.service.privilege.RoleService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
-import com.yuqincar.utils.ExcelUtil;
 
 @Component
 public class InitTestData {
@@ -84,9 +74,6 @@ public class InitTestData {
 
 	@Resource
 	private LocationDao locationDao;
-
-	@Resource
-	private AddressDao addressDao;
 
 	@Resource
 	private ServicePointDao servicePointDao;
@@ -160,63 +147,19 @@ public class InitTestData {
 	@Transactional
 	public void install() {
 		Session session = sessionFactory.getCurrentSession();
-
-		initServicePoint();
-		initPriceTable();
+		
 		initUser();
 		initDriver();
 		initDevice();
 		initCar();
 		initCustomer();
 		//initOrder();
-		initCarCare();
-		initCarExamine();
-		initCarRepair();
-		initCarRefuel();
-		initCarInsurance();
-		initOrderStatement();
-	}
-	
-	private void initPriceTable(){
-		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\价格表.xls","价格表");
-		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\商社协议价格表.xls","商社协议价");
-	}
-	
-	private void initPriceTable(String fileName,String tableName){
-		Map<CarServiceType,Price> map=new HashMap<CarServiceType,Price>();
-		
-		List<List<String>> tableContent=ExcelUtil.getLinesFromExcel(fileName, 2, 23, 1, 7, 0);
-		for(List<String> line:tableContent){
-			CarServiceSuperType superType=carServiceSuperTypeDao.getCarServiceSuperTypeByTitle(line.get(0));
-			if(superType==null){
-				superType=new CarServiceSuperType();
-				superType.setTitle(line.get(0));
-				carServiceSuperTypeDao.save(superType);
-			}
-			
-			CarServiceType carServiceType=carServiceTypeDao.getCarServiceTypeByTitle(line.get(1));
-			if(carServiceType==null){
-				carServiceType=new CarServiceType();
-				carServiceType.setTitle(line.get(1));
-				carServiceType.setSuperType(superType);
-				carServiceTypeDao.save(carServiceType);
-			}
-			
-			Price price=new Price();
-			price.setPerDay(new BigDecimal(Float.valueOf(line.get(2))));
-			price.setPerHalfDay(new BigDecimal(Float.valueOf(line.get(3))));
-			price.setPerMileAfterLimit(new BigDecimal(Float.valueOf(line.get(4))));
-			price.setPerHourAfterLimit(new BigDecimal(Float.valueOf(line.get(5))));
-			price.setPerPlaneTime(new BigDecimal(Float.valueOf(line.get(6))));
-			priceDao.save(price);
-			
-			map.put(carServiceType, price);
-		}
-
-		PriceTable priceTable=new PriceTable();
-		priceTable.setTitle(tableName);
-		priceTable.setCarServiceType(map);
-		priceTableDao.save(priceTable);
+		//initCarCare();
+		//initCarExamine();
+		//initCarRepair();
+		//initCarRefuel();
+		//initCarInsurance();
+		//initOrderStatement();
 	}
 
 	private void initCarRepair() {
@@ -838,94 +781,42 @@ public class InitTestData {
 	}
 
 	private void initCustomer() {
+		PriceTable priceTable=priceTableDao.getPriceTableByTitle("价格表");
+		
 		CustomerOrganization co1 = new CustomerOrganization();
 		co1.setName("重庆师范大学");
 		co1.setAbbreviation("重师");
-		Address address1 = new Address();
-		address1.setDescription("重庆师范大学大门");
-		address1.setDetail("沙坪坝区陈家湾231号");
-		Location location1 = new Location();
-		location1.setLongitude(106.475815);
-		location1.setLatitude(29.571351);
-		locationDao.save(location1);
-		address1.setLocation(location1);
-		addressDao.save(address1);
-		co1.setpAddress(address1);
+		co1.setPriceTable(priceTable);
 		customerOrganizationDao.save(co1);
 
 		CustomerOrganization co2 = new CustomerOrganization();
 		co2.setName("重庆大学");
 		co2.setAbbreviation("重大");
-		Address address2 = new Address();
-		address2.setDescription("重庆大学行政楼");
-		address2.setDetail("沙坪坝沙正街174号");
-		Location location2 = new Location();
-		location2.setLongitude(106.473815);
-		location2.setLatitude(29.569351);
-		locationDao.save(location2);
-		address2.setLocation(location2);
-		addressDao.save(address2);
-		co2.setpAddress(address2);
+		co2.setPriceTable(priceTable);
 		customerOrganizationDao.save(co2);
 
 		CustomerOrganization co3 = new CustomerOrganization();
 		co3.setName("重庆海关");
 		co3.setAbbreviation("海关");
-		Address address3 = new Address();
-		address3.setDescription("红旗河沟");
-		address3.setDetail("江北区红石路111号");
-		Location location3 = new Location();
-		location3.setLongitude(106.56649);
-		location3.setLatitude(29.587985);
-		locationDao.save(location3);
-		address3.setLocation(location3);
-		addressDao.save(address3);
-		co3.setpAddress(address3);
+		co3.setPriceTable(priceTable);
 		customerOrganizationDao.save(co3);
 
 		CustomerOrganization co4 = new CustomerOrganization();
 		co4.setName("重庆市安全监察局");
 		co4.setAbbreviation("安监局");
-		Address address4 = new Address();
-		address4.setDescription("光电园凤凰座");
-		address4.setDetail("渝北区青枫北路435号");
-		Location location4 = new Location();
-		location4.setLongitude(106.54649);
-		location4.setLatitude(29.585985);
-		locationDao.save(location4);
-		address4.setLocation(location4);
-		addressDao.save(address4);
-		co4.setpAddress(address4);
+		co4.setPriceTable(priceTable);
 		customerOrganizationDao.save(co4);
 
 		CustomerOrganization co5 = new CustomerOrganization();
 		co5.setName("重庆市人民政府");
 		co5.setAbbreviation("市府");
-		Address address5 = new Address();
-		address5.setDescription("大溪沟");
-		address5.setDetail("渝中区大溪沟1路1号");
-		Location location5 = new Location();
-		location5.setLongitude(106.584613);
-		location5.setLatitude(29.564503);
-		locationDao.save(location5);
-		address5.setLocation(location5);
-		addressDao.save(address5);
-		co5.setpAddress(address5);
+		co5.setPriceTable(priceTable);
 		customerOrganizationDao.save(co5);
 
 		CustomerOrganization co6 = new CustomerOrganization();
 		co6.setName("中共重庆市委员会");
 		co6.setAbbreviation("市委");
-		Address address6 = new Address();
-		address6.setDescription("大溪沟");
-		address6.setDetail("渝中区大溪沟1路2号");
-		Location location6 = new Location();
-		location6.setLongitude(106.586613);
-		location6.setLatitude(29.566503);
-		locationDao.save(location6);
-		address6.setLocation(location6);
-		addressDao.save(address6);
-		co6.setpAddress(address6);
+		co6.setPriceTable(priceTable);
 		customerOrganizationDao.save(co6);
 
 		Customer c1 = new Customer();
@@ -937,12 +828,6 @@ public class InitTestData {
 		phoneList1.add("13883100001");
 		phoneList1.add("65100001");
 		c1.setPhones(phoneList1);
-		List<Address> addressList1 = new ArrayList<Address>();
-		addressList1.add(customerOrganizationDao.getByAbbreviation("海关")
-				.getpAddress());
-		addressList1.add(customerOrganizationDao.getByAbbreviation("市委")
-				.getpAddress());
-		c1.setAddresses(addressList1);
 		customerDao.save(c1);
 
 		Customer c2 = new Customer();
@@ -953,12 +838,6 @@ public class InitTestData {
 		List<String> phoneList2 = new ArrayList<String>();
 		phoneList2.add("13883100002");
 		c2.setPhones(phoneList2);
-		List<Address> addressList2 = new ArrayList<Address>();
-		addressList2.add(customerOrganizationDao.getByAbbreviation("安监局")
-				.getpAddress());
-		addressList2.add(customerOrganizationDao.getByAbbreviation("市府")
-				.getpAddress());
-		c2.setAddresses(addressList2);
 		customerDao.save(c2);
 
 		Customer c3 = new Customer();
@@ -970,12 +849,6 @@ public class InitTestData {
 		phoneList3.add("13883100003");
 		phoneList3.add("65100003");
 		c3.setPhones(phoneList3);
-		List<Address> addressList3 = new ArrayList<Address>();
-		addressList3.add(customerOrganizationDao.getByAbbreviation("海关")
-				.getpAddress());
-		addressList3.add(customerOrganizationDao.getByAbbreviation("市府")
-				.getpAddress());
-		c3.setAddresses(addressList3);
 		customerDao.save(c3);
 
 		Customer c4 = new Customer();
@@ -986,12 +859,6 @@ public class InitTestData {
 		List<String> phoneList4 = new ArrayList<String>();
 		phoneList4.add("13883100004");
 		c4.setPhones(phoneList4);
-		List<Address> addressList4 = new ArrayList<Address>();
-		addressList4.add(customerOrganizationDao.getByAbbreviation("安监局")
-				.getpAddress());
-		addressList4.add(customerOrganizationDao.getByAbbreviation("市委")
-				.getpAddress());
-		c4.setAddresses(addressList4);
 		customerDao.save(c4);
 
 		Customer c5 = new Customer();
@@ -1003,12 +870,6 @@ public class InitTestData {
 		phoneList5.add("13883100005");
 		phoneList5.add("65100005");
 		c5.setPhones(phoneList5);
-		List<Address> addressList5 = new ArrayList<Address>();
-		addressList5.add(customerOrganizationDao.getByAbbreviation("重大")
-				.getpAddress());
-		addressList5.add(customerOrganizationDao.getByAbbreviation("市委")
-				.getpAddress());
-		c5.setAddresses(addressList5);
 		customerDao.save(c5);
 
 		Customer c6 = new Customer();
@@ -1019,12 +880,6 @@ public class InitTestData {
 		List<String> phoneList6 = new ArrayList<String>();
 		phoneList6.add("13883100006");
 		c6.setPhones(phoneList6);
-		List<Address> addressList6 = new ArrayList<Address>();
-		addressList6.add(customerOrganizationDao.getByAbbreviation("重大")
-				.getpAddress());
-		addressList6.add(customerOrganizationDao.getByAbbreviation("市府")
-				.getpAddress());
-		c6.setAddresses(addressList6);
 		customerDao.save(c6);
 
 		Customer c7 = new Customer();
@@ -1036,12 +891,6 @@ public class InitTestData {
 		phoneList7.add("13883100007");
 		phoneList7.add("65100007");
 		c7.setPhones(phoneList7);
-		List<Address> addressList7 = new ArrayList<Address>();
-		addressList7.add(customerOrganizationDao.getByAbbreviation("重师")
-				.getpAddress());
-		addressList7.add(customerOrganizationDao.getByAbbreviation("市府")
-				.getpAddress());
-		c7.setAddresses(addressList7);
 		customerDao.save(c7);
 
 		Customer c8 = new Customer();
@@ -1052,12 +901,6 @@ public class InitTestData {
 		List<String> phoneList8 = new ArrayList<String>();
 		phoneList8.add("13883100008");
 		c8.setPhones(phoneList8);
-		List<Address> addressList8 = new ArrayList<Address>();
-		addressList8.add(customerOrganizationDao.getByAbbreviation("重师")
-				.getpAddress());
-		addressList8.add(customerOrganizationDao.getByAbbreviation("市委")
-				.getpAddress());
-		c8.setAddresses(addressList8);
 		customerDao.save(c8);
 
 		Customer c9 = new Customer();
@@ -1069,12 +912,6 @@ public class InitTestData {
 		phoneList9.add("13883100009");
 		phoneList9.add("65100009");
 		c9.setPhones(phoneList9);
-		List<Address> addressList9 = new ArrayList<Address>();
-		addressList9.add(customerOrganizationDao.getByAbbreviation("重大")
-				.getpAddress());
-		addressList9.add(customerOrganizationDao.getByAbbreviation("海关")
-				.getpAddress());
-		c9.setAddresses(addressList9);
 		customerDao.save(c9);
 
 		Customer c10 = new Customer();
@@ -1085,12 +922,6 @@ public class InitTestData {
 		List<String> phoneList10 = new ArrayList<String>();
 		phoneList10.add("13883100010");
 		c10.setPhones(phoneList10);
-		List<Address> addressList10 = new ArrayList<Address>();
-		addressList10.add(customerOrganizationDao.getByAbbreviation("重大")
-				.getpAddress());
-		addressList10.add(customerOrganizationDao.getByAbbreviation("安监局")
-				.getpAddress());
-		c10.setAddresses(addressList10);
 		customerDao.save(c10);
 
 		Customer c11 = new Customer();
@@ -1102,12 +933,6 @@ public class InitTestData {
 		phoneList11.add("13883100011");
 		phoneList11.add("65100011");
 		c11.setPhones(phoneList11);
-		List<Address> addressList11 = new ArrayList<Address>();
-		addressList11.add(customerOrganizationDao.getByAbbreviation("重师")
-				.getpAddress());
-		addressList11.add(customerOrganizationDao.getByAbbreviation("安监局")
-				.getpAddress());
-		c11.setAddresses(addressList11);
 		customerDao.save(c11);
 
 		Customer c12 = new Customer();
@@ -1118,12 +943,6 @@ public class InitTestData {
 		List<String> phoneList12 = new ArrayList<String>();
 		phoneList12.add("13883100012");
 		c12.setPhones(phoneList12);
-		List<Address> addressList12 = new ArrayList<Address>();
-		addressList12.add(customerOrganizationDao.getByAbbreviation("重师")
-				.getpAddress());
-		addressList12.add(customerOrganizationDao.getByAbbreviation("海关")
-				.getpAddress());
-		c12.setAddresses(addressList12);
 		customerDao.save(c12);
 
 		List<Customer> cl1 = new ArrayList<Customer>();
@@ -1222,6 +1041,18 @@ public class InitTestData {
 	}
 
 	private void initCar() {
+		ServicePoint sp1 = new ServicePoint();
+		sp1.setName("重庆大学业务点");
+		servicePointDao.save(sp1);
+
+		ServicePoint sp2 = new ServicePoint();
+		sp2.setName("龙头寺业务点");
+		servicePointDao.save(sp2);
+
+		ServicePoint sp3 = new ServicePoint();
+		sp3.setName("解放碑业务点");
+		servicePointDao.save(sp3);
+		
 		Car car1 = new Car();
 		car1.setPlateNumber("渝A00001");
 		car1.setBrand("大众");
@@ -1230,7 +1061,7 @@ public class InitTestData {
 		car1.setEngineSN("ESN00001");
 		car1.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("大众帕萨特"));
 		car1.setDriver(userService.getByLoginName("司机1"));
-		car1.setServicePoint(servicePointDao.getById(1L));
+		car1.setServicePoint(sp1);
 		car1.setDevice(deviceDao.getById(1L));
 		car1.setMileage(80000);
 		car1.setRegistDate(new Date());
@@ -1250,7 +1081,7 @@ public class InitTestData {
 		car2.setEngineSN("ESN00002");
 		car2.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("大众迈腾"));
 		car2.setDriver(userService.getByLoginName("司机2"));
-		car2.setServicePoint(servicePointDao.getById(1L));
+		car2.setServicePoint(sp1);
 		car2.setDevice(deviceDao.getById(2L));
 		car2.setMileage(90000);
 		car2.setRegistDate(new Date());
@@ -1270,7 +1101,7 @@ public class InitTestData {
 		car3.setEngineSN("ESN00003");
 		car3.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("蒙迪欧致胜"));
 		car3.setDriver(userService.getByLoginName("司机2"));
-		car3.setServicePoint(servicePointDao.getById(1L));
+		car3.setServicePoint(sp1);
 		car3.setDevice(deviceDao.getById(3L));
 		car3.setMileage(100000);
 		car3.setRegistDate(new Date());
@@ -1290,7 +1121,7 @@ public class InitTestData {
 		car4.setEngineSN("ESN00004");
 		car4.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("沃尔沃S80/2.5"));
 		car4.setDriver(userService.getByLoginName("司机4"));
-		car4.setServicePoint(servicePointDao.getById(2L));
+		car4.setServicePoint(sp2);
 		car4.setDevice(deviceDao.getById(4L));
 		car4.setMileage(110000);
 		car4.setRegistDate(new Date());
@@ -1309,7 +1140,7 @@ public class InitTestData {
 		car5.setVIN("SVN000005");
 		car5.setEngineSN("ESN00005");
 		car5.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("凯美瑞"));
-		car5.setServicePoint(servicePointDao.getById(2L));
+		car5.setServicePoint(sp2);
 		car5.setDevice(deviceDao.getById(5L));
 		car5.setMileage(120000);
 		car5.setRegistDate(new Date());
@@ -1329,7 +1160,7 @@ public class InitTestData {
 		car6.setEngineSN("ESN00006");
 		car6.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("商务别克"));
 		car6.setDriver(userService.getByLoginName("司机6"));
-		car6.setServicePoint(servicePointDao.getById(2L));
+		car6.setServicePoint(sp2);
 		car6.setDevice(deviceDao.getById(6L));
 		car6.setMileage(130000);
 		car6.setRegistDate(new Date());
@@ -1349,7 +1180,7 @@ public class InitTestData {
 		car7.setEngineSN("ESN00007");
 		car7.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("别克"));
 		car7.setDriver(userService.getByLoginName("司机7"));
-		car7.setServicePoint(servicePointDao.getById(3L));
+		car7.setServicePoint(sp3);
 		car7.setDevice(deviceDao.getById(7L));
 		car7.setMileage(140000);
 		car7.setRegistDate(new Date());
@@ -1369,7 +1200,7 @@ public class InitTestData {
 		car8.setEngineSN("ESN00008");
 		car8.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("丰田RAV4、CRV越野"));
 		car8.setDriver(userService.getByLoginName("司机8"));
-		car8.setServicePoint(servicePointDao.getById(3L));
+		car8.setServicePoint(sp3);
 		car8.setDevice(deviceDao.getById(8L));
 		car8.setMileage(150000);
 		car8.setRegistDate(new Date());
@@ -1389,7 +1220,7 @@ public class InitTestData {
 		car9.setEngineSN("ESN00009");
 		car9.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle("2.4奥迪"));
 		car9.setDriver(userService.getByLoginName("司机8"));
-		car9.setServicePoint(servicePointDao.getById(3L));
+		car9.setServicePoint(sp3);
 		car9.setDevice(deviceDao.getById(8L));
 		car9.setMileage(150000);
 		car9.setRegistDate(new Date());
@@ -1606,50 +1437,6 @@ public class InitTestData {
 		user7.setRoles(new HashSet<Role>());
 		user7.getRoles().add(roleService.getRoleByName("公司领导"));
 		userDao.save(user7);
-		}
-
-	private void initServicePoint() {
-		ServicePoint p1 = new ServicePoint();
-		p1.setName("重庆大学业务点");
-		Address address1 = new Address();
-		address1.setDescription("重庆大学大门");
-		address1.setDetail("沙坪坝区沙正街174号");
-		Location location1 = new Location();
-		location1.setLongitude(106.474815);
-		location1.setLatitude(29.570351);
-		locationDao.save(location1);
-		address1.setLocation(location1);
-		addressDao.save(address1);
-		p1.setPointAddress(address1);
-		servicePointDao.save(p1);
-
-		ServicePoint p2 = new ServicePoint();
-		p2.setName("龙头寺业务点");
-		Address address2 = new Address();
-		address2.setDescription("龙头寺火车站");
-		address2.setDetail("渝北区华园路1号");
-		Location location2 = new Location();
-		location2.setLongitude(106.56749);
-		location2.setLatitude(29.588985);
-		locationDao.save(location2);
-		address2.setLocation(location2);
-		addressDao.save(address2);
-		p2.setPointAddress(address2);
-		servicePointDao.save(p2);
-
-		ServicePoint p3 = new ServicePoint();
-		p3.setName("解放碑业务点");
-		Address address3 = new Address();
-		address3.setDescription("解放碑");
-		address3.setDetail("渝中区民权路1号");
-		Location location3 = new Location();
-		location3.setLongitude(106.583613);
-		location3.setLatitude(29.563503);
-		locationDao.save(location3);
-		address3.setLocation(location3);
-		addressDao.save(address3);
-		p3.setPointAddress(address3);
-		servicePointDao.save(p3);
 	}
 
 	public static void main(String[] args) {

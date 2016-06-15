@@ -219,11 +219,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			nodes= carService.getCarTree(model.getPlateNumber());
 		Gson gson = new Gson();
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));
-		
-
-		Car car = (Car) ActionContext.getContext().getValueStack().peek();
 		ActionContext.getContext().put("carSelectorId", carSelectorId);
-		
 		return "popup";
 	}
 	//判断车辆能否删除

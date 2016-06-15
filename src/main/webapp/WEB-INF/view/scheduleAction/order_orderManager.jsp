@@ -43,7 +43,7 @@
 					</td>					
 					<th>司机</th>
 					<td>
-						<s:textfield class="inputText" id="driverName" type="text" name="driverName"/>
+						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driverName"/>
 						<s:textfield id="driverId" name="driverId" type="hidden"/>						
 					</td>
 					<th>计划开始时间</th>

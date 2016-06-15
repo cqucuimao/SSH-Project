@@ -41,11 +41,12 @@ public class Customer extends BaseEntity {
 	@OrderColumn(name="list_order")
 	private List<String> phones;	//联系电话
 
-	@Text("常用地址")	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name = "customer_address", joinColumns = { @JoinColumn(name = "customer_id")},
-		inverseJoinColumns = { @JoinColumn(name = "address_id") })
-	private List<Address> addresses;	//常用地址
+	@Text("联系电话")
+	@ElementCollection
+	@CollectionTable
+	@Column(name="address")
+	@OrderColumn(name="list_order")
+	private List<String> addresses;	//常用地址
 	
 	@Text("常用乘车人")
 	@OneToMany(mappedBy="customer")
@@ -81,13 +82,13 @@ public class Customer extends BaseEntity {
 
 	public void setPhones(List<String> phones) {
 		this.phones = phones;
-	}
+	}	
 
-	public List<Address> getAddresses() {
+	public List<String> getAddresses() {
 		return addresses;
 	}
 
-	public void setAddresses(List<Address> addresses) {
+	public void setAddresses(List<String> addresses) {
 		this.addresses = addresses;
 	}
 

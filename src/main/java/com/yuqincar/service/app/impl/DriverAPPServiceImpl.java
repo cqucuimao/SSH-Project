@@ -17,7 +17,6 @@ import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.dao.order.OrderOperationRecordDao;
 import com.yuqincar.domain.common.DiskFile;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.monitor.Location;
 import com.yuqincar.domain.order.APPRemindMessage;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.DayOrderDetail;
@@ -29,6 +28,7 @@ import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.app.APPMessageService;
 import com.yuqincar.service.app.DriverAPPService;
+import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
@@ -52,6 +52,8 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 	private APPMessageService appMessageService;
 	@Autowired
 	private OrderOperationRecordDao orderOperationRecordDao;
+	@Autowired
+	private OrderService orderService;
 	
 	/**
 	 * 获取某个待执行的订单
@@ -190,7 +192,7 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			orderOperationRecordDao.save(oor);
 		}
 		
-		//TODO 计算每一个计价周期的价格，并汇总总价格
+		orderService.orderCheckout(order);
 		
 		return 0;
 	}

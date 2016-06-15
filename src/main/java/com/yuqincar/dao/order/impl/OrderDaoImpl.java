@@ -26,10 +26,8 @@ import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
-import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.monitor.Location;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
@@ -192,27 +190,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 						"from order_ where status=? order by queueTime asc")
 				.setParameter(0, OrderStatusEnum.INQUEUE).list();
 	}
-
-	//按照距离location最近的直线距离升序排序的业务点列表
-	public List<ServicePoint> getAscendingDirectNearestServicePoints(Location location){
-		final List<ServicePoint> servicePointList=(List<ServicePoint>)getSession().createQuery("from ServicePoint").list();
-		final List<Double> servicePointDistanceList=new LinkedList<Double>();
-		for(ServicePoint servicePoint:servicePointList)
-			servicePointDistanceList.add(straightLineDistance(location.getLongitude(),location.getLatitude(),
-					servicePoint.getPointAddress().getLocation().getLongitude(),servicePoint.getPointAddress().getLocation().getLatitude()));
-		Collections.sort(servicePointList, new Comparator<ServicePoint>(){
-			public int compare(ServicePoint sp1, ServicePoint sp2) {
-				int index1=servicePointList.indexOf(sp1);
-				int index2=servicePointList.indexOf(sp2);
-				if(servicePointDistanceList.get(index1).doubleValue()<servicePointDistanceList.get(index2).doubleValue())
-					return -1;
-				else if(servicePointDistanceList.get(index1).doubleValue()>servicePointDistanceList.get(index2).doubleValue())
-					return 1;
-				return 0;
-            }
-		});
-		return servicePointList;
-	}
 	
 	@SuppressWarnings("unchecked")
 	public PageBean getRecommandedCar(CarServiceType serviceType, ChargeModeEnum chargeMode,
@@ -261,13 +238,13 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		List<Car> tempCarList;
 		if(chargeMode==ChargeModeEnum.MILE || chargeMode==ChargeModeEnum.PLANE){
 			String hql = "from Car as car where car.status<>? and serviceType=? and car.standbyCar =?";
-					  hql = hql+" and car not in (select o.car from order_ as o where o.chargeMode==? and o.chargeMode==? and  and o.status<>? and o.status<>? and o.status<>? and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate))";
+					  hql = hql+" and car not in (select o.car from order_ as o where o.chargeMode=? and o.chargeMode=? and  and o.status<>? and o.status<>? and o.status<>? and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate))";
 					  hql = hql+" and car not in (select cc.car from CarCare as cc where cc.appointment=? and TO_DAYS(cc.date)=TO_DAYS(?))";
 					  hql = hql+" and car not in (select ce.car from CarExamine as ce where ce.appointment=? and TO_DAYS(ce.date)=TO_DAYS(?))";
 					  hql = hql+" and car not in (select cr.car from CarRepair as cr where cr.appointment=? and TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(cr.toDate))";
 					  
 					  hql = hql+" and car.driver is not null";
-					  hql = hql+" and car.driver not in (select o.driver from order_ as o where o.chargeMode==? and o.chargeMode==? and o.status<>? and o.status<>? and o.status<>? and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate))";
+					  hql = hql+" and car.driver not in (select o.driver from order_ as o where o.chargeMode=? and o.chargeMode=? and o.status<>? and o.status<>? and o.status<>? and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate))";
 					  hql = hql+" and car.driver not in (select cc.driver from CarCare as cc where cc.appointment=? and TO_DAYS(cc.date)=TO_DAYS(?))";
 					  hql = hql+" and car.driver not in (select ce.driver from CarExamine as ce where ce.appointment=? and TO_DAYS(ce.date)=TO_DAYS(?))";
 					  hql = hql+" and car.driver not in (select cr.driver from CarRepair as cr where cr.appointment=? and TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(cr.toDate))";
@@ -450,7 +427,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
 		if (order.getChargeMode() == ChargeModeEnum.MILE || order.getChargeMode() == ChargeModeEnum.PLANE) {
 			System.out.println("5");
-			hql = "from order_ where status<>? and status<>? and status<>? and car=? and （chargeMode==? or chargeMode==?) and TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(planEndDate)";
+			hql = "from order_ where status<>? and status<>? and status<>? and car=? and （chargeMode=? or chargeMode=?) and TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(planEndDate)";
 			List list=null;
 			if(order.getId()!=null && order.getId()>0){
 				hql = hql + " and id<>?";	//如果order有id值，说明是从队列调度或修改，那么需要将order排除在外。
@@ -470,7 +447,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			if (list.size() > 0)
 				return 2;
 			
-			hql = "from order_ where status<>? and status<>? and status<>? and driver=? and （chargeMode==? or chargeMode==?) and TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(planEndDate)";
+			hql = "from order_ where status<>? and status<>? and status<>? and driver=? and （chargeMode=? or chargeMode=?) and TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(planEndDate)";
 			list=null;
 			if(order.getId()!=null && order.getId()>0){
 				hql = hql + " and id<>?";	//如果order有id值，说明是从队列调度或修改，那么需要将order排除在外。

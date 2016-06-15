@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSON;
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
@@ -21,8 +20,6 @@ import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.monitor.Location;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
@@ -457,6 +454,8 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
 		
+		//由于取消了Address类，所以注释下面的代码。
+		/*
 		List<Address> addresses=new ArrayList<Address>();
 		Address fromAddress=new Address();
 		fromAddress.setDescription(fromAddressDescription);
@@ -474,6 +473,7 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			toAddress.getLocation().setLatitude(toAddressLatitude);
 			addresses.add(toAddress);
 		}
+		*/
 		order.setMemo(memo);
 		order.setOrderSource(OrderSourceEnum.SCHEDULER);
 		orderService.EnQueue(order,null,copyOrderCount);

@@ -45,6 +45,9 @@
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
+	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
+	
 	<script type="text/javascript">
 		var actionId = $("input[name=actionId]").val();
 		var id = actionId.substr(2,1);	
@@ -87,7 +90,12 @@
 				alert("时间不合法！");
 				return false;
 			}
+			alert("chen");
+			alert(artDialog.open.origin.location);
 			$("#timeForm").attr("action","order_editDriverAction.action");
+			alert(artDialog.open.origin.location);
+			artDialog.open.origin.location.reload();
+			art.dialog.close();
 			//top.location.href="order_editDriverAction.action";
 			//popdown("popupModify");
 		}) 

@@ -1,8 +1,5 @@
 package com.yuqincar.action.customer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -11,11 +8,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.customer.CustomerService;
-import com.yuqincar.service.order.AddressService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.utils.QueryHelper;
 
@@ -25,14 +20,11 @@ public class CustomerOrganizationAction extends BaseAction implements
 		ModelDriven<CustomerOrganization> {
 
 	private CustomerOrganization model = new CustomerOrganization();
-	private List<Address> address;
 
 	@Autowired
 	private CustomerOrganizationService customerOrganizationService;
 	@Autowired
 	private CustomerService customerService;
-	@Autowired
-	private AddressService addressService;
 	@Autowired
 	private OrderService orderService;
 	
@@ -84,12 +76,12 @@ public class CustomerOrganizationAction extends BaseAction implements
 	public String add() throws Exception {
 		
 		
-		if (address == null || address.size() == 0 || address.get(0).getDescription().length() == 0
-				|| address.get(0).getDetail().length() == 0 || address.get(0).getLocation().getLongitude() == 0
-				|| address.get(0).getLocation().getLatitude() == 0) {
-			addFieldError("pAddress", "地址信息不能为空！");
-			return "saveUI";
-		}
+//		if (address == null || address.size() == 0 || address.get(0).getDescription().length() == 0
+//				|| address.get(0).getDetail().length() == 0 || address.get(0).getLocation().getLongitude() == 0
+//				|| address.get(0).getLocation().getLatitude() == 0) {
+//			addFieldError("pAddress", "地址信息不能为空！");
+//			return "saveUI";
+//		}
 		/*
 		 * String descriptionAddress = model.getAddress().getDescription();
 		 * String detailAddress = model.getAddress().getDetail();
@@ -112,9 +104,9 @@ public class CustomerOrganizationAction extends BaseAction implements
 		 * addressService.saveAddress(address1); }
 		 * model.setAddress(addressService
 		 * .getAddressByDescription(descriptionAddress));
-		 */
-		addressService.saveAddresses(address);
-		model.setPAddress(address.get(0));
+//		 */
+//		addressService.saveAddresses(address);
+//		model.setPAddress(address.get(0));
 
 		customerOrganizationService.saveCustomerOrganization(model);
 		return "toList";
@@ -127,8 +119,6 @@ public class CustomerOrganizationAction extends BaseAction implements
 		CustomerOrganization customerOrganization = customerOrganizationService
 				.getById(model.getId());
 		ActionContext.getContext().getValueStack().push(customerOrganization);
-		address = new ArrayList<Address>();
-		address.add(customerOrganization.getpAddress());
 		ActionContext.getContext().put("customerList", customerService.getAllCustomerByOrganization(customerOrganization.getId()));
 		if(customerOrganization.getManager()!=null)
 			customerId=customerOrganization.getManager().getId();
@@ -138,14 +128,7 @@ public class CustomerOrganizationAction extends BaseAction implements
 
 	/** 修改 */
 	public String edit() throws Exception {
-		// 从数据库中取出原对象
 		
-		if (address == null || address.size() == 0 || address.get(0).getDescription().length() == 0
-				|| address.get(0).getDetail().length() == 0 || address.get(0).getLocation().getLongitude() == 0
-				|| address.get(0).getLocation().getLatitude() == 0) {
-			addFieldError("pAddress", "地址信息不能为空！");
-			return "managerUI";
-		}
 		if (customerOrganizationService.isNameExist(model.getId(), model.getName()) == true
 				&& customerOrganizationService.isAbbreviationExist(model.getId(),
 						model.getAbbreviation()) == true) {
@@ -157,14 +140,14 @@ public class CustomerOrganizationAction extends BaseAction implements
 				.getById(model.getId());
 
 		// 设置要修改的属性
-		long oldId=customerOrganization.getpAddress().getId();
-		customerOrganization.setName(model.getName());
-		customerOrganization.setAbbreviation(model.getAbbreviation());
-		addressService.saveAddresses(address);
-		customerOrganization.setpAddress(address.get(0));
-		customerOrganizationService
-				.updateCustomerOrganization(customerOrganization);
-		addressService.deleteAddress(oldId);
+//		long oldId=customerOrganization.getpAddress().getId();
+//		customerOrganization.setName(model.getName());
+//		customerOrganization.setAbbreviation(model.getAbbreviation());
+//		addressService.saveAddresses(address);
+//		customerOrganization.setpAddress(address.get(0));
+//		customerOrganizationService
+//				.updateCustomerOrganization(customerOrganization);
+//		addressService.deleteAddress(oldId);
 		if(customerId>0){
 			customerOrganization.setManager(customerService.getById(customerId));
 		}
@@ -175,15 +158,7 @@ public class CustomerOrganizationAction extends BaseAction implements
 	public CustomerOrganization getModel() {
 		return model;
 	}
-
-	public List<Address> getAddress() {
-		return address;
-	}
-
-	public void setAddress(List<Address> address) {
-		this.address = address;
-	}
-
+	
 	/** 验证客户单位地址 */
 	/*public void validateAdd() {
 		if (customerOrganizationService.isNameExist(0, model.getName()) == false

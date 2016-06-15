@@ -43,7 +43,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private String oldPassword = "";
 	private String newPassword = "";
 	
-	private String popupDriverOnly;
+	private String driverOnly;
+	private String userSelectorId;
 
 	/** 列表 */
 	public String list() throws Exception {
@@ -63,11 +64,10 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	
 	public String popup() {
 		List<TreeNode> nodes ;
-		System.out.println("popupDriverOnly="+popupDriverOnly);
-		nodes= userService.getUserTree(model.getName(), (popupDriverOnly!=null && popupDriverOnly.equals("true")) ? true : false);
-		
+		nodes= userService.getUserTree(model.getName(), (driverOnly!=null && driverOnly.equals("true")) ? true : false);
 		Gson gson = new Gson();
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));
+		ActionContext.getContext().put("userSelectorId", userSelectorId);
 		return "popup";
 	}
 
@@ -241,13 +241,22 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 
 
-	public String getPopupDriverOnly() {
-		return popupDriverOnly;
+	public String getDriverOnly() {
+		return driverOnly;
 	}
 
 
-	public void setPopupDriverOnly(String popupDriverOnly) {
-		this.popupDriverOnly = popupDriverOnly;
+	public void setDriverOnly(String driverOnly) {
+		this.driverOnly = driverOnly;
 	}
 
+
+	public String getUserSelectorId() {
+		return userSelectorId;
+	}
+
+
+	public void setUserSelectorId(String userSelectorId) {
+		this.userSelectorId = userSelectorId;
+	}
 }

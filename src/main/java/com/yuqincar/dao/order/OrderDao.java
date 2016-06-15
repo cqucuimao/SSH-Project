@@ -1,22 +1,17 @@
 package com.yuqincar.dao.order;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 import com.yuqincar.dao.common.BaseDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
-import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.monitor.Location;
-import com.yuqincar.domain.order.Address;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.User;
-import com.yuqincar.utils.QueryHelper;
 
 public interface OrderDao extends BaseDao<Order> {
 
@@ -87,11 +82,6 @@ public interface OrderDao extends BaseDao<Order> {
      * @return
      */
     public List<Order> getOrderQueue();
-    
-    /**
-     * 按照距离location最近的直线距离升序排序的业务点列表
-     */
-    public List<ServicePoint> getAscendingDirectNearestServicePoints(Location location);
 
     /**
      * 得到推荐的汽车。并将满足条件的汽车按照匹配度降序排列，可分页。 推荐汽车的原则： 1. 车型符合（需满足） 2.

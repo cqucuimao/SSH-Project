@@ -34,7 +34,7 @@
                         		/>
                     </td>
 					<th><s:property value="tr.getText('car.Car.driver')" /></th>
-					<td><s:textfield cssClass="inputText" id="driverName" type="text" name="driver.name"/>
+					<td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name"/>
 							<s:textfield id="driverId" name="driverId" type="hidden"/></td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="submit" />

@@ -188,7 +188,7 @@
    
     
     function modify(actionId,time,index){
-   		var after = index-(-1);
+   		var after = index-(-1);//计算index+1
    		var beforeTime = $("#TD"+(index-1)).text();
    		var afterTime = $("#TD"+after).text();
     	popup("修改时间","order_popupModify.action?actionId="+actionId+"&time="+time+"&beforeTime="+beforeTime+"&afterTime="+afterTime,330,200,"popupModify");

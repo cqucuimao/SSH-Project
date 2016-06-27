@@ -82,9 +82,7 @@ public class OrderAction extends BaseAction {
 
 	
 	public boolean isCanUpdateOrder(){
-		System.out.println("isCanUpdateOrder");
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
-		System.out.println("order.getId()="+order.getId());
 		return orderService.canUpdate(order);
 	}
 	
@@ -173,6 +171,37 @@ public class OrderAction extends BaseAction {
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
 			
+			//由于接口改变，下面的getOrderTrackAbstract传两个null。后期应该改变代码。
+			//TreeMap<Date, String> map=orderService.getOrderTrackAbstract(order);
+			TreeMap<Date, String> map=new TreeMap<Date,String>();
+			List<AbstractTrackVO> list=new ArrayList<AbstractTrackVO>();
+			if(map!=null){
+				System.out.println("map.size="+map.keySet().size());
+				for(Date date:map.keySet()){
+					AbstractTrackVO atvo=new AbstractTrackVO();
+					atvo.setAbstractTime(DateUtils.getYMDHMSString(date));
+					atvo.setAbstractAddress(map.get(date));
+					list.add(atvo);
+				}
+			}
+			System.out.println("list.size="+list.size());
+			if(list.size()<9){
+				int n=9-list.size();
+				for(int i=1;i<=n;i++){
+					AbstractTrackVO atvo=new AbstractTrackVO();
+					atvo.setAbstractTime(" ");
+					atvo.setAbstractAddress(" ");
+					list.add(atvo);
+				}
+			}
+			ActionContext.getContext().put("abstractTrackList", list);
+		}
+/*
+		System.out.println("in print, orderId="+orderId);
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(order);
+			
 			TreeMap<Date, String> map=orderService.getOrderTrackAbstract(order);
 			List<AbstractTrackVO> list=new ArrayList<AbstractTrackVO>();
 			if(map!=null){
@@ -196,6 +225,7 @@ public class OrderAction extends BaseAction {
 			}
 			ActionContext.getContext().put("abstractTrackList", list);
 		}
+*/
 		return "print";
 	}
 	
@@ -471,43 +501,6 @@ public class OrderAction extends BaseAction {
 		return "view";
 	}
 	
-	public String modifyMile(){
-		if(orderId>0){
-			Order order=orderService.getOrderById(orderId);
-			ActionContext.getContext().getValueStack().push(order);
-			orderMileString=new BigDecimal(order.getTotalChargeMile()).setScale(1, BigDecimal.ROUND_HALF_UP).toString();
-		}
-		return "modifyMile";
-	}
-	
-	public String modifyMileDo(){
-		System.out.println("modifyMileDo");
-		System.out.println("orderId="+orderId);
-		Order order=orderService.getOrderById(orderId);
-		//orderService.modifyOrderMile(order, Float.parseFloat(orderMileString), (User)ActionContext.getContext().getSession().get("user"));
-		ActionContext.getContext().getValueStack().push(order);
-		return "view";
-	}
-	
-	public String modifyMoney(){
-		if(orderId>0){
-			Order order=orderService.getOrderById(orderId);
-			ActionContext.getContext().getValueStack().push(order);
-			orderMoneyString=order.getOrderMoney().setScale(1, BigDecimal.ROUND_HALF_UP).toString();
-		}
-		System.out.println("orderMoneyString="+orderMoneyString);
-		return "modifyMoney";
-	}
-	
-	public String modifyMoneyDo(){
-		System.out.println("modifyMoneyDo");
-		System.out.println("orderId="+orderId);
-		Order order=orderService.getOrderById(orderId);
-		//orderService.modifyOrderMoney(order, new BigDecimal(orderMoneyString), (User)ActionContext.getContext().getSession().get("user"));
-		ActionContext.getContext().getValueStack().push(order);
-		return "view";
-	}
-	
 	public String getTypeString(){
 		OrderOperationRecord record=(OrderOperationRecord)ActionContext.getContext().getValueStack().peek();
 		return orderService.getOperationRecordTypeString(record.getType());
@@ -527,14 +520,14 @@ public class OrderAction extends BaseAction {
 
 	public String getChargeModeString() {
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
-		return orderService.getChargeModeString(order.getChargeMode());
+		return order.getChargeMode().toString();
 	}
 	
 	public String getPlanDateString(){
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
 		StringBuffer sb=new StringBuffer();
 		sb.append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
-		if(order.getChargeMode()!=ChargeModeEnum.MILE){
+		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			sb.append(" 到 ");
 			sb.append(DateUtils.getYMDHMString(order.getPlanEndDate()));
 		}
@@ -585,6 +578,10 @@ public class OrderAction extends BaseAction {
 			return OrderStatusEnum.ACCEPTED;
 		} else if (status.equals("已开始")) {
 			return OrderStatusEnum.BEGIN;
+		} else if (status.equals("已上车")) {
+			return OrderStatusEnum.GETON;
+		} else if (status.equals("已下车")) {
+			return OrderStatusEnum.GETOFF;
 		} else if (status.equals("已结束")) {
 			return OrderStatusEnum.END;
 		} else if (status.equals("已付费")) {
@@ -630,7 +627,6 @@ public class OrderAction extends BaseAction {
 	}
 	
 	public String orderManagerQueryForm(){
-		System.out.println("in orderManagerQueryForm");
 		QueryHelper helper = new QueryHelper("order_", "o");
 		if(sn!=null && !sn.isEmpty())
 			helper.addWhereCondition("o.sn like ?", "%"+sn+"%");

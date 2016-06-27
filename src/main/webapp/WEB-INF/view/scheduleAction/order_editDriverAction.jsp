@@ -149,6 +149,8 @@
     <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
+	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
     <script type="text/javascript">
     
    	
@@ -191,7 +193,15 @@
    		var after = index-(-1);//计算index+1
    		var beforeTime = $("#TD"+(index-1)).text();
    		var afterTime = $("#TD"+after).text();
-    	popup("修改时间","order_popupModify.action?actionId="+actionId+"&time="+time+"&beforeTime="+beforeTime+"&afterTime="+afterTime,330,200,"popupModify");
+    	url="order_popupModify.action?actionId="+actionId+"&time="+time+"&beforeTime="+beforeTime+"&afterTime="+afterTime;
+    	art.dialog.open(url,{
+            id: "popupModify",
+            title: "修改时间",
+            width: 330,
+            height: 200,
+            padding: 0,
+            lock: true
+        });
     }
     
 		

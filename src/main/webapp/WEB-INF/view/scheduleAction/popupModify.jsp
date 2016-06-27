@@ -90,12 +90,11 @@
 				alert("时间不合法！");
 				return false;
 			}
-			alert(artDialog.open.origin);
-			alert(artDialog.open.origin.location);
-			$("#timeForm").attr("action","order_editDriverActionTime.action");
-			alert(artDialog.open.origin.location);
-			artDialog.open.origin.location.reload();
+			$("#timeForm").attr("action","order_modifyDriverActionTime.action");
+			$("#timeForm").submit();
+			var win=artDialog.open.origin;
 			art.dialog.close();
+			win.location.reload();
 			//top.location.href="order_editDriverAction.action";
 			//popdown("popupModify");
 		}) 

@@ -399,7 +399,7 @@ public class OrderAction extends BaseAction {
 	}
 	
 	//修改时间
-	public String modifyDriverActionTime() throws ParseException{
+	public void modifyDriverActionTime() throws ParseException{
 		System.out.println("++++");
 		User user = (User)ActionContext.getContext().getSession().get("user");
 		System.out.println("actionId="+actionId);
@@ -414,8 +414,6 @@ public class OrderAction extends BaseAction {
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
-		
-		return "operateList";
 	}
 	
 	public String cancel(){

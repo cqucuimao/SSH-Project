@@ -28,84 +28,118 @@
     <div class="space">
             <h1 align="center">重庆市渝勤汽车服务有限公司派车单</h1>
         <div class="">
-<table id="tableId" style="border-color:black" border="1" width="100%">
+<table id="tableId" style="border-color:black;width:100%;" border="1" >
 		<tbody>
 			<tr>
-				<td style="border:none" width="100">订单号:${sn }</td>
+				<td style="border:none" colspan="2" width=""></td>
 				<td style="border:none" colspan="4"></td>
-				<td style="border:none" class="alignRight" width="200">渝勤运</td>
+				<td style="border:none" class="alignRight" colspan="2" width="">渝勤运${sn }</td>
 			</tr>
 			<tr>
-				<td class="alignCenter">用车单位</td>
+				<td class="alignCenter" colspan="2">用车单位</td>
 				<td colspan="2">&nbsp;&nbsp;${customerOrganization.abbreviation }</td>
-				<td class="alignCenter">联系人电话</td>
-				<td colspan="2">&nbsp;&nbsp;${customer.name}&nbsp;&nbsp;(${phone })</td>
+				<td class="alignCenter" colspan="2">联系人电话</td>
+				<td colspan="2">&nbsp;&nbsp;${customer.name}：${phone }</td>
 				
 			</tr>
 			<tr>
-				<td class="alignCenter">订车时间</td>
-				<td colspan="2">&nbsp;&nbsp;<s:date name="scheduleTime" format="yyyy-MM-dd hh:mm"/></td>
-				<td class="alignCenter">定车地点</td>
+				<td class="alignCenter" colspan="2">定车时间</td>
+				<td colspan="2">&nbsp;&nbsp;<s:date name="scheduleTime" format="yyyy-MM-dd"/></td>
+				<td class="alignCenter" colspan="2">上车地点</td>
 				<td colspan="2">&nbsp;&nbsp;${fromAddress}</td>
 			</tr>
 			<tr>
-				<td class="alignCenter">车型</td>
+				<td class="alignCenter" colspan="2">车型</td>
 				<td colspan="2" >&nbsp;&nbsp;${serviceType.title }</td>
-				<td class="alignCenter">车牌号</td>
+				<td class="alignCenter" colspan="2">车牌号</td>
 				<td colspan="2" >&nbsp;&nbsp;${car.plateNumber }</td>
 			</tr>
 			<tr>
-				<td class="alignCenter">驾驶员/电话</td>
-				<td colspan="5" width="550">&nbsp;&nbsp;${driver.name }&nbsp;&nbsp;(${driver.phoneNumber })</td>
+				<td class="alignCenter" colspan="2">驾驶员/电话</td>
+				<td colspan="2">&nbsp;&nbsp;${driver.name }：${driver.phoneNumber }</td>
+				<td class="alignCenter" colspan="2">目的地</td>
+				<td colspan="2">&nbsp;&nbsp;${toAddress}</td>
 			</tr>
 			<tr>
-				<td class="alignCenter">时间</td>
-				<td class="alignCenter" colspan="5" width="550">经过地点摘要</td>
+				<td class="alignCenter">日期</td>
+				<td class="alignCenter">上车时间</td>
+				<td class="alignCenter">下车时间</td>
+				<td class="alignCenter" colspan="3">经过地点摘要</td>
+				<td class="alignCenter">实际公里</td>
+				<td class="alignCenter">收费公里</td>
 			</tr>
 			<s:iterator value="abstractTrackList">
 			<tr>
-				<td align="center">${abstractTime}</td>
-				<td colspan="5" align="center">${abstractAddress}</td>
+				<td align="center"></td>
+				<td align="center"></td>
+				<td align="center"></td>
+				<td colspan="3" align="center">${abstractAddress}</td>
+				<td align="center"></td>
+				<td align="center"></td>
 			</tr>
 			</s:iterator>
 			<tr>
-				<td class="alignCenter">过路停车</td>
+				<td class="alignCenter" width="150">出库路码</td>
 				<td width="150">　</td>
-				<td class="alignCenter" width="100">餐宿补贴</td>
+				<td class="alignCenter" width="150">客户上车路码</td>
 				<td width="150"></td>
-				<td class="alignCenter" width="150">其他费用</td>
+				<td class="alignCenter" width="150">客户下车路码</td>
+				<td width="150"></td>
+				<td class="alignCenter" width="150">回库路码</td>
+				<td width="150"></td>
+			</tr>
+			<tr>
+				<td class="alignCenter">邮费</td>
+				<td></td>
+				<td class="alignCenter">洗车费</td>
+				<td></td>
+				<td class="alignCenter">停车费</td>
+				<td></td>
+				<td class="alignCenter">计费路码</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td class="alignCenter">出站路码</td>
-				<td>　</td>
-				<td class="alignCenter">回站路码</td>
-				<td>　</td>
-				<td class="alignCenter">合计里程（KM）</td>
-				<td>&nbsp;&nbsp;${actualMile }</td>
-			</tr>
-			<tr>
-				<td class="alignCenter">上车时间</td>
-				<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/></td>
-				<td class="alignCenter">下车时间</td>
-				<td><s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
-				<td class="alignCenter">合计时间（h）</td>
+				<td class="alignCenter" colspan="2">过路费（客户自理）</td>
+				<td colspan="2"></td>
+				<td class="alignCenter">食宿</td>
+				<td></td>
+				<td class="alignCenter">其他费用</td>
 				<td style="padding-left:8px"></td>
 			</tr>
 			<tr>
-				<td class="alignCenter" style="height:60px">结算金额</td>
-				<td colspan="3">&nbsp;&nbsp;<fmt:formatNumber value="${actualMoney}" pattern="#0.0"/></td>
-				<td class="alignCenter" style="border-right:none">用车单位签字：</td>
-				<td style="border-left:none; padding-left:25px">
+				<td class="alignCenter">核算金额</td>
+				<td colspan="3"></td>
+				<td class="alignCenter">实收金额</td>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;请为本次服务评价：</td>
+			</tr>
+			<tr>
+				<td class="alignCenter" style="height:60px">驾驶员签字</td>
+				<td colspan="2"></td>
+				<td class="alignCenter" colspan="2">用车人签字及电话</td>
+				<td style="padding-left:25px" colspan="3">
 				<img id="imgId" width="150" height="50" style="display:none" src="order_getSignature.action?imageId=${signature.id}" />
 				<input id="signatureId" value="${signature.id }" style="display:none"/>
 				</td>
 			</tr>
 			<tr>
+				<td class="alignCenter">意见及建议</td>
+				<td colspan="7"></td>
+			</tr>
+			<tr>
+				<td style="border:none;"></td>
 				<td colspan="5" style="border:none;padding-left:50px">
-				</td>
-				
-				<td style="border:none">派车人：${scheduler.name }</td>
+				</td>			
+				<td colspan="2" style="border:none">派车人：${scheduler.name }</td>
+			</tr>
+			<tr>
+				<td style="border:none" colspan="2">用车电话：63219797</td>
+				<td style="border:none"></td>
+				<td style="border:none" colspan="2">夜间用车：60391610</td>
+				<td style="border:none"></td>
+				<td style="border:none" colspan="2">服务监督电话：60391609</td>
 			</tr>
 			<tr>
 				<td style="border:none">　</td>
@@ -113,16 +147,12 @@
 			</tr>
 			<tr>
 				<td style="border:none">　</td>
-				<td style="border:none" colspan="5">　</td>
-			</tr>
-			<tr>
-				<td style="border:none">　</td>
-				<td style="border:none" colspan="5">
+				<td style="border:none" colspan="7">
 				<div class="ttt">注：白联</div>
-				<div class="ttt">部门，红联</div>
-				<div class="ttt">部门，篮联</div>
-				<div class="ttt">部门，黄联</div>
-				<div class="ttt">部门</div>
+				<div class="ttt">财务联，红联</div>
+				<div class="ttt">运营联，篮联</div>
+				<div class="ttt">存根联，黄联</div>
+				<div class="ttt">客户联</div>
 				</td>
 			</tr>
 		</tbody>
@@ -156,9 +186,9 @@
 		date = centry + (today.getFullYear())+ "年" + 
 		    		(today.getMonth() + 1 ) + "月" + 
 		    		today.getDate() + "日 "; 
-		$("#tableId tr:eq(19) td:eq(0)").text(date);
+		$("#tableId tr:eq(21) td:eq(1)").text(date);
 		//计算订单执行时间
-    	var date1 = $("#tableId tr:eq(17) td:eq(1)").text();
+    	/* var date1 = $("#tableId tr:eq(17) td:eq(1)").text();
     	var date2 = $("#tableId tr:eq(17) td:eq(3)").text();
     	
     	var y1 = parseInt(date1.split('-')[0]);
@@ -177,7 +207,7 @@
     	var day2 = new Date(Date.UTC(y2,m2,d2,h2,min2));
 
     	var days = (day2 - day1)/1000/60/60;
-    	$("#tableId tr:eq(17) td:eq(5)").text(days.toFixed(1));
+    	$("#tableId tr:eq(21) td:eq(2)").text(days.toFixed(1)); */
     	
     });
     </script>

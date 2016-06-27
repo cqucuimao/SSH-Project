@@ -26,7 +26,9 @@
 					<input id="register" class="inputButton" type="button" value="车辆登记" name="button" />
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-					<td><s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
+					<td>
+						<s:textfield id="car_platenumber" name="plateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
+					</td>
 					<th><s:property value="tr.getText('car.CarServiceType.title')" /></th>
 					<td><s:select name="serviceType.title" cssClass="SelectStyle"
                         		list="carServiceTypeList" listKey="title" listValue="title"
@@ -34,7 +36,7 @@
                         		/>
                     </td>
 					<th><s:property value="tr.getText('car.Car.driver')" /></th>
-					<td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name"/>
+					<td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
 							<s:textfield id="driverId" name="driverId" type="hidden"/></td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="submit" />

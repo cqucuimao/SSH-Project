@@ -136,7 +136,9 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 				sb.append("订单已派发。司机：").append(order.getDriver().getName()).append("（").append(order.getDriver().getPhoneNumber())
 					.append("，").append(order.getCar().getPlateNumber()).append("）");
 				Map<String,Object> map=new HashMap<String,Object>();
-				map.put("orderId", order.getId());
+				//map.put("orderId", order.getId());
+				map.put("orderStatus", "WAIT");
+				map.put("id", order.getId());
 				appMessageService.sendMessageToCustomerAPP(order.getCustomer(), sb.toString(),map);
 			}
 			return 1;

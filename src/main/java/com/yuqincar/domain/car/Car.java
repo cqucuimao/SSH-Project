@@ -70,10 +70,13 @@ public class Car extends BaseEntity {
 	private int nextCareMile;	//下次保养里程数
 
 	@Text("保险过期日期")
-	private Date insuranceExpiredDate;	//保险过期时间
+	private Date insuranceExpiredDate;	//保险过期日期
 
 	@Text("年检到期日期")
 	private Date nextExaminateDate;	//年检到期时间
+	
+	@Text("下次路桥费缴纳日期")
+	private Date nextTollChargeDate;	//下次路桥费缴纳日期
 
 	@Text("车辆状态")
     private CarStatusEnum status; //车辆状态
@@ -216,6 +219,12 @@ public class Car extends BaseEntity {
 	public void setStandbyCar(boolean standbyCar) {
 		this.standbyCar = standbyCar;
 	}
-	
-	
+
+	public Date getNextTollChargeDate() {
+		return nextTollChargeDate;
+	}
+
+	public void setNextTollChargeDate(Date nextTollChargeDate) {
+		this.nextTollChargeDate = nextTollChargeDate;
+	}	
 }

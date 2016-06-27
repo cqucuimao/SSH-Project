@@ -48,30 +48,8 @@
                     <tr>
                     	<th>计费方式</th>
                     	<td>${chargeModeString }</td>
-                        <th>用车人数：</th>
-                        <td>${passengerNumber }人</td>
-                    </tr>
-                    <tr>
-                        <th>车型：</th>
+                    	<th>车型：</th>
                         <td>${serviceType.title }</td>
-                        <th>订单状态：</th>
-                        <td>${statusString }</td>
-                    </tr>
-                    <tr>
-                        <th>计划起止时间：</th>
-                        <td>${planDateString }</td>
-                        <th>实际起止时间：</th>
-                        <td>${actualDateString }</td>
-                    </tr>                    
-                    <tr>
-                        <th>始发地：</th>
-                        <td>${fromAddress }（${fromAddress.detail }）</td>
-                        <th>目的地：</th>
-                        <td>
-                        	<s:if test="toAddress!=null">
-                        		${toAddress }（${toAddress.detail }）
-                        	</s:if>
-                        </td>
                     </tr>
                     <tr>
                         <th>司机：</th>
@@ -86,7 +64,27 @@
                         		${car.plateNumber }
                         	</s:if>
 						</td>
+                    </tr> 
+                    <tr>                        
+                        <th>订单状态：</th>
+                        <td>${statusString }</td>
+                    </tr> 
+                    <tr>
+                        <th>计划起止时间：</th>
+                        <td>${planDateString }</td>
+                        <th>实际起止时间：</th>
+                        <td>${actualDateString }</td>
                     </tr>                    
+                    <tr>
+                        <th>始发地：</th>
+                        <td>${fromAddress }</td>
+                        <th>目的地：</th>
+                        <td>
+                        	<s:if test="toAddress!=null">
+                        		${toAddress }
+                        	</s:if>
+                        </td>
+                    </tr>                  
                     <tr>
                         <th>进队列时间：</th>
                         <td><s:date name="queueTime" format="yyyy-MM-dd HH:mm:ss"/></td>
@@ -100,24 +98,16 @@
                         <td><s:date name="acceptedTime" format="yyyy-MM-dd HH:mm:ss"/></td>
                     </tr>
                     <tr>
-                        <th>实际里程：</th>
-                        <td>${actualMile }KM</td>
-                        <th>订单里程：</th>
-                        <td>${orderMile}KM
-                        	<s:if test="chargeMode==@com.yuqincar.domain.order.ChargeModeEnum@MILE">
-                        		&nbsp;&nbsp;&nbsp;<s:a action="order_modifyMile?orderId=%{id}">[修改]</s:a>
-                        	</s:if>
-                        </td>
+                        <th>实际路码：</th>
+                        <td>${endMile-beginMile}KM</td>
+                        <th>计费路码：</th>
+                        <td>${totalChargeMile}KM</td>
                     </tr>
                     <tr>
-                        <th>实际金额：</th>
-                        <td>${actualMoneyString}元</td>
-                        <th>订单金额：</th>
-                        <td>${orderMoneyString}元
-                        	<s:if test="chargeMode!=@com.yuqincar.domain.order.ChargeModeEnum@MILE">
-                        		&nbsp;&nbsp;&nbsp;<s:a action="order_modifyMoney?orderId=%{id}">[修改]</s:a>
-                        	</s:if>
-                        </td>
+                        <th>核算金额：</th>
+                        <td>${orderMoney}元</td>
+                        <th>实收金额：</th>
+                        <td>${actualMoney}元</td>
                     </tr>
                     <tr>
                         <th>备注：</th>

@@ -15,6 +15,7 @@ import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarCareService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.DateUtils;
@@ -36,9 +37,10 @@ public class CarCareServiceImpl implements CarCareService {
     }
 
 	@Transactional
-	public void carCareAppointment(Car car, Date date) {
+	public void carCareAppointment(Car car,User driver, Date date) {
 		CarCare carCare=new CarCare();
 		carCare.setCar(car);
+		carCare.setDriver(driver);
 		carCare.setDate(date);
 		carCare.setAppointment(true);
 		carCareDao.save(carCare);
@@ -46,14 +48,14 @@ public class CarCareServiceImpl implements CarCareService {
 		//给司机发送短信
 		Map<String,String> params=new HashMap<String,String>();
 		params.put("carCareDate", DateUtils.getYMDString(date));
-		smsService.sendTemplateSMS(car.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT, params);
+		smsService.sendTemplateSMS(driver.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT, params);
 	}
 
 	public CarCare getCarCareById(long id) {
 		return carCareDao.getById(id);
 	}
 
-	public PageBean<CarCareService> queryCarCare(int pageNum, QueryHelper helper) {
+	public PageBean<CarCare> queryCarCare(int pageNum, QueryHelper helper) {
 		return carCareDao.getPageBean(pageNum, helper);
 	}
 

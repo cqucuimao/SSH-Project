@@ -17,6 +17,15 @@
         <!-- 标题 -->
         <div class="title">
             <h1>加油信息</h1>
+            <p style="color: red">
+				<s:if test="hasFieldErrors()">
+					<s:iterator value="fieldErrors">
+						<s:iterator value="value">
+							<s:property />
+						</s:iterator>
+					</s:iterator>
+				</s:if>
+			</p>
         </div>
         <div class="editBlock detail p30">
         <s:form action="carRefuel_%{id == null ? 'add' : 'edit'}" id="pageForm">
@@ -32,17 +41,25 @@
 				</colgroup>
                 <tbody>
                 	<tr>
+                        <th><s:property value="tr.getText('car.CarRefuel.order')" /></th>
+						<td>
+							<input class="inputText" type="text" name="order.sn"/>
+						</td>
+                    </tr>
+                	<tr>
                         <th><s:property value="tr.getText('car.Car.plateNumber')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" 
+								name="car.plateNumber" type="text"  synchDriverName="driverName" synchDriverId="driverId"/>
 						</td>
                     </tr>
                     <tr>
-                        <th><s:property value="tr.getText('car.CarRefuel.refuelingSite')" /><span class="required">*</span></th>
-                        <td>
-                        	<input class="inputText" type="text" name="refuelingSite"/>
+						<th><s:property value="tr.getText('car.CarRefuel.driver')" /><span class="required">*</span></th>
+						<td>
+							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
+							<s:textfield id="driverId" name="driver.id" type="hidden"/>
 						</td>
-                    </tr>
+					</tr>
                     <tr>
                         <th><s:property value="tr.getText('car.CarRefuel.date')" /><span class="required">*</span></th>
 						<td>
@@ -50,9 +67,9 @@
 						</td>
                     </tr>
                     <tr>
-                        <th><s:property value="tr.getText('car.CarRefuel.RefuelingCharge')" />(L)<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.CarRefuel.volume')" />(L)</th>
                         <td>
-                        	<input class="inputText" type="text" name="refuelingCharge"/>
+                        	<input class="inputText" type="text" name="volume"/>
 						</td>
                     </tr>
                     <tr>
@@ -90,16 +107,11 @@
 					'car.plateNumber':{
 						required:true,
 					},
-					refuelingSite:{
+					'driver.name':{
 						required:true,
 					},
 					date:{
 						required:true,
-					},
-					refuelingCharge:{
-						required:true,
-						number:true,
-						min:0,
 					},
 					money:{
 						required:true,

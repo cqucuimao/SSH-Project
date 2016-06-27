@@ -35,7 +35,7 @@
             <table>
                 <tr>
                     <th>车牌号</th>
-                    <td><s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
+                    <td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
                     <th>驻车地点</th>
                     <td>
                     <s:select style="width:135px;" name="servicePoint.name" id="servicePointId" list="#servicePointList" listKey="id" listValue="name"/>

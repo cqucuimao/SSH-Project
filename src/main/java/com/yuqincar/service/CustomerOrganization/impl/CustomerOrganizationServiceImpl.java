@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.CustomerOrganization.CustomerOrganizationDao;
 import com.yuqincar.dao.monitor.LocationDao;
+import com.yuqincar.dao.order.PriceTableDao;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.monitor.Location;
 import com.yuqincar.domain.order.CustomerOrganization;
@@ -31,6 +32,9 @@ public class CustomerOrganizationServiceImpl implements
 	private CustomerOrganizationDao customerOrganizationDao;
 	
 	@Autowired
+	private PriceTableDao priceTableDao;
+	
+	@Autowired
 	private LocationDao locationDao;
 
 	public PageBean<CustomerOrganization> queryCustomerOrganizationByKeyword(String keyword) {
@@ -44,6 +48,7 @@ public class CustomerOrganizationServiceImpl implements
 	@Transactional
 	public void saveCustomerOrganization(
 			CustomerOrganization customerOrganization) {
+		customerOrganization.setPriceTable(priceTableDao.getDefaultPriceTable());
 		customerOrganizationDao.save(customerOrganization);
 	}
 

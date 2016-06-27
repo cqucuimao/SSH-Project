@@ -25,7 +25,10 @@
 				<tr>
 					<th>车牌号:</th>
 					<td><s:textfield cssClass="inputText" name="plateNumber" type="text" /></td>
-					<td>
+					<td>						
+						<input type="hidden" name="carSelectorId" value="${carSelectorId}"/>
+						<input type="hidden" name="synchDriverName" value="${synchDriverName}"/>
+						<input type="hidden" name="synchDriverId" value="${synchDriverId}"/>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 				</tr>					
@@ -83,6 +86,13 @@
                 for(var i=0;i<nodes.length;i++){
                    	if(!nodes[i].isParent) {
                    		newVal = nodes[i].name;
+                   		if(nodes[i].param){
+                        	synchDriverName=nodes[i].param.driverName;
+                       		synchDriverId=nodes[i].param.driverId;
+                   		}else{
+                   			synchDriverName=false;
+                   			synchDriverId=false;
+                   		}
                    		//console.log(newVal);
                    	}
                 }
@@ -91,6 +101,24 @@
             	console.info(input);
             	input.value = newVal;
             	input.select();
+
+            	if("${synchDriverName}"!=""){
+            		driverName=origin.document.getElementById("${synchDriverName}");
+					if(synchDriverName){       			
+            			driverName.value=synchDriverName;
+					}else{
+						driverName.value="";
+					}
+            	}
+            	if("${synchDriverId}"!=""){
+            		driverId=origin.document.getElementById("${synchDriverId}");
+					if(synchDriverId){          			
+            			driverId.value=synchDriverId;
+					}else{
+						driverId.value="";
+					}
+            	}
+            	
             	art.dialog.close();
             })
             

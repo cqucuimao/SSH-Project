@@ -28,7 +28,7 @@
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
 						 
 					</td>
 					<td>

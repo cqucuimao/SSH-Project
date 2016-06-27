@@ -1,7 +1,9 @@
 package com.yuqincar.action.car;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.monitor.Device;
@@ -43,6 +46,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private Long deviceId;	
 	private String driverName;
 	private String carSelectorId;
+	private String synchDriverName;
+	private String synchDriverId;
 	
 	/** 列表 */
 	public String list() throws Exception {
@@ -94,11 +99,20 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	/** 添加 */
 	public String add() throws Exception {
+		if(model.isStandbyCar())
+			model.setDriver(null);
+		else{
+			if(driverId==null){
+				addFieldError("driver", "非备用车必须制定司机！");
+				return addUI();
+			}
+		}	
 		// 封装对象
 		//System.out.println(carService);
 		model.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
 		model.setServicePoint(carService.getServicePointById(servicePointId));
 		model.setDriver(userService.getById(driverId));
+		model.setStatus(CarStatusEnum.NORMAL);
 		// 保存到数据库
 		carService.saveCar(model);
 
@@ -146,6 +160,14 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	/** 修改 */
 	public String edit() throws Exception {
+		if(model.isStandbyCar())
+			model.setDriver(null);
+		else{
+			if(driverId==null){
+				addFieldError("driver", "非备用车必须制定司机！");
+				return addUI();
+			}
+		}	
 		//从数据库中取出原对象
 		Car car = carService.getCarById(model.getId());
 
@@ -199,14 +221,26 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	public String popup() {
 		List<TreeNode> nodes = new ArrayList() ;
+		boolean synchDriver=false;
+		if(!StringUtils.isEmpty(synchDriverName) && !StringUtils.isEmpty(synchDriverId))
+			synchDriver=true;
+		
 		if(!StringUtils.isEmpty(model.getPlateNumber()))
-			nodes= carService.getCarTree(model.getPlateNumber());
+			nodes= carService.getCarTree(model.getPlateNumber(),synchDriver);
 		else if(!StringUtils.isEmpty(driverName)) {
 			List<Car> cars = carService.findByDriverName(driverName);
 			for(Car c : cars) {
 				TreeNode parent = new TreeNode();
 				TreeNode child = new TreeNode();
 				child.setName(c.getPlateNumber());
+				if(synchDriver){
+					if(c.getDriver()!=null){
+						Map<String,Object> param=new HashMap<String,Object>();
+						param.put("driverName", c.getDriver().getName());
+						param.put("driverId", c.getDriver().getId());
+						child.setParam(param);
+					}
+				}
 				parent.setOpen(true);
 				parent.setName(c.getServicePoint().getName());
 				parent.setChildren(new ArrayList());
@@ -216,10 +250,13 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		}
 		//默认返回所有车辆
 		if(StringUtils.isEmpty(model.getPlateNumber())&&StringUtils.isEmpty(driverName))
-			nodes= carService.getCarTree(model.getPlateNumber());
+			nodes= carService.getCarTree(model.getPlateNumber(),synchDriver);
 		Gson gson = new Gson();
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));
+		System.out.println("nodes="+gson.toJson(nodes));
 		ActionContext.getContext().put("carSelectorId", carSelectorId);
+		ActionContext.getContext().put("synchDriverName", synchDriverName);
+		ActionContext.getContext().put("synchDriverId", synchDriverId);
 		return "popup";
 	}
 	//判断车辆能否删除
@@ -252,7 +289,6 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 
 	public void setDriverId(Long driverId) {
-		System.out.println("in setDriverId");
 		this.driverId = driverId;
 	}
 	public Long getDeviceId() {
@@ -272,6 +308,18 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 	public void setCarSelectorId(String carSelectorId) {
 		this.carSelectorId = carSelectorId;
+	}
+	public String getSynchDriverName() {
+		return synchDriverName;
+	}
+	public void setSynchDriverName(String synchDriverName) {
+		this.synchDriverName = synchDriverName;
+	}
+	public String getSynchDriverId() {
+		return synchDriverId;
+	}
+	public void setSynchDriverId(String synchDriverId) {
+		this.synchDriverId = synchDriverId;
 	}
 	
 	

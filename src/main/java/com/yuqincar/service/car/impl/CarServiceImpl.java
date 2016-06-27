@@ -1,9 +1,10 @@
 package com.yuqincar.service.car.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +15,10 @@ import com.yuqincar.dao.car.ServicePointDao;
 import com.yuqincar.dao.monitor.DeviceDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
-import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.monitor.Device;
-import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.utils.QueryHelper;
 
@@ -165,7 +164,8 @@ public class CarServiceImpl implements CarService {
 		return carDao.getAll();
 	}
 	
-	public List<TreeNode> getCarTree(String plateNumber) {
+	public List<TreeNode> getCarTree(String plateNumber,boolean synchDriver) {
+		System.out.println("in getCarTree, plateNumber="+plateNumber);
 		List<Car> cars ;
 		//默认展开
 		boolean flag = true;
@@ -178,6 +178,14 @@ public class CarServiceImpl implements CarService {
 			TreeNode child = new TreeNode();
 			
 			child.setName(c.getPlateNumber());
+			if(synchDriver){
+				if(c.getDriver()!=null){
+					Map<String,Object> param=new HashMap<String,Object>();
+					param.put("driverName", c.getDriver().getName());
+					param.put("driverId", c.getDriver().getId());
+					child.setParam(param);
+				}
+			}
 			
 			String departmentName = "";
 			if(c.getServicePoint()!=null) {

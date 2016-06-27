@@ -17,9 +17,11 @@ import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarRepairService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
@@ -38,12 +40,19 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	@Autowired
 	private OrderService orderService;
 	
+	@Autowired
+	private UserService userService;
+	
 	/** 列表 */
 	public String list() throws Exception {
 		QueryHelper helper = new QueryHelper(CarRepair.class, "cr");
 		
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !"".equals(model.getCar().getPlateNumber()))
-		helper.addWhereCondition("cr.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null 
+				&& !"".equals(model.getCar().getPlateNumber()))
+			helper.addWhereCondition("cr.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		
+		if(model.getDriver()!=null && model.getDriver().getId()!=null)
+			helper.addWhereCondition("cr.driver.id = ?", model.getDriver().getId());
 		
 		//if(model.getMoney()!=null && !"".equals(model.getMoney()))
 		//helper.addWhereCondition("cr.money=?", model.getMoney());
@@ -80,9 +89,11 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		}
 		
 		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver=userService.getById(model.getDriver().getId());
 		
 		model.setCar(car1);
-		//model.setAppointment(true);
+		model.setDriver(driver);
+		model.setAppointment(false);
 		carRepairService.saveCarRepair(model);
 		
 		return "toList";
@@ -100,6 +111,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		}
 		
 		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver = userService.getById(model.getDriver().getId());
 		List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getFromDate(), model.getToDate());
 		boolean haveTask = false;
 		int taskType = 0;
@@ -138,7 +150,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 			addFieldError("", "添加维修记录失败！因为该时间段内有"+clazz);
 			return "saveAppoint";
 		}else{
-			carRepairService.carRepairAppointment(car, model.getFromDate(), model.getToDate());
+			carRepairService.carRepairAppointment(car, driver, model.getFromDate(), model.getToDate());
 		}
 		
 		return "toList";
@@ -175,13 +187,20 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		}
 		
 		CarRepair carRepair = carRepairService.getCarRepairById(model.getId());
+		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver=userService.getById(model.getDriver().getId());
 
 		//设置要修改的属性
+		carRepair.setCar(car);
+		carRepair.setDriver(driver);
 		carRepair.setFromDate(model.getFromDate());
 		carRepair.setToDate(model.getToDate());
+		carRepair.setRepairLocation(model.getRepairLocation());
 		carRepair.setMoney(model .getMoney());
+		carRepair.setReason(model.getReason());
 		carRepair.setMemo(model .getMemo());
-		carRepair.setAppointment(model.isAppointment());
+		carRepair.setPayDate(model.getPayDate());
+		carRepair.setAppointment(false);
 
 		//更新到数据库
 		carRepairService.updateCarRepair(carRepair);
@@ -214,18 +233,5 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "list";
 	}
-	
-	
-	/** 验证截止时间不能早于起始时间*/
-	/*public void validateAdd(){
-		boolean before = model.getToDate().before(model.getFromDate());
-		//System.out.println(before);
-		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
-			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
-		}
-	}*/
 
 }

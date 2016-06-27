@@ -3,6 +3,8 @@ package com.yuqincar.action.app;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletContext;
 
@@ -219,8 +221,8 @@ public class AppOrderSignatureAction extends BaseAction{
 		return username;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsername(String username)  throws UnsupportedEncodingException{
+		this.username = URLDecoder.decode(username,"UTF-8");
 	}
 
 	public String getPwd() {

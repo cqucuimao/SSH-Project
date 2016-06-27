@@ -34,6 +34,10 @@
                     			<th width="90"><s:property value="tr.getText('car.Car.plateNumber')" />：</th>
                     			<td>${car.plateNumber}</td>
                 			</tr>
+							<tr>
+                    			<th><s:property value="tr.getText('car.CarCare.driver')" />：</th>
+                    			<td>${driver.name}</td>
+                			</tr>
                 			<tr>
                     			<th>维修时间：</th>
                     			<td><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>

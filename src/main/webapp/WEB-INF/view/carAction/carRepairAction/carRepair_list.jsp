@@ -29,7 +29,14 @@
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
-<s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" /></td>
+						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" 
+							name="car.plateNumber" type="text" />
+					</td>
+					<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
+					<td>
+						<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
+						<s:textfield id="driverId" name="driver.id" type="hidden"/>
+					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
@@ -44,6 +51,7 @@
 					<thead>
 						<tr>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
               				<th>维修时间</th>
               				<th><s:property value="tr.getText('car.CarRepair.repairLocation')" /></th>
               				<th><s:property value="tr.getText('car.CarRepair.reason')" /></th>
@@ -58,6 +66,7 @@
 				        <s:iterator value="recordList">
 						<tr>
 							<td><s:a action="carRepair_detail?id=%{id}">${car.plateNumber}</s:a></td>
+							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 							<td>${repairLocation}</td>
 							<td>${reason}</td>

@@ -410,10 +410,6 @@
 				alert("上车时间不能为空！");
 				return false;
 			}
-			if ($("#fromAddress").val() == "") {
-				alert("上车地点不能为空！");
-				return false;
-			}
 			if ($("#chargeMode").val() == "filter_days"
 					|| $("#chargeMode").val() == "filter_protocol") {
 				if ($("#planEndDate").val() == "") {
@@ -674,17 +670,15 @@
 								for (var i = 0; i < data.length; i++) {
 									$(".tableHover").append('<tr>');
 									$(".tableHover").append('<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
-									if (typeof (data[i].driverName) != "undefined") {
-										$(".tableHover").append('<td>'+ data[i].driverName + '</td>');
-										$(".tableHover").append("<input type='hidden'>" + data[i].driverId + "</input>")
-									}else{
-										$(".tableHover").append('<td></td>');
-										$(".tableHover").append("<input type='hidden'></input>");
-									}
 									if (typeof (data[i].carNumber) != "undefined") {
 										$(".tableHover").append('<td>'+ data[i].carNumber+ '</td>');
 									} else {
 										$(".tableHover").append('<td></td>');
+									}
+									if (typeof (data[i].driverName) != "undefined") {
+										$(".tableHover").append("<td>"+ data[i].driverName + "<input type='hidden' value=';"+data[i].driverId+";'></input></td>");
+									}else{
+										$(".tableHover").append("<td><input type='hidden'></input></td>");
 									}
 									if (typeof (data[i].phone) != "undefined") {
 										$(".tableHover").append('<td>'+ data[i].phone+ '</td>');

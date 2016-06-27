@@ -45,9 +45,17 @@
                 	<tr>
                 		<th><s:property value="tr.getText('car.Car.plateNumber')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();"
+ 								name="car.plateNumber" type="text" synchDriverName="driverName" synchDriverId="driverId"/>
 						</td>
                     </tr>
+                    <tr>
+						<th><s:property value="tr.getText('car.Car.driver')" /><span class="required">*</span></th>
+						<td>
+							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
+							<s:textfield id="driverId" name="driver.id" type="hidden"/>
+						</td>
+					</tr>
                     <tr>
                     	<th>预约时间<span class="required">*</span></th>
                         <td>

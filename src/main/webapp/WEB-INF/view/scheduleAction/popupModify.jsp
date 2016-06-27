@@ -90,7 +90,7 @@
 				alert("时间不合法！");
 				return false;
 			}
-			alert("chen");
+			alert(artDialog.open.origin);
 			alert(artDialog.open.origin.location);
 			$("#timeForm").attr("action","order_editDriverActionTime.action");
 			alert(artDialog.open.origin.location);

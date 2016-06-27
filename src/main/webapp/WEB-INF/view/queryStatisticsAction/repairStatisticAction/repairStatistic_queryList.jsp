@@ -44,7 +44,7 @@
 					</td>
 					<th>车牌号:</th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" />
+						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" />
 					</td>
 					<th>司机姓名:</th>
 					<td>

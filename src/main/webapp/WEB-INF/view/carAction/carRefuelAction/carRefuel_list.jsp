@@ -27,7 +27,16 @@
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" /></td>
+						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+					</td>
+					<th>从</th>
+					<td>
+						<s:textfield name="date1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+					</td>
+					<th>到</th>
+					<td>
+						<s:textfield name="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
@@ -41,23 +50,23 @@
 					
 					<thead>
 						<tr>
+							<th><s:property value="tr.getText('car.CarRefuel.order')" /></th>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-              				<th><s:property value="tr.getText('car.CarRefuel.refuelingSite')" /></th>
+							<th><s:property value="tr.getText('car.CarRefuel.driver')" /></th>
                 			<th><s:property value="tr.getText('car.CarRefuel.date')" /></th>
-                			<th><s:property value="tr.getText('car.CarRefuel.RefuelingCharge')" />(L)</th>
+                			<th><s:property value="tr.getText('car.CarRefuel.volume')" />(L)</th>
                 			<th><s:property value="tr.getText('car.CarRefuel.money')" />(元)</th>
-			                <th>相关操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
+							<td>${order.sn}</td>
 							<td><s:a action="carRefuel_detail?id=%{id}">${car.plateNumber}</s:a></td>
-							<td>${refuelingSite}</td>
+							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
-                			<td style="text-align:right">${RefuelingCharge}</td>
+                			<td style="text-align:right">${volume}</td>
 							<td style="text-align:right">${money}</td>
-							<td></td>
 						</tr>
 						</s:iterator> 
 					</tbody>

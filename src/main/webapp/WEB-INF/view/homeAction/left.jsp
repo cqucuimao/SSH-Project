@@ -146,6 +146,12 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/tollCharge_list') ">
+			<dd>
+				<s:a action="tollCharge_list">路桥费</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
 		</dl>
 		</s:if>
 				

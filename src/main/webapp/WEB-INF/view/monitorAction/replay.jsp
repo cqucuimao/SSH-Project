@@ -31,7 +31,7 @@
                     <td><s:textfield class="inputText" name="driver.name"/></td>
                     <th>车牌号</th>
                     <!-- <td><s:textfield id="plateNumberInput" class="inputText" style="width:103px;" name="plateNumber"/></td> -->
-                    <td><s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
+                    <td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
                     <th>起始时间</th>
 					<td>
 						<input class="Wdate half" style="width:165px;" type="text" id="beginTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />

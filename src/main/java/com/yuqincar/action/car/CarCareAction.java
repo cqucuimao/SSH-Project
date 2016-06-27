@@ -19,9 +19,11 @@ import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarCareService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
@@ -39,6 +41,9 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private UserService userService;
 	
 	private Date date;
 
@@ -75,8 +80,10 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		
 		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
 				.equals(model.getCar().getPlateNumber()))
-		helper.addWhereCondition("u.car.plateNumber like ?", 
-				"%"+model.getCar().getPlateNumber()+"%");
+			helper.addWhereCondition("u.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		
+		if(model.getDriver()!=null && model.getDriver().getId()!=null)
+			helper.addWhereCondition("u.driver.id = ?", model.getDriver().getId());
 		
 		if(date1!=null && date2!=null)
 			helper.addWhereCondition("(TO_DAYS(u.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(u.date))>=0", 
@@ -103,25 +110,23 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
 	/** 添加 */
 	public String add() throws Exception {
+		System.out.println("in add1, model="+model);
 		// 保存到数据库
 		
-		Date today = new Date();
-		//System.out.println(today);
-		boolean before = model.getDate().before(today);
-		//System.out.println(before);
-		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
-			addFieldError("date", "你输入的预约时间不能早于今天！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
+		if(DateUtils.compareYMD(model.getDate(), new Date())>0){
+			addFieldError("date", "你输入的时间不能晚于今天！");
 			return "saveUI";
 		}
 		
 		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver = userService.getById(model.getDriver().getId());
 		
 		model.setCar(car1);
-		//model.setAppointment(true);
+		model.setDriver(driver);
+		model.setAppointment(false);
 		carCareService.saveCarCare(model);
+		model=null;
+		System.out.println("in add1, model="+model);
 		return "toList";
 	}
 	
@@ -140,16 +145,9 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	/** 修改 */
 	public String edit() throws Exception {
 		//从数据库中取出原对象
-		
-		Date today = new Date();
-		//System.out.println(today);
-		boolean before = model.getDate().before(today);
-		//System.out.println(before);
-		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
-			addFieldError("date", "你输入的预约时间不能早于今天！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
+
+		if(DateUtils.compareYMD(model.getDate(), new Date())>0){		
+			addFieldError("date", "你输入的时间不能晚于今天！");
 			return "saveUI";
 		}
 		
@@ -160,7 +158,7 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		carCare.setMileInterval(model.getMileInterval());
 		carCare.setMoney(model.getMoney());
 		carCare.setMemo(model.getMemo());
-		carCare.setAppointment(model.isAppointment());
+		carCare.setAppointment(false);
 
 		//更新到数据库
 		carCareService.updateCarCare(carCare);
@@ -169,11 +167,7 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	}
 	
 	/** 预约*/
-	public String appoint() throws Exception{
-		
-		//model.setAppointment(true);
-		//model.setMileInterval(5000);
-		
+	public String appoint() throws Exception{		
 		return "saveAppoint";
 	}
 	
@@ -205,22 +199,9 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	}
 
 	public CarCare getModel() {
+		System.out.println("in getModel,model="+model);
 		return model;
 	}
-	
-	/** 验证预约时间不能早于今天*/
-	/*public void validateAdd(){
-		Date today = new Date();
-		//System.out.println(today);
-		boolean before = model.getDate().before(today);
-		//System.out.println(before);
-		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
-			addFieldError("date", "你输入的预约时间不能早于今天！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
-		}
-	}*/
 	
 	public String care(){
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carCareHelper");
@@ -230,19 +211,14 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	}
 	
 	public String saveAppointment(){
-		Date today = new Date();
-		//System.out.println(today);
-		boolean before = model.getDate().before(today);
-		//System.out.println(before);
-		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
+		if(DateUtils.compareYMD(model.getDate(), new Date())<0){
 			addFieldError("date", "你输入的预约时间不能早于今天！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
 			return "saveAppoint";
 		}
 		
 		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver = userService.getById(model.getDriver().getId());
+		
 		//System.out.println("规范化?"+car.getBrand()+"?打工算法妨功害能"+car.getMemo());
 		List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getDate(), model.getDate());
 		boolean haveTask=false;
@@ -284,7 +260,7 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 			return "saveAppoint";
 		}else{
 			//插入预约保养记录
-			carCareService.carCareAppointment(car, model.getDate());
+			carCareService.carCareAppointment(car, driver, model.getDate());
 		}
 		
 		return "toList";

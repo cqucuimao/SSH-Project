@@ -44,9 +44,17 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.Car.plateNumber')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" 
+								name="car.plateNumber" synchDriverName="driverName" synchDriverId="driverId"/>
 						</td>
                     </tr>
+                    <tr>
+						<th><s:property value="tr.getText('car.Car.driver')" /><span class="required">*</span></th>
+						<td>
+							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
+							<s:textfield id="driverId" name="driver.id" type="hidden"/>
+						</td>
+					</tr>
                     <tr>
                     	<th><s:property value="tr.getText('car.CarExamine.date')" /><span class="required">*</span></th>
                         <td>
@@ -54,13 +62,16 @@
 						</td>
                     </tr>
                 	<tr>
-                        <th>下次年审日期<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.CarExamine.nextExamineDate')" /><span class="required">*</span></th>
                         <td>
-							<s:textfield cssClass="inputText" name="examineIntervalYear" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-							<!-- 
-							<s:fielderror style="color:red"></s:fielderror>
-							 -->
+							<s:textfield cssClass="inputText" name="nextExamineDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 						</td>
+                    </tr>                    
+                    <tr>
+                        <th><s:property value="tr.getText('car.CarExamine.money')" /><span class="required">*</span></th>
+                        <td>
+                        	<s:textfield cssClass="inputText" name="money"/>
+                        </td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.CarExamine.memo')" /></th>

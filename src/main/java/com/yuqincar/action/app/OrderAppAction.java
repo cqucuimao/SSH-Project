@@ -135,28 +135,6 @@ public class OrderAppAction extends BaseAction{
 			return false;
 		else
 			return true;
-		
-		//TODO 暂且只允许验证码为123456，需要和王子敬商量
-//		if(validationCode.equals("e10adc3949ba59abbe56e057f20f883e"))
-//			return true;
-//		else
-//			return false;
-		
-		/*
-		CustomerOrganization customerOrganization=customerOrganizationService.getCustomerOrganizationByName(customerOrganizationName);
-		System.out.println("customerOrganization.name="+customerOrganization.getName());
-		if(customerOrganization==null)
-			return false;
-		Customer customer=customerService.getCustomerByNameAndOrganization(customerName, customerOrganizationName);
-		System.out.println("customer.name="+customer.getName());
-		if(customer==null)
-			return false;
-		for(String phone:customer.getPhones())
-			if(phoneNumber.equals(phone))
-				return true;
-		
-		return false;
-		*/
 	}
 	
 	public void login(){		
@@ -390,7 +368,7 @@ public class OrderAppAction extends BaseAction{
 			ovo.setTime(time.toString());
 			
 			ovo.setFromAddress(order.getFromAddress());
-			if(order.getChargeMode()==ChargeModeEnum.MILE)
+			if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 				ovo.setToAddress(order.getToAddress());
 			
 			if(order.isCallForOther())
@@ -441,7 +419,7 @@ public class OrderAppAction extends BaseAction{
 		odvo.setTime(time.toString());
 		
 		odvo.setFromAddress(order.getFromAddress());
-		if(order.getChargeMode()==ChargeModeEnum.MILE)
+		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			odvo.setToAddress(order.getToAddress());
 		
 		odvo.setCarServiceType(order.getServiceType().getTitle());
@@ -623,8 +601,6 @@ public class OrderAppAction extends BaseAction{
 			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
-		System.out.println("in updateDeviceToken");
-		System.out.println("phoneNumber="+phoneNumber);
 		Customer customer=customerService.getCustomerByPhoneNumber(phoneNumber);
 		if(deviceType.equals("ios"))
 			customer.setAppDeviceType(UserAPPDeviceTypeEnum.IOS);
@@ -824,8 +800,8 @@ public class OrderAppAction extends BaseAction{
 		return address;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setAddress(String address) throws UnsupportedEncodingException{
+		this.address = URLDecoder.decode(address,"UTF-8");
 	}
 
 	public String getChargeMode() {
@@ -840,16 +816,16 @@ public class OrderAppAction extends BaseAction{
 		return fromAddress;
 	}
 
-	public void setFromAddress(String fromAddress) {
-		this.fromAddress = fromAddress;
+	public void setFromAddress(String fromAddress) throws UnsupportedEncodingException{
+		this.fromAddress = URLDecoder.decode(fromAddress,"UTF-8");
 	}
 
 	public String getToAddress() {
 		return toAddress;
 	}
 
-	public void setToAddress(String toAddress) {
-		this.toAddress = toAddress;
+	public void setToAddress(String toAddress) throws UnsupportedEncodingException {
+		this.toAddress = URLDecoder.decode(toAddress,"UTF-8");
 	}
 
 	class CarServiceTypeVO{

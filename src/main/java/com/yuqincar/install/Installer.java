@@ -308,6 +308,18 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/carExamine_examine", carExamineMenu));
 		privilegeDao.save(new Privilege("", "/carExamine_saveAppointment", carExamineMenu));
 		
+		Privilege tollChargeMenu = new Privilege("路桥费", "/tollCharge_list", carMenu);
+		privilegeDao.save(tollChargeMenu);
+		privilegeDao.save(new Privilege("", "/tollCharge_queryForm", tollChargeMenu));
+		privilegeDao.save(new Privilege("", "/tollCharge_delete", tollChargeMenu));
+		privilegeDao.save(new Privilege("", "/tollCharge_editUI", tollChargeMenu));
+		privilegeDao.save(new Privilege("", "/tollCharge_freshList", tollChargeMenu));
+		privilegeDao.save(new Privilege("", "/tollCharge_saveUI", tollChargeMenu));
+		privilegeDao.save(new Privilege("", "/tollCharge_remind", tollChargeMenu));
+		privilegeDao.save(new Privilege("", "/tollCharge_save", tollChargeMenu));
+		privilegeDao.save(new Privilege("", "/tollCharge_edit", tollChargeMenu));
+		privilegeDao.save(new Privilege("", "/tollCharge_remindExport", tollChargeMenu));
+		
 		//客户管理
 		Privilege customerMenu = new Privilege("客户管理", "/customer", null);
 		privilegeDao.save(customerMenu);

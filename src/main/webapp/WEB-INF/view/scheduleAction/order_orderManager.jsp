@@ -43,7 +43,7 @@
 					</td>					
 					<th>司机</th>
 					<td>
-						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driverName"/>
+						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driverName" driverOnly="true"/>
 						<s:textfield id="driverId" name="driverId" type="hidden"/>						
 					</td>
 					<th>计划开始时间</th>
@@ -54,7 +54,7 @@
 					</td>
 					<th>状态</th>
 					<td>
-						<s:select name="status" list="{'所有状态','在队列','已调度','已接受','已开始','已结束','已付费','已取消'}"></s:select>
+						<s:select name="status" list="{'所有状态','在队列','已调度','已接受','已开始','已上车','已下车','已结束','已付费','已取消'}"></s:select>
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="button" />&nbsp;&nbsp;&nbsp;&nbsp;

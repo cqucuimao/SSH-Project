@@ -31,8 +31,8 @@ public class CarExamine extends BaseEntity {
 	@JoinColumn(nullable=false)
 	private Date date;	//年审时间
 
-	@Text("下次年审间隔年")
-	private Date examineIntervalYear;	//下次年审间隔年数
+	@Text("下次年审日期")
+	private Date nextExamineDate;	//下次年审日期
 
 	@Text("年审花费")
 	private BigDecimal money;	//年审花费
@@ -54,13 +54,12 @@ public class CarExamine extends BaseEntity {
 	}
 	public void setDate(Date date) {
 		this.date = date;
+	}	
+	public Date getNextExamineDate() {
+		return nextExamineDate;
 	}
-		
-	public Date getExamineIntervalYear() {
-		return examineIntervalYear;
-	}
-	public void setExamineIntervalYear(Date examineIntervalYear) {
-		this.examineIntervalYear = examineIntervalYear;
+	public void setNextExamineDate(Date nextExamineDate) {
+		this.nextExamineDate = nextExamineDate;
 	}
 	public BigDecimal getMoney() {
 		return money;

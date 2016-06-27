@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,7 @@ import com.yuqincar.dao.monitor.LocationDao;
 import com.yuqincar.dao.order.DayOrderDetailDao;
 import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.dao.order.OrderOperationRecordDao;
+import com.yuqincar.dao.order.PriceTableDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
@@ -78,6 +78,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private OrderOperationRecordDao orderOperationRecordDao;
+	
+	@Autowired
+	private PriceTableDao priceTableDao;
 	
 	@Autowired
 	private DayOrderDetailDao dayOrderDetailDao;
@@ -145,62 +148,6 @@ public class OrderServiceImpl implements OrderService {
 
 	public boolean canScheduleOrder(Order order) {
 		return order.getStatus()==OrderStatusEnum.INQUEUE;
-	}
-
-	private CustomerOrganization generateCustomerOrganization(
-			String customerOrganizationName) {
-		if (customerOrganizationDao
-				.isNameExist(0, customerOrganizationName))
-			return customerOrganizationDao.getByName(customerOrganizationName);
-		else {
-			CustomerOrganization customerOrganization = new CustomerOrganization();
-			customerOrganization.setName(customerOrganizationName);
-			customerOrganizationDao.save(customerOrganization);
-			return customerOrganization;
-		}
-	}
-
-	private Customer generateCustomer(
-			CustomerOrganization customerOrganization, String customerName,
-			String phone) {
-		boolean customerExist, phoneExist;
-		QueryHelper helper = new QueryHelper(Customer.class, "c");
-		helper.addWhereCondition("c.customerOrganization=? and c.name=?",
-				customerOrganization, customerName);
-		List<Customer> customerList = (List<Customer>) customerDao
-				.getPageBean(1, helper).getRecordList();
-		if (customerList == null || customerList.size() == 0)
-			customerExist = false;
-		else
-			customerExist = true;
-
-		helper = new QueryHelper(Customer.class, "c");
-		helper.addWhereCondition(
-				"? in elements(c.phones) and c.customerOrganization=?", phone,
-				customerOrganization);
-		List<Customer> cList = (List<Customer>) customerDao.getPageBean(
-				1, helper).getRecordList();
-		if (cList == null || cList.size() == 0)
-			phoneExist = false;
-		else
-			phoneExist = true;
-
-		if (!customerExist) {
-			Customer customer = new Customer();
-			customer.setName(customerName);
-			customer.setCustomerOrganization(customerOrganization);
-			List<String> phones = new ArrayList<String>();
-			phones.add(phone);
-			customer.setPhones(phones);
-			customerDao.save(customer);
-			return customer;
-		} else {
-			if (!phoneExist) {
-				customerList.get(0).getPhones().add(phone);
-				customerDao.update(customerList.get(0));
-			}
-			return customerList.get(0);
-		}
 	}
 	
 	private void copyOrderScheduled(Order order, int n) {
@@ -407,6 +354,11 @@ public class OrderServiceImpl implements OrderService {
 			sb.append("(").append(++n).append(")").append("车辆由：")
 				.append(toUpdateOrder.getCar().getPlateNumber())
 				.append(" 改为 ").append(order.getCar().getPlateNumber()).append("；");
+		
+		if(!order.getDriver().equals(toUpdateOrder.getDriver()))
+			sb.append("(").append(++n).append(")").append("司机由：")
+				.append(toUpdateOrder.getDriver().getName())
+				.append(" 改为 ").append(order.getDriver().getName()).append("；");
 		
 		if(n>0){
 			OrderOperationRecord orderOperation = new OrderOperationRecord();
@@ -867,6 +819,7 @@ public class OrderServiceImpl implements OrderService {
 					//新建客户单位，修改客户姓名，修改客户所属单位。
 					CustomerOrganization customerOrganization=new CustomerOrganization();
 					customerOrganization.setName(customerOrganizationName);
+					customerOrganization.setPriceTable(priceTableDao.getDefaultPriceTable());
 					customerOrganizationDao.save(customerOrganization);
 					
 					helper = new QueryHelper(Customer.class, "c");
@@ -914,6 +867,7 @@ public class OrderServiceImpl implements OrderService {
 					//三个数据都不存在，全部新建。
 					CustomerOrganization customerOrganization=new CustomerOrganization();
 					customerOrganization.setName(customerOrganizationName);
+					customerOrganization.setPriceTable(priceTableDao.getDefaultPriceTable());
 					customerOrganizationDao.save(customerOrganization);
 					
 					Customer customer=new Customer();

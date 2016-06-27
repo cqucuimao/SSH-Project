@@ -459,7 +459,12 @@ $(function(){
 	$(".carSelector").each(function (i){
 		$(this).click(function(){
 			art.dialog.data('plateNumber', this.value); 
-			art.dialog.open('car_popup.action?carSelectorId='+this.id,{
+			url='car_popup.action?carSelectorId='+this.id;
+			if($(this).attr("synchDriverName")!=null)
+				url=url+'&synchDriverName='+$(this).attr("synchDriverName");
+			if($(this).attr("synchDriverId")!=null)
+				url=url+'&synchDriverId='+$(this).attr("synchDriverId");
+			art.dialog.open(url,{
 				title: '车辆选择', 
 				width: 300, 
 				height: 530

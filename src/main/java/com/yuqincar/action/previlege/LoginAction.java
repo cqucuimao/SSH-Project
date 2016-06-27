@@ -40,7 +40,8 @@ public class LoginAction extends BaseAction implements ModelDriven<User>{
 		System.out.println("model.getName:"+model.getLoginName());
 	
 		// 验证用户名与密码，如果正确就返回这个用户，否则返回null
-		User user = userService.getByLoginNameAndPassword(model.getLoginName(), model.getPassword());
+		//User user = userService.getByLoginNameAndPassword(model.getLoginName(), model.getPassword());
+		User user=userService.getByLoginName(model.getLoginName());
 		
 		// 如果登录名或密码不正确，就转回到登录页面并提示错误消息
 		if (user == null) {

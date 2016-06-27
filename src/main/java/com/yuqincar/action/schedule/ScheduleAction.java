@@ -61,8 +61,8 @@ public class ScheduleAction extends BaseAction {
 	private UserService userService;
 	
 	private List<CarServiceType> serviceTypes;
-	private String watchKeeperDriverName;
-	private String watchKeeperDriverId;
+	private String watchKeeperName;
+	private String watchKeeperId;
 	private String queryCarPlateNumber;
 	private String keyWord;
 	private String customerOrganizationName;
@@ -479,11 +479,14 @@ public class ScheduleAction extends BaseAction {
 		chargeModeEnum = getChargeMode(chargeMode);
 		order.setChargeMode(chargeModeEnum);
 		
+		order.setFromAddress(fromAddress);
 		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setPlanBeginDate(DateUtils.getYMD(planBeginDate));
 			order.setPlanEndDate(DateUtils.getYMD(planEndDate));
-		}else
+		}else{
+			order.setToAddress(toAddress);
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
+		}
 		
 		carServiceType_ = carService.getCarServiceTypeById(Long
 				.parseLong(serviceType));
@@ -499,11 +502,6 @@ public class ScheduleAction extends BaseAction {
 		if(needCopy==null || needCopy.isEmpty() || needCopy.equals("off"))
 			copyNumber=0;
 		
-		System.out.println("callForOther="+callForOther);
-		System.out.println("otherPassengerName="+otherPassengerName);
-		System.out.println("otherPhoneNumber="+otherPhoneNumber);
-		System.out.println("callForOtherSendSMS="+callForOtherSendSMS);
-
 		if(callForOther!=null && callForOther.equals("on")){
 			order.setCallForOther(true);
 			order.setOtherPassengerName(otherPassengerName);
@@ -577,12 +575,14 @@ public class ScheduleAction extends BaseAction {
 		System.out.println("in getRecommendDriver");
 		System.out.println("planBeginDate=" + planBeginDate);
 		System.out.println("planEndDate=" + planEndDate);
-		Date beginDate_ = DateUtils.getYMDHM(planBeginDate);
-		Date endDate_;
-		if (getChargeMode(chargeMode) == ChargeModeEnum.MILE) {
+		Date beginDate_=null;
+		Date endDate_=null;
+		if (getChargeMode(chargeMode) == ChargeModeEnum.MILE || getChargeMode(chargeMode) == ChargeModeEnum.PLANE) {
+			beginDate_ = DateUtils.getYMDHM(planBeginDate);
 			endDate_ = DateUtils.getOffsetDate(beginDate_, 4);
 		} else {
-			endDate_ = DateUtils.getYMDHM(planEndDate);
+			beginDate_ = DateUtils.getYMD(planBeginDate);
+			endDate_ = DateUtils.getYMD(planEndDate);
 		}
 		List<Car> cars = orderService.getRecommandedCar(
 				carService.getCarServiceTypeById(Long.parseLong(serviceType)),getChargeMode(chargeMode),
@@ -668,8 +668,8 @@ public class ScheduleAction extends BaseAction {
 		System.out.println("in watchKeeper");
 		WatchKeeper watchKeeper=watchKeeperService.getWatchKeeper();
 		onDuty=watchKeeper.isOnDuty();
-		watchKeeperDriverName=watchKeeper.getKeeper().getName();
-		watchKeeperDriverId=String.valueOf(watchKeeper.getKeeper().getId());
+		watchKeeperName=watchKeeper.getKeeper().getName();
+		watchKeeperId=String.valueOf(watchKeeper.getKeeper().getId());
 		return "watchKeeper";
 	}
 	
@@ -677,7 +677,7 @@ public class ScheduleAction extends BaseAction {
 		System.out.println("in configWatchKeeper");
 		WatchKeeper watchKeeper=watchKeeperService.getWatchKeeper();
 		watchKeeper.setOnDuty(onDuty);
-		watchKeeper.setKeeper(userService.getById(Long.valueOf(watchKeeperDriverId)));
+		watchKeeper.setKeeper(userService.getById(Long.valueOf(watchKeeperId)));
 		watchKeeperService.updateWatchKeeper(watchKeeper);
 		System.out.println("end configWatchKeeper");
 		return queue();
@@ -867,20 +867,20 @@ public class ScheduleAction extends BaseAction {
 		this.toAddress = toAddress;
 	}
 
-	public String getWatchKeeperDriverName() {
-		return watchKeeperDriverName;
+	public String getWatchKeeperName() {
+		return watchKeeperName;
 	}
 
-	public void setWatchKeeperDriverName(String watchKeeperDriverName) {
-		this.watchKeeperDriverName = watchKeeperDriverName;
+	public void setWatchKeeperName(String watchKeeperName) {
+		this.watchKeeperName = watchKeeperName;
 	}
 
-	public String getWatchKeeperDriverId() {
-		return watchKeeperDriverId;
+	public String getWatchKeeperId() {
+		return watchKeeperId;
 	}
 
-	public void setWatchKeeperDriverId(String watchKeeperDriverId) {
-		this.watchKeeperDriverId = watchKeeperDriverId;
+	public void setWatchKeeperId(String watchKeeperId) {
+		this.watchKeeperId = watchKeeperId;
 	}
 
 	public boolean isOnDuty() {

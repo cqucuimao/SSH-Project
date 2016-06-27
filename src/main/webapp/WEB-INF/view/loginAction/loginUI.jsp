@@ -22,7 +22,11 @@
         <h1 class="logo"><em></em>综合业务管理系统</h1>
         <div class="loginBox">
 			<s:form action="login_login" >
-                <div class="note"><s:property value="errors['loginError'][0]"/><s:property value="errors['loginName'][0]" /><s:property value="errors['password'][0]" /></div>
+                <div class="note">
+                	<s:property value="errors['loginError'][0]"/>
+                	<s:property value="errors['loginName'][0]" />
+                	<s:property value="errors['password'][0]" />
+                </div>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
@@ -36,7 +40,8 @@
                         <span class="input-group-addon">
                             <i class="icon-password"></i>
                         </span>
-                        <s:password id="login-password" cssClass="inputText" showPassword="false" name="password" />
+                        	<s:password id="login-password" cssClass="inputText" showPassword="false" name="password" />
+                        
                     </div>
                 </div>
                 <div class="form-group vaildate">

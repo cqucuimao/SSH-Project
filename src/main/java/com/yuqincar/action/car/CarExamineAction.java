@@ -1,6 +1,5 @@
 package com.yuqincar.action.car;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -18,9 +17,11 @@ import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarExamineService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
@@ -39,15 +40,18 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	@Autowired
 	private OrderService orderService;
 	
+	@Autowired
+	private UserService userService;
+	
 	/** 列表 */
 	public String list() throws Exception {
 		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
 		
 		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !"".equals(model.getCar().getPlateNumber()))
-		helper.addWhereCondition("ce.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+			helper.addWhereCondition("ce.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
 		
-		//if(model.getMoney()!=null && !"".equals(model.getMoney()))
-			//helper.addWhereCondition("ce.money=?", model.getMoney());
+		if(model.getDriver()!=null && model.getDriver().getId()!=null)
+			helper.addWhereCondition("ce.driver.id = ?", model.getDriver().getId());
 
 		System.out.println(helper.getQueryListHql());
 		
@@ -73,7 +77,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	public String add() throws Exception {
 		// 保存到数据库
 		
-		boolean before = model.getExamineIntervalYear().before(model.getDate());
+		boolean before = model.getNextExamineDate().before(model.getDate());
 		//System.out.println(before);
 		if(before){
 		
@@ -84,9 +88,11 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		}
 		
 		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver = userService.getById(model.getDriver().getId());
 		
 		model.setCar(car1);
-		//model.setAppointment(true);
+		model.setDriver(driver);
+		model.setAppointment(false);
 		carExamineService.saveCarExamine(model);
 		return "toList";
 	}
@@ -97,7 +103,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		CarExamine carExamine = carExamineService.getCarExamineById(model.getId());
 		
 		carExamine.setDate(DateUtils.getYMD(DateUtils.getYMDString(carExamine.getDate())));
-		carExamine.setExamineIntervalYear(DateUtils.getYMD(DateUtils.getYMDString(carExamine.getExamineIntervalYear())));
+		carExamine.setNextExamineDate(DateUtils.getYMD(DateUtils.getYMDString(carExamine.getNextExamineDate())));
 		
 		ActionContext.getContext().getValueStack().push(carExamine);
 
@@ -108,7 +114,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	public String edit() throws Exception {
 		//从数据库中取出原对象
 		
-		boolean before = model.getExamineIntervalYear().before(model.getDate());
+		boolean before = model.getNextExamineDate().before(model.getDate());
 		//System.out.println(before);
 		if(before){
 		
@@ -119,13 +125,17 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		}
 		
 		CarExamine carExamine = carExamineService.getCarExamineById(model.getId());
+		Car car=carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver=userService.getById(model.getDriver().getId());
 
 		//设置要修改的属性
+		carExamine.setCar(car);
+		carExamine.setDriver(driver);
 		carExamine.setDate(model.getDate());
-		carExamine.setExamineIntervalYear(model.getExamineIntervalYear());
+		carExamine.setNextExamineDate(model.getNextExamineDate());
 		carExamine.setMoney(model .getMoney());
 		carExamine.setMemo(model .getMemo());
-		carExamine.setAppointment(model.isAppointment());
+		carExamine.setAppointment(false);
 
 		//更新到数据库
 		carExamineService.updateCarExamine(carExamine);
@@ -148,7 +158,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
 		
 		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !"".equals(model.getCar().getPlateNumber()))
-		helper.addWhereCondition("ce.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+			helper.addWhereCondition("ce.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
 		
 		PageBean pageBean = carExamineService.queryCarExamine(pageNum, helper);
 		
@@ -179,19 +189,6 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		return "list";
 	}
 	
-	
-	/** 验证下次年审时间不能早于年审时间*/
-	/*public void validateAdd(){
-		boolean before = model.getExamineIntervalYear().before(model.getDate());
-		//System.out.println(before);
-		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
-			addFieldError("examineIntervalYear", "你输入的下次年审时间不能早于年审时间！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
-		}
-	}*/
-	
 	public String saveAppointment(){
 		Date today = new Date();
 		//System.out.println(today);
@@ -206,6 +203,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		}
 		
 		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver = userService.getById(model.getDriver().getId());
 		List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getDate(), model.getDate());
 		boolean haveTask=false;
 		int taskType=0;  //1订单  2 保养 3 年审 4 维修
@@ -244,7 +242,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 			addFieldError("", "添加年审记录失败！因为该时间段内有"+clazz);
 			return "saveAppoint";
 		}else {
-			carExamineService.carExamineAppointment(car, model.getDate());
+			carExamineService.carExamineAppointment(car, driver, model.getDate());
 		}
 		return "toList";
 	}

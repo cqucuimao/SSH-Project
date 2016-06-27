@@ -7,6 +7,7 @@ import java.util.List;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
 
 public interface CarCareService {
@@ -25,11 +26,11 @@ public interface CarCareService {
 	 * @param car
 	 * @param date
 	 */
-	public void carCareAppointment(Car car,Date date);
+	public void carCareAppointment(Car car,User driver, Date date);
 	
 	public CarCare getCarCareById(long id);
 	
-	public PageBean<CarCareService> queryCarCare(int pageNum , QueryHelper helper);
+	public PageBean<CarCare> queryCarCare(int pageNum , QueryHelper helper);
 	
 	/**
 	 * 

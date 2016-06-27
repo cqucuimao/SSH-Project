@@ -31,20 +31,24 @@
 					</colgroup>
 					<tbody class="tableHover">
 							<tr>
-                    			<th width="90"><s:property value="tr.getText('car.Car.plateNumber')" />：</th>
+                    			<th width="90"><s:property value="tr.getText('car.CarRefuel.order')" />：</th>
+                    			<td>${order.sn}</td>
+                			</tr>
+							<tr>
+                    			<th><s:property value="tr.getText('car.Car.plateNumber')" />：</th>
                     			<td>${car.plateNumber}</td>
                 			</tr>
-                			<tr>
-                				<th><s:property value="tr.getText('car.CarRefuel.refuelingSite')" />：</th>
-                				<td>${refuelingSite}</td>
+							<tr>
+                    			<th><s:property value="tr.getText('car.CarRefuel.driver')" />：</th>
+                    			<td>${driver.name}</td>
                 			</tr>
                 			<tr>
                     			<th><s:property value="tr.getText('car.CarRefuel.date')" />：</th>
                     			<td><s:date name="date" format="yyyy-MM-dd"/></td>
                 			</tr>
                 			<tr>
-                				<th><s:property value="tr.getText('car.CarRefuel.RefuelingCharge')" />(L)：</th>
-                				<td>${RefuelingCharge}</td>
+                				<th><s:property value="tr.getText('car.CarRefuel.volume')" />(L)：</th>
+                				<td>${volume}</td>
                 			</tr>
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarRefuel.money')" />(元)：</th>

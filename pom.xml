@@ -224,7 +224,62 @@
 			<artifactId>jxl</artifactId>
 			<version>2.6.10</version>
 		</dependency>
-
+		<dependency>
+    		<groupId>com.baidu.yun</groupId>
+    		<artifactId>bccs-api</artifactId>
+    		<version>3.0.1</version>
+    		<scope>system</scope>
+    		<systemPath>
+    			${project.basedir}/src/main/webapp/WEB-INF/lib/baidu_push_server.jar
+   			</systemPath>
+		</dependency>
+		
+		<!-- 百度推送 -->
+		<dependency>
+    		<groupId>com.baidu.yun</groupId>
+    		<artifactId>bccs-api</artifactId>
+    		<version>3.0.1</version>
+    		<scope>system</scope>
+    		<systemPath>
+    			${project.basedir}/src/main/webapp/WEB-INF/lib/baidu_push_server.jar
+   			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.2</version>
+    		<scope>system</scope>
+    		<systemPath>
+    			${project.basedir}/src/main/webapp/WEB-INF/lib/commons-beanutils-1.9.2.jar
+   			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ezmorph</groupId>
+			<artifactId>ezmorph</artifactId>
+			<version>1.0.6</version>
+    		<scope>system</scope>
+    		<systemPath>
+    			${project.basedir}/src/main/webapp/WEB-INF/lib/ezmorph-1.0.6.jar
+   			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>json</groupId>
+			<artifactId>json</artifactId>
+			<version>2.4</version>
+    		<scope>system</scope>
+    		<systemPath>
+    			${project.basedir}/src/main/webapp/WEB-INF/lib/json-lib-2.4-jdk15.jar
+   			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+    		<scope>system</scope>
+    		<systemPath>
+    			${project.basedir}/src/main/webapp/WEB-INF/lib/commons-lang-2.6.jar
+   			</systemPath>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>yuqin</finalName>

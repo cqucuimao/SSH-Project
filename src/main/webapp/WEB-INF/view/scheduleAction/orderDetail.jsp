@@ -50,7 +50,7 @@ ${order }
                 </tr>
                 <tr>
                 	<th>计费方式：</th>
-                	<td>${chargeModeString }</td>
+                	<td>${chargeModeString}</td>
                 </tr>
                 <tr>
                     <th>用车人数：</th>

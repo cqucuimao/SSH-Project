@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.spi.CalendarDataProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,7 @@ import com.yuqincar.dao.car.CarExamineDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarExamineService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.DateUtils;
@@ -36,9 +36,10 @@ public class CarExamineServiceImpl implements CarExamineService {
 	}
 
 	@Transactional
-	public void carExamineAppointment(Car car, Date date) {
+	public void carExamineAppointment(Car car, User driver, Date date) {
 		CarExamine carExamine = new CarExamine();
 		carExamine.setCar(car);
+		carExamine.setDriver(driver);
 		carExamine.setDate(date);
 		carExamine.setAppointment(true);
 		carExamineDao.save(carExamine);
@@ -46,7 +47,7 @@ public class CarExamineServiceImpl implements CarExamineService {
 		//给司机发送短信
 		Map<String,String> params=new HashMap<String,String>();
 		params.put("carExamineDate", DateUtils.getYMDString(date));
-		smsService.sendTemplateSMS(car.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_EXAMINE_APPOINTMENT, params);
+		smsService.sendTemplateSMS(driver.getPhoneNumber(), SMSService.SMS_TEMPLATE_EXAMINE_APPOINTMENT, params);
 	}
 
 	public CarExamine getCarExamineById(long id) {

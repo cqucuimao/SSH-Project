@@ -34,6 +34,10 @@
                     			<th width="120"><s:property value="tr.getText('car.Car.plateNumber')" />：</th>
                     			<td>${car.plateNumber}</td>
                 			</tr>
+							<tr>
+                    			<th><s:property value="tr.getText('car.CarCare.driver')" />：</th>
+                    			<td>${driver.name}</td>
+                			</tr>
                 			<tr>
                     			<th><s:property value="tr.getText('car.CarCare.date')" />：</th>
                     			<td><s:date name="date" format="yyyy-MM-dd"/></td>

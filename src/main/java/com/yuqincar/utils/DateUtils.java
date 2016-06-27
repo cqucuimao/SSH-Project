@@ -541,27 +541,15 @@ public class DateUtils {
 	}
 	
 	/**
-	 * 比较两个日期的年月日是否相等，即比较两个日期是否是在同一天
+	 * 比较两个日期的年月日
 	 * @param date1
 	 * @param date2
 	 * @return
 	 */
-	public static boolean compareYMD(Date date1, Date date2) {
-		int year1,month1,day1;
-		int year2,month2,day2;
-		
-		Calendar cal=Calendar.getInstance();
-		cal.setTime(date1);
-		year1=cal.get(Calendar.YEAR);
-		month1=cal.get(Calendar.MONTH);
-		day1=cal.get(Calendar.DAY_OF_MONTH);
-		
-		cal.setTime(date2);
-		year2=cal.get(Calendar.YEAR);
-		month2=cal.get(Calendar.MONTH);
-		day2=cal.get(Calendar.DAY_OF_MONTH);
-		
-		return year1==year2 && month1==month2 && day1==day2;
+	public static int compareYMD(Date date1, Date date2) {
+		date1=getMinDate(date1);
+		date2=getMinDate(date2);
+		return date1.compareTo(date2);
 	}
 
     /**

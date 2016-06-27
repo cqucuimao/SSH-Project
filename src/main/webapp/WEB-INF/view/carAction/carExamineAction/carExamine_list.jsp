@@ -27,7 +27,12 @@
 						<input id="appoint" class="inputButton" type="button" value="年审预约" name="button" />
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-					<td><s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" /></td>
+					<td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" /></td>
+					<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
+					<td>
+						<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
+							<s:textfield id="driverId" name="driver.id" type="hidden"/>
+					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<input id="remind" class="inputButton" type="button" value="年审提醒" name="button" />
@@ -43,6 +48,7 @@
 					<thead>
 						<tr>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
 							<th><s:property value="tr.getText('car.CarExamine.date')" /></th>
               				<th>下次年审日期</th>
                 			<th><s:property value="tr.getText('car.CarExamine.memo')" /></th>
@@ -54,6 +60,7 @@
 				        <s:iterator value="recordList">
 						<tr>
 							<td><s:a action="carExamine_detail?id=%{id}">${car.plateNumber}</s:a></td>
+							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right"><s:date name="examineIntervalYear" format="yyyy-MM-dd"/></td>
 							<td>${memo}</td>

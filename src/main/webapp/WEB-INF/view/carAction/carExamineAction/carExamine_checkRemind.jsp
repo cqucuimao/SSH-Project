@@ -44,7 +44,7 @@
 				        <s:iterator value="recordList">
 						<tr>
 							<td>${car.plateNumber}</td>
-							<td style="text-align:right"><s:date name="examineIntervalYear" format="yyyy-MM-dd"/></td>
+							<td style="text-align:right"><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
 							<td>${memo}</td>
 						</tr>
 						</s:iterator> 

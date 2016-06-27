@@ -3,12 +3,9 @@ package com.yuqincar.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.io.InputStreamReader;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.Properties;
 
 public class Configuration {
@@ -21,6 +18,10 @@ public class Configuration {
 	private static String IOSDriverPushKeyStore=null;
 	private static String IOSCustomerPushKeyStore=null;
 	private static String AppleDeveloperPassword=null;
+	private static String BaiduDriverPushApiKey=null;
+	private static String BaiduDriverPushSecretKey=null;
+	private static String BaiduCustomerPushApiKey=null;
+	private static String BaiduCustomerPushSecretKey=null;
 	
 	//调度员能够调度一个队列中的订单所需的最大分钟数。超过这个时间，就会被剥夺。
 	private static int depriveScheduleMinute = 10;
@@ -43,6 +44,10 @@ public class Configuration {
 			IOSCustomerPushKeyStore = props.getProperty("IOSCustomerPushKeyStore");
 			AppleDeveloperPassword = props.getProperty("AppleDeveloperPassword");			
 			depriveScheduleMinute=Integer.parseInt(props.getProperty("depriveScheduleMinute"));
+			BaiduDriverPushApiKey=props.getProperty("BaiduDriverPushApiKey");
+			BaiduDriverPushSecretKey=props.getProperty("BaiduDriverPushSecretKey");
+			BaiduCustomerPushApiKey=props.getProperty("BaiduCustomerPushApiKey");
+			BaiduCustomerPushSecretKey=props.getProperty("BaiduCustomerPushSecretKey");
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -128,5 +133,40 @@ public class Configuration {
 	public static void setAppleDeveloperPassword(String appleDeveloperPassword) {
 		AppleDeveloperPassword = appleDeveloperPassword;
 	}
+
+	public static String getBaiduDriverPushApiKey() {
+		return BaiduDriverPushApiKey;
+	}
+
+	public static void setBaiduDriverPushApiKey(String baiduDriverPushApiKey) {
+		BaiduDriverPushApiKey = baiduDriverPushApiKey;
+	}
+
+	public static String getBaiduDriverPushSecretKey() {
+		return BaiduDriverPushSecretKey;
+	}
+
+	public static void setBaiduDriverPushSecretKey(String baiduDriverPushSecretKey) {
+		BaiduDriverPushSecretKey = baiduDriverPushSecretKey;
+	}
+
+	public static String getBaiduCustomerPushApiKey() {
+		return BaiduCustomerPushApiKey;
+	}
+
+	public static void setBaiduCustomerPushApiKey(String baiduCustomerPushApiKey) {
+		BaiduCustomerPushApiKey = baiduCustomerPushApiKey;
+	}
+
+	public static String getBaiduCustomerPushSecretKey() {
+		return BaiduCustomerPushSecretKey;
+	}
+
+	public static void setBaiduCustomerPushSecretKey(
+			String baiduCustomerPushSecretKey) {
+		BaiduCustomerPushSecretKey = baiduCustomerPushSecretKey;
+	}
+	
+	
 	
 }

@@ -1,13 +1,15 @@
 package com.yuqincar.domain.common;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TreeNode {
 	private Long id;
 	private String name;
 	private List<TreeNode> children;
 	private Boolean open;
+	private Map<String,Object> param;
+	
 	public String getName() {
 		return name;
 	}
@@ -32,10 +34,10 @@ public class TreeNode {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	
-	
-	
-	
-	
+	public Map<String, Object> getParam() {
+		return param;
+	}
+	public void setParam(Map<String, Object> param) {
+		this.param = param;
+	}	
 }

@@ -13,6 +13,7 @@ import com.yuqincar.dao.car.CarRepairDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarRepairService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.DateUtils;
@@ -32,9 +33,10 @@ public class CarRepairServiceImpl implements CarRepairService {
 	}
 
 	@Transactional
-	public void carRepairAppointment(Car car, Date fromDate, Date toDate) {
+	public void carRepairAppointment(Car car, User driver, Date fromDate, Date toDate) {
 		CarRepair carRepair = new CarRepair();
 		carRepair.setCar(car);
+		carRepair.setDriver(driver);
 		carRepair.setFromDate(fromDate);
 		carRepair.setToDate(toDate);
 		carRepair.setAppointment(true);
@@ -43,7 +45,7 @@ public class CarRepairServiceImpl implements CarRepairService {
 		//给司机发送短信
 		Map<String,String> params=new HashMap<String,String>();
 		params.put("carRepairDate", DateUtils.getYMDString(fromDate)+" 至 "+DateUtils.getYMDString(toDate));
-		smsService.sendTemplateSMS(car.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_REPAIR_APPOINTMENT, params);
+		smsService.sendTemplateSMS(driver.getPhoneNumber(), SMSService.SMS_TEMPLATE_REPAIR_APPOINTMENT, params);
 	}
 
 	public CarRepair getCarRepairById(long id) {

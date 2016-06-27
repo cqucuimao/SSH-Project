@@ -52,6 +52,8 @@ public class SMSServiceImpl implements SMSService {
 		
 		//sendSMSToFile(phoneNumber,templateId,template_param);
 		
+		return null;
+		/*
 		String postEntity;
 		try {
 			postEntity = "app_id=" + APP_ID + "&access_token="
@@ -70,6 +72,7 @@ public class SMSServiceImpl implements SMSService {
 			throw new RuntimeException(e);
 		}
 		return resJson;
+		*/
 	}
 	
 	/**

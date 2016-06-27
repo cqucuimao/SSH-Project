@@ -16,6 +16,15 @@
 		<!-- 标题 -->
 		<div class="title">
 			<h1>车辆登记</h1>
+			<p style="color: red">
+				<s:if test="hasFieldErrors()">
+					<s:iterator value="fieldErrors">
+						<s:iterator value="value">
+							<s:property />
+						</s:iterator>
+					</s:iterator>
+				</s:if>
+			</p>
 		</div>
 		<div class="editBlock detail p30">
 			<s:form action="car_%{id == null ? 'add' : 'edit'}" id="pageForm">
@@ -82,11 +91,10 @@
 						</td>
 					</tr>				
 					<tr>
-						<th><s:property value="tr.getText('car.Car.driver')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.Car.driver')" /></th>
 						<td>
-							<s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" />
-							<s:textfield id="driverId" name="driverId" type="hidden" />
-						
+							<s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
+							<s:textfield id="driverId" name="driverId" type="hidden" />						
 						</td>
 					</tr>
 					<tr>
@@ -99,9 +107,14 @@
 						</td>
 					</tr>
 					<tr>
-	                <td colspan="2">
-	                		 
-		                	<input type="submit" class="inputButton" value="确定" />
+						<th><s:property value="tr.getText('car.Car.standbyCar')" /></th>
+						<td>
+							<s:checkbox class="m10" id="standbyCar" name="standbyCar"/>
+						</td>
+					</tr>
+					<tr>
+	                <td colspan="2">	                		 
+		                	<input type="submit" class="inputButton" value="确定" id="sureButton"/>
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a>
 		                
 	                </td>
@@ -146,14 +159,16 @@
 					model:{
 						required:true,
 					},
-					driverId:{
-						required:true,
-					},
 					servicePointId:{
 						required:true,
 					},
 				}
 			});
+			
+// 			$("#sureButton").click(function(){
+// 				if(!$("#standbyCar").is(":checked") && $("#driverId").val()=="")
+// 					alert("非备用车的情况");
+// 			});
 			
 			//获取当前日期
 	    	today = new Date();  

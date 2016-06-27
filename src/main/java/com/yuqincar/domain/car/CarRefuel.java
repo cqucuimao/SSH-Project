@@ -34,6 +34,10 @@ public class CarRefuel extends BaseEntity {
 	@Column(nullable=false)
 	private Date date;
 	
+	@Text("加油数量")
+	@Column
+	private float volume;
+	
 	@Text("加油金额")
 	@Column(nullable=false)
 	private BigDecimal money;
@@ -68,5 +72,22 @@ public class CarRefuel extends BaseEntity {
 
 	public void setDriver(User driver) {
 		this.driver = driver;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public float getVolume() {
+		return volume;
+	}
+
+	public void setVolume(float volume) {
+		this.volume = volume;
 	}	
+	
 }

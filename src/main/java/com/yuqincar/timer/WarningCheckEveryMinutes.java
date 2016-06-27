@@ -60,6 +60,8 @@ public class WarningCheckEveryMinutes {
 		System.out.println("in checkUnplannedRunningWarning");
 		List<Car> cars=carService.getAllNormalCars();
 		for(Car car:cars){
+			if(car.getDevice()==null)
+				continue;
 			String url=String.format(UNPLANNED_RUNNING_URL, car.getDevice().getSN());
 			String json = HttpMethod.get(url.toString());
 			JSONObject result=JSON.parseObject(json);

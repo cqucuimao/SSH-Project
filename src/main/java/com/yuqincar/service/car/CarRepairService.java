@@ -6,6 +6,7 @@ import java.util.Date;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
 
 public interface CarRepairService {
@@ -22,7 +23,7 @@ public interface CarRepairService {
 	 * @param car
 	 * @param date
 	 */
-	public void carRepairAppointment(Car car,Date fromDate,Date toDate);
+	public void carRepairAppointment(Car car,User driver, Date fromDate,Date toDate);
 	
 	public CarRepair getCarRepairById(long id);
 	

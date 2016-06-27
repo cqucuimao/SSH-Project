@@ -221,6 +221,13 @@
 			</result>
 			<result name="toList" type="redirectAction">carExamine_list</result>
 		</action>
+		
+		<!-- 路桥费 -->
+		<action name="tollCharge_*" class="tollChargeAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/tollChargeAction/tollCharge_list.jsp</result>
+			<result name="saveUI">/WEB-INF/view/carAction/tollChargeAction/tollCharge_saveUI.jsp</result>
+			<result name="remind">/WEB-INF/view/carAction/tollChargeAction/tollCharge_remind.jsp</result>
+		</action>
 
 		<!-- 车辆实时监控管理 -->
 		<action name="realtime_*" class="realtimeAction" method="{1}">
@@ -394,10 +401,6 @@
 			<result name="postpone">/WEB-INF/view/scheduleAction/order_postpone.jsp
 			</result>
 			<result name="reschedule">/WEB-INF/view/scheduleAction/order_reschedule.jsp
-			</result>
-			<result name="modifyMile">/WEB-INF/view/scheduleAction/order_modifyMile.jsp
-			</result>
-			<result name="modifyMoney">/WEB-INF/view/scheduleAction/order_modifyMoney.jsp
 			</result>
 			<result name="protocolOrderRemind">/WEB-INF/view/scheduleAction/order_protocolOrderRemind.jsp
 			</result>

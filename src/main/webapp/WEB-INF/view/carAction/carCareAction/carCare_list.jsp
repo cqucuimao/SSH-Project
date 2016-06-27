@@ -29,7 +29,12 @@
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+					</td>
+					<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
+					<td>
+						<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
+							<s:textfield id="driverId" name="driver.id" type="hidden"/>
 					</td>
 					<th>从</th>
 					<td>
@@ -54,6 +59,7 @@
 					<thead>
 						<tr>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
               				<th><s:property value="tr.getText('car.CarCare.date')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.mileInterval')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.money')" /></th>
@@ -67,6 +73,7 @@
 				        
 						<tr>
 							<td><s:a action="carCare_detail?id=%{id}">${car.plateNumber}</s:a></td>
+							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right">${mileInterval}</td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>

@@ -34,13 +34,17 @@
                     			<th width="100"><s:property value="tr.getText('car.Car.plateNumber')" />：</th>
                     			<td>${car.plateNumber}</td>
                 			</tr>
+							<tr>
+                    			<th><s:property value="tr.getText('car.CarCare.driver')" />：</th>
+                    			<td>${driver.name}</td>
+                			</tr>
                 			<tr>
                     			<th><s:property value="tr.getText('car.CarExamine.date')" />：</th>
                     			<td><s:date name="date" format="yyyy-MM-dd"/></td>
                 			</tr>
                 			<tr>
-                    			<th>下次年审日期：</th>
-                    			<td><s:date name="examineIntervalYear" format="yyyy-MM-dd"/></td>
+                    			<th><s:property value="tr.getText('car.CarExamine.nextExamineDate')" />：</th>
+                    			<td><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
                 			</tr>
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarExamine.memo')" />：</th>

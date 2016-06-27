@@ -25,7 +25,7 @@
 						<input id="register" class="inputButton" type="button" value="违章登记" name="button" />
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-					<td><s:textfield id="car_platenumber" cssClass="inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
+					<td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
 					<td>
 						<input class="inputButton" type="button" value="查询" name="button" />
 					</td>

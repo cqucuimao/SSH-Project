@@ -121,7 +121,7 @@ public interface CarService {
 	
 	public List<Car> getAll();
 
-	public List<TreeNode> getCarTree(String plateNumber);
+	public List<TreeNode> getCarTree(String plateNumber,boolean synchDriver);
 
 	/**
 	 * 获取所有未报废车辆

@@ -185,8 +185,8 @@ public class OrderAction extends BaseAction {
 				}
 			}
 			System.out.println("list.size="+list.size());
-			if(list.size()<9){
-				int n=9-list.size();
+			if(list.size()<8){
+				int n=8-list.size();
 				for(int i=1;i<=n;i++){
 					AbstractTrackVO atvo=new AbstractTrackVO();
 					atvo.setAbstractTime(" ");
@@ -223,7 +223,7 @@ public class OrderAction extends BaseAction {
 	/*
 	 * 编辑司机动作
 	 */
-	public String operate() {
+	public String editDriverAction() {
 		
 		System.out.println(ActionContext.getContext().getValueStack().peek().getClass().toString());
 		System.out.println("orderForView="+ActionContext.getContext().get("orderForView"));
@@ -369,7 +369,7 @@ public class OrderAction extends BaseAction {
 	}
 	
 	//修改时间
-	public String editDriverAction() throws ParseException{
+	public String modifyDriverActionTime() throws ParseException{
 		System.out.println("++++");
 		User user = (User)ActionContext.getContext().getSession().get("user");
 		System.out.println("actionId="+actionId);

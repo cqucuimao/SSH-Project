@@ -92,7 +92,7 @@
 			}
 			alert("chen");
 			alert(artDialog.open.origin.location);
-			$("#timeForm").attr("action","order_editDriverAction.action");
+			$("#timeForm").attr("action","order_editDriverActionTime.action");
 			alert(artDialog.open.origin.location);
 			artDialog.open.origin.location.reload();
 			art.dialog.close();

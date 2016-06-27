@@ -385,9 +385,10 @@
 			</result>
 			<result name="print">/WEB-INF/view/scheduleAction/orderPrint.jsp
 			</result>
-			<result name="operate">/WEB-INF/view/scheduleAction/order_operate.jsp
+			<result name="operate">/WEB-INF/view/scheduleAction/order_editDriverAction.jsp
 			</result>
-			<result name="operateList">/WEB-INF/view/scheduleAction/order_operate.jsp</result>
+			<result name="operateList">/WEB-INF/view/scheduleAction/order_editDriverAction.jsp
+			</result>
 			<result name="cancel">/WEB-INF/view/scheduleAction/order_cancel.jsp
 			</result>
 			<result name="postpone">/WEB-INF/view/scheduleAction/order_postpone.jsp

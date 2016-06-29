@@ -26,10 +26,12 @@
 </head>
 <body class="" style="width:100%">
     <div class="space">
-            <h1 align="center">重庆市渝勤汽车服务有限公司派车单</h1>
         <div class="">
-<table id="tableId" style="border-color:black;width:100%;" border="1" >
+		<table id="tableId" style="border-color:black;width:75%;" border="1" >
 		<tbody>
+			<tr>
+				<th colspan="8" style="font-size:20px;border:none">重庆市渝勤汽车服务有限公司派车单</th>
+			</tr>
 			<tr>
 				<td style="border:none" colspan="2" width=""></td>
 				<td style="border:none" colspan="4"></td>
@@ -186,7 +188,7 @@
 		date = centry + (today.getFullYear())+ "年" + 
 		    		(today.getMonth() + 1 ) + "月" + 
 		    		today.getDate() + "日 "; 
-		$("#tableId tr:eq(21) td:eq(1)").text(date);
+		$("#tableId tr:eq(22) td:eq(1)").text(date);
 		//计算订单执行时间
     	/* var date1 = $("#tableId tr:eq(17) td:eq(1)").text();
     	var date2 = $("#tableId tr:eq(17) td:eq(3)").text();

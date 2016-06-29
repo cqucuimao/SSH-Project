@@ -80,7 +80,7 @@
 						<col></col>
 						<col></col>
 						<col></col>
-						<col width="150"></col>
+						<col width="160"></col>
 					</colgroup>
 					<thead>
 						<tr>
@@ -114,9 +114,9 @@
 							<s:if test="canEditDriverAction"> 
 								<s:a action="order_editDriverAction.action?orderId=%{id}"><i class="icon-operate-modify" title="编辑司机动作"></i></s:a>
 							</s:if>
-							<s:if test="canEditOrderBill"> 
+							<%-- <s:if test="canEditOrderBill">  --%>
 								<s:a action="order_editOrderBill.action?orderId=%{id}"><i class="icon-operate-modify" title="编辑派车单"></i></s:a>
-							</s:if>
+							<%-- </s:if> --%>
 							</td>
 						</tr>
 						</s:iterator>

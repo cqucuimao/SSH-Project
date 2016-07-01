@@ -27,7 +27,13 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	@Transactional
 	public void saveCarInsurance(CarInsurance carInsurance) {
 		carInsuranceDao.save(carInsurance);
-
+		
+		carInsurance.getCar().setInsuranceExpiredDate(carInsurance.getToDate());
+		if(carInsurance.getCar().getInsuranceExpiredDate().after(new Date()))
+			carInsurance.getCar().setInsuranceExpired(false);
+		else
+			carInsurance.getCar().setInsuranceExpired(true);
+		carDao.update(carInsurance.getCar());
 	}
 
 	public CarInsurance getCarInsuranceById(long id) {

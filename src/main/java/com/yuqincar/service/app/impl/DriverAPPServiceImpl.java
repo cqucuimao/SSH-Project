@@ -194,7 +194,8 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			orderOperationRecordDao.save(oor);
 		}
 		
-		orderService.orderCheckout(order);
+		if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL)
+			orderService.orderCheckout(order);
 		
 		return 0;
 	}

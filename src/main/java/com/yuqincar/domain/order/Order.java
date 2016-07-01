@@ -145,7 +145,7 @@ public class Order extends BaseEntity {
 	@Text("订单来源")
 	private OrderSourceEnum orderSource;
 	
-	@Text("是否为他人叫车")
+	@Text("为他人叫车")
 	private boolean callForOther;
 	
 	@Text("实际乘车人")
@@ -187,6 +187,10 @@ public class Order extends BaseEntity {
 	
 	@Text("意见及建议")
 	private String options;
+	
+	@Text("业务员")
+	@OneToOne(fetch=FetchType.LAZY)
+	private User saler;
 
 	public OrderStatement getOrderStatement() {
 		return orderStatement;
@@ -571,5 +575,13 @@ public class Order extends BaseEntity {
 
 	public void setOptions(String options) {
 		this.options = options;
+	}
+
+	public User getSaler() {
+		return saler;
+	}
+
+	public void setSaler(User saler) {
+		this.saler = saler;
 	}	
 }

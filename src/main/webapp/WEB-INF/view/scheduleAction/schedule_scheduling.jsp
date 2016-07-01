@@ -116,13 +116,26 @@
 									<tr>
 										<th>上车地点<span class="required">*</span></th>
 										<td>
-											<s:textfield class="inputText" type="text" placeholder="上车地点" name="fromAddress" id="fromAddress" />
+											<s:textfield class="inputText" type="text" name="fromAddress" id="fromAddress" value="电话联系"/>
 										</td>
 									</tr>
 									<tr class="filter_mileage filter_plane">
 										<th>下车地点<span class="required">*</span></th>
 										<td>
 											<s:textfield class="inputText" type="text" placeholder="下车地点" name="toAddress" id="toAddress" />
+										</td>
+									</tr>	
+									<tr class="filter_protocol">
+										<th>协议价格<span class="required">*</span></th>
+										<td>
+											<s:textfield class="inputText" type="text" name="protocolMoney" id="protocolMoney" />
+										</td>
+									</tr>							
+									<tr>
+										<th>业务员</th>
+										<td>
+											<s:textfield class="userSelector inputText inputChoose" id="salerName" type="text"/>
+								 			<s:textfield id="salerId" name="salerId" type="hidden"/>
 										</td>
 									</tr>
 									<tr>
@@ -236,6 +249,7 @@
 				$("input[type=radio][value=days]").click();
 			}else if("filter_protocol"=="${chargeMode}"){
 				$("input[type=radio][value=protocol]").attr("checked", "checked");
+				$("#protocolMoney").val("${protocolMoney}");
 				$("input[type=radio][value=protocol]").click();
 			}
 			
@@ -252,6 +266,13 @@
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
 			$("#serviceType").find("option[value='${serviceType}']").attr("selected","selected");
+			$("#salerName").val("${salerName}");
+			$("#salerId").val("${salerId}");
+			
+			if("filter_days"=="${chargeMode}" || "filter_protocol"=="${chargeMode}"){
+				formatDateField1($("#planBeginDate"));
+				formatDateField1($("#planEndDate"));
+			}
 			
 			$("input[type=button][value=进入队列]").hide();
 		}
@@ -284,6 +305,8 @@
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
 			$("#serviceType").find("option[value='${serviceType}']").attr("selected","selected");
+			$("#salerName").val("${salerName}");
+			$("#salerId").val("${salerId}");
 			
 			$("#schedule").val("确认修改");
 			$("#inQueue").hide();
@@ -292,6 +315,11 @@
 			$("#selectCarPlateNumber").val("${selectCarPlateNumber}");
 			$("#driverName").val("${selectCarDriverName}");
 			$("#selectCarDriverId").val("${selectCarDriverId}");
+			
+			if("filter_days"=="${chargeMode}" || "filter_protocol"=="${chargeMode}"){
+				formatDateField1($("#planBeginDate"));
+				formatDateField1($("#planEndDate"));
+			}
 		}
 	
 	
@@ -366,17 +394,35 @@
 					return false;
 				}
 			}
+			
+			if ($("#chargeMode").val() == "filter_protocol") {
+				if ($("#protocolMoney").val() == "") {
+					alert("协议价格不能为空！");
+					return false;
+				}else if(isNaN($("#protocolMoney").val())){
+					alert("协议价格填写错误！");
+					return false;
+				}
+			}
+			
 			return true;
 		}
 
 		function checkDriver() {
-			if($("#selectCarPlateNumber").val()==""){
-				alert("还没有选择调度的车辆！");
-				return false;
-			}
-			if($("#driverName").val()=="" || $("#selectCarDriverId").val()==""){
-				alert("还没有选择调度的司机！");
-				return false;
+			if($("#chargeMode").val() == "filter_protocol"){
+				if($("#selectCarPlateNumber").val()=="" && ($("#driverName").val()=="" || $("#selectCarDriverId").val()=="")){
+					alert("协议订单中也需要指定车或者司机！");
+					return false;
+				}
+			}else{
+				if($("#selectCarPlateNumber").val()==""){
+					alert("还没有选择调度的车辆！");
+					return false;
+				}
+				if($("#driverName").val()=="" || $("#selectCarDriverId").val()==""){
+					alert("还没有选择调度的司机！");
+					return false;
+				}
 			}
 			return true;
 		}
@@ -631,6 +677,8 @@
 										alert("司机不可用");
 									} else if (data.result == 9) {
 										alert("队列订单不能被当前用户调度")
+									} else if (data.result == 10) {
+										alert("车辆已经过保")
 									}
 								},
 								error : function(msg) {  			         

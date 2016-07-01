@@ -46,14 +46,13 @@ public class SMSServiceImpl implements SMSService {
 	}
 
 	public String sendTemplateSMS(String phoneNumber,String templateId, Map<String, String> params) {
+		System.out.println("in sendTemplateSMS");
 		Gson gson = new Gson();
 		String template_param = gson.toJson(params);
 		System.out.println(template_param);
 		
 		//sendSMSToFile(phoneNumber,templateId,template_param);
 		
-		return null;
-		/*
 		String postEntity;
 		try {
 			postEntity = "app_id=" + APP_ID + "&access_token="
@@ -71,8 +70,8 @@ public class SMSServiceImpl implements SMSService {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		System.out.println("resJson="+resJson);
 		return resJson;
-		*/
 	}
 	
 	/**

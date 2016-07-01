@@ -78,7 +78,7 @@
 					<!-- 
 					<th>司机姓名:</th>
 					<td>
-						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="car.driver.name"/>
+						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driver.name"/>
 						<s:textfield id="driverId" name="driverId" type="hidden"/>
 					</td>
 					 
@@ -94,7 +94,7 @@
 					</td>
 					<th>司机姓名:</th>
 					<td>
-						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="car.driver.name"/>
+						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driver.name"/>
 						<s:textfield id="driverId" name="driverId" type="hidden"/>
 					</td>
 					<th>订单状态:</th>

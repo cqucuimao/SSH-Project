@@ -166,14 +166,6 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 	    
 	}
 
-	public List<Car> findByDriverNameServicePointName(String driverName, String servicePointName) {
-		return getSession().createQuery(//
-				"FROM Car c WHERE c.driver.name=? AND c.servicePoint.name=?")
-				.setParameter(0, driverName)//
-				.setParameter(1, servicePointName)
-				.list();
-	}
-
 	public List<Car> findByServicePointName(String servicePointName) {
 		return getSession().createQuery(//
 				"FROM Car c WHERE c.servicePoint.name=?")

@@ -90,14 +90,6 @@ public interface CarService {
 			String servicePointName);
 
 	/**
-	 * 根据驾驶员姓名,驻车点查找车辆
-	 * @param driverName
-	 * @param servicePointName
-	 * @return
-	 */
-	public List<Car> findByDriverNameAndServicePointName(String driverName, String servicePointName);
-
-	/**
 	 * 根据驻车点查找车辆
 	 * @param servicePointName
 	 * @return

@@ -46,8 +46,8 @@
 				        <s:iterator value="recordList">
 						<tr>
 							<td>${car.plateNumber}</td>
-							<td>${car.driver.name}</td>
-							<td style="text-align:right">${car.driver.phoneNumber}</td>
+							<td>${driver.name}</td>
+							<td style="text-align:right">${driver.phoneNumber}</td>
 							<td style="text-align:right">${car.nextCareMile}</td>
 							<td style="text-align:right">${car.mileage}</td>
 						</tr>

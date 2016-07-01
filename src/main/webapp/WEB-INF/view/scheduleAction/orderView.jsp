@@ -21,21 +21,21 @@
             <table>
                 <tbody>
                     <tr>
-                        <th width="15%">订单号：</th>
+                        <th width="15%"><s:property value="tr.getText('order.Order.sn')" />：</th>
                         <td width="35%">${sn }</td>
-                        <th width="15%">单位：</th>
+                        <th width="15%"><s:property value="tr.getText('order.Order.customerOrganization')" />：</th>
                         <td width="35%">${customerOrganization.abbreviation }</td>
                     </tr>
                     <tr>
-                        <th>姓名：</th>
+                        <th><s:property value="tr.getText('order.Order.customer')" />：</th>
                         <td>${customer.name}</td>
-                        <th>联系方式：</th>
+                        <th><s:property value="tr.getText('order.Order.phone')" />：</th>
                         <td>${phone }</td>
                     </tr>
                     <tr>
-                    	<th>为他人叫车：</th>
+                    	<th><s:property value="tr.getText('order.Order.callForOther')" />：</th>
                     	<td><s:if test="callForOther">是</s:if><s:else>否</s:else></td>
-                    	<td>乘车人信息：</td>
+                    	<td><s:property value="tr.getText('order.Order.otherPassengerName')" />：</td>
                     	<td>
                     		<s:if test="callForOther">
                     			${otherPassengerName}（${otherPhoneNumber}，<s:if test="callForOtherSendSMS">发送提醒短信</s:if><s:else>不发送提醒短信</s:else>）
@@ -46,27 +46,31 @@
 						</td>
                     </tr>
                     <tr>
-                    	<th>计费方式</th>
+                    	<th><s:property value="tr.getText('order.Order.chargeMode')" />：</th>
                     	<td>${chargeModeString }</td>
-                    	<th>车型：</th>
+                    	<th><s:property value="tr.getText('order.Order.serviceType')" />：</th>
                         <td>${serviceType.title }</td>
                     </tr>
                     <tr>
-                        <th>司机：</th>
-                        <td>
-                        	<s:if test="driver!=null">
-                        		${driver.name }（${driver.phoneNumber}）
-                        	</s:if>
-                        </td>
-                        <th>车牌：</th>
+                        <th><s:property value="tr.getText('order.Order.car')" />：</th>
                         <td>
                         	<s:if test="car!=null">
                         		${car.plateNumber }
                         	</s:if>
 						</td>
+                        <th><s:property value="tr.getText('order.Order.driver')" />：</th>
+                        <td>
+                        	<s:if test="driver!=null">
+                        		${driver.name }（${driver.phoneNumber}）
+                        	</s:if>
+                        </td>
                     </tr> 
-                    <tr>                        
-                        <th>订单状态：</th>
+                    <tr>    
+                        <th><s:property value="tr.getText('order.Order.saler')" />：</th>
+                        <td>
+                        	${saler.name }
+                        </td>                    
+                        <th><s:property value="tr.getText('order.Order.status')" />：</th>
                         <td>${statusString }</td>
                     </tr> 
                     <tr>
@@ -76,9 +80,9 @@
                         <td>${actualDateString }</td>
                     </tr>                    
                     <tr>
-                        <th>始发地：</th>
+                        <th><s:property value="tr.getText('order.Order.fromAddress')" />：</th>
                         <td>${fromAddress }</td>
-                        <th>目的地：</th>
+                        <th><s:property value="tr.getText('order.Order.toAddress')" />：</th>
                         <td>
                         	<s:if test="toAddress!=null">
                         		${toAddress }
@@ -86,31 +90,43 @@
                         </td>
                     </tr>                  
                     <tr>
-                        <th>进队列时间：</th>
-                        <td><s:date name="queueTime" format="yyyy-MM-dd HH:mm:ss"/></td>
-                        <th>调度时间：</th>
-                        <td><s:date name="scheduleTime" format="yyyy-MM-dd HH:mm:ss"/></td>
+                        <th><s:property value="tr.getText('order.Order.queueTime')" />：</th>
+                        <td>
+                        	<s:if test="queueTime!=null">
+                        		<s:date name="queueTime" format="yyyy-MM-dd HH:mm:ss"/>
+                        	</s:if>
+                        </td>
+                        <th><s:property value="tr.getText('order.Order.scheduleTime')" />：</th>
+                        <td>
+                        	<s:if test="scheduleTime!=null">
+                        		<s:date name="scheduleTime" format="yyyy-MM-dd HH:mm:ss"/>
+                        	</s:if>
+                        </td>
                     </tr>
                     <tr>
-                        <th>调度员：</th>
+                        <th><s:property value="tr.getText('order.Order.scheduler')" />：</th>
                         <td>${scheduler.name}</td>
-                        <th>接受时间：</th>
-                        <td><s:date name="acceptedTime" format="yyyy-MM-dd HH:mm:ss"/></td>
+                        <th><s:property value="tr.getText('order.Order.acceptedTime')" />：</th>
+                        <td>
+                        	<s:if test="acceptedTime!=null">
+                        		<s:date name="acceptedTime" format="yyyy-MM-dd HH:mm:ss"/>
+                        	</s:if>
+                        </td>
                     </tr>
                     <tr>
                         <th>实际路码：</th>
                         <td>${endMile-beginMile}KM</td>
-                        <th>计费路码：</th>
+                        <th><s:property value="tr.getText('order.Order.totalChargeMile')" />：</th>
                         <td>${totalChargeMile}KM</td>
                     </tr>
                     <tr>
-                        <th>核算金额：</th>
+                        <th><s:property value="tr.getText('order.Order.orderMoney')" />：</th>
                         <td>${orderMoney}元</td>
-                        <th>实收金额：</th>
+                        <th><s:property value="tr.getText('order.Order.actualMoney')" />：</th>
                         <td>${actualMoney}元</td>
                     </tr>
                     <tr>
-                        <th>备注：</th>
+                        <th><s:property value="tr.getText('order.Order.memo')" />：</th>
                         <td>${memo}</td>
                         <th></th>
                         <td></td>

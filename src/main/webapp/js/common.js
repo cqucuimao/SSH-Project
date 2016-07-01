@@ -503,3 +503,49 @@ $(function(){
 			});
      });
 })
+
+Date.prototype.Format = function(fmt) { //author: meizz  
+	var o = {   
+			"M+" : this.getMonth()+1,                 //月份   
+			"d+" : this.getDate(),                    //日   
+			"h+" : this.getHours(),                   //小时   
+			"m+" : this.getMinutes(),                 //分   
+			"s+" : this.getSeconds(),                 //秒   
+			"q+" : Math.floor((this.getMonth()+3)/3), //季度   
+			"S"  : this.getMilliseconds()             //毫秒   
+	};
+	if(/(y+)/.test(fmt))   
+		fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+	for(var k in o)   
+		if(new RegExp("("+ k +")").test(fmt))   
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+	return fmt;   
+}
+
+
+function formatDateField1(obj){
+	//将16-6-21 00:00:00.000 或00:00:00转换为 2016-06-21
+	var dateStr=obj.val();
+	if(dateStr.length>0){
+		var arr1=dateStr.split(" ");
+		var arr=arr1[0].split("-");
+		if(arr[0].length==2)
+			arr[0]="20"+arr[0];
+		var date = new Date(arr[0],arr[1]-1,arr[2]);
+		var dateStr=date.Format("yyyy-MM-dd");
+		obj.val(dateStr);
+	}
+}
+
+function formatDateField2(obj){
+	//将16-6-21 转换为 2016-06-21
+	var dateStr=obj.val();
+	if(dateStr.length>0){
+		var arr=dateStr.split("-");
+		if(arr[0].length==2)
+			arr[0]="20"+arr[0];
+		var date = new Date(arr[0],arr[1]-1,arr[2]);
+		var dateStr=date.Format("yyyy-MM-dd");
+		obj.val(dateStr);
+	}
+}

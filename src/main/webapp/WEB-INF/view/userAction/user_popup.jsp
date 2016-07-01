@@ -98,14 +98,20 @@
             
             $("#clear").click(function(){
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById('driverName');
-            	var driverId = origin.document.getElementById('driverId');
-            	
+            	var driverName = origin.document.getElementById('${userSelectorId}');
+            	var driverId = driverName.nextSibling;
+            	while(driverId!="[object HTMLInputElement]")
+            	{
+            		driverId=driverId.nextSibling;
+            	}
+            	if(driverId.type!="hidden")
+            		return;
+
             	driverId.value="";
             	driverId.select();
-            	
-            	input.value = "";
-            	input.select();
+
+            	driverName.value = "";
+            	driverName.select();
             	art.dialog.close();
             })
             

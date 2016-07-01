@@ -524,10 +524,13 @@ public class OrderAction extends BaseAction {
 	public String getPlanDateString(){
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
 		StringBuffer sb=new StringBuffer();
-		sb.append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
 		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL){
+			sb.append(DateUtils.getYMDString(order.getPlanBeginDate()));
 			sb.append(" 到 ");
-			sb.append(DateUtils.getYMDHMString(order.getPlanEndDate()));
+			sb.append(DateUtils.getYMDString(order.getPlanEndDate()));
+		}
+		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
+			sb.append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
 		}
 		return sb.toString();
 	}
@@ -604,6 +607,7 @@ public class OrderAction extends BaseAction {
 		System.out.println("in protocolOrderRemind");
 		QueryHelper helper = new QueryHelper("order_", "o");
 		helper.addWhereCondition("o.status=?", OrderStatusEnum.SCHEDULED);
+		helper.addWhereCondition("o.chargeMode<>?",ChargeModeEnum.PROTOCOL);
 		helper.addOrderByProperty("o.scheduleTime", true);
 		List<Order> orderList=orderService.queryOrder(pageNum, helper).getRecordList();
 		ActionContext.getContext().put("recordList", orderList);

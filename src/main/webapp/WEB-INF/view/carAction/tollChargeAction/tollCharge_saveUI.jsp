@@ -49,7 +49,7 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.TollCharge.payDate')" /><span class="required">*</span></th>
                         <td>
-                        	<s:textfield cssClass="inputText" name="payDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+                        	<s:textfield cssClass="inputText" name="payDate" id="payDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
                         </td>
                     </tr>
                     <tr>
@@ -73,7 +73,7 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.TollCharge.nextPayDate')" /><span class="required">*</span></th>
                         <td>
-                        	<s:textfield cssClass="inputText" name="nextPayDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+                        	<s:textfield cssClass="inputText" name="nextPayDate" id="nextPayDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
                         </td>
                     </tr>
                 </tbody>
@@ -97,6 +97,8 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+
+	
 	    $(function(){	    	
 			$("#pageForm").validate({
 				onfocusout: function(element) { $(element).valid(); },
@@ -126,6 +128,8 @@
 					},
 				}
 			});
+			formatDateField1($("#payDate"));
+			formatDateField1($("#nextPayDate"));
 		});
     </script>
 </body>

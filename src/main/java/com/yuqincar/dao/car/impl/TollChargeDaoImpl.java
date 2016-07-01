@@ -14,6 +14,9 @@ public class TollChargeDaoImpl extends BaseDaoImpl<TollCharge> implements TollCh
 	public TollCharge getRecentTollCharge(Car car){
 		List<TollCharge> tollCharge = getSession().createQuery("from TollCharge tc where tc.car=? order by tc.payDate desc").
 				setParameter(0, car).list();
-		return tollCharge.get(0);
+		if(tollCharge.size()>0)
+			return tollCharge.get(0);
+		else
+			return null;
 	}
 }

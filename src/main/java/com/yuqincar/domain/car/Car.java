@@ -71,6 +71,9 @@ public class Car extends BaseEntity {
 
 	@Text("保险过期日期")
 	private Date insuranceExpiredDate;	//保险过期日期
+	
+	@Text("是否过保")
+	private boolean insuranceExpired;
 
 	@Text("年检到期日期")
 	private Date nextExaminateDate;	//年检到期时间
@@ -226,5 +229,13 @@ public class Car extends BaseEntity {
 
 	public void setNextTollChargeDate(Date nextTollChargeDate) {
 		this.nextTollChargeDate = nextTollChargeDate;
+	}
+
+	public boolean isInsuranceExpired() {
+		return insuranceExpired;
+	}
+
+	public void setInsuranceExpired(boolean insuranceExpired) {
+		this.insuranceExpired = insuranceExpired;
 	}	
 }

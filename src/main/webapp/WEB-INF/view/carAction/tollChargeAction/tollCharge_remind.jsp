@@ -19,7 +19,7 @@
 			<h1>路桥费缴款提醒</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="tollCharge_remindExport">
+			<s:form id="exportForm" action="tollCharge_remindExport">
 			<table>
 				<tr>
 					<td>
@@ -44,8 +44,8 @@
 				        <s:iterator value="recordList">
 						<tr>
 							<td>${car.plateNumber}</td>
-							<td style="text-align:right"><s:date name="payDate" format="yyyy-MM-dd"/></td>
-							<td style="text-align:right"><s:date name="nextPayDate" format="yyyy-MM-dd"/></td>
+							<td style="text-align:right">${payDate}</td>
+							<td style="text-align:right">${nextPayDate}</td>
 						</tr>
 						</s:iterator> 
 					</tbody>

@@ -144,10 +144,6 @@ public class CarServiceImpl implements CarService {
 		return carDao.findByDriverNameAndPlateNumberAndServicePointName(driverName,plateNumber,servicePointName);
 	}
 
-	public List<Car> findByDriverNameAndServicePointName(String driverName, String servicePointName) {
-		return carDao.findByDriverNameServicePointName(driverName, servicePointName);
-	}
-
 	public List<Car> getByServicePointName(String servicePointName) {
 		return carDao.findByServicePointName(servicePointName);
 	}

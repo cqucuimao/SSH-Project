@@ -35,14 +35,6 @@ public interface CarDao extends BaseDao<Car> {
 			String servicePointName);
 
 	/**
-	 * 根据驾驶员名称，驻车点查找车辆
-	 * @param driverName
-	 * @param servicePointName
-	 * @return
-	 */
-	List<Car> findByDriverNameServicePointName(String driverName, String servicePointName);
-
-	/**
 	 * 根据驻车点民称查找车辆
 	 * @param servicePointName
 	 * @return

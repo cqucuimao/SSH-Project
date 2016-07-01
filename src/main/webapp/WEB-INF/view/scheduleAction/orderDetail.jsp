@@ -23,41 +23,37 @@ ${order }
             	</tr>
             	</s:if>
                 <tr>
-                    <th width="70">订单号：</th>
+                    <th width="70"><s:property value="tr.getText('order.Order.sn')" />：</th>
                     <td>${sn }</td>
                 </tr>
                 <tr>
-                    <th width="70">状态：</th>
+                    <th width="70"><s:property value="tr.getText('order.Order.status')" />：</th>
                     <td>${status.string }</td>
                 </tr>
                 <tr>
-                    <th width="70">单位：</th>
+                    <th width="70"><s:property value="tr.getText('order.Order.customerOrganization')" />：</th>
                     <td>${customerOrganization.name }</td>
                 </tr>
                 <tr>
-                    <th>姓名：</th>
+                    <th><s:property value="tr.getText('order.Order.customer')" />：</th>
                     <td>${customer.name }</td>
                 </tr>
                 <s:if test="callForOther">
                 <tr>
-                	<th>实际乘车人：</th>
+                	<th><s:property value="tr.getText('order.Order.otherPassengerName')" />：</th>
                 	<td>${otherPassengerName}（${otherPhoneNumber}）</td>
                 </tr>
                 </s:if>
                 <tr>
-                    <th>联系方式：</th>
+                    <th><s:property value="tr.getText('order.Order.phone')" />：</th>
                     <td>${phone }</td>
                 </tr>
                 <tr>
-                	<th>计费方式：</th>
+                	<th><s:property value="tr.getText('order.Order.chargeMode')" />：</th>
                 	<td>${chargeModeString}</td>
                 </tr>
                 <tr>
-                    <th>用车人数：</th>
-                    <td>${passengerNumber }</td>
-                </tr>
-                <tr>
-                    <th>车型：</th>
+                    <th><s:property value="tr.getText('order.Order.serviceType')" />：</th>
                     <td>${serviceType.title }</td>
                 </tr>
                 <tr>
@@ -65,23 +61,27 @@ ${order }
                     <td><s:date name="planBeginDate" format="yyyy-MM-dd"/></td>
                 </tr>
                 <tr>
-                    <th>始发地：</th>
+                    <th><s:property value="tr.getText('order.Order.fromAddress')" />：</th>
                     <td>${fromAddress}&nbsp;</td>
                 </tr>
                 <tr>
-                    <th>目的地：</th>
+                    <th><s:property value="tr.getText('order.Order.toAddress')" />：</th>
                     <td>${toAddress}&nbsp;</td>
                 </tr>                
                 <tr>
-                    <th>车牌：</th>
+                    <th><s:property value="tr.getText('order.Order.car')" />：</th>
                     <td>${car.plateNumber}</td>
                 </tr>
                 <tr>
-                    <th>司机：</th>
+                    <th><s:property value="tr.getText('order.Order.driver')" />：</th>
                     <td>${driver.name }</td>
                 </tr>
                 <tr>
-                    <th>备注：</th>
+                    <th><s:property value="tr.getText('order.Order.saler')" />：</th>
+                    <td>${saler.name }</td>
+                </tr>
+                <tr>
+                    <th><s:property value="tr.getText('order.Order.memo')" />：</th>
                     <td>${memo }</td>
                 </tr>
             </tbody>

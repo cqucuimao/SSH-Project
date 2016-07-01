@@ -169,6 +169,11 @@ public class OrderServiceImpl implements OrderService {
 			o.setOtherPhoneNumber(order.getOtherPhoneNumber());
 			o.setCallForOtherSendSMS(order.isCallForOtherSendSMS());
 			o.setOrderSource(order.getOrderSource());
+			o.setFromAddress(order.getFromAddress());
+			o.setToAddress(order.getToAddress());
+			o.setSaler(order.getSaler());
+			o.setOrderMoney(order.getOrderMoney());
+			o.setActualMoney(order.getActualMoney());
 			EnQueue(o,baseSN,0);
 			baseSN=o.getSn();
 		}
@@ -257,10 +262,11 @@ public class OrderServiceImpl implements OrderService {
 			
 			if(order.isCallForOther())
 				saveOtherPassenger(order);
-			if(scheduleMode==OrderService.SCHEDULE_FROM_NEW || scheduleMode==OrderService.SCHEDULE_FROM_QUEUE)
-				appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。上车时间："+DateUtils.getYMDHMString(order.getPlanBeginDate())
-						+ "；上车地点："+order.getFromAddress(),null);
-			else
+			if(scheduleMode==OrderService.SCHEDULE_FROM_NEW || scheduleMode==OrderService.SCHEDULE_FROM_QUEUE){
+				if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null))
+					appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。上车时间："+DateUtils.getYMDHMString(order.getPlanBeginDate())
+							+ "；上车地点："+order.getFromAddress(),null);
+			}else
 				checkUpdateData(order,toUpdateOrder,user);
 		}
 		return result;
@@ -350,15 +356,17 @@ public class OrderServiceImpl implements OrderService {
 					.append(order.getToAddress()).append("；");
 		}
 		
-		if(!order.getCar().equals(toUpdateOrder.getCar()))
+		if((order.getCar()!=null && !order.getCar().equals(toUpdateOrder.getCar())) ||
+				(order.getCar()==null && toUpdateOrder.getCar()!=null))
 			sb.append("(").append(++n).append(")").append("车辆由：")
-				.append(toUpdateOrder.getCar().getPlateNumber())
-				.append(" 改为 ").append(order.getCar().getPlateNumber()).append("；");
-		
-		if(!order.getDriver().equals(toUpdateOrder.getDriver()))
+				.append(toUpdateOrder.getCar()!=null ? toUpdateOrder.getCar().getPlateNumber() : "<空>")
+				.append(" 改为 ").append(order.getCar()!=null ? order.getCar().getPlateNumber() : "<空>").append("；");
+				
+		if((order.getDriver()!=null && !order.getDriver().equals(toUpdateOrder.getDriver())) || 
+				(order.getDriver()==null && toUpdateOrder.getDriver()!=null))
 			sb.append("(").append(++n).append(")").append("司机由：")
-				.append(toUpdateOrder.getDriver().getName())
-				.append(" 改为 ").append(order.getDriver().getName()).append("；");
+				.append(toUpdateOrder.getDriver()!=null ? toUpdateOrder.getDriver().getName() : "<空>")
+				.append(" 改为 ").append(order.getDriver()!=null ? order.getDriver().getName() : "<空>").append("；");
 		
 		if(n>0){
 			OrderOperationRecord orderOperation = new OrderOperationRecord();
@@ -369,8 +377,9 @@ public class OrderServiceImpl implements OrderService {
 			orderOperation.setUser(user);
 			orderOperationRecordDao.save(orderOperation);
 			
-			appMessageService.sendMessageToDriverAPP(toUpdateOrder.getDriver(), "有订单（"+order.getSn()+"）发生了修改："+sb.toString(),null);
-			if(!toUpdateOrder.getDriver().equals(order.getDriver()))
+			if(toUpdateOrder.getDriver()!=null)
+				appMessageService.sendMessageToDriverAPP(toUpdateOrder.getDriver(), "有订单（"+order.getSn()+"）发生了修改："+sb.toString(),null);
+			if(order.getDriver()!=null && !order.getDriver().equals(toUpdateOrder.getDriver()))
 				appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。上车时间："+DateUtils.getYMDHMString(order.getPlanBeginDate())
 						+ "；上车地点："+order.getFromAddress(),null);
 		}

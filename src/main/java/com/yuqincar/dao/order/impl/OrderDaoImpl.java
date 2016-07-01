@@ -56,8 +56,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		 * ,YY表示两位年，MM表示两位月，XXXXX表示每个月的流水号，每个月从00001开始。
 		 * 
 		 */
-		String sn = getSN(order,baseSN);
-		order.setSn(sn);
+		dealSN(order,baseSN);
 		order.setQueueTime(new Date());
 		// 设置订单状态,状态设置为进队列
 		order.setStatus(OrderStatusEnum.INQUEUE);
@@ -154,8 +153,14 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			return carStatus;
 		}
 		
+		String prefix=null;
+		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL &&(order.getCar()==null || order.getDriver()==null)){
+			prefix="W";
+		}else{
+			prefix="YQ";
+		}
 		if(scheduleMode==OrderService.SCHEDULE_FROM_NEW){
-			order.setSn(getSN(order,null));
+			dealSN(order,null);
 			order.setCar(car);
 			order.setStatus(OrderStatusEnum.SCHEDULED);
 			order.setDriver(driver);
@@ -163,6 +168,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			order.setScheduleTime(new Date());
 			save(order);
 		}else if(scheduleMode==OrderService.SCHEDULE_FROM_QUEUE){
+			dealSN(order,null);
 			order.setCar(car);
 			order.setDriver(driver);
 			order.setStatus(OrderStatusEnum.SCHEDULED);
@@ -171,11 +177,12 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			order.setScheduling(false);
 			update(order);
 		}else if(scheduleMode==OrderService.SCHEDULE_FROM_UPDATE){
+			dealSN(order,null);
 			order.setCar(car);
 			order.setDriver(driver);
 			order.setScheduler(user);
 			update(order);
-		}
+		}		
 		
 		return 0;
 	}
@@ -414,15 +421,17 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		System.out.println("in isCarAndDriverAvailable");
 		System.out.println("order.getId()="+order.getId());
 		System.out.println("1");
-		if (car.getStatus().equals(CarStatusEnum.SCRAPPED)) {
+		if (!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null) && car.getStatus().equals(CarStatusEnum.SCRAPPED)) {
 			return 3;
 		}
 
 		System.out.println("2");
-		if(order.getServiceType()!=car.getServiceType())
+		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null) && car.getServiceType()!=order.getServiceType())
 			return 7;
 
-		System.out.println("4");
+		if(car.isInsuranceExpired())
+			return 10;
+		
 		String hql = null;
 
 		if (order.getChargeMode() == ChargeModeEnum.MILE || order.getChargeMode() == ChargeModeEnum.PLANE) {
@@ -468,84 +477,88 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				return 8;
 			
 		} else {
-			hql = "from order_ where status<>? and status<>? and status<>? and car=? and (";
-			hql = hql
-					+ "(TO_DAYS(?)<=TO_DAYS(planBeginDate) and TO_DAYS(planBeginDate) <=TO_DAYS(?)) or ";
-			hql = hql
-					+ "(TO_DAYS(?)<=TO_DAYS(planEndDate) and TO_DAYS(planEndDate) <=TO_DAYS(?)) or ";
-			hql = hql
-					+ "(TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(planEndDate))";
-			hql = hql + ")";
 			List list=null;
-			if(order.getId()!=null && order.getId()>0){
-				hql = hql + " and id<>?";	//如果order有id值，说明是从队列调度或修改，那么需要将order排除在外。
-				list = getSession().createQuery(hql)
-						.setParameter(0, OrderStatusEnum.CANCELLED)
-						.setParameter(1, OrderStatusEnum.END)
-						.setParameter(2, OrderStatusEnum.PAYED)
-						.setParameter(3, car)
-						.setParameter(4, order.getPlanBeginDate())
-						.setParameter(5, order.getPlanEndDate())
-						.setParameter(6, order.getPlanBeginDate())
-						.setParameter(7, order.getPlanEndDate())
-						.setParameter(8, order.getPlanBeginDate())
-						.setParameter(9, order.getPlanEndDate())
-						.setParameter(10, order.getId()).list();
-			}else{
-				list = getSession().createQuery(hql)
-						.setParameter(0, OrderStatusEnum.CANCELLED)
-						.setParameter(1, OrderStatusEnum.END)
-						.setParameter(2, OrderStatusEnum.PAYED)
-						.setParameter(3, car)
-						.setParameter(4, order.getPlanBeginDate())
-						.setParameter(5, order.getPlanEndDate())
-						.setParameter(6, order.getPlanBeginDate())
-						.setParameter(7, order.getPlanEndDate())
-						.setParameter(8, order.getPlanBeginDate())
-						.setParameter(9, order.getPlanEndDate()).list();
-			}
-			if (list.size() > 0) {
-				return 2;
+			if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null)){  //如果协议订单中没有选择车，那么就不做下面的判断
+				hql = "from order_ where status<>? and status<>? and status<>? and car=? and (";
+				hql = hql
+						+ "(TO_DAYS(?)<=TO_DAYS(planBeginDate) and TO_DAYS(planBeginDate) <=TO_DAYS(?)) or ";
+				hql = hql
+						+ "(TO_DAYS(?)<=TO_DAYS(planEndDate) and TO_DAYS(planEndDate) <=TO_DAYS(?)) or ";
+				hql = hql
+						+ "(TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(planEndDate))";
+				hql = hql + ")";
+				if(order.getId()!=null && order.getId()>0){
+					hql = hql + " and id<>?";	//如果order有id值，说明是从队列调度或修改，那么需要将order排除在外。
+					list = getSession().createQuery(hql)
+							.setParameter(0, OrderStatusEnum.CANCELLED)
+							.setParameter(1, OrderStatusEnum.END)
+							.setParameter(2, OrderStatusEnum.PAYED)
+							.setParameter(3, car)
+							.setParameter(4, order.getPlanBeginDate())
+							.setParameter(5, order.getPlanEndDate())
+							.setParameter(6, order.getPlanBeginDate())
+							.setParameter(7, order.getPlanEndDate())
+							.setParameter(8, order.getPlanBeginDate())
+							.setParameter(9, order.getPlanEndDate())
+							.setParameter(10, order.getId()).list();
+				}else{
+					list = getSession().createQuery(hql)
+							.setParameter(0, OrderStatusEnum.CANCELLED)
+							.setParameter(1, OrderStatusEnum.END)
+							.setParameter(2, OrderStatusEnum.PAYED)
+							.setParameter(3, car)
+							.setParameter(4, order.getPlanBeginDate())
+							.setParameter(5, order.getPlanEndDate())
+							.setParameter(6, order.getPlanBeginDate())
+							.setParameter(7, order.getPlanEndDate())
+							.setParameter(8, order.getPlanBeginDate())
+							.setParameter(9, order.getPlanEndDate()).list();
+				}
+				if (list.size() > 0) {
+					return 2;
+				}
 			}
 			
-			hql = "from order_ where status<>? and status<>? and status<>? and driver=? and (";
-			hql = hql
-					+ "(TO_DAYS(?)<=TO_DAYS(planBeginDate) and TO_DAYS(planBeginDate) <=TO_DAYS(?)) or ";
-			hql = hql
-					+ "(TO_DAYS(?)<=TO_DAYS(planEndDate) and TO_DAYS(planEndDate) <=TO_DAYS(?)) or ";
-			hql = hql
-					+ "(TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(planEndDate))";
-			hql = hql + ")";
-			list=null;
-			if(order.getId()!=null && order.getId()>0){
-				hql = hql + " and id<>?";	//如果order有id值，说明是从队列调度或修改，那么需要将order排除在外。
-				list = getSession().createQuery(hql)
-						.setParameter(0, OrderStatusEnum.CANCELLED)
-						.setParameter(1, OrderStatusEnum.END)
-						.setParameter(2, OrderStatusEnum.PAYED)
-						.setParameter(3, driver)
-						.setParameter(4, order.getPlanBeginDate())
-						.setParameter(5, order.getPlanEndDate())
-						.setParameter(6, order.getPlanBeginDate())
-						.setParameter(7, order.getPlanEndDate())
-						.setParameter(8, order.getPlanBeginDate())
-						.setParameter(9, order.getPlanEndDate())
-						.setParameter(10, order.getId()).list();
-			}else{
-				list = getSession().createQuery(hql)
-						.setParameter(0, OrderStatusEnum.CANCELLED)
-						.setParameter(1, OrderStatusEnum.END)
-						.setParameter(2, OrderStatusEnum.PAYED)
-						.setParameter(3, driver)
-						.setParameter(4, order.getPlanBeginDate())
-						.setParameter(5, order.getPlanEndDate())
-						.setParameter(6, order.getPlanBeginDate())
-						.setParameter(7, order.getPlanEndDate())
-						.setParameter(8, order.getPlanBeginDate())
-						.setParameter(9, order.getPlanEndDate()).list();
-			}
-			if (list.size() > 0) {
-				return 8;
+			if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null)){  //如果协议订单中没有选择司机，那么就不做下面的判断
+				hql = "from order_ where status<>? and status<>? and status<>? and driver=? and (";
+				hql = hql
+						+ "(TO_DAYS(?)<=TO_DAYS(planBeginDate) and TO_DAYS(planBeginDate) <=TO_DAYS(?)) or ";
+				hql = hql
+						+ "(TO_DAYS(?)<=TO_DAYS(planEndDate) and TO_DAYS(planEndDate) <=TO_DAYS(?)) or ";
+				hql = hql
+						+ "(TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(planEndDate))";
+				hql = hql + ")";
+				list=null;
+				if(order.getId()!=null && order.getId()>0){
+					hql = hql + " and id<>?";	//如果order有id值，说明是从队列调度或修改，那么需要将order排除在外。
+					list = getSession().createQuery(hql)
+							.setParameter(0, OrderStatusEnum.CANCELLED)
+							.setParameter(1, OrderStatusEnum.END)
+							.setParameter(2, OrderStatusEnum.PAYED)
+							.setParameter(3, driver)
+							.setParameter(4, order.getPlanBeginDate())
+							.setParameter(5, order.getPlanEndDate())
+							.setParameter(6, order.getPlanBeginDate())
+							.setParameter(7, order.getPlanEndDate())
+							.setParameter(8, order.getPlanBeginDate())
+							.setParameter(9, order.getPlanEndDate())
+							.setParameter(10, order.getId()).list();
+				}else{
+					list = getSession().createQuery(hql)
+							.setParameter(0, OrderStatusEnum.CANCELLED)
+							.setParameter(1, OrderStatusEnum.END)
+							.setParameter(2, OrderStatusEnum.PAYED)
+							.setParameter(3, driver)
+							.setParameter(4, order.getPlanBeginDate())
+							.setParameter(5, order.getPlanEndDate())
+							.setParameter(6, order.getPlanBeginDate())
+							.setParameter(7, order.getPlanEndDate())
+							.setParameter(8, order.getPlanBeginDate())
+							.setParameter(9, order.getPlanEndDate()).list();
+				}
+				if (list.size() > 0) {
+					return 8;
+				}
 			}
 		}
 
@@ -560,13 +573,14 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				return 6;
 			}
 		} else {
-			System.out.println("9");
-			hql = "from CarCare where car.id=? and appointment=? and TO_DAYS(?)<=TO_DAYS(date) and TO_DAYS(date)<=TO_DAYS(?)";
-			if (getSession().createQuery(hql).setParameter(0, car.getId())
-					.setParameter(1, true)
-					.setParameter(2, order.getPlanBeginDate())
-					.setParameter(3, order.getPlanEndDate()).list().size() > 0) {
-				return 6;
+			if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null)){  //如果协议订单中没有选择车辆，那么就不做下面的判断
+				hql = "from CarCare where car.id=? and appointment=? and TO_DAYS(?)<=TO_DAYS(date) and TO_DAYS(date)<=TO_DAYS(?)";
+				if (getSession().createQuery(hql).setParameter(0, car.getId())
+						.setParameter(1, true)
+						.setParameter(2, order.getPlanBeginDate())
+						.setParameter(3, order.getPlanEndDate()).list().size() > 0) {
+					return 6;
+				}
 			}
 		}
 
@@ -582,25 +596,26 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				return 4;
 			}
 		} else {
-			System.out.println("12");
-			hql = "from CarRepair where car.id=? and appointment=? and (";
-			hql = hql
-					+ "(TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(toDate)) or ";
-			hql = hql
-					+ "(TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(toDate)) or ";
-			hql = hql
-					+ "(TO_DAYS(?)<=TO_DAYS(fromDate) and TO_DAYS(toDate) <=TO_DAYS(?))";
-			hql = hql + ")";
-			List carRepairList = getSession().createQuery(hql)
-					.setParameter(0, car.getId()).setParameter(1, true)
-					.setParameter(2, order.getPlanBeginDate())
-					.setParameter(3, order.getPlanBeginDate())
-					.setParameter(4, order.getPlanEndDate())
-					.setParameter(5, order.getPlanEndDate())
-					.setParameter(6, order.getPlanBeginDate())
-					.setParameter(7, order.getPlanEndDate()).list();
-			if (carRepairList.size() > 0) {
-				return 4;
+			if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null)){  //如果协议订单中没有选择车辆，那么就不做下面的判断
+				hql = "from CarRepair where car.id=? and appointment=? and (";
+				hql = hql
+						+ "(TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(toDate)) or ";
+				hql = hql
+						+ "(TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(toDate)) or ";
+				hql = hql
+						+ "(TO_DAYS(?)<=TO_DAYS(fromDate) and TO_DAYS(toDate) <=TO_DAYS(?))";
+				hql = hql + ")";
+				List carRepairList = getSession().createQuery(hql)
+						.setParameter(0, car.getId()).setParameter(1, true)
+						.setParameter(2, order.getPlanBeginDate())
+						.setParameter(3, order.getPlanBeginDate())
+						.setParameter(4, order.getPlanEndDate())
+						.setParameter(5, order.getPlanEndDate())
+						.setParameter(6, order.getPlanBeginDate())
+						.setParameter(7, order.getPlanEndDate()).list();
+				if (carRepairList.size() > 0) {
+					return 4;
+				}
 			}
 		}
 
@@ -615,13 +630,14 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				return 5;
 			}
 		} else {
-			System.out.println("15");
-			hql = "from CarExamine where car.id=? and appointment=? and TO_DAYS(?)<=TO_DAYS(date) and TO_DAYS(date)<=TO_DAYS(?)";
-			if (getSession().createQuery(hql).setParameter(0, car.getId())
-					.setParameter(1, true)
-					.setParameter(2, order.getPlanBeginDate())
-					.setParameter(3, order.getPlanEndDate()).list().size() > 0) {
-				return 5;
+			if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null)){  //如果协议订单中没有选择车辆，那么就不做下面的判断
+				hql = "from CarExamine where car.id=? and appointment=? and TO_DAYS(?)<=TO_DAYS(date) and TO_DAYS(date)<=TO_DAYS(?)";
+				if (getSession().createQuery(hql).setParameter(0, car.getId())
+						.setParameter(1, true)
+						.setParameter(2, order.getPlanBeginDate())
+						.setParameter(3, order.getPlanEndDate()).list().size() > 0) {
+					return 5;
+				}
 			}
 		}
 		System.out.println("16");
@@ -660,35 +676,53 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		return d;
 	}
 
-	/**
-	 * 生成sn号函数
-	 * 
-	 * @return
-	 */
-	private String getSN(Order order,String baseSN) {
+	private void dealSN(Order order, String baseSN) {
 		if(baseSN==null){
-			// 设置sn号,从数据库查当前年月的数据,如果没有,从00001开始,如果有加1即可
-			String sn = null;
-			Calendar cc = Calendar.getInstance();
-			String yy = String.valueOf(cc.get(Calendar.YEAR)).substring(2);
-			String mm = String.valueOf(cc.get(Calendar.MONTH) + 1);
-			String yearMonth = (yy.length() < 2 ? "0" + yy : yy)
-					+ (mm.length() < 2 ? "0" + mm : mm);
-			// 通过createTime判断,降序排列
-			String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by sn*1 desc";
-			Query query = getSession().createQuery(sql).setParameter(0,new Date());
-			List list = query.list();
-			if (list.size() == 0) {
-				sn = yearMonth + "00001";
-			} else {
-				sn = String
-						.valueOf(Integer.parseInt(((Order) list.get(0)).getSn()) + 1);
+			if(order.getSn()==null){
+				// 设置sn号,从数据库查当前年月的数据,如果没有,从00001开始,如果有加1即可
+				String sn = null;
+				Calendar cc = Calendar.getInstance();
+				String yy = String.valueOf(cc.get(Calendar.YEAR)).substring(2);
+				String mm = String.valueOf(cc.get(Calendar.MONTH) + 1);
+				String yearMonth = (yy.length() < 2 ? "0" + yy : yy)
+						+ (mm.length() < 2 ? "0" + mm : mm);
+				// 通过createTime判断,降序排列
+				String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by sn*1 desc";
+				Query query = getSession().createQuery(sql).setParameter(0,new Date());
+				List list = query.list();
+				if (list.size() == 0) {
+					sn = yearMonth + "00001";
+				} else {
+					String lastSN=((Order)list.get(0)).getSn();
+					if(lastSN.startsWith(OrderService.SN_PREFIX))
+						lastSN=lastSN.substring(OrderService.SN_PREFIX.length());
+					else if(lastSN.startsWith(OrderService.SN_COOPERATION_PREFIX))
+						lastSN=lastSN.substring(OrderService.SN_COOPERATION_PREFIX.length());
+					sn = String.valueOf(Integer.parseInt(lastSN) + 1);
+				}
+				if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null))
+					order.setSn(OrderService.SN_COOPERATION_PREFIX+sn);
+				else
+					order.setSn(OrderService.SN_PREFIX+sn);
+			}else{
+				if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null)){
+					if(order.getSn().startsWith(OrderService.SN_PREFIX))
+						order.setSn(OrderService.SN_COOPERATION_PREFIX+order.getSn().substring(OrderService.SN_PREFIX.length()));
+				}else
+					if(order.getSn().startsWith(OrderService.SN_COOPERATION_PREFIX))
+						order.setSn(OrderService.SN_PREFIX+order.getSn().substring(OrderService.SN_COOPERATION_PREFIX.length()));
 			}
-			return sn;
 		}else{	//复制订单时，需要指定
-			int intSN=Integer.parseInt(baseSN);
-			intSN++;
-			return String.valueOf(intSN);
+			String sn=null;
+			if(baseSN.startsWith(OrderService.SN_PREFIX)){
+				sn=baseSN.substring(OrderService.SN_PREFIX.length());
+				sn=String.valueOf(Integer.parseInt(sn)+1);
+				order.setSn(OrderService.SN_PREFIX+sn);
+			}else if(baseSN.startsWith(OrderService.SN_COOPERATION_PREFIX)){
+				sn=baseSN.substring(OrderService.SN_COOPERATION_PREFIX.length());
+				sn=String.valueOf(Integer.parseInt(sn)+1);
+				order.setSn(OrderService.SN_COOPERATION_PREFIX+sn);
+			}
 		}
 	}
 

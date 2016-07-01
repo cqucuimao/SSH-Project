@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -89,6 +90,9 @@ public class ScheduleAction extends BaseAction {
 	private String otherPassengerName;
 	private String otherPhoneNumber;
 	private String callForOtherSendSMS;
+	private String salerName;
+	private String salerId;
+	private BigDecimal protocolMoney;
 	
 	public void getCar() {
 		System.out.println("queryCarPlateNumber="+queryCarPlateNumber);
@@ -291,9 +295,16 @@ public class ScheduleAction extends BaseAction {
 		order.setFromAddress(fromAddress);
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			order.setToAddress(toAddress);
+		if(!StringUtils.isEmpty(salerId)){
+			User saler=userService.getById(Long.valueOf(salerId));
+			order.setSaler(saler);
+		}
+		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+			order.setOrderMoney(protocolMoney);
+		else
+			order.setOrderMoney(new BigDecimal(0));
 		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceType)));
 		order.setPhone(phone);
-		order.setOrderMoney(new BigDecimal(0));
 		order.setStatus(OrderStatusEnum.INQUEUE);
 		order.setMemo(memo);
 		order.setOrderSource(OrderSourceEnum.SCHEDULER);
@@ -332,14 +343,6 @@ public class ScheduleAction extends BaseAction {
 	}
 	
 	public void isCarAndDriverAvailable(){
-		System.out.println("in isCarAvailable");
-		System.out.println("chargeMode="+chargeMode);
-		System.out.println("planBeginDate="+planBeginDate);
-		System.out.println("planEndDate="+planEndDate);
-		System.out.println("selectCarPlateNumber="+selectCarPlateNumber);
-		System.out.println("selectCarDriverId="+selectCarDriverId);
-		System.out.println("serviceType="+serviceType);
-		System.out.println("scheduleFromUpdateOrderId="+scheduleFromUpdateOrderId);
 		Order order=new Order();
 		if(scheduleFromUpdateOrderId>0)	//修改订单。
 			order.setId(scheduleFromUpdateOrderId);   //修改订单时，设置id的目的是为了在查询数据库时，把本订单排除在外。
@@ -351,8 +354,12 @@ public class ScheduleAction extends BaseAction {
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
 		order.setServiceType(carService.getCarServiceTypeById(Long
 					.parseLong(serviceType)));
-		Car car = carService.getCarByPlateNumber(selectCarPlateNumber);
-		User driver=userService.getById(Long.valueOf(selectCarDriverId));
+		Car car = null;
+		User driver = null;
+		if(!StringUtils.isEmpty(selectCarPlateNumber))
+			car=carService.getCarByPlateNumber(selectCarPlateNumber);
+		if(!StringUtils.isEmpty(selectCarDriverId))
+			driver=userService.getById(Long.valueOf(selectCarDriverId));
 		int result=orderService.isCarAndDriverAvailable(order, car,driver);
 		System.out.println("resutl="+result);
 		writeJson("{\"result\":" + result + "}");
@@ -373,6 +380,12 @@ public class ScheduleAction extends BaseAction {
 		fromAddress=order.getFromAddress();
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			toAddress=order.getToAddress();
+		if(order.getSaler()!=null){
+			salerName=order.getSaler().getName();
+			salerId=String.valueOf(order.getSaler().getId());
+		}
+		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+			protocolMoney=order.getOrderMoney();
 		serviceType=String.valueOf(order.getServiceType().getId());
 		memo=order.getMemo();
 		serviceTypes = orderService.getAllCarServiceType();
@@ -407,10 +420,13 @@ public class ScheduleAction extends BaseAction {
 		Order order=orderService.getOrderById(scheduleFromUpdateOrderId);
 		System.out.println(order);
 		scheduleMode=OrderService.SCHEDULE_FROM_UPDATE;
-		initInputField(order);
-		selectCarDriverName=order.getDriver().getName();
-		selectCarPlateNumber=order.getCar().getPlateNumber();
-		selectCarDriverId=String.valueOf(order.getDriver().getId());
+		initInputField(order);	
+		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getCar()==null))
+			selectCarPlateNumber=order.getCar().getPlateNumber();
+		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null)){
+			selectCarDriverName=order.getDriver().getName();
+			selectCarDriverId=String.valueOf(order.getDriver().getId());
+		}
 		System.out.println("callForOther="+callForOther);
 		System.out.println("otherPassengerName="+otherPassengerName);
 		System.out.println("otherPhoneNumber="+otherPhoneNumber);
@@ -462,6 +478,7 @@ public class ScheduleAction extends BaseAction {
 			toUpdateOrder.setServiceType(order.getServiceType());
 			toUpdateOrder.setFromAddress(order.getFromAddress());
 			toUpdateOrder.setToAddress(order.getToAddress());
+			toUpdateOrder.setSaler(order.getSaler());
 			toUpdateOrder.setCar(order.getCar());
 			toUpdateOrder.setDriver(order.getDriver());
 			if(order.isCallForOther()){
@@ -475,7 +492,8 @@ public class ScheduleAction extends BaseAction {
 		ChargeModeEnum chargeModeEnum = null;
 		CarServiceType carServiceType_ = null;
 		Car car = null;
-		car = carService.getCarByPlateNumber(selectCarPlateNumber);
+		if(!StringUtils.isEmpty(selectCarPlateNumber))
+			car=carService.getCarByPlateNumber(selectCarPlateNumber);
 		chargeModeEnum = getChargeMode(chargeMode);
 		order.setChargeMode(chargeModeEnum);
 		
@@ -487,16 +505,26 @@ public class ScheduleAction extends BaseAction {
 			order.setToAddress(toAddress);
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
 		}
+		if(!StringUtils.isEmpty(salerId)){
+			User saler=userService.getById(Long.valueOf(salerId));
+			order.setSaler(saler);
+		}
+		
+		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
+			order.setOrderMoney(protocolMoney);
+			order.setActualMoney(protocolMoney);
+		}else{
+			if(order.getOrderMoney()==null)
+				order.setOrderMoney(new BigDecimal(0));
+			if(order.getActualMoney()==null)
+				order.setActualMoney(new BigDecimal(0));
+		}
 		
 		carServiceType_ = carService.getCarServiceTypeById(Long
 				.parseLong(serviceType));
 		order.setServiceType(carServiceType_);
 		order.setPhone(phone);
 		
-		if(order.getOrderMoney()==null)
-			order.setOrderMoney(new BigDecimal(0));
-		if(order.getActualMoney()==null)
-			order.setActualMoney(new BigDecimal(0));
 		order.setMemo(memo);
 		System.out.println("needCopy="+needCopy);
 		if(needCopy==null || needCopy.isEmpty() || needCopy.equals("off"))
@@ -527,7 +555,9 @@ public class ScheduleAction extends BaseAction {
 		else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE))
 			str=OrderService.SCHEDULE_FROM_UPDATE;
 		User user=(User)ActionContext.getContext().getSession().get("user");
-		User driver=userService.getById(Long.valueOf(selectCarDriverId));
+		User driver = null;
+		if(!StringUtils.isEmpty(selectCarDriverId))
+			driver=userService.getById(Long.valueOf(selectCarDriverId));
 		result = orderService.scheduleOrder(str, order,customerOrganizationName, customerName, car, driver, copyNumber,toUpdateOrder,user);
 		System.out.println("result="+result);
 		if (result == 0){
@@ -921,6 +951,30 @@ public class ScheduleAction extends BaseAction {
 
 	public void setCallForOtherSendSMS(String callForOtherSendSMS) {
 		this.callForOtherSendSMS = callForOtherSendSMS;
+	}
+
+	public String getSalerId() {
+		return salerId;
+	}
+
+	public void setSalerId(String salerId) {
+		this.salerId = salerId;
+	}	
+
+	public String getSalerName() {
+		return salerName;
+	}
+
+	public void setSalerName(String salerName) {
+		this.salerName = salerName;
+	}
+
+	public BigDecimal getProtocolMoney() {
+		return protocolMoney;
+	}
+
+	public void setProtocolMoney(BigDecimal protocolMoney) {
+		this.protocolMoney = protocolMoney;
 	}
 
 	/**

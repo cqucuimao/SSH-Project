@@ -20,7 +20,7 @@
 			<h1>路桥费</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="tollCharge_queryForm">
+			<s:form id="queryForm" action="tollCharge_queryForm">
 			<table>
 				<tr>
 					<td>
@@ -32,11 +32,11 @@
 					</td>
 					<th>从</th>
 					<td>
-						<s:textfield name="beginDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+						<s:textfield name="beginDate" id="beginDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<th>到</th>
 					<td>
-						<s:textfield name="endDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+						<s:textfield name="endDate" id="endDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
@@ -96,9 +96,9 @@
 	        });
 	        $("#remind").click(function(){
 	            self.location.href='tollCharge_remind.action';
-	        });
-	        
-	       
+	        });  
+			formatDateField2($("#beginDate"));
+			formatDateField2($("#endDate"));
 	    })
 	</script>
 </body>

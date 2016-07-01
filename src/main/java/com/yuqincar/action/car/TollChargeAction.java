@@ -17,6 +17,7 @@ import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.TollChargeService;
+import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
 @Controller
@@ -110,19 +111,23 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	public String remind(){
 		QueryHelper helper = new QueryHelper("Car", "c");
 		helper.addWhereCondition("c.nextTollChargeDate is not null");
-		helper.addOrderByProperty("nextTollChargeDate", false);
+		helper.addOrderByProperty("nextTollChargeDate", true);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);
 		
 		List<RemindVO> voList=new ArrayList<RemindVO>(pageBean.getRecordList().size());
 		for(Car car:pageBean.getRecordList()){
 			RemindVO vo=new RemindVO();
 			vo.setCar(car);
-			vo.setNextPayDate(car.getNextTollChargeDate());
+			vo.setNextPayDate(DateUtils.getYMDString(car.getNextTollChargeDate()));
 			TollCharge tc=tollChargeService.getRecentTollCharge(car);
-			vo.setPayDate(tc.getPayDate());
+			if(tc!=null)
+				vo.setPayDate(DateUtils.getYMDString(tc.getPayDate()));
+			else
+				vo.setPayDate("");
 			voList.add(vo);
 		}
-		ActionContext.getContext().put("recordList", voList);
+		pageBean.setRecordList(voList);
+		ActionContext.getContext().getValueStack().push(pageBean);
 		return "remind";
 	}
 	
@@ -149,28 +154,31 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 		this.endDate = endDate;
 	}	
 	
-	class RemindVO{
+	public class RemindVO{
 		private Car car;
-		private Date payDate;
-		private Date nextPayDate;
+		private String payDate;
+		private String nextPayDate;
 		
 		public Car getCar() {
+			System.out.println("in getCar()");
 			return car;
 		}
 		public void setCar(Car car) {
 			this.car = car;
 		}
-		public Date getPayDate() {
+		public String getPayDate() {
+			System.out.println("in getPayDate()");
 			return payDate;
 		}
-		public void setPayDate(Date payDate) {
+		public void setPayDate(String payDate) {
 			this.payDate = payDate;
 		}
-		public Date getNextPayDate() {
+		public String getNextPayDate() {
+			System.out.println("in getNextPayDate()");
 			return nextPayDate;
 		}
-		public void setNextPayDate(Date nextPayDate) {
+		public void setNextPayDate(String nextPayDate) {
 			this.nextPayDate = nextPayDate;
-		}		
+		}
 	}
 }

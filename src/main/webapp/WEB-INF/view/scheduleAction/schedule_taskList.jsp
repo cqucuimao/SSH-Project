@@ -137,7 +137,7 @@
 			$(".icon-car").not(".gray").closest("a").click(function(){
 				var carId=$("#carId").val();
 				var orderDate=$("#orderDate").val();
-				popup("订单详情","order_info.action?carId="+carId+"&orderDate="+orderDate,650,460,"orderDetail");
+				popup("订单详情","order_info.action?carId="+carId+"&orderDate="+orderDate,650,500,"orderDetail");
 			});
 		})
 	</script>

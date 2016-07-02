@@ -27,10 +27,12 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Cell;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatement;
 import com.yuqincar.domain.order.OrderStatementStatusEnum;
@@ -214,7 +216,8 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	   DecimalFormat df = new DecimalFormat("###");//浮点数显示格式
 	   DecimalFormat df1 = new DecimalFormat("0.0");//浮点数显示格式
 	   String tempName = orderStatement.getName()+".pdf";
-	   fileName = new String(tempName.getBytes(), "ISO8859-1");
+	   fileName = new String(tempName.getBytes("GB2312"), "ISO8859-1");
+	   System.out.println("fileName="+fileName);
 	   //手动画表格
 	   Document doc = new Document (PageSize.A4);
 	   ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -266,60 +269,114 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   Paragraph titleParagragh = new Paragraph("重庆市渝勤汽车服务有限公司派车单\n\n",titleFont);
 		   titleParagragh.setAlignment(titleParagragh.ALIGN_CENTER);
 		   doc.add(titleParagragh);
-		   /*****生成6列的表格*****/
+		   /*****生成8列的表格*****/
 		   //表格第0行
-		   PdfPTable table = new PdfPTable (6);
-		   table.setTotalWidth(580f);
-		   table.setWidths(new float[]{90f,115f,80f,115f,100f,80f});
-		   PdfPCell cell = new PdfPCell (new Paragraph ("订单号:",font));
+		   PdfPTable table = new PdfPTable (8);
+		   table.setTotalWidth(670f);
+		   table.setWidths(new float[]{90f,80f,100f,70f,100f,70f,80f,80f});
+		   
+		   PdfPCell cell = new PdfPCell ();
 		   cell.setBorder(0);
-		   table.addCell (cell);
-		   Paragraph paragraph = new Paragraph (orders.get(k).getSn(),font);		 
-		   cell = new PdfPCell ();
-		   cell.setPhrase(paragraph);
+		   cell.setColspan (6);
+		   table.addCell (cell);		   
+		   cell = new PdfPCell (new Paragraph ("渝勤运"+orders.get(k).getSn(),font));
+		   cell.setColspan(2);
 		   cell.setBorder(0);
-		   cell.setColspan (5);
 		   table.addCell (cell);
 		   //表格第1行
-		   table.addCell (new Paragraph ("用车单位",font));
+		   cell = new PdfPCell(new Paragraph ("用车单位",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
 		   cell = new PdfPCell (new Paragraph (orders.get(k).getCustomerOrganization().getAbbreviation(),font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
-		   table.addCell (new Paragraph ("联系人电话",font));
-		   cell = new PdfPCell (new Paragraph (orders.get(k).getCustomer().getName()+"("+orders.get(k).getPhone()+")",font));
+		   cell = new PdfPCell(new Paragraph ("联系电话",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (orders.get(k).getCustomer().getName()+"："+orders.get(k).getPhone(),font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
 		   //表格第2行
-		   table.addCell (new Paragraph ("定车时间",font));
+		   cell = new PdfPCell(new Paragraph ("定车时间",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
 		   String scheduleTime = sdf1.format(orders.get(k).getScheduleTime());
 		   cell = new PdfPCell (new Paragraph (scheduleTime,font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
-		   table.addCell (new Paragraph ("定车地点",font));
+		   cell = new PdfPCell(new Paragraph ("上车地点",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
 		   cell = new PdfPCell (new Paragraph (orders.get(k).getFromAddress(),font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
 		   //表格第3行
-		   table.addCell (new Paragraph ("车型",font));
+		   cell = new PdfPCell(new Paragraph ("车型",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
 		   cell = new PdfPCell (new Paragraph (orders.get(k).getServiceType().getTitle(),font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
-		   table.addCell (new Paragraph ("车牌号",font));
+		   cell = new PdfPCell(new Paragraph ("车牌号",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
 		   cell = new PdfPCell (new Paragraph (orders.get(k).getCar().getPlateNumber(),font));
 		   cell.setColspan(2);
 		   table.addCell (cell);		   
 		   //表格第4行
-		   table.addCell (new Paragraph ("联系人/电话",font));
-		   cell = new PdfPCell (new Paragraph (orders.get(k).getDriver().getName()+"("+orders.get(k).getPhone()+")",font));
-		   cell.setColspan (5);
+		   cell = new PdfPCell(new Paragraph ("联系人/电话",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (orders.get(k).getDriver().getName()+"："+orders.get(k).getPhone(),font));
+		   cell.setColspan (6);
 		   table.addCell (cell);
 		   //表格第5行
-		   table.addCell (new Paragraph ("时间",font));
+		   table.addCell (new Paragraph ("日期",font));
+		   table.addCell (new Paragraph ("上车时间",font));
+		   table.addCell (new Paragraph ("下车时间",font));
 		   cell = new PdfPCell (new Paragraph ("经过地点摘要",font));
-		   cell.setColspan (5);
+		   cell.setColspan (3);
 		   table.addCell (cell);
-		   //表格6到14行
-		   TreeMap<Date, String> map=orderService.getOrderTrackAbstract(orders.get(k));
+		   table.addCell (new Paragraph ("实际公里",font));
+		   table.addCell (new Paragraph ("收费公里",font));
+		   //表格6到13行
+		   List<DayOrderDetail> dayDetails = orders.get(k).getDayDetails();
+		   if(dayDetails != null){
+			   for(int i=0;i<dayDetails.size();i++){
+				   table.addCell(new Paragraph(DateUtils.getYMDString(dayDetails.get(i).getGetonDate()),font));
+				   table.addCell(new Paragraph(DateUtils.getYMDHMSString(dayDetails.get(i).getGetonDate()),font));
+				   table.addCell(new Paragraph(DateUtils.getYMDHMSString(dayDetails.get(i).getGetoffDate()),font));
+				   cell = new PdfPCell(new Paragraph(dayDetails.get(i).getPathAbstract(),font));
+				   cell.setColspan(3);
+				   table.addCell(cell);
+				   table.addCell(new Paragraph(dayDetails.get(i).getActualMile()));
+				   table.addCell(new Paragraph(dayDetails.get(i).getChargeMile()));
+			   }
+			   if(dayDetails.size()<8){
+				   for(int i=0;i<8-dayDetails.size();i++){
+					   table.addCell(new Paragraph(" ",font));
+					   table.addCell(new Paragraph(" ",font));
+					   table.addCell(new Paragraph(" ",font));
+					   cell = new PdfPCell(new Paragraph(" ",font));
+					   cell.setColspan(3);
+					   table.addCell(cell);
+					   table.addCell(new Paragraph(" ",font));
+					   table.addCell(new Paragraph(" ",font));
+				   }
+			   }
+		   }else{
+			   for(int i=0;i<8;i++){
+				   table.addCell(new Paragraph(" ",font));
+				   table.addCell(new Paragraph(" ",font));
+				   table.addCell(new Paragraph(" ",font));
+				   cell = new PdfPCell(new Paragraph(" ",font));
+				   cell.setColspan(3);
+				   table.addCell(cell);
+				   table.addCell(new Paragraph(" ",font));
+				   table.addCell(new Paragraph(" ",font));
+			   }
+		   }
+		   /*TreeMap<Date, String> map=orderService.getOrderTrackAbstract(orders.get(k).getSn(),orders.get(k).getActualBeginDate(),orders.get(k).getActualEndDate());
 		   if(map!=null){
 			   for(Date d:map.keySet()){
 				   table.addCell (new Paragraph (DateUtils.getYMDHMSString(d),font));
@@ -341,46 +398,62 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 				   cell.setColspan (5);
 				   table.addCell (cell);
 			   }
-		   }
+		   }*/
+		   //表格第14行
+		   table.addCell (new Paragraph ("出库路码",font));
+		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph ("客户上车路码",font));
+		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph ("客户下车路码",font));
+		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph ("回库路码",font));
+		   table.addCell (new Paragraph ("",font));
 		   //表格第15行
-		   table.addCell (new Paragraph ("过路停车",font));
-		   table.addCell (new Paragraph ("",font));//默认不填
-		   table.addCell (new Paragraph ("餐宿补贴",font));
-		   table.addCell (new Paragraph ("",font));//默认不填
-		   table.addCell (new Paragraph ("其他费用",font));
-		   table.addCell (new Paragraph ("",font));//默认不填
-		   //表格第16行
-		   table.addCell (new Paragraph ("出站路码",font));
-		   table.addCell (new Paragraph ("",font));//默认不填
-		   table.addCell (new Paragraph ("回站路码",font));
-		   table.addCell (new Paragraph ("",font));//默认不填
-		   table.addCell (new Paragraph ("合计里程(KM)",font));
+		   table.addCell (new Paragraph ("油费",font));
+		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph ("洗车费",font));
+		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph ("停车费",font));
 		   table.addCell (new Paragraph (orders.get(k).getTotalChargeMile()+"",font));
-		   //表格第17行
-		   table.addCell (new Paragraph ("上车时间",font));
-		   String actualBeginDate = sdf1.format(orders.get(k).getActualBeginDate());
-		   table.addCell (new Paragraph (actualBeginDate,font));
-		   table.addCell (new Paragraph ("下车时间",font));
-		   String actualEndDate = sdf1.format(orders.get(k).getActualEndDate());
-		   table.addCell (new Paragraph (actualEndDate,font));
-		   
-		   table.addCell (new Paragraph ("合计时间(h)",font));
-		   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	       Date d1 = sdf.parse(orders.get(k).getActualBeginDate().toString());
-	       Date d2 = sdf.parse(orders.get(k).getActualEndDate().toString());
-	       float diff = d2.getTime() - d1.getTime();
-	       float hours = diff / (1000 * 60 * 60);
-		   String totalTime = df1.format(hours);
-		   table.addCell (new Paragraph (totalTime,font));
-		   
-		   //表格第18行
-		   table.addCell (new Paragraph ("结算金额",font));
-		   String actualMoney = df1.format(orders.get(k).getActualMoney());
-		   cell = new PdfPCell (new Paragraph (actualMoney,font));
+		   table.addCell (new Paragraph ("计费路码",font));
+		   table.addCell (new Paragraph ("",font));
+		   //表格第16行
+		   cell = new PdfPCell(new Paragraph ("过路费（客户自理）",font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
-		   cell = new PdfPCell (new Paragraph ("用车单位签字:",font));
+		   cell = new PdfPCell (new Paragraph ());
+		   cell.setColspan(2);
+		   table.addCell (cell);	
+		   table.addCell (new Paragraph ("食宿",font));
+		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph ("其他费用",font));
+		   table.addCell (new Paragraph ("",font));
+		   //表格第17行
+		   table.addCell (new Paragraph ("核算金额",font));
+		   //String actualMoney = df1.format(orders.get(k).getActualMoney());
+		   cell = new PdfPCell ();
+		   cell.setColspan(3);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph ("实收金额",font));
 		   table.addCell(cell);
+		   cell = new PdfPCell ();
+		   cell.setColspan(3);
+		   table.addCell (cell);
+		   //表格第18行
+		   cell = new PdfPCell(new Paragraph ("请为本次服务评价：",font));
+		   cell.setColspan(2);
+		   table.addCell(cell);
+		   cell = new PdfPCell(new Paragraph("?????",font));
+		   cell.setColspan(6);
+		   table.addCell(cell);
+		   //表格第19行
+		   table.addCell (new Paragraph ("驾驶员签字",font));
+		   cell = new PdfPCell ();
+		   cell.setColspan(2);
+		   table.addCell (cell);		   
+		   cell = new PdfPCell (new Paragraph ("用车人签字及电话",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
 		   if(orders.get(k).getSignature() != null){
 			   InputStream fileStream = diskFileService.getInputStream(orders.get(k).getSignature());
 			   int count = (int) fileStream.available();
@@ -397,17 +470,29 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 			   table.addCell (cell);
 			   cell = new PdfPCell();
 		   }
-		   //表格第19行
+		   //表格第20行
+		   table.addCell (new Paragraph ("意见及建议",font));
+		   cell = new PdfPCell ();
+		   cell.setColspan(7);
+		   table.addCell (cell);
+		   //表格第21行
 		   cell = new PdfPCell (new Paragraph ("",font));
 		   cell.setBorder(0);
 		   table.addCell (cell);
+		   
 		   Calendar c=Calendar.getInstance();
 		   int months = c.get(Calendar.MONTH)+1;
 		   String today = c.get(Calendar.YEAR)+"年"+months+"月"+c.get(Calendar.DATE)+"日";
 		   cell = new PdfPCell (new Paragraph (today,font));
+		   cell.setColspan(2);
+		   cell.setBorder(0);
+		   table.addCell (cell);
+		   
+		   cell = new PdfPCell (new Paragraph ("",font));
 		   cell.setColspan(3);
 		   cell.setBorder(0);
 		   table.addCell (cell);
+		   
 		   if(orders.get(k).getScheduler() != null)
 			   cell = new PdfPCell (new Paragraph ("派车人:"+orders.get(k).getScheduler().getName(),font));
 		   else
@@ -419,14 +504,13 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   for(PdfPRow row:(ArrayList<PdfPRow>)table.getRows()){
 			   for(PdfPCell cells:row.getCells()){
 				   if( cells!=null)
-					   cells.setPadding(8.0f);
+					   cells.setPadding(4.0f);
 			   }
 		   }		   
 		   doc.add (table);	   
 	   }
 	   doc.close ();
 	   this.pdfStream = new ByteArrayInputStream(buffer.toByteArray());
-	   //this.pdfStream = new FileInputStream(orderStatement.getName()+".pdf");
 	   buffer.close(); 
 	   return SUCCESS;
 	}

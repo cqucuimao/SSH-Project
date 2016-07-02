@@ -21,5 +21,6 @@ public class MessageToken {
 		String json = HttpMethod.post(url, params);
 		System.out.println(json);
 		// token = d49cdd0c70071ddaa1a7c1c92b86a0181456484895955 "expires_in":2592000
+		//459c74019476ed91fca24282bbd90a8a1464526510541
 	}
 }

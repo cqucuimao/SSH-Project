@@ -28,7 +28,9 @@
 <body class="" style="width:100%">
     <div class="space">
         <div class="">
-<table id="tableId" style="border-color:black;width:75%;" border="1" >
+        <s:form name="myForm" action="order_editOrderBill.action">
+        <input type="hidden" name="orderId" value="${orderId }">
+<table id="tableId" style="border-color:black;width:85%;" border="1" >
 		<tbody>
 			<tr>
 				<th colspan="8" style="font-size:20px;border:none">重庆市渝勤汽车服务有限公司派车单</th>
@@ -36,7 +38,7 @@
 			<tr>
 				<td style="border:none" colspan="2" width=""></td>
 				<td style="border:none" colspan="4"></td>
-				<td style="border:none" class="alignRight" colspan="2" width="">渝勤运${sn }</td>
+				<td style="border:none" class="alignRight" colspan="2" width="200">渝勤运${sn }</td>
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">用车单位</td>
@@ -71,52 +73,69 @@
 				<td class="alignCenter">实际公里</td>
 				<td class="alignCenter">收费公里</td>
 			</tr>
-			<s:iterator value="abstractTrackList">
+			
+			<s:iterator value="abstractTrackList" status="track" >
+			<tr>
+				<td align="center"><s:date name="getonDate" format="yyyy-MM-dd"/></td>
+				<td align="center"><s:textfield class="Wdate half" name="%{'dayDetails['+#track.index+'].getonDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
+				<td align="center"><s:textfield class="Wdate half" name="%{'dayDetails['+#track.index+'].getoffDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
+				<td colspan="3" align="center"><s:textfield name="%{'dayDetails['+#track.index+'].pathAbstract'}" /></td>
+				<td align="center"><s:textfield name="%{'dayDetails['+#track.index+'].actualMile'}"/></td>
+				<td align="center"><s:textfield name="%{'dayDetails['+#track.index+'].chargeMile'}" /></td>
+			</tr>
+			</s:iterator>
+			<s:iterator value="nullAbstractTrackList" >
 			<tr>
 				<td align="center"></td>
 				<td align="center"></td>
 				<td align="center"></td>
-				<td colspan="3" align="center">${abstractAddress}</td>
+				<td colspan="3" align="center"></td>
 				<td align="center"></td>
 				<td align="center"></td>
 			</tr>
 			</s:iterator>
 			<tr>
 				<td class="alignCenter" width="150">出库路码</td>
-				<td width="150"><input type="text" name="beginMile" /></td>
+				<td class="alignCenter" width="150"><s:textfield name="beginMile" /></td>
 				<td class="alignCenter" width="150">客户上车路码</td>
-				<td width="150"><input type="text" name="customerGetonMile" /></td>
+				<td class="alignCenter" width="150"><s:textfield name="customerGetonMile" /></td>
 				<td class="alignCenter" width="150">客户下车路码</td>
-				<td width="150"><input type="text" name="customerGetoffMile" /></td>
+				<td class="alignCenter" width="150"><s:textfield name="customerGetoffMile" /></td>
 				<td class="alignCenter" width="150">回库路码</td>
-				<td width="150"><input type="text" name="endMile" /></td>
+				<td class="alignCenter" width="150"><s:textfield name="endMile" /></td>
 			</tr>
 			<tr>
 				<td class="alignCenter">邮费</td>
-				<td><input type="text" name="refuelMoney" /></td>
+				<td class="alignCenter"><s:textfield name="refuelMoney" /></td>
 				<td class="alignCenter">洗车费</td>
-				<td><input type="text" name="washingFee" /></td>
+				<td class="alignCenter"><s:textfield name="washingFee" /></td>
 				<td class="alignCenter">停车费</td>
-				<td><input type="text" name="parkingFee" /></td>
+				<td class="alignCenter"><s:textfield name="parkingFee" /></td>
 				<td class="alignCenter">计费路码</td>
-				<td><input type="text" name="totalChargeMile" /></td>
+				<td class="alignCenter"><s:textfield name="totalChargeMile" /></td>
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">过路费（客户自理）</td>
-				<td colspan="2"><input type="text" name="toll" style="width:280px"/></td>
+				<td class="alignCenter" colspan="2"><s:textfield name="toll" style="width:280px"/></td>
 				<td class="alignCenter">食宿</td>
-				<td><input type="text" name="roomAndBoardFee" /></td>
+				<td class="alignCenter"><s:textfield name="roomAndBoardFee" /></td>
 				<td class="alignCenter">其他费用</td>
-				<td><input type="text" name="otherFee" /></td>
+				<td class="alignCenter"><s:textfield name="otherFee"/></td>
 			</tr>
 			<tr>
 				<td class="alignCenter">核算金额</td>
-				<td colspan="3"><input type="text" name="orderMoney" style="width:px"/></td>
+				<td class="alignCenter" colspan="3"><s:textfield name="orderMoney" style="width:px"/></td>
 				<td class="alignCenter">实收金额</td>
-				<td colspan="3"><input type="text" name="actualMoney" style="width:px"/></td>
+				<td class="alignCenter" colspan="3"><s:textfield name="actualMoney" style="width:px"/></td>
 			</tr>
 			<tr>
-				<td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;请为本次服务评价：</td>
+				<td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;请为本次服务评价：&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="grade" value="4"/>非常满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="grade" value="3"/>满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="grade" value="2"/>一般满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="grade" value="1"/>不满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input id="gradeId" type="hidden" name="" value="${grade }">
+				</td>
 			</tr>
 			<tr>
 				<td class="alignCenter" style="height:60px">驾驶员签字</td>
@@ -129,7 +148,7 @@
 			</tr>
 			<tr>
 				<td class="alignCenter">意见及建议</td>
-				<td colspan="7"><input type="text" name="options" style="width:px"/></td>
+				<td colspan="7" style="padding-left:15px"><s:textfield name="options" style="width:px"/></td>
 			</tr>
 			<tr>
 				<td style="border:none;"></td>
@@ -162,22 +181,39 @@
 		<tfoot>
 			<tr >
          	<td style="border:none" colspan="2" class="noprint">
-             	<input class="inputButton" type="button" value="确定" >
+             	<input class="inputButton" type="submit" value="确定" >
               	<a class="p15" href="javascript:history.go(-1);">返回</a>
          	</td>
     		</tr>
     	</tfoot>
 </table>
+</s:form>
         </div>
     </div>
     <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+    <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
     <script type="text/javascript">
     $(function(){
 		 
 		var obj= $("#signatureId");
 		if(obj.val() != null&&obj.val() != 0){
 			$("#imgId").show();
+		}
+		
+		var grade = $("#gradeId").val();
+		if(grade == null || grade == 0){
+			$("input[name=grade]").attr("checked",false);
+		}if(grade == 1){
+			$("input[name=grade][value=1]").attr("checked",true);
+		}if(grade == 2){
+			$("input[name=grade][value=2]").attr("checked",true);
+		}if(grade == 3){
+			$("input[name=grade][value=3]").attr("checked",true);
+		}if(grade == 4){
+			$("input[name=grade][value=4]").attr("checked",true);
 		}
 	 });
     $(function(){

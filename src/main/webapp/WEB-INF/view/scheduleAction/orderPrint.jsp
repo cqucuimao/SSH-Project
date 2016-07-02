@@ -15,6 +15,7 @@
 		.noprint{display:none;}
 	}
 	td{
+	
 	height:30px;
 	}
 	.ttt{
@@ -27,7 +28,7 @@
 <body class="" style="width:100%">
     <div class="space">
         <div class="">
-		<table id="tableId" style="border-color:black;width:75%;" border="1" >
+		<table id="tableId" style="border-color:black;width:100%;" border="1" >
 		<tbody>
 			<tr>
 				<th colspan="8" style="font-size:20px;border:none">重庆市渝勤汽车服务有限公司派车单</th>
@@ -35,32 +36,32 @@
 			<tr>
 				<td style="border:none" colspan="2" width=""></td>
 				<td style="border:none" colspan="4"></td>
-				<td style="border:none" class="alignRight" colspan="2" width="">渝勤运${sn }</td>
+				<td style="border:none" class="alignCenter" colspan="2" width="">渝勤运${sn }</td>
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">用车单位</td>
-				<td colspan="2">&nbsp;&nbsp;${customerOrganization.abbreviation }</td>
+				<td class="alignCenter" colspan="2">&nbsp;&nbsp;${customerOrganization.abbreviation }</td>
 				<td class="alignCenter" colspan="2">联系人电话</td>
-				<td colspan="2">&nbsp;&nbsp;${customer.name}：${phone }</td>
+				<td class="alignCenter" colspan="2">&nbsp;&nbsp;${customer.name}：${phone }</td>
 				
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">定车时间</td>
-				<td colspan="2">&nbsp;&nbsp;<s:date name="scheduleTime" format="yyyy-MM-dd"/></td>
+				<td class="alignCenter" colspan="2">&nbsp;&nbsp;<s:date name="scheduleTime" format="yyyy-MM-dd"/></td>
 				<td class="alignCenter" colspan="2">上车地点</td>
-				<td colspan="2">&nbsp;&nbsp;${fromAddress}</td>
+				<td class="alignCenter" colspan="2">&nbsp;&nbsp;${fromAddress}</td>
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">车型</td>
-				<td colspan="2" >&nbsp;&nbsp;${serviceType.title }</td>
+				<td class="alignCenter" colspan="2" >&nbsp;&nbsp;${serviceType.title }</td>
 				<td class="alignCenter" colspan="2">车牌号</td>
-				<td colspan="2" >&nbsp;&nbsp;${car.plateNumber }</td>
+				<td class="alignCenter" colspan="2" >&nbsp;&nbsp;${car.plateNumber }</td>
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">驾驶员/电话</td>
-				<td colspan="2">&nbsp;&nbsp;${driver.name }：${driver.phoneNumber }</td>
+				<td class="alignCenter" colspan="2">&nbsp;&nbsp;${driver.name }：${driver.phoneNumber }</td>
 				<td class="alignCenter" colspan="2">目的地</td>
-				<td colspan="2">&nbsp;&nbsp;${toAddress}</td>
+				<td class="alignCenter" colspan="2">&nbsp;&nbsp;${toAddress}</td>
 			</tr>
 			<tr>
 				<td class="alignCenter">日期</td>
@@ -72,50 +73,65 @@
 			</tr>
 			<s:iterator value="abstractTrackList">
 			<tr>
+				<td align="center"><s:date name="getonDate" format="yyyy-MM-dd"/></td>
+				<td align="center"><s:date name="getonDate" format="yyyy-MM-dd HH:mm"/></td>
+				<td align="center"><s:date name="getoffDate" format="yyyy-MM-dd HH:mm"/></td>
+				<td colspan="3" align="center">${pathAbstract}</td>
+				<td align="center">${actualMile }</td>
+				<td align="center">${chargeMile }</td>
+			</tr>
+			</s:iterator>
+			<s:iterator value="nullAbstractTrackList" >
+			<tr>
 				<td align="center"></td>
 				<td align="center"></td>
 				<td align="center"></td>
-				<td colspan="3" align="center">${abstractAddress}</td>
+				<td colspan="3" align="center"></td>
 				<td align="center"></td>
 				<td align="center"></td>
 			</tr>
 			</s:iterator>
 			<tr>
 				<td class="alignCenter" width="150">出库路码</td>
-				<td width="150">　</td>
+				<td class="alignCenter" width="150">${beginMile }</td>
 				<td class="alignCenter" width="150">客户上车路码</td>
-				<td width="150"></td>
+				<td class="alignCenter" width="150">${customerGetonMile }</td>
 				<td class="alignCenter" width="150">客户下车路码</td>
-				<td width="150"></td>
+				<td class="alignCenter" width="150">${customerGetoffMile }</td>
 				<td class="alignCenter" width="150">回库路码</td>
-				<td width="150"></td>
+				<td class="alignCenter" width="150">${endMile }</td>
 			</tr>
 			<tr>
 				<td class="alignCenter">邮费</td>
-				<td></td>
+				<td class="alignCenter">${refuelMoney }</td>
 				<td class="alignCenter">洗车费</td>
-				<td></td>
+				<td class="alignCenter">${washingFee }</td>
 				<td class="alignCenter">停车费</td>
-				<td></td>
+				<td class="alignCenter">${parkingFee }</td>
 				<td class="alignCenter">计费路码</td>
-				<td></td>
+				<td class="alignCenter">${totalChargeMile }</td>
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">过路费（客户自理）</td>
-				<td colspan="2"></td>
+				<td class="alignCenter" colspan="2">${toll }</td>
 				<td class="alignCenter">食宿</td>
-				<td></td>
+				<td class="alignCenter">${roomAndBoardFee }</td>
 				<td class="alignCenter">其他费用</td>
-				<td style="padding-left:8px"></td>
+				<td class="alignCenter" style="padding-left:8px">${otherFee }</td>
 			</tr>
 			<tr>
 				<td class="alignCenter">核算金额</td>
-				<td colspan="3"></td>
+				<td class="alignCenter" colspan="3">${orderMoney }</td>
 				<td class="alignCenter">实收金额</td>
-				<td colspan="3"></td>
+				<td class="alignCenter" colspan="3">${actualMoney}</td>
 			</tr>
 			<tr>
-				<td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;请为本次服务评价：</td>
+				<td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;请为本次服务评价：&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="grade" value="4" readonly="readonly"/>非常满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="grade" value="3" readonly="readonly"/>满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="grade" value="2" readonly="readonly"/>一般满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="grade" value="1" readonly="readonly"/>不满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input id="gradeId" type="hidden" name="grade" value="${grade }"></td>
 			</tr>
 			<tr>
 				<td class="alignCenter" style="height:60px">驾驶员签字</td>
@@ -123,12 +139,12 @@
 				<td class="alignCenter" colspan="2">用车人签字及电话</td>
 				<td style="padding-left:25px" colspan="3">
 				<img id="imgId" width="150" height="50" style="display:none" src="order_getSignature.action?imageId=${signature.id}" />
-				<input id="signatureId" value="${signature.id }" style="display:none"/>
+				<input id="signatureId" value="${signature.id }" style="display:none"/>${phone }
 				</td>
 			</tr>
 			<tr>
 				<td class="alignCenter">意见及建议</td>
-				<td colspan="7"></td>
+				<td colspan="7" style="padding-left:15px">${options }</td>
 			</tr>
 			<tr>
 				<td style="border:none;"></td>
@@ -170,6 +186,7 @@
         </div>
     </div>
     <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
     <script type="text/javascript">
     $(function(){
@@ -177,6 +194,19 @@
 		var obj= $("#signatureId");
 		if(obj.val() != null&&obj.val() != 0){
 			$("#imgId").show();
+		}
+		
+		var grade = $("#gradeId").val();
+		if(grade == null || grade == 0){
+			$("input[name=grade]").attr("checked",false);
+		}if(grade == 1){
+			$("input[name=grade][value=1]").attr("checked",true);
+		}if(grade == 2){
+			$("input[name=grade][value=2]").attr("checked",true);
+		}if(grade == 3){
+			$("input[name=grade][value=3]").attr("checked",true);
+		}if(grade == 4){
+			$("input[name=grade][value=4]").attr("checked",true);
 		}
 	 });
     $(function(){
@@ -189,27 +219,6 @@
 		    		(today.getMonth() + 1 ) + "月" + 
 		    		today.getDate() + "日 "; 
 		$("#tableId tr:eq(22) td:eq(1)").text(date);
-		//计算订单执行时间
-    	/* var date1 = $("#tableId tr:eq(17) td:eq(1)").text();
-    	var date2 = $("#tableId tr:eq(17) td:eq(3)").text();
-    	
-    	var y1 = parseInt(date1.split('-')[0]);
-    	var m1 = parseInt(date1.split('-')[1]);
-    	var d1 = parseInt(date1.split('-')[2]);
-    	var h1 = parseInt(date1.split('-')[2].split(' ')[1]);
-    	var min1 = parseInt(date1.split('-')[2].split(' ')[1].split(':')[1]);
-    	
-    	var y2 = parseInt(date2.split('-')[0]);
-    	var m2 = parseInt(date2.split('-')[1]);
-    	var d2 = parseInt(date2.split('-')[2]);
-    	var h2 = parseInt(date2.split('-')[2].split(' ')[1]);
-    	var min2 = parseInt(date2.split('-')[2].split(' ')[1].split(':')[1]);
-    	
-    	var day1 = new Date(Date.UTC(y1,m1,d1,h1,min1));
-    	var day2 = new Date(Date.UTC(y2,m2,d2,h2,min2));
-
-    	var days = (day2 - day1)/1000/60/60;
-    	$("#tableId tr:eq(21) td:eq(2)").text(days.toFixed(1)); */
     	
     });
     </script>

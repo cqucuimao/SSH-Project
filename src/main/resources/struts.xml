@@ -392,6 +392,8 @@
 			</result>
 			<result name="print">/WEB-INF/view/scheduleAction/orderPrint.jsp
 			</result>
+			<result name="editOrderBillUI">/WEB-INF/view/scheduleAction/order_editOrderBill.jsp
+			</result>
 			<result name="operate">/WEB-INF/view/scheduleAction/order_editDriverAction.jsp
 			</result>
 			<result name="operateList">/WEB-INF/view/scheduleAction/order_editDriverAction.jsp

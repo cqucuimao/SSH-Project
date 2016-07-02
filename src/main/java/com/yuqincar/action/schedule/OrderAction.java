@@ -14,17 +14,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.struts2.views.jsp.IteratorStatus;
 import org.dbunit.dataset.stream.StreamingDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.mysql.fabric.xmlrpc.base.Struct;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.DriverActionVO;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderOperationRecord;
@@ -80,6 +83,24 @@ public class OrderAction extends BaseAction {
 	private String plateNumber;
 	private String rescheduleReason;
 
+	private float beginMile; 
+	private float customerGetonMile;
+	private float customerGetoffMile;
+	private float endMile;
+	private BigDecimal refuelMoney;
+	private BigDecimal washingFee;
+	private BigDecimal parkingFee;
+	private BigDecimal toll;
+	private float totalChargeMile;
+	private BigDecimal roomAndBoardFee;
+	private BigDecimal otherFee;
+	private BigDecimal orderMoney;
+	private BigDecimal actualMoney;
+	private int grade;
+	private String options;
+	private IteratorStatus iteratorStatus;
+	
+	private List<DayOrderDetail> dayDetails = new ArrayList<DayOrderDetail>();
 	
 	public boolean isCanUpdateOrder(){
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
@@ -130,6 +151,10 @@ public class OrderAction extends BaseAction {
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
 		return orderService.canAddEndAction(order);
 	}
+	public boolean isCanEditOrderBill(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		return orderService.canEditOrderBill(order);
+	}
 	public void getDriverJson() {
 
 		QueryHelper helper = new QueryHelper(User.class, "u");
@@ -170,65 +195,88 @@ public class OrderAction extends BaseAction {
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
-			
-			//由于接口改变，下面的getOrderTrackAbstract传两个null。后期应该改变代码。
-			//TreeMap<Date, String> map=orderService.getOrderTrackAbstract(order);
-			TreeMap<Date, String> map=new TreeMap<Date,String>();
-			List<AbstractTrackVO> list=new ArrayList<AbstractTrackVO>();
-			if(map!=null){
-				System.out.println("map.size="+map.keySet().size());
-				for(Date date:map.keySet()){
-					AbstractTrackVO atvo=new AbstractTrackVO();
-					atvo.setAbstractTime(DateUtils.getYMDHMSString(date));
-					atvo.setAbstractAddress(map.get(date));
-					list.add(atvo);
+
+			dayDetails=order.getDayDetails();
+			List<DayOrderDetail> nullDayDetails = new ArrayList<DayOrderDetail>();
+			System.out.println("list.size="+dayDetails.size());
+			if(dayDetails.size()<8){
+				int n=8-dayDetails.size();
+				for(int i=1;i<=n;i++){				
+					nullDayDetails.add(null);
 				}
 			}
-			System.out.println("list.size="+list.size());
-			if(list.size()<9){
-				int n=9-list.size();
-				for(int i=1;i<=n;i++){
-					AbstractTrackVO atvo=new AbstractTrackVO();
-					atvo.setAbstractTime(" ");
-					atvo.setAbstractAddress(" ");
-					list.add(atvo);
-				}
-			}
-			ActionContext.getContext().put("abstractTrackList", list);
+			ActionContext.getContext().put("abstractTrackList", dayDetails);
+			ActionContext.getContext().put("nullAbstractTrackList", nullDayDetails);
 		}
-/*
+		return "print";
+	}
+	/**
+	 * 编辑派车单--显示页面
+	 * @return
+	 */
+	public String editOrderBillUI() {
 		System.out.println("in print, orderId="+orderId);
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
+			ActionContext.getContext().getValueStack().push(orderId);
 			ActionContext.getContext().getValueStack().push(order);
-			
-			TreeMap<Date, String> map=orderService.getOrderTrackAbstract(order);
-			List<AbstractTrackVO> list=new ArrayList<AbstractTrackVO>();
-			if(map!=null){
-				System.out.println("map.size="+map.keySet().size());
-				for(Date date:map.keySet()){
-					AbstractTrackVO atvo=new AbstractTrackVO();
-					atvo.setAbstractTime(DateUtils.getYMDHMSString(date));
-					atvo.setAbstractAddress(map.get(date));
-					list.add(atvo);
+
+			dayDetails=order.getDayDetails();
+			List<DayOrderDetail> nullDayDetails = new ArrayList<DayOrderDetail>();
+			System.out.println("list.size="+dayDetails.size());
+			if(dayDetails.size()<8){
+				int n=8-dayDetails.size();
+				for(int i=1;i<=n;i++){			
+					nullDayDetails.add(null);
 				}
 			}
-			System.out.println("list.size="+list.size());
-			if(list.size()<8){
-				int n=8-list.size();
-				for(int i=1;i<=n;i++){
-					AbstractTrackVO atvo=new AbstractTrackVO();
-					atvo.setAbstractTime(" ");
-					atvo.setAbstractAddress(" ");
-					list.add(atvo);
-				}
-			}
-			ActionContext.getContext().put("abstractTrackList", list);
+			ActionContext.getContext().put("abstractTrackList", dayDetails);
+			ActionContext.getContext().put("nullAbstractTrackList", nullDayDetails);
 		}
-*/
-		return "print";
+		return "editOrderBillUI";
 	}
 	
+	/*
+	 * 编辑派车单
+	 */
+	public String editOrderBill(){
+		System.out.println("IDDDDD="+orderId);
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			
+			for(int i=0;i<order.getDayDetails().size();i++){
+				order.getDayDetails().get(i).setGetonDate(dayDetails.get(i).getGetonDate());
+				order.getDayDetails().get(i).setGetoffDate(dayDetails.get(i).getGetoffDate());
+				order.getDayDetails().get(i).setPathAbstract(dayDetails.get(i).getPathAbstract());
+				order.getDayDetails().get(i).setActualMile(dayDetails.get(i).getActualMile());
+				order.getDayDetails().get(i).setChargeMile(dayDetails.get(i).getChargeMile());
+			}
+			order.setBeginMile(beginMile);
+			order.setCustomerGetonMile(customerGetonMile);
+			order.setCustomerGetoffMile(customerGetoffMile);
+			order.setEndMile(endMile);
+			order.setRefuelMoney(refuelMoney);
+			order.setWashingFee(washingFee);
+			order.setParkingFee(parkingFee);
+			order.setTotalChargeMile(totalChargeMile);
+			order.setToll(toll);
+			order.setRoomAndBoardFee(roomAndBoardFee);
+			order.setOtherFee(otherFee);
+			order.setActualMoney(actualMoney);
+			order.setOrderMoney(orderMoney);
+			order.setGrade(grade);
+			order.setOptions(options);
+			
+			orderService.editOrderBill(order, user);
+		}
+
+		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("orderManagerHelper");
+		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		
+		return "list";
+	}
 	/*
 	 * 显示用车单位签名（图片）
 	 */
@@ -254,7 +302,7 @@ public class OrderAction extends BaseAction {
 	 * 编辑司机动作
 	 */
 	public String editDriverAction() {
-		
+		System.out.println("ID="+orderId);
 		System.out.println(ActionContext.getContext().getValueStack().peek().getClass().toString());
 		System.out.println("orderForView="+ActionContext.getContext().get("orderForView"));
 		if(orderId>0){
@@ -873,6 +921,145 @@ public class OrderAction extends BaseAction {
 	public void setRescheduleReason(String rescheduleReason) {
 		this.rescheduleReason = rescheduleReason;
 	}
+	
+	public float getBeginMile() {
+		return beginMile;
+	}
+
+	public void setBeginMile(float beginMile) {
+		this.beginMile = beginMile;
+	}
+
+	public float getCustomerGetonMile() {
+		return customerGetonMile;
+	}
+
+	public void setCustomerGetonMile(float customerGetonMile) {
+		this.customerGetonMile = customerGetonMile;
+	}
+
+	public float getCustomerGetoffMile() {
+		return customerGetoffMile;
+	}
+
+	public void setCustomerGetoffMile(float customerGetoffMile) {
+		this.customerGetoffMile = customerGetoffMile;
+	}
+
+	public float getEndMile() {
+		return endMile;
+	}
+
+	public void setEndMile(float endMile) {
+		this.endMile = endMile;
+	}
+
+	public BigDecimal getRefuelMoney() {
+		return refuelMoney;
+	}
+
+	public void setRefuelMoney(BigDecimal refuelMoney) {
+		this.refuelMoney = refuelMoney;
+	}
+
+	public BigDecimal getWashingFee() {
+		return washingFee;
+	}
+
+	public void setWashingFee(BigDecimal washingFee) {
+		this.washingFee = washingFee;
+	}
+
+	public BigDecimal getParkingFee() {
+		return parkingFee;
+	}
+
+	public void setParkingFee(BigDecimal parkingFee) {
+		this.parkingFee = parkingFee;
+	}
+
+	public BigDecimal getToll() {
+		return toll;
+	}
+
+	public void setToll(BigDecimal toll) {
+		this.toll = toll;
+	}
+
+	public float getTotalChargeMile() {
+		return totalChargeMile;
+	}
+
+	public void setTotalChargeMile(float totalChargeMile) {
+		this.totalChargeMile = totalChargeMile;
+	}
+
+	public BigDecimal getRoomAndBoardFee() {
+		return roomAndBoardFee;
+	}
+
+	public void setRoomAndBoardFee(BigDecimal roomAndBoardFee) {
+		this.roomAndBoardFee = roomAndBoardFee;
+	}
+
+	public BigDecimal getOtherFee() {
+		return otherFee;
+	}
+
+	public void setOtherFee(BigDecimal otherFee) {
+		this.otherFee = otherFee;
+	}
+
+	public BigDecimal getOrderMoney() {
+		return orderMoney;
+	}
+
+	public void setOrderMoney(BigDecimal orderMoney) {
+		this.orderMoney = orderMoney;
+	}
+
+	public BigDecimal getActualMoney() {
+		return actualMoney;
+	}
+
+	public void setActualMoney(BigDecimal actualMoney) {
+		this.actualMoney = actualMoney;
+	}
+
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public void setOptions(String options) {
+		this.options = options;
+	}
+
+	public IteratorStatus getIteratorStatus() {
+		return iteratorStatus;
+	}
+
+	public void setIteratorStatus(IteratorStatus iteratorStatus) {
+		this.iteratorStatus = iteratorStatus;
+	}
+
+	public List<DayOrderDetail> getDayDetails() {
+		return dayDetails;
+	}
+
+	public void setDayDetails(List<DayOrderDetail> dayDetails) {
+		this.dayDetails = dayDetails;
+	}	
+	
+	
+	
 }
 
 class AbstractTrackVO{

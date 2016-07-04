@@ -228,6 +228,12 @@
 			<result name="saveUI">/WEB-INF/view/carAction/tollChargeAction/tollCharge_saveUI.jsp</result>
 			<result name="remind">/WEB-INF/view/carAction/tollChargeAction/tollCharge_remind.jsp</result>
 		</action>
+		
+		<!-- 物品领用 -->
+		<action name="materialReceive_*" class="materialReceiveAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/materialReceiveAction/materialReceive_list.jsp</result>
+			<result name="saveUI">/WEB-INF/view/carAction/materialReceiveAction/materialReceive_saveUI.jsp</result>
+		</action>
 
 		<!-- 车辆实时监控管理 -->
 		<action name="realtime_*" class="realtimeAction" method="{1}">

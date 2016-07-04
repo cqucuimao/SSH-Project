@@ -152,6 +152,12 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/materialReceive_list') ">
+			<dd>
+				<s:a action="materialReceive_list">物品领用</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
 		</dl>
 		</s:if>
 				

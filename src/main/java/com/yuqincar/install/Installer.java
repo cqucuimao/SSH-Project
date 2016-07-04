@@ -321,6 +321,17 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/tollCharge_edit", tollChargeMenu));
 		privilegeDao.save(new Privilege("", "/tollCharge_remindExport", tollChargeMenu));
 		
+		//物品领用
+		Privilege materialReceiveMenu = new Privilege("物品领用", "/materialReceive_list", carMenu);
+		privilegeDao.save(materialReceiveMenu);
+		privilegeDao.save(new Privilege("", "/materialReceive_queryForm", materialReceiveMenu));
+		privilegeDao.save(new Privilege("", "/materialReceive_delete", materialReceiveMenu));
+		privilegeDao.save(new Privilege("", "/materialReceive_editUI", materialReceiveMenu));
+		privilegeDao.save(new Privilege("", "/materialReceive_freshList", materialReceiveMenu));
+		privilegeDao.save(new Privilege("", "/materialReceive_saveUI", materialReceiveMenu));
+		privilegeDao.save(new Privilege("", "/materialReceive_save", materialReceiveMenu));
+		privilegeDao.save(new Privilege("", "/materialReceive_edit", materialReceiveMenu));
+		
 		//客户管理
 		Privilege customerMenu = new Privilege("客户管理", "/customer", null);
 		privilegeDao.save(customerMenu);

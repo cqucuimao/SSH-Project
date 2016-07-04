@@ -2,11 +2,13 @@ package com.yuqincar.domain.car;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.yuqincar.domain.common.BaseEntity;
@@ -26,13 +28,7 @@ public class CarInsurance extends BaseEntity {
 	@Text("缴款日期")
 	@Column(nullable=false)
 	private Date payDate;  //保险付款日期
-
-	public Date getPayDate() {
-		return payDate;
-	}
-	public void setPayDate(Date payDate) {
-		this.payDate = payDate;
-	}
+	
 	@Text("保险起始日期")
 	@Column(nullable=false)
 	private Date fromDate;	//保险起始时间
@@ -48,10 +44,18 @@ public class CarInsurance extends BaseEntity {
 	@Text("保单号")
 	@Column(nullable=false)
 	private String policyNumber;   //保单号
-
-	@Text("保险种类")
+	
+	@Text("交强险金额")
 	@Column(nullable=false)
-	private String insureType;   //保险种类
+	private BigDecimal compulsoryMoney;
+	
+	@Text("车船税")
+	@Column(nullable=false)
+	private BigDecimal vehicleTax;
+	
+	@Text("商业保险")
+	@OneToMany(mappedBy="insurance")
+	private List<CommercialInsurance> commercialInsuranceList;
 
 	@Text("保险金额")
 	@Column(nullable=false)
@@ -78,6 +82,12 @@ public class CarInsurance extends BaseEntity {
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}
+	public Date getPayDate() {
+		return payDate;
+	}
+	public void setPayDate(Date payDate) {
+		this.payDate = payDate;
+	}
 	public String getInsureCompany() {
 		return insureCompany;
 	}
@@ -102,10 +112,23 @@ public class CarInsurance extends BaseEntity {
 	public void setPolicyNumber(String policyNumber) {
 		this.policyNumber = policyNumber;
 	}
-	public String getInsureType() {
-		return insureType;
+	public BigDecimal getCompulsoryMoney() {
+		return compulsoryMoney;
 	}
-	public void setInsureType(String insureType) {
-		this.insureType = insureType;
+	public void setCompulsoryMoney(BigDecimal compulsoryMoney) {
+		this.compulsoryMoney = compulsoryMoney;
+	}
+	public BigDecimal getVehicleTax() {
+		return vehicleTax;
+	}
+	public void setVehicleTax(BigDecimal vehicleTax) {
+		this.vehicleTax = vehicleTax;
+	}
+	public List<CommercialInsurance> getCommercialInsuranceList() {
+		return commercialInsuranceList;
+	}
+	public void setCommercialInsuranceList(
+			List<CommercialInsurance> commercialInsuranceList) {
+		this.commercialInsuranceList = commercialInsuranceList;
 	}	
 }

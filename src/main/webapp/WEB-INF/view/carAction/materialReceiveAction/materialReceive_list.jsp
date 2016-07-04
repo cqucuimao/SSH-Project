@@ -67,7 +67,10 @@
 							<td>${driver.id}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>${content}</td>
-							<td style="text-align:right"><fmt:formatNumber value="${value}" pattern="#0"/></td>
+							<td style="text-align:right">
+								${value }
+								<!--<fmt:formatNumber value="${value}" pattern="#0"/>-->
+							</td>
 							<td>
                     			<s:a action="materialReceive_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:a action="materialReceive_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>

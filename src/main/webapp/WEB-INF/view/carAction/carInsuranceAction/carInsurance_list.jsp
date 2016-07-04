@@ -50,8 +50,6 @@
                 			<th><s:property value="tr.getText('car.CarInsurance.policyNumber')" /></th>
                 			<th>起止时间</th>
                 			<th><s:property value="tr.getText('car.CarInsurance.money')" />(元)</th>
-                			<th><s:property value="tr.getText('car.CarInsurance.insureType')" /></th>
-                			<th><s:property value="tr.getText('car.CarInsurance.memo')" /></th>
                 			<th><s:property value="tr.getText('car.CarInsurance.payDate')" /></th>
 						</tr>
 					</thead>
@@ -63,8 +61,6 @@
                 			<td>${policyNumber}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
-							<td>${insureType}</td>
-							<td>${memo}</td>
 							<td style="text-align:right"><s:date name="payDate" format="yyyy-MM-dd"/></td>
 						</tr>
 						</s:iterator> 

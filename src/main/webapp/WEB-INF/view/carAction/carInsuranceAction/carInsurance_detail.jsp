@@ -51,10 +51,6 @@
                 				<td><fmt:formatNumber value="${money}" pattern="#0"/></td>
                 			</tr>
                 			<tr>
-                    			<th><s:property value="tr.getText('car.CarInsurance.insureType')" />：</th>
-                    			<td>${insureType}</td>
-                			</tr>
-                			<tr>
                 				<th><s:property value="tr.getText('car.CarInsurance.memo')" />：</th>
                 				<td><textarea readonly>${memo}</textarea></td>
                 			</tr>

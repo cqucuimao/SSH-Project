@@ -26,6 +26,7 @@
 					<th>用户名:</th>
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
 					<td>
+						<input type="hidden" name="userSelectorId" value="${userSelectorId}"/>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 				</tr>

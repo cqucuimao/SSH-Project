@@ -47,6 +47,10 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 		if(beginDate!=null && endDate!=null)
 			helper.addWhereCondition("(TO_DAYS(tc.payDate)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(tc.payDate))>=0", 
 					beginDate ,endDate);
+		else if(beginDate==null && endDate!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(tc.payDate))>=0", endDate);
+		else if(beginDate!=null && endDate==null)
+			helper.addWhereCondition("(TO_DAYS(tc.payDate)-TO_DAYS(?))>=0", beginDate);
 		helper.addOrderByProperty("tc.payDate", false);
 		
 		PageBean pageBean = tollChargeService.queryTollCharge(pageNum, helper);		

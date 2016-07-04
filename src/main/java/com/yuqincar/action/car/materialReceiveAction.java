@@ -51,6 +51,10 @@ public class materialReceiveAction extends BaseAction implements ModelDriven<Mat
 		if(beginDate!=null && endDate!=null)
 			helper.addWhereCondition("(TO_DAYS(mr.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(mr.date))>=0", 
 					beginDate ,endDate);
+		else if(beginDate==null && endDate!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(mr.date))>=0", endDate);
+		else if(beginDate!=null && endDate==null)
+			helper.addWhereCondition("(TO_DAYS(mr.date)-TO_DAYS(?))>=0", beginDate);
 		helper.addOrderByProperty("mr.date", false);
 		
 		PageBean pageBean = materialService.queryMaterial(pageNum, helper);		

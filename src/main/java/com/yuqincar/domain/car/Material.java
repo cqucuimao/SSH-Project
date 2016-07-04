@@ -33,9 +33,11 @@ public class Material extends BaseEntity {
 	private Date date;
 	
 	@Text("领用物品")
+	@Column(nullable = false)
 	private String content;
 	
 	@Text("价值")
+	@Column(nullable = false)
 	private BigDecimal value;
 
 	public Car getCar() {

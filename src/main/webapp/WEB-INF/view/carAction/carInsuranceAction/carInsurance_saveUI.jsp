@@ -64,12 +64,6 @@
                         	<input class="inputText" type="text" name="money"/>
 						</td>
                     </tr>
-                    <tr>
-                        <th><s:property value="tr.getText('car.CarInsurance.insureType')" /><span class="required">*</span></th>
-                        <td>
-                        	<input class="inputText" type="text" name="insureType"/>
-						</td>
-                    </tr>
                     <tr><th><s:property value="tr.getText('car.CarInsurance.memo')" /></th>
                     	<td>
                         	<textarea class="inputText" style="height:100px" name="memo"></textarea>

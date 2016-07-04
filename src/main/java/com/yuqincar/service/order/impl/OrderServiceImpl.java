@@ -413,8 +413,9 @@ public class OrderServiceImpl implements OrderService {
 			String message="订单（"+order.getSn()+"）已经被取消。";
 			Map<String,String> params=new HashMap<String,String>();
 			params.put("sn", order.getSn());
-			//给司机发消息
-			appMessageService.sendMessageToDriverAPP(order.getDriver(), message,null);
+			if(order.getDriver()!=null)
+				//给司机发消息
+				appMessageService.sendMessageToDriverAPP(order.getDriver(), message,null);
 			
 			if(order.getOrderSource()!=OrderSourceEnum.APP)
 				//给非APP用户发短信

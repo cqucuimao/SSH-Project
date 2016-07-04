@@ -35,17 +35,6 @@
 						</td>
 					</tr>
 					<tr>
-						<th><s:property value="tr.getText('car.ServicePoint.pointAddress')" /><span class="required">*</span></th>
-							<td>
-							<!-- 地址匹配收藏输入框-->
-							<!-- 地址详情输入框 -->	
-							<jsp:include page="../../addressComponmentAction/addressComponmentMap.jsp">
-								<jsp:param value="0" name="id" />
-							</jsp:include>
-							<s:fielderror style="color:red"></s:fielderror>																
-							</td>
-					</tr>
-					<tr>
 	                <td colspan="2">	             
 		                	<input type="submit" class="inputButton" value="确定" />
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a>

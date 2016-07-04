@@ -44,7 +44,8 @@
                 	<tr>
                         <th>车辆<span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text"/>
+							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber"
+									 type="text" synchDriverName="driver" synchDriverId="driverId"/>
 						</td>
                     </tr>
                 	<tr>
@@ -116,7 +117,7 @@
 					},
 				}
 			});
-			formatDateField1($("#Date"));
+			formatDateField1($("#date"));
 		});
     </script>
 </body>

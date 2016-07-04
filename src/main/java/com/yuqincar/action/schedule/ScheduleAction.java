@@ -236,16 +236,6 @@ public class ScheduleAction extends BaseAction {
 			writeJson(jsonArray.toJSONString());
 		}
 	}
-	
-	public String cancelOrder(){
-		System.out.println("cancelOrder");
-		System.out.println("cancelOrderId="+cancelOrderId);
-		Order order=orderService.getOrderById(cancelOrderId);
-		User user = (User) ActionContext.getContext().getSession().get("user");
-		orderService.cancelOrder(order, user, "在队列中被取消");
-		System.out.println("before return");
-		return "toQueue";
-	}
 
 	public String getChargeModeString() {
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();

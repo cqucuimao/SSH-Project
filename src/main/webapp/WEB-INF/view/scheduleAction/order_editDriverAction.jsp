@@ -57,7 +57,7 @@
                         <th>目的地：</th>
                         <td>
                         	<s:if test="toAddress!=null">
-                        		${toAddress }（${toAddress.detail }）
+                        		${toAddress }
                         	</s:if>
                         </td>
                         

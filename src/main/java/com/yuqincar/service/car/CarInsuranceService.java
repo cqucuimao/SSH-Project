@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarInsurance;
+import com.yuqincar.domain.car.CommercialInsurance;
+import com.yuqincar.domain.car.CommercialInsuranceType;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.utils.QueryHelper;
 
@@ -29,4 +31,16 @@ public interface CarInsuranceService {
 	public List<Car> getAllNeedInsuranceCars();
 	
 	public BigDecimal statisticCarInsurance(Date fromDate, Date toDate);
+	
+	public void saveCommercialInsuranceType(CommercialInsuranceType commercialInsuranceType);
+	
+	public boolean canDeleteCommercialInsuranceType(Long id);
+	
+	public void deleteCommercialInsuranceType(Long id);
+	
+	public List<CommercialInsuranceType> getAllCommercialInsuranceType();
+	
+	public void saveCommercialInsurance(CommercialInsurance commercialInsurance);
+	
+	public void deleteCommercialInsurance(Long id);
 }

@@ -125,7 +125,8 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	public PageBean getPageBean(int pageNum, QueryHelper queryHelper ) {
-		int pageSize = Configuration.getPageSize();
+		//int pageSize = Configuration.getPageSize();
+		int pageSize=1;
 		return getPageBean(pageNum,queryHelper,pageSize);
 	}
 	

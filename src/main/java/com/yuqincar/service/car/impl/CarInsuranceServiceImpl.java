@@ -10,8 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.CarInsuranceDao;
+import com.yuqincar.dao.car.CommercialInsuranceDao;
+import com.yuqincar.dao.car.CommercialInsuranceTypeDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarInsurance;
+import com.yuqincar.domain.car.CommercialInsurance;
+import com.yuqincar.domain.car.CommercialInsuranceType;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.service.car.CarInsuranceService;
 import com.yuqincar.utils.QueryHelper;
@@ -21,6 +25,10 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	
 	@Autowired
 	private CarInsuranceDao carInsuranceDao;
+	@Autowired
+	private CommercialInsuranceTypeDao commercialInsuranceTypeDao;
+	@Autowired
+	private CommercialInsuranceDao commercialInsuranceDao;
 	@Autowired
 	private CarDao carDao;
 
@@ -50,6 +58,30 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	
 	public BigDecimal statisticCarInsurance(Date fromDate, Date toDate){
 		return carInsuranceDao.statisticCarInsurance(fromDate, toDate);
+	}
+		
+	public void saveCommercialInsuranceType(CommercialInsuranceType commercialInsuranceType){
+		commercialInsuranceTypeDao.save(commercialInsuranceType);
+	}
+	
+	public boolean canDeleteCommercialInsuranceType(Long id){
+		return commercialInsuranceTypeDao.canDeleteCommercialInsuranceType(id);
+	}
+	
+	public void deleteCommercialInsuranceType(Long id){
+		commercialInsuranceTypeDao.delete(id);
+	}
+	
+	public List<CommercialInsuranceType> getAllCommercialInsuranceType(){
+		return commercialInsuranceTypeDao.getAll();
+	}
+	
+	public void saveCommercialInsurance(CommercialInsurance commercialInsurance){
+		commercialInsuranceDao.save(commercialInsurance);
+	}
+	
+	public void deleteCommercialInsurance(Long id){
+		commercialInsuranceDao.delete(id);
 	}
 
 }

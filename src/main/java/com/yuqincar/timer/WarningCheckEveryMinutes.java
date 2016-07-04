@@ -54,7 +54,8 @@ public class WarningCheckEveryMinutes {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/1 * * * ?") // 每5分钟执行一次
+	//暂时取消非计划形式的报警。因为不好区分出正常情况。
+	//@Scheduled(cron = "0 0/1 * * * ?") // 每5分钟执行一次
 	@Transactional
 	public void checkUnplannedRunningWarning(){
 		System.out.println("in checkUnplannedRunningWarning");

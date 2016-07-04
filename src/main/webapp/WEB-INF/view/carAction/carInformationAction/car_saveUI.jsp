@@ -85,9 +85,9 @@
 						</td>
 					</tr>
 					<tr>
-						<th><s:property value="tr.getText('car.Car.registDate')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.Car.enrollDate')" /><span class="required">*</span></th>
 						<td >
-								<input class="Wdate half" name="registDate" id="registDateId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<input class="Wdate half" name="enrollDate" id="enrollDateId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
 						</td>
 					</tr>				
 					<tr>
@@ -153,7 +153,7 @@
 					EngineSN:{
 						required:true,
 					},
-					registDate:{
+					enrollDate:{
 						required:true,
 					},
 					model:{
@@ -181,7 +181,7 @@
 			    		today.getHours()+ ":"+
 			    		today.getMinutes()+":"+
 			    		today.getSeconds(); 
-			$("#registDateId").val(date);
+			$("#enrollDateId").val(date);
 		});
 	</script>
 </body>

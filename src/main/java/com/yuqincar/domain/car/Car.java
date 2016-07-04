@@ -59,9 +59,9 @@ public class Car extends BaseEntity {
 	@Text("里程数")
 	private int mileage;	//里程数
 
-	@Text("注册时间")
+	@Text("登记时间")
 	@Column(nullable = false)
-	private Date registDate;	//注册时间
+	private Date enrollDate;	//登记时间。投入公司使用的时间
 
 	@Text("备注")
 	private String memo;	//备注
@@ -86,6 +86,19 @@ public class Car extends BaseEntity {
 	
 	@Text("是否为备用车")
 	private boolean standbyCar;
+	
+	@Text("注册时间")
+	@Column(nullable = false)
+	private Date registDate;
+	
+	@Text("牌照种类")
+	@Column(nullable = false)
+	private PlateTypeEnum plateType;
+	
+	@Text("座位数")
+	@Column(nullable = false)
+	private int seatNumber;
+	
 
 	public String getPlateNumber() {
 		return plateNumber;
@@ -165,14 +178,14 @@ public class Car extends BaseEntity {
 
 	public void setMileage(int mileage) {
 		this.mileage = mileage;
+	}	
+
+	public Date getEnrollDate() {
+		return enrollDate;
 	}
 
-	public Date getRegistDate() {
-		return registDate;
-	}
-
-	public void setRegistDate(Date registDate) {
-		this.registDate = registDate;
+	public void setEnrollDate(Date enrollDate) {
+		this.enrollDate = enrollDate;
 	}
 
 	public String getMemo() {
@@ -237,5 +250,29 @@ public class Car extends BaseEntity {
 
 	public void setInsuranceExpired(boolean insuranceExpired) {
 		this.insuranceExpired = insuranceExpired;
-	}	
+	}
+
+	public Date getRegistDate() {
+		return registDate;
+	}
+
+	public void setRegistDate(Date registDate) {
+		this.registDate = registDate;
+	}
+
+	public PlateTypeEnum getPlateType() {
+		return plateType;
+	}
+
+	public void setPlateType(PlateTypeEnum plateType) {
+		this.plateType = plateType;
+	}
+
+	public int getSeatNumber() {
+		return seatNumber;
+	}
+
+	public void setSeatNumber(int seatNumber) {
+		this.seatNumber = seatNumber;
+	}		
 }

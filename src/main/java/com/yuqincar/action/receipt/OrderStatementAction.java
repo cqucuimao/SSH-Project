@@ -349,8 +349,8 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 				   cell = new PdfPCell(new Paragraph(dayDetails.get(i).getPathAbstract(),font));
 				   cell.setColspan(3);
 				   table.addCell(cell);
-				   table.addCell(new Paragraph(dayDetails.get(i).getActualMile()));
-				   table.addCell(new Paragraph(dayDetails.get(i).getChargeMile()));
+				   table.addCell(new Paragraph(dayDetails.get(i).getActualMile()+"",font));
+				   table.addCell(new Paragraph(dayDetails.get(i).getChargeMile()+"",font));
 			   }
 			   if(dayDetails.size()<8){
 				   for(int i=0;i<8-dayDetails.size();i++){
@@ -376,74 +376,64 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 				   table.addCell(new Paragraph(" ",font));
 			   }
 		   }
-		   /*TreeMap<Date, String> map=orderService.getOrderTrackAbstract(orders.get(k).getSn(),orders.get(k).getActualBeginDate(),orders.get(k).getActualEndDate());
-		   if(map!=null){
-			   for(Date d:map.keySet()){
-				   table.addCell (new Paragraph (DateUtils.getYMDHMSString(d),font));
-				   cell = new PdfPCell (new Paragraph (map.get(d),font));
-				   cell.setColspan (5);
-				   table.addCell (cell);
-			   }
-			   if(map.keySet().size()<9)
-				   for(int i = 1;i <=9-map.keySet().size();i++){
-					   table.addCell (new Paragraph (""+i,font));
-					   cell = new PdfPCell (new Paragraph ("",font));
-					   cell.setColspan (5);
-					   table.addCell (cell);
-				   }
-		   }else{
-			   for(int i = 1;i <=9;i++){
-				   table.addCell (new Paragraph (""+i,font));
-				   cell = new PdfPCell (new Paragraph ("",font));
-				   cell.setColspan (5);
-				   table.addCell (cell);
-			   }
-		   }*/
 		   //表格第14行
 		   table.addCell (new Paragraph ("出库路码",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getBeginMile()+"",font));
 		   table.addCell (new Paragraph ("客户上车路码",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getCustomerGetonMile()+"",font));
 		   table.addCell (new Paragraph ("客户下车路码",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getCustomerGetoffMile()+"",font));
 		   table.addCell (new Paragraph ("回库路码",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getEndMile()+"",font));
 		   //表格第15行
 		   table.addCell (new Paragraph ("油费",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getRefuelMoney()+"",font));
 		   table.addCell (new Paragraph ("洗车费",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getWashingFee()+"",font));
 		   table.addCell (new Paragraph ("停车费",font));
-		   table.addCell (new Paragraph (orders.get(k).getTotalChargeMile()+"",font));
+		   table.addCell (new Paragraph (orders.get(k).getParkingFee()+"",font));
 		   table.addCell (new Paragraph ("计费路码",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getTotalChargeMile()+"",font));
 		   //表格第16行
 		   cell = new PdfPCell(new Paragraph ("过路费（客户自理）",font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
-		   cell = new PdfPCell (new Paragraph ());
+		   cell = new PdfPCell (new Paragraph (orders.get(k).getToll()+"",font));
 		   cell.setColspan(2);
 		   table.addCell (cell);	
 		   table.addCell (new Paragraph ("食宿",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getRoomAndBoardFee()+"",font));
 		   table.addCell (new Paragraph ("其他费用",font));
-		   table.addCell (new Paragraph ("",font));
+		   table.addCell (new Paragraph (orders.get(k).getOtherFee()+"",font));
 		   //表格第17行
 		   table.addCell (new Paragraph ("核算金额",font));
 		   //String actualMoney = df1.format(orders.get(k).getActualMoney());
-		   cell = new PdfPCell ();
+		   cell = new PdfPCell (new Paragraph(orders.get(k).getOrderMoney()+"",font));
 		   cell.setColspan(3);
 		   table.addCell (cell);
 		   cell = new PdfPCell (new Paragraph ("实收金额",font));
 		   table.addCell(cell);
-		   cell = new PdfPCell ();
+		   cell = new PdfPCell (new Paragraph(orders.get(k).getActualMoney()+"",font));
 		   cell.setColspan(3);
 		   table.addCell (cell);
 		   //表格第18行
 		   cell = new PdfPCell(new Paragraph ("请为本次服务评价：",font));
 		   cell.setColspan(2);
 		   table.addCell(cell);
-		   cell = new PdfPCell(new Paragraph("?????",font));
+		   String gradeString = null;
+		   int grade = orders.get(k).getGrade();
+		   if(grade == 0){
+			   gradeString = " ";
+		   }if(grade == 1){
+			   gradeString = "不满意";
+		   }if(grade == 2){
+			   gradeString = "一般满意";
+		   }if(grade == 3){
+			   gradeString = "满意";
+		   }if(grade == 4){
+			   gradeString = "非常满意";
+		   }
+		   cell = new PdfPCell(new Paragraph(gradeString,font));
 		   cell.setColspan(6);
 		   table.addCell(cell);
 		   //表格第19行
@@ -472,7 +462,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   }
 		   //表格第20行
 		   table.addCell (new Paragraph ("意见及建议",font));
-		   cell = new PdfPCell ();
+		   cell = new PdfPCell (new Paragraph(orders.get(k).getOptions()+"",font));
 		   cell.setColspan(7);
 		   table.addCell (cell);
 		   //表格第21行

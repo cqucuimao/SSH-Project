@@ -1,9 +1,12 @@
 package com.yuqincar.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import jxl.Cell;
 import jxl.Range;
@@ -34,15 +37,27 @@ public class ExcelUtil {
 		}
 	}
 	
-	public static List<List<String>> getLinesFromExcel(String src, int rowFrom,
-			int rowTo, int colFrom, int colTo, int sheetIndex) {
+	public static List<List<String>> getLinesFromExcel(String src, int rowFrom,int colFrom, int colTo, int sheetIndex) {
+		try{
+			InputStream is=new FileInputStream(new File(src));
+			return getLinesFromExcel(is,rowFrom,colFrom,colTo,sheetIndex);
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static List<List<String>> getLinesFromExcel(InputStream is, int rowFrom,int colFrom, int colTo, int sheetIndex){
 		Workbook wb = null;
 		try {
-			wb = Workbook.getWorkbook(new File(src));
+			wb = Workbook.getWorkbook(is);
 			Sheet sheet = wb.getSheet(sheetIndex);
-			List<List<String>> lines=new ArrayList<List<String>>(rowTo-rowFrom+1);
-			for(int i=rowFrom;i<=rowTo;i++)
-				lines.add(getStringFromExcel(sheet, i, i, colFrom, colTo));
+			List<List<String>> lines=new ArrayList<List<String>>(sheet.getRows()-rowFrom+1);
+			for(int i=rowFrom;i<=sheet.getRows();i++){
+				List<String> line=getStringFromExcel(sheet, i, i, colFrom, colTo);
+				if(line!=null && line.size()>0 && !StringUtils.isEmpty(line.get(0)))
+					lines.add(line);
+			}
 			return lines;
 		} catch (Exception e) {
 			e.printStackTrace();

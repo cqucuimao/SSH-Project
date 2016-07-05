@@ -205,6 +205,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 		User driver = userService.getById(model.getDriver().getId());
 		List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getDate(), model.getDate());
+		taskList.addAll(orderService.getDriverTask(driver,  model.getDate(), model.getDate()));
 		boolean haveTask=false;
 		int taskType=0;  //1订单  2 保养 3 年审 4 维修
 		for(List<BaseEntity> dayList:taskList){
@@ -239,7 +240,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 				clazz="维修记录";
 				break;
 			}
-			addFieldError("", "添加年审记录失败！因为该时间段内有"+clazz);
+			addFieldError("", "添加年审记录失败！因为车辆或司机在该时间段内有"+clazz);
 			return "saveAppoint";
 		}else {
 			carExamineService.carExamineAppointment(car, driver, model.getDate());

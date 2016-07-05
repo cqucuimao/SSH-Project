@@ -101,18 +101,15 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	
 	public String saveAppointment(){
 		boolean before = model.getToDate().before(model.getFromDate());
-		//System.out.println(before);
 		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
 			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
 			return "saveAppoint";
 		}
 		
 		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 		User driver = userService.getById(model.getDriver().getId());
 		List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getFromDate(), model.getToDate());
+		taskList.addAll(orderService.getDriverTask(driver,  model.getFromDate(), model.getToDate()));
 		boolean haveTask = false;
 		int taskType = 0;
 		for(List<BaseEntity> dayList:taskList){
@@ -147,7 +144,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 				clazz="维修记录";
 				break;
 			}
-			addFieldError("", "添加维修记录失败！因为该时间段内有"+clazz);
+			addFieldError("", "添加维修记录失败！因为车辆或司机在该时间段内有"+clazz);
 			return "saveAppoint";
 		}else{
 			carRepairService.carRepairAppointment(car, driver, model.getFromDate(), model.getToDate());

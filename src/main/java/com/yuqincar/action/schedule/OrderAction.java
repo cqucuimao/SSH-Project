@@ -557,10 +557,10 @@ public class OrderAction extends BaseAction {
 	 */
 	public String info() {
 		Date date = DateUtils.getYMD2(orderDate);
-		ActionContext.getContext().put(
-				"orderList",
-				orderService.getCarTask(carService.getCarById(carId), date,
-						date).get(0));
+		if(carId>0 && driverId==0)
+			ActionContext.getContext().put("orderList",orderService.getCarTask(carService.getCarById(carId), date,date).get(0));
+		else if(driverId>0 && carId==0)
+			ActionContext.getContext().put("orderList",orderService.getDriverTask(userService.getById(driverId), date,date).get(0));
 		return "info";
 	}
 

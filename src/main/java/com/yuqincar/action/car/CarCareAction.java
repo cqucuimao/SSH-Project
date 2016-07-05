@@ -221,6 +221,7 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		
 		//System.out.println("规范化?"+car.getBrand()+"?打工算法妨功害能"+car.getMemo());
 		List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getDate(), model.getDate());
+		taskList.addAll(orderService.getDriverTask(driver,  model.getDate(), model.getDate()));
 		boolean haveTask=false;
 		int taskType=0;	//1订单  2 保养 3 年审 4 维修
 		for(List<BaseEntity> dayList: taskList){
@@ -256,7 +257,7 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 				clazz="维修记录";
 				break;
 			}
-			addFieldError("", "添加保养记录失败！因为该时间段内有"+clazz);
+			addFieldError("", "添加保养记录失败！因为车辆或司机在该时间段内有"+clazz);
 			return "saveAppoint";
 		}else{
 			//插入预约保养记录

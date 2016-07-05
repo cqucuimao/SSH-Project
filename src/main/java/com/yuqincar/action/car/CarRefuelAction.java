@@ -72,17 +72,6 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	public String add() throws Exception {
 		// 保存到数据库
 		
-		if(!StringUtils.isEmpty(model.getOrder().getSn())){
-			Order order = orderService.getOrderBySN(model.getOrder().getSn());
-			if(order==null){
-				addFieldError("order.sn", "找不到对应的订单！请确认订单号输入是否正确。");
-				return "saveUI";
-			}
-			model.setOrder(order);
-		}else{
-			model.setOrder(null);
-		}
-		
 		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 		User driver = userService.getById(model.getDriver().getId());
 		

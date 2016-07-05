@@ -31,8 +31,8 @@
 					</colgroup>
 					<tbody class="tableHover">
 							<tr>
-                    			<th width="90"><s:property value="tr.getText('car.CarRefuel.order')" />：</th>
-                    			<td>${order.sn}</td>
+                    			<th width="90"><s:property value="tr.getText('car.CarRefuel.sn')" />：</th>
+                    			<td>${sn}</td>
                 			</tr>
 							<tr>
                     			<th><s:property value="tr.getText('car.Car.plateNumber')" />：</th>

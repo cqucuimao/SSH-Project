@@ -50,7 +50,7 @@
 					
 					<thead>
 						<tr>
-							<th><s:property value="tr.getText('car.CarRefuel.order')" /></th>
+							<th><s:property value="tr.getText('car.CarRefuel.sn')" /></th>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 							<th><s:property value="tr.getText('car.CarRefuel.driver')" /></th>
                 			<th><s:property value="tr.getText('car.CarRefuel.date')" /></th>
@@ -61,7 +61,7 @@
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td>${order.sn}</td>
+							<td>${sn}</td>
 							<td><s:a action="carRefuel_detail?id=%{id}">${car.plateNumber}</s:a></td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>

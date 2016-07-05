@@ -99,6 +99,10 @@ public class Car extends BaseEntity {
 	@Column(nullable = false)
 	private int seatNumber;
 	
+	@Text("变速箱类型")
+	@Column(nullable=false)
+	private TransmissionTypeEnum transmissionType;
+	
 
 	public String getPlateNumber() {
 		return plateNumber;
@@ -274,5 +278,13 @@ public class Car extends BaseEntity {
 
 	public void setSeatNumber(int seatNumber) {
 		this.seatNumber = seatNumber;
+	}
+
+	public TransmissionTypeEnum getTransmissionType() {
+		return transmissionType;
+	}
+
+	public void setTransmissionType(TransmissionTypeEnum transmissionType) {
+		this.transmissionType = transmissionType;
 	}		
 }

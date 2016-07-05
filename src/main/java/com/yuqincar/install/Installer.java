@@ -454,7 +454,7 @@ public class Installer {
 	private void initPriceTable(String fileName,String tableName){
 		Map<CarServiceType,Price> map=new HashMap<CarServiceType,Price>();
 		
-		List<List<String>> tableContent=ExcelUtil.getLinesFromExcel(fileName, 2, 23, 1, 7, 0);
+		List<List<String>> tableContent=ExcelUtil.getLinesFromExcel(fileName, 2, 1, 7, 0);
 		for(List<String> line:tableContent){
 			CarServiceSuperType superType=carServiceSuperTypeDao.getCarServiceSuperTypeByTitle(line.get(0));
 			if(superType==null){

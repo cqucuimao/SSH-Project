@@ -41,9 +41,9 @@
 				</colgroup>
                 <tbody>
                 	<tr>
-                        <th><s:property value="tr.getText('car.CarRefuel.order')" /></th>
+                        <th><s:property value="tr.getText('car.CarRefuel.sn')" /></th>
 						<td>
-							<input class="inputText" type="text" name="order.sn"/>
+							<input class="inputText" type="text" name="sn"/>
 						</td>
                     </tr>
                 	<tr>

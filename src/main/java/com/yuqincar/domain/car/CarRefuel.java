@@ -16,10 +16,9 @@ import com.yuqincar.utils.Text;
 
 @Entity
 public class CarRefuel extends BaseEntity {
-	@Text("订单")
-	@OneToOne(fetch=FetchType.LAZY)
-	private Order order;
-
+	@Text("流水号")
+	private String sn;
+	
 	@Text("车辆")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
@@ -74,20 +73,20 @@ public class CarRefuel extends BaseEntity {
 		this.driver = driver;
 	}
 
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
 	public float getVolume() {
 		return volume;
 	}
 
 	public void setVolume(float volume) {
 		this.volume = volume;
+	}
+
+	public String getSn() {
+		return sn;
+	}
+
+	public void setSn(String sn) {
+		this.sn = sn;
 	}	
 	
 }

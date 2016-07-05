@@ -89,9 +89,9 @@
 					<c:forEach items="${recordList}" var="temp">
 							<tr>
   								<c:forEach items="${temp}" var="map">  
-  									<td>${map.key.driver.name}</td>
+  									<td>${map.key.driverName}</td>
 									<td>${map.key.plateNumber}</td>
-									<td>${map.key.driver.phoneNumber}</td>								
+									<td>${map.key.phone}</td>								
   									<c:forEach items="${map.value}" var="mapValue">  										
   										<c:if test="${mapValue.value==0}">
   											<td><i class="icon-car maintenance"></i>保养中</td>
@@ -104,7 +104,7 @@
   										</c:if>
   										<c:if test="${mapValue.value==3}">  																										
   											<td>
-  												<a href="#" onclick="taskClick(${map.key.id},'${mapValue.key}')"><i class="icon-car"></i>任务中</a>
+  												<a href="#" onclick="taskClick('${map.key.type}',${map.key.id},'${mapValue.key}')"><i class="icon-car"></i>任务中</a>
   											</td>
   										</c:if>
   										<c:if test="${mapValue.value==4}">
@@ -129,8 +129,11 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>	
 	<script type="text/javascript">
-		function taskClick(carId,orderDate){
-			popup("订单详情","order_info.action?carId="+carId+"&orderDate="+orderDate,650,500,"orderDetail");
+		function taskClick(type,id,orderDate){
+			if("car"==type)
+				popup("订单详情","order_info.action?carId="+id+"&orderDate="+orderDate,650,500,"orderDetail");
+			else if("driver==type")
+				popup("订单详情","order_info.action?driverId="+id+"&orderDate="+orderDate,650,500,"orderDetail");
 		}
 	</script>
 </body>

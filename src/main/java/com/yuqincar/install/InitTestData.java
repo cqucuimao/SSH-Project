@@ -48,6 +48,7 @@ import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.car.ServicePoint;
+import com.yuqincar.domain.car.TransmissionTypeEnum;
 import com.yuqincar.domain.monitor.Device;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
@@ -1070,6 +1071,7 @@ public class InitTestData {
 		car1.setEnrollDate(new Date());
 		car1.setPlateType(PlateTypeEnum.BLUE);
 		car1.setSeatNumber(5);
+		car1.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car1);
 
 		Car car2 = new Car();
@@ -1093,6 +1095,7 @@ public class InitTestData {
 		car2.setEnrollDate(new Date());
 		car2.setPlateType(PlateTypeEnum.BLUE);
 		car2.setSeatNumber(5);
+		car2.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car2);
 
 		Car car3 = new Car();
@@ -1116,6 +1119,7 @@ public class InitTestData {
 		car3.setEnrollDate(new Date());
 		car3.setPlateType(PlateTypeEnum.BLUE);
 		car3.setSeatNumber(5);
+		car3.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car3);
 
 		Car car4 = new Car();
@@ -1139,6 +1143,7 @@ public class InitTestData {
 		car4.setEnrollDate(new Date());
 		car4.setPlateType(PlateTypeEnum.BLUE);
 		car4.setSeatNumber(5);
+		car4.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car4);
 
 		Car car5 = new Car();
@@ -1161,6 +1166,7 @@ public class InitTestData {
 		car5.setEnrollDate(new Date());
 		car5.setPlateType(PlateTypeEnum.BLUE);
 		car5.setSeatNumber(5);
+		car5.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car5);
 
 		Car car6 = new Car();
@@ -1184,6 +1190,7 @@ public class InitTestData {
 		car6.setEnrollDate(new Date());
 		car6.setPlateType(PlateTypeEnum.BLUE);
 		car6.setSeatNumber(5);
+		car6.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car6);
 
 		Car car7 = new Car();
@@ -1207,6 +1214,7 @@ public class InitTestData {
 		car7.setEnrollDate(new Date());
 		car7.setPlateType(PlateTypeEnum.BLUE);
 		car7.setSeatNumber(5);
+		car7.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car7);
 
 		Car car8 = new Car();
@@ -1230,6 +1238,7 @@ public class InitTestData {
 		car8.setEnrollDate(new Date());
 		car8.setPlateType(PlateTypeEnum.BLUE);
 		car8.setSeatNumber(5);
+		car8.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car8);
 
 		Car car9 = new Car();
@@ -1253,6 +1262,7 @@ public class InitTestData {
 		car9.setEnrollDate(new Date());
 		car9.setPlateType(PlateTypeEnum.BLUE);
 		car9.setSeatNumber(5);
+		car9.setTransmissionType(TransmissionTypeEnum.AUTO);
 		carDao.save(car9);
 	}
 

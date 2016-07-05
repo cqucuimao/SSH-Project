@@ -51,6 +51,8 @@ public interface OrderDao extends BaseDao<Order> {
      *         如果有维修任务，就返回此维修记录对象（CarRepair） 如果有年审任务，就返回此年审记录对象（CarExamine）
      */
     public List<List<BaseEntity>> getCarTask(Car car, Date fromDate, Date toDate);
+    
+    public List<List<BaseEntity>> getDriverTask(User driver, Date fromDate, Date toDate);
 
     /**
      * 调度车辆。如果order.status==INQUEUE，那么就不需要再保存order，而是修改其car和driver的属性值，否则就要先保存。

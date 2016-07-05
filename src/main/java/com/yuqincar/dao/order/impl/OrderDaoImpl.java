@@ -130,6 +130,69 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		}
 		return list;
 	}
+	
+
+    public List<List<BaseEntity>> getDriverTask(User driver, Date fromDate, Date toDate){
+		List<List<BaseEntity>> list = new ArrayList<List<BaseEntity>>();
+		String hql = null;
+		int days = DateUtils.elapseDays(fromDate, toDate, true, true);
+		BaseEntity entity = null;
+		
+		for (int i = 0; i < days; i++) {
+			List<BaseEntity> dayList=null;
+			Date date = DateUtils.getOffsetDate(fromDate, i);
+			// 1、CarCare
+			hql = "from CarCare where driver.id=? and TO_DAYS(?)=TO_DAYS(date)";
+			entity = (BaseEntity) getSession().createQuery(hql)
+					.setParameter(0, driver.getId()).setParameter(1, date)
+					.uniqueResult();
+			if(entity!=null){
+				dayList=new ArrayList<BaseEntity>();
+				dayList.add(entity);
+				entity=null;
+			}
+			
+			// 2、CarRepair
+			hql = "from CarRepair where driver.id=? and TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(toDate)";
+			entity = (BaseEntity) getSession().createQuery(hql)
+					.setParameter(0, driver.getId()).setParameter(1, date)
+					.setParameter(2, date).uniqueResult();
+			if (entity != null) {
+				if(dayList==null)
+					dayList=new ArrayList<BaseEntity>();
+				dayList.add(entity);
+				entity=null;
+			}
+			
+			// 3、CarExam
+			hql = "from CarExamine where driver.id=? and TO_DAYS(?)=TO_DAYS(date)";
+			entity = (BaseEntity) getSession().createQuery(hql)
+					.setParameter(0, driver.getId()).setParameter(1, date)
+					.uniqueResult();
+			if (entity != null) {
+				if(dayList==null)
+					dayList=new ArrayList<BaseEntity>();
+				dayList.add(entity);
+				entity=null;
+			}
+			
+			// 4、Order 预订用车或者实际在用车都算
+			hql = "from order_ as o where o.status<>? and o.driver=? and (((o.chargeMode=? or o.chargeMode=?) and TO_DAYS(o.planBeginDate)=TO_DAYS(?)) or ((o.chargeMode=? or o.chargeMode=?) and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate)))";
+			List<BaseEntity> orderList = (List<BaseEntity>) getSession().createQuery(hql)
+					.setParameter(0, OrderStatusEnum.CANCELLED).setParameter(1, driver)
+					.setParameter(2, ChargeModeEnum.MILE).setParameter(3, ChargeModeEnum.PLANE).setParameter(4, date)
+					.setParameter(5, ChargeModeEnum.DAY).setParameter(6, ChargeModeEnum.PROTOCOL).setParameter(7, date)
+					.setParameter(8, date).list();
+			if(orderList!=null && orderList.size()>0){
+				if(dayList==null)
+					dayList=new ArrayList<BaseEntity>();
+				dayList.addAll(orderList);
+			}
+			
+			list.add(dayList);
+		}
+		return list;
+    }
 
 	/**
 	 * @see com.yuqincar.dao.order.OrderDao#canScheduleOrder(com.yuqincar.domain.order.Order)
@@ -153,12 +216,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			return carStatus;
 		}
 		
-		String prefix=null;
-		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL &&(order.getCar()==null || order.getDriver()==null)){
-			prefix="W";
-		}else{
-			prefix="YQ";
-		}
 		if(scheduleMode==OrderService.SCHEDULE_FROM_NEW){
 			dealSN(order,null);
 			order.setCar(car);
@@ -687,7 +744,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				String yearMonth = (yy.length() < 2 ? "0" + yy : yy)
 						+ (mm.length() < 2 ? "0" + mm : mm);
 				// 通过createTime判断,降序排列
-				String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by sn*1 desc";
+				String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by id desc";
 				Query query = getSession().createQuery(sql).setParameter(0,new Date());
 				List list = query.list();
 				if (list.size() == 0) {

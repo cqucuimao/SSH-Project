@@ -46,6 +46,7 @@ import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.DriverLicense;
+import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.monitor.Device;
 import com.yuqincar.domain.order.ChargeModeEnum;
@@ -377,7 +378,6 @@ public class InitTestData {
 		ci1.setToDate(DateUtils.getYMD("2026-01-20"));
 		ci1.setInsureCompany("平安保险");
 		ci1.setPolicyNumber("1111111");
-		ci1.setInsureType("商业保险");
 		ci1.setMoney(new BigDecimal(10));
 		carInsuranceDao.save(ci1);
 		
@@ -388,7 +388,6 @@ public class InitTestData {
 		ci2.setToDate(DateUtils.getYMD("2026-02-21"));
 		ci2.setInsureCompany("平安保险1");
 		ci2.setPolicyNumber("2222222");
-		ci2.setInsureType("商业保险1");
 		ci2.setMoney(new BigDecimal(110));
 		carInsuranceDao.save(ci2);
 		
@@ -399,7 +398,6 @@ public class InitTestData {
 		ci3.setToDate(DateUtils.getYMD("2026-03-22"));
 		ci3.setInsureCompany("平安保险2");
 		ci3.setPolicyNumber("3333333");
-		ci3.setInsureType("商业保险2");
 		ci3.setMoney(new BigDecimal(170));
 		carInsuranceDao.save(ci3);
 		
@@ -410,7 +408,6 @@ public class InitTestData {
 		ci4.setToDate(DateUtils.getYMD("2026-04-23"));
 		ci4.setInsureCompany("平安保险3");
 		ci4.setPolicyNumber("4444444");
-		ci4.setInsureType("商业保险3");
 		ci4.setMoney(new BigDecimal(210));
 		carInsuranceDao.save(ci4);
 		
@@ -421,7 +418,6 @@ public class InitTestData {
 		ci5.setToDate(DateUtils.getYMD("2026-05-24"));
 		ci5.setInsureCompany("平安保险4");
 		ci5.setPolicyNumber("5555555");
-		ci5.setInsureType("商业保险4");
 		ci5.setMoney(new BigDecimal(90));
 		carInsuranceDao.save(ci5);
 	}
@@ -1071,6 +1067,9 @@ public class InitTestData {
 		car1.setNextExaminateDate(DateUtils.getYMD("2018-01-20"));
 		car1.setStatus(CarStatusEnum.NORMAL);
 		car1.setStandbyCar(false);
+		car1.setEnrollDate(new Date());
+		car1.setPlateType(PlateTypeEnum.BLUE);
+		car1.setSeatNumber(5);
 		carDao.save(car1);
 
 		Car car2 = new Car();
@@ -1091,6 +1090,9 @@ public class InitTestData {
 		car2.setNextExaminateDate(DateUtils.getYMD("2018-02-20"));
 		car2.setStatus(CarStatusEnum.NORMAL);
 		car2.setStandbyCar(false);
+		car2.setEnrollDate(new Date());
+		car2.setPlateType(PlateTypeEnum.BLUE);
+		car2.setSeatNumber(5);
 		carDao.save(car2);
 
 		Car car3 = new Car();
@@ -1111,6 +1113,9 @@ public class InitTestData {
 		car3.setNextExaminateDate(DateUtils.getYMD("2018-03-20"));
 		car3.setStatus(CarStatusEnum.NORMAL);
 		car3.setStandbyCar(false);
+		car3.setEnrollDate(new Date());
+		car3.setPlateType(PlateTypeEnum.BLUE);
+		car3.setSeatNumber(5);
 		carDao.save(car3);
 
 		Car car4 = new Car();
@@ -1131,6 +1136,9 @@ public class InitTestData {
 		car4.setNextExaminateDate(DateUtils.getYMD("2018-04-20"));
 		car4.setStatus(CarStatusEnum.NORMAL);
 		car4.setStandbyCar(false);
+		car4.setEnrollDate(new Date());
+		car4.setPlateType(PlateTypeEnum.BLUE);
+		car4.setSeatNumber(5);
 		carDao.save(car4);
 
 		Car car5 = new Car();
@@ -1150,6 +1158,9 @@ public class InitTestData {
 		car5.setNextExaminateDate(DateUtils.getYMD("2018-05-20"));
 		car5.setStatus(CarStatusEnum.NORMAL);
 		car5.setStandbyCar(true);
+		car5.setEnrollDate(new Date());
+		car5.setPlateType(PlateTypeEnum.BLUE);
+		car5.setSeatNumber(5);
 		carDao.save(car5);
 
 		Car car6 = new Car();
@@ -1170,6 +1181,9 @@ public class InitTestData {
 		car6.setNextExaminateDate(DateUtils.getYMD("2018-06-20"));
 		car6.setStatus(CarStatusEnum.NORMAL);
 		car6.setStandbyCar(false);
+		car6.setEnrollDate(new Date());
+		car6.setPlateType(PlateTypeEnum.BLUE);
+		car6.setSeatNumber(5);
 		carDao.save(car6);
 
 		Car car7 = new Car();
@@ -1190,6 +1204,9 @@ public class InitTestData {
 		car7.setNextExaminateDate(DateUtils.getYMD("2018-07-20"));
 		car7.setStatus(CarStatusEnum.NORMAL);
 		car7.setStandbyCar(false);
+		car7.setEnrollDate(new Date());
+		car7.setPlateType(PlateTypeEnum.BLUE);
+		car7.setSeatNumber(5);
 		carDao.save(car7);
 
 		Car car8 = new Car();
@@ -1210,6 +1227,9 @@ public class InitTestData {
 		car8.setNextExaminateDate(DateUtils.getYMD("2018-08-20"));
 		car8.setStatus(CarStatusEnum.NORMAL);
 		car8.setStandbyCar(false);
+		car8.setEnrollDate(new Date());
+		car8.setPlateType(PlateTypeEnum.BLUE);
+		car8.setSeatNumber(5);
 		carDao.save(car8);
 
 		Car car9 = new Car();
@@ -1230,6 +1250,9 @@ public class InitTestData {
 		car9.setNextExaminateDate(DateUtils.getYMD("2018-09-20"));
 		car9.setStatus(CarStatusEnum.SCRAPPED);// 这辆车是报废了的。
 		car9.setStandbyCar(false);
+		car9.setEnrollDate(new Date());
+		car9.setPlateType(PlateTypeEnum.BLUE);
+		car9.setSeatNumber(5);
 		carDao.save(car9);
 	}
 

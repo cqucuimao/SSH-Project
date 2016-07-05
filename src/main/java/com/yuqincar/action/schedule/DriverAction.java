@@ -114,11 +114,6 @@ public class DriverAction extends BaseAction {
         PageBean<LinkedHashMap<Car, LinkedHashMap<String, Integer>>> pageBean = new PageBean<LinkedHashMap<Car, LinkedHashMap<String, Integer>>>(
             pageNum, 10, carStatus.size(), carStatus);
         ActionContext.getContext().getValueStack().push(pageBean);
-    	System.out.println("driverId="+driverId);
-    	System.out.println("plateNumber="+plateNumber);
-    	System.out.println("servicePointId="+servicePointId);
-    	System.out.println("beginDate="+beginDate);
-    	System.out.println("endDate="+endDate);
     	driverId=0;
     	plateNumber=null;
     	servicePointId=0;
@@ -183,5 +178,41 @@ public class DriverAction extends BaseAction {
 		this.customerOrganizationName = customerOrganizationName;
 	}
     
-    
+    class LineTitleVO{
+    	private String type;//如果是查车，type="car";如果是查人，type="driver"
+    	private long id;
+    	private String driverName;
+    	private String plateNumber;
+    	private String phone;
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+		public long getId() {
+			return id;
+		}
+		public void setId(long id) {
+			this.id = id;
+		}
+		public String getDriverName() {
+			return driverName;
+		}
+		public void setDriverName(String driverName) {
+			this.driverName = driverName;
+		}
+		public String getPlateNumber() {
+			return plateNumber;
+		}
+		public void setPlateNumber(String plateNumber) {
+			this.plateNumber = plateNumber;
+		}
+		public String getPhone() {
+			return phone;
+		}
+		public void setPhone(String phone) {
+			this.phone = phone;
+		}    	
+    }
 }

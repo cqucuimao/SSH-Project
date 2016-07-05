@@ -72,6 +72,8 @@ public interface OrderService extends BaseService {
 	 * @throws Exception
 	 */
 	public List<List<BaseEntity>> getCarTask(Car car, Date fromDate, Date toDate);
+	
+	public List<List<BaseEntity>> getDriverTask(User driver, Date fromDate, Date toDate);
 
 	/**
 	 * 是否可以调度。用于在订单列表中判断是否可以显示“调度”按钮。

@@ -145,6 +145,10 @@ public class OrderServiceImpl implements OrderService {
 	public List<List<BaseEntity>> getCarTask(Car car, Date fromDate, Date toDate) {
 		return orderDao.getCarTask(car, fromDate, toDate);
 	}
+	
+	public List<List<BaseEntity>> getDriverTask(User driver, Date fromDate, Date toDate) {
+		return orderDao.getDriverTask(driver, fromDate, toDate);
+	}
 
 	public boolean canScheduleOrder(Order order) {
 		return order.getStatus()==OrderStatusEnum.INQUEUE;

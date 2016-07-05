@@ -34,7 +34,7 @@
 					</td>
 					<th>车牌号</th>
 					<td>
-						<s:textfield id="car_platenumber" class="inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" />
+						<s:textfield id="car_platenumber" class="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text"/>
 					</td>
 					<th>时间</th>
 					<td>
@@ -66,14 +66,12 @@
 						<col></col>
 						<col></col>
 						<col></col>
-						<col></col>
 					</colgroup>
 					<thead>
 						<tr>
 							<th>姓名</th>
 							<th>车牌</th>
 							<th>联系方式</th>
-							<th>驻车点</th>	
 							<c:set var="flag" value="0"></c:set>
 							<c:forEach items="${recordList}" var="temp">							
   								<c:forEach items="${temp}" var="map">  
@@ -93,8 +91,7 @@
   								<c:forEach items="${temp}" var="map">  
   									<td>${map.key.driver.name}</td>
 									<td>${map.key.plateNumber}</td>
-									<td>${map.key.driver.phoneNumber}</td>
-									<td>${map.key.servicePoint.name}</td>								
+									<td>${map.key.driver.phoneNumber}</td>								
   									<c:forEach items="${map.value}" var="mapValue">  										
   										<c:if test="${mapValue.value==0}">
   											<td><i class="icon-car maintenance"></i>保养中</td>
@@ -106,9 +103,8 @@
   											<td><i class="icon-car check"></i>年审中</td>
   										</c:if>
   										<c:if test="${mapValue.value==3}">  																										
-  											<td><a href="#"><i class="icon-car"></i>任务中</a>
-  											<input type="hidden" id="carId"  value="${map.key.id}"/>
-  											<input type="hidden" id="orderDate"  value="${mapValue.key}"/>
+  											<td>
+  												<a href="#" onclick="taskClick(${map.key.id},'${mapValue.key}')"><i class="icon-car"></i>任务中</a>
   											</td>
   										</c:if>
   										<c:if test="${mapValue.value==4}">
@@ -133,13 +129,9 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>	
 	<script type="text/javascript">
-		$(function(){			
-			$(".icon-car").not(".gray").closest("a").click(function(){
-				var carId=$("#carId").val();
-				var orderDate=$("#orderDate").val();
-				popup("订单详情","order_info.action?carId="+carId+"&orderDate="+orderDate,650,500,"orderDetail");
-			});
-		})
+		function taskClick(carId,orderDate){
+			popup("订单详情","order_info.action?carId="+carId+"&orderDate="+orderDate,650,500,"orderDetail");
+		}
 	</script>
 </body>
 </html>

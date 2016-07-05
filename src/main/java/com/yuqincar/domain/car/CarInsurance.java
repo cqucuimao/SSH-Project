@@ -49,9 +49,29 @@ public class CarInsurance extends BaseEntity {
 	@Column(nullable=false)
 	private BigDecimal compulsoryMoney;
 	
-	@Text("车船税")
+	@Text("交强险生效日期")
 	@Column(nullable=false)
-	private BigDecimal vehicleTax;
+	private Date compulsoryBeginDate;
+	
+	@Text("交强险截至日期")
+	@Column(nullable=false)
+	private Date compulsoryEndDate;
+	
+	@Text("交强险承保金额")
+	@Column(nullable=false)
+	private BigDecimal compulsoryCoverageMoney;
+	
+	@Text("车船税金额")
+	@Column(nullable=false)
+	private BigDecimal vehicleTaxMoney;
+	
+	@Text("车船税生效日期")
+	@Column(nullable=false)
+	private Date vehicleTaxBeginDate;
+	
+	@Text("车船税截至日期")
+	@Column(nullable=false)
+	private Date vehicleTaxEndDate;
 	
 	@Text("商业保险")
 	@OneToMany(mappedBy="insurance")
@@ -118,17 +138,47 @@ public class CarInsurance extends BaseEntity {
 	public void setCompulsoryMoney(BigDecimal compulsoryMoney) {
 		this.compulsoryMoney = compulsoryMoney;
 	}
-	public BigDecimal getVehicleTax() {
-		return vehicleTax;
-	}
-	public void setVehicleTax(BigDecimal vehicleTax) {
-		this.vehicleTax = vehicleTax;
-	}
 	public List<CommercialInsurance> getCommercialInsuranceList() {
 		return commercialInsuranceList;
 	}
 	public void setCommercialInsuranceList(
 			List<CommercialInsurance> commercialInsuranceList) {
 		this.commercialInsuranceList = commercialInsuranceList;
+	}
+	public Date getCompulsoryBeginDate() {
+		return compulsoryBeginDate;
+	}
+	public void setCompulsoryBeginDate(Date compulsoryBeginDate) {
+		this.compulsoryBeginDate = compulsoryBeginDate;
+	}
+	public Date getCompulsoryEndDate() {
+		return compulsoryEndDate;
+	}
+	public void setCompulsoryEndDate(Date compulsoryEndDate) {
+		this.compulsoryEndDate = compulsoryEndDate;
+	}
+	public BigDecimal getCompulsoryCoverageMoney() {
+		return compulsoryCoverageMoney;
+	}
+	public void setCompulsoryCoverageMoney(BigDecimal compulsoryCoverageMoney) {
+		this.compulsoryCoverageMoney = compulsoryCoverageMoney;
+	}
+	public BigDecimal getVehicleTaxMoney() {
+		return vehicleTaxMoney;
+	}
+	public void setVehicleTaxMoney(BigDecimal vehicleTaxMoney) {
+		this.vehicleTaxMoney = vehicleTaxMoney;
+	}
+	public Date getVehicleTaxBeginDate() {
+		return vehicleTaxBeginDate;
+	}
+	public void setVehicleTaxBeginDate(Date vehicleTaxBeginDate) {
+		this.vehicleTaxBeginDate = vehicleTaxBeginDate;
+	}
+	public Date getVehicleTaxEndDate() {
+		return vehicleTaxEndDate;
+	}
+	public void setVehicleTaxEndDate(Date vehicleTaxEndDate) {
+		this.vehicleTaxEndDate = vehicleTaxEndDate;
 	}	
 }

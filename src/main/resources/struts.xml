@@ -148,10 +148,8 @@
 			</result>
 			<result name="saveAppoint">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp
 			</result>
-			<!-- 
-			<result name="input">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp
-			</result>
-			 -->
+			<!-- <result name="input">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp 
+				</result> -->
 			<result name="remindList">/WEB-INF/view/carAction/carCareAction/carCare_checkRemind.jsp
 			</result>
 			<result name="carCareDetail">/WEB-INF/view/carAction/carCareAction/carCare_detail.jsp
@@ -181,10 +179,8 @@
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carRepairAction/carRepair_saveUI.jsp
 			</result>
-			<!-- 
-			<result name="input">/WEB-INF/view/carAction/carRepairAction/carRepair_saveUI.jsp
-			</result>
-			 -->
+			<!-- <result name="input">/WEB-INF/view/carAction/carRepairAction/carRepair_saveUI.jsp 
+				</result> -->
 			<result name="saveAppoint">/WEB-INF/view/carAction/carRepairAction/carRepair_saveAppoint.jsp
 			</result>
 			<result name="carRepairDetail">/WEB-INF/view/carAction/carRepairAction/carRepair_detail.jsp
@@ -209,10 +205,8 @@
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carExamineAction/carExamine_saveUI.jsp
 			</result>
-			<!-- 
-			<result name="input">/WEB-INF/view/carAction/carExamineAction/carExamine_saveUI.jsp
-			</result>
-			 -->
+			<!-- <result name="input">/WEB-INF/view/carAction/carExamineAction/carExamine_saveUI.jsp 
+				</result> -->
 			<result name="saveAppoint">/WEB-INF/view/carAction/carExamineAction/carExamine_saveAppoint.jsp
 			</result>
 			<result name="remindList">/WEB-INF/view/carAction/carExamineAction/carExamine_checkRemind.jsp
@@ -221,18 +215,41 @@
 			</result>
 			<result name="toList" type="redirectAction">carExamine_list</result>
 		</action>
-		
+
 		<!-- 路桥费 -->
 		<action name="tollCharge_*" class="tollChargeAction" method="{1}">
-			<result name="list">/WEB-INF/view/carAction/tollChargeAction/tollCharge_list.jsp</result>
-			<result name="saveUI">/WEB-INF/view/carAction/tollChargeAction/tollCharge_saveUI.jsp</result>
-			<result name="remind">/WEB-INF/view/carAction/tollChargeAction/tollCharge_remind.jsp</result>
+			<result name="list">/WEB-INF/view/carAction/tollChargeAction/tollCharge_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/tollChargeAction/tollCharge_saveUI.jsp
+			</result>
+			<result name="remind">/WEB-INF/view/carAction/tollChargeAction/tollCharge_remind.jsp
+			</result>
+		</action>
+
+		<!-- 物品领用 -->
+		<action name="materialReceive_*" class="materialReceiveAction"
+			method="{1}">
+			<result name="list">/WEB-INF/view/carAction/materialReceiveAction/materialReceive_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/materialReceiveAction/materialReceive_saveUI.jsp
+			</result>
+		</action>
+
+		<!-- 洗车登记 -->
+		<action name="carWash_*" class="carWashAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carWashAction/CarWash_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carWashAction/CarWash_saveUI.jsp
+			</result>
 		</action>
 		
-		<!-- 物品领用 -->
-		<action name="materialReceive_*" class="materialReceiveAction" method="{1}">
-			<result name="list">/WEB-INF/view/carAction/materialReceiveAction/materialReceive_list.jsp</result>
-			<result name="saveUI">/WEB-INF/view/carAction/materialReceiveAction/materialReceive_saveUI.jsp</result>
+		<!-- 洗车点 -->
+		<action name="carWashShop_*" class="carWashShopAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carWashAction/washShop_list.jsp
+			</result>
+			<result name="SaveUI">/WEB-INF/view/carAction/carWashAction/washShop_saveUI.jsp
+			</result>
+			<result name="toList" type="redirectAction">carWashShop_list</result>
 		</action>
 
 		<!-- 车辆实时监控管理 -->
@@ -267,10 +284,10 @@
 			<result name="list">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_list.jsp
 			</result>
 			<result name="saveUI">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_saveUI.jsp
-			</result>			
+			</result>
 			<result name="managerUI">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_managerUI.jsp
 			</result>
-			<result name="toList" type="redirectAction">customerOrganization_list</result>			
+			<result name="toList" type="redirectAction">customerOrganization_list</result>
 			<result name="popup">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_popup.jsp
 			</result>
 		</action>
@@ -326,7 +343,7 @@
 			<result name="query">/WEB-INF/view/queryStatisticsAction/repairStatisticAction/repairStatistic_queryList.jsp
 			</result>
 		</action>
-		
+
 		<!-- 已完成订单统计记录 -->
 		<action name="completedOrderStatistic_*" class="completedOrderStatisticAction"
 			method="{1}">
@@ -339,7 +356,7 @@
 			<result name="query">/WEB-INF/view/queryStatisticsAction/completedOrderStatisticAction/completedOrderStatistic_queryList.jsp
 			</result>
 		</action>
-		
+
 		<!-- 已收款对账单统计记录 -->
 		<action name="accountsReceivableStatistic_*" class="accountsReceivableStatisticAction"
 			method="{1}">
@@ -352,7 +369,7 @@
 			<result name="query">/WEB-INF/view/queryStatisticsAction/accountsReceivableStatisticAction/accountsReceivableStatistic_queryList.jsp
 			</result>
 		</action>
-		
+
 		<!-- GPS设备API -->
 		<action name="api" class="apiAction" method="api">
 		</action>
@@ -374,18 +391,21 @@
 			</result>
 			<result name="queue">/WEB-INF/view/scheduleAction/schedule_queue.jsp
 			</result>
-			<result name="toQueue"  type="redirectAction">schedule_queue
+			<result name="toQueue" type="redirectAction">schedule_queue
 			</result>
 			<result name="map">/WEB-INF/view/addressComponmentAction/map.jsp
 			</result>
 			<result name="historyAddress">/WEB-INF/view/addressComponmentAction/historyAddress.jsp
 			</result>
 			<result name="success">/WEB-INF/view/scheduleAction/success.jsp</result>
-			<result name="deprived">/WEB-INF/view/scheduleAction/schedule_deprived.jsp</result>
+			<result name="deprived">/WEB-INF/view/scheduleAction/schedule_deprived.jsp
+			</result>
 			<result name="input">/WEB-INF/view/scheduleAction/schedule_scheduling.jsp
 			</result>
-			<result name="orderView" type="redirectAction">order_view?orderId=${scheduleFromUpdateOrderId}</result>
-			<result name="watchKeeper">/WEB-INF/view/scheduleAction/schedule_watchKeeper.jsp</result>
+			<result name="orderView" type="redirectAction">order_view?orderId=${scheduleFromUpdateOrderId}
+			</result>
+			<result name="watchKeeper">/WEB-INF/view/scheduleAction/schedule_watchKeeper.jsp
+			</result>
 		</action>
 
 		<!-- 订单管理功能 -->
@@ -419,23 +439,30 @@
 		</action>
 
 		<!-- 未收款订单管理 -->
-	     <action name="unpaidOrder_*" class="unpaidOrderAction" method="{1}">
-	    	<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
-	    	<result name="list">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
-	     </action>
-	     <!-- 对账单管理 -->
-	     <action name="orderStatement_*" class="orderStatementAction" method="{1}">
-	    	<result name="home">/WEB-INF/view/receiptAction/orderStatement.jsp</result>
-	    	<result name="list">/WEB-INF/view/receiptAction/orderStatement.jsp</result>
-	    	<result name="paidList">/WEB-INF/view/receiptAction/paidOrderStatement.jsp</result>
-	    	<result name="info">/WEB-INF/view/receiptAction/orderStatementInfo.jsp</result>
-	    	<result name="success" type="stream">
-                <param name="contentType">application/pdf; charset=gb2312</param>
-                <param name="inputName">pdfStream</param>
-                <param name="contentDisposition">attachment;filename="${fileName}"</param>
-                <param name="bufferSize">2048</param>
-            </result>
-	     </action>
+		<action name="unpaidOrder_*" class="unpaidOrderAction" method="{1}">
+			<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp
+			</result>
+			<result name="list">/WEB-INF/view/receiptAction/unpaidOrder.jsp
+			</result>
+		</action>
+		<!-- 对账单管理 -->
+		<action name="orderStatement_*" class="orderStatementAction"
+			method="{1}">
+			<result name="home">/WEB-INF/view/receiptAction/orderStatement.jsp
+			</result>
+			<result name="list">/WEB-INF/view/receiptAction/orderStatement.jsp
+			</result>
+			<result name="paidList">/WEB-INF/view/receiptAction/paidOrderStatement.jsp
+			</result>
+			<result name="info">/WEB-INF/view/receiptAction/orderStatementInfo.jsp
+			</result>
+			<result name="success" type="stream">
+				<param name="contentType">application/pdf; charset=gb2312</param>
+				<param name="inputName">pdfStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">2048</param>
+			</result>
+		</action>
 
 		<!-- 司机任务管理功能 -->
 		<action name="driver_*" class="driverAction" method="{1}">
@@ -454,7 +481,7 @@
 				</interceptor-ref>
 			</interceptor-stack>
 		</interceptors>
-		
+
 		<default-interceptor-ref name="defaultStackWithLogEnabled" />
 
 		<action name="user_*" class="appUserAction" method="{1}"></action>
@@ -487,9 +514,10 @@
 			</result>
 		</action>
 	</package>
-	
+
 	<!-- 给OrderApp使用 -->
-	<package name="orderAppPackage" extends="struts-default" namespace="/orderapp">
+	<package name="orderAppPackage" extends="struts-default"
+		namespace="/orderapp">
 		<interceptors>
 			<interceptor-stack name="defaultStackWithLogEnabled">
 				<interceptor-ref name="defaultStack">
@@ -498,16 +526,17 @@
 				</interceptor-ref>
 			</interceptor-stack>
 		</interceptors>
-		
+
 		<default-interceptor-ref name="defaultStackWithLogEnabled" />
 
 		<action name="OrderApp_*" class="orderAppAction" method="{1}"></action>
 		<action name="user_*" class="appUserAction" method="{1}"></action>
 	</package>
-	
-	
+
+
 	<!-- 给ScheduleApp使用 -->
-	<package name="scheduleAppPackage" extends="struts-default" namespace="/scheduleapp">
+	<package name="scheduleAppPackage" extends="struts-default"
+		namespace="/scheduleapp">
 		<interceptors>
 			<interceptor-stack name="defaultStackWithLogEnabled">
 				<interceptor-ref name="defaultStack">
@@ -516,7 +545,7 @@
 				</interceptor-ref>
 			</interceptor-stack>
 		</interceptors>
-		
+
 		<default-interceptor-ref name="defaultStackWithLogEnabled" />
 
 		<action name="ScheduleApp_*" class="scheduleAppAction" method="{1}"></action>

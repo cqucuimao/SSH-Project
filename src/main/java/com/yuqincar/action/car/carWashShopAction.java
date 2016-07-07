@@ -29,7 +29,7 @@ import com.yuqincar.service.car.CarWashService;
 	    
    }
    public String delete() throws Exception {
-	    System.out.println("id="+model.getId());
+	    System.out.println("ids="+model.getId());
 	    carWashService.deleteCarWashShop(model.getId());
 	    
 	    return "toList";
@@ -69,6 +69,5 @@ import com.yuqincar.service.car.CarWashService;
 
   public CarWashShop getModel() {
 		return model;
-	}
-
+  }
 }

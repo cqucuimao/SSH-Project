@@ -27,7 +27,6 @@ public class OrderStatement extends BaseEntity {
 	
 	@Text("客户单位")
 	@OneToOne
-	@Column(nullable=false)
 	private CustomerOrganization customerOrganization;//客户单位
 	
 	@Text("开始日期")

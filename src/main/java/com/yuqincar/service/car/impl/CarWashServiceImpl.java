@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.car.CarWashDao;
 import com.yuqincar.dao.car.CarWashShopDao;
@@ -20,6 +21,7 @@ public class CarWashServiceImpl implements CarWashService {
 	@Autowired
 	private CarWashDao carWashDao;
 	
+	@Transactional
 	public void saveCarWashShop(CarWashShop carWashShop) {
 		carWashShopDao.save(carWashShop);
 	}
@@ -28,6 +30,7 @@ public class CarWashServiceImpl implements CarWashService {
 		return carWashShopDao.canDeleteCarWashShop(id);
 	}
 
+	@Transactional
 	public void deleteCarWashShop(Long id) {
 		carWashShopDao.delete(id);
 	}
@@ -40,14 +43,17 @@ public class CarWashServiceImpl implements CarWashService {
 		return carWashShopDao.getAll();
 	}
 
+	@Transactional
 	public void saveCarWash(CarWash carWash) {
 		carWashDao.save(carWash);
 	}
 
+	@Transactional
 	public void updateCarWash(CarWash carWash) {
 		carWashDao.update(carWash);
 	}
 
+	@Transactional
 	public void deleteCarWash(Long id) {
 		carWashDao.delete(id);
 	}

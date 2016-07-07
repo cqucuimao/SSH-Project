@@ -1,5 +1,7 @@
 package com.yuqincar.action.car;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarInsurance;
+import com.yuqincar.domain.car.CommercialInsurance;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.service.car.CarInsuranceService;
 import com.yuqincar.service.car.CarService;
@@ -26,6 +29,8 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	@Autowired
 	private CarService carService;
+	
+	private Long commercialInsuranceTypeId;
 	
 	/** 列表 */
 	public String list() throws Exception {
@@ -46,13 +51,15 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	/** 添加页面 */
 	public String addUI() throws Exception {
+		ActionContext.getContext().put("commercialInsuranceTypeList", carInsuranceService.getAllCommercialInsuranceType());	 
+		List<CommercialInsurance> commercialInsuranceList;
 		return "saveUI";
 	}
 	
 	/** 添加 */
 	public String add() throws Exception {
 		// 保存到数据库
-		
+		  
 		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 		model.setCar(car1);
 		
@@ -117,5 +124,15 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
 		}
 	}
+
+	public long getCommercialInsuranceTypeId() {
+		return commercialInsuranceTypeId;
+	}
+
+	public void setCommercialInsuranceTypeId(long commercialInsuranceTypeId) {
+		this.commercialInsuranceTypeId = commercialInsuranceTypeId;
+	}
+	
+	
 
 }

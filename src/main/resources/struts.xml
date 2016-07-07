@@ -170,9 +170,20 @@
 			</result>
 			<result name="carInsuranceDetail">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_detail.jsp
 			</result>
+			<result name="typeList">/WEB-INF/view/carAction/carInsuranceAction/carInsuranceType_list.jsp
+			</result>
+			<result name="typeSaveUI">/WEB-INF/view/carAction/carInsuranceAction/carInsuranceType_saveUI.jsp
+			</result>
 			<result name="toList" type="redirectAction">carInsurance_list</result>
 		</action>
-
+		<!-- 商业保险类型 -->
+		<action name="commercialInsuranceType_*" class="commercialInsuranceTypeAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carInsuranceAction/commercialInsuranceType_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carInsuranceAction/commercialInsuranceType_saveUI.jsp
+			</result>
+			<result name="toList" type="redirectAction">commercialInsuranceType_list</result>
+		</action>
 		<!-- 车辆维修管理 -->
 		<action name="carRepair_*" class="carRepairAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carRepairAction/carRepair_list.jsp

@@ -23,42 +23,18 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-					<td><s:a action="orderStatement_list"><span>未收款对账单列表</span></s:a></td>
-				    <td class="on"><a href="#"><span>已收款对账单列表</span></a></td>
+					<td class="on"><a href="#"><span>新建对账单列表</span></a></td>
+				    <td><s:a action="orderStatement_invoicedList"><span>已开票对账单列表</span></s:a></td>
+				    <td><s:a action="orderStatement_paidList"><span>已收款对账单列表</span></s:a></td>
 				</tr>
 			</table>
 		</div>
 		<br/>
-		<div class="editBlock search">
-			<s:form id="pageForm" action="orderStatement_paidList">
-			<table>
-				<tr>
-					<th>单位名称</th>
-					<td>
-					    <s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
-					    <input id="customer_organization_id" type="hidden">
-					</td>
-					<th>对账单时间</th>
-					<td>
-						<s:textfield class="Wdate half" style="width:120px;" type="text" name="fromDate" id="startTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" >
-						  <s:param name="value"><s:date name="fromDate" format="yyyy-MM-dd"/></s:param>
-						</s:textfield>
-						- 
-						<s:textfield class="Wdate half" style="width:120px;" type="text" name="toDate" id="endTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" >
-						  <s:param name="value"><s:date name="toDate" format="yyyy-MM-dd"/></s:param>
-						</s:textfield>
-                    </td>
-                    <td>
-						<input class="inputButton" type="submit" value="查询" />
-					</td>
-                </tr>
-			</table>
-			</s:form>
-		</div>
 		<div class="dataGrid">
 			<div class="tableWrap">
 				<table>
 					<colgroup>
+						<col></col>
 						<col></col>
 						<col></col>
 						<col></col>
@@ -74,30 +50,32 @@
 							<th>订单数</th>
 							<th>金额(元)</th>
 							<th>生成日期</th>
+							<th>状态</th>
+							<th>操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover" id="htcList">
-					<s:iterator value="recordList">
+					<s:iterator value="orderStatementList">
 					<tr>
-					    <td>${name}</td>
+					    <td><s:a action="orderStatement_newDetail?orderStatementId=%{id}">${name}</s:a></td>
                 		<td>${customerOrganization.name}</td>
 						<td><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 						<td>${orderNum}</td>
 						<td><fmt:formatNumber value="${totalMoney}" pattern="#.0"/></td>
 						<td><s:date name="date" format="yyyy-MM-dd"/></td>
+						<td>${status.label}</td>
+						<td><s:a action="orderStatement_generatePDF?id=%{id}"><i class="icon-operate-print" title="导出"></i></s:a></td>
 					</tr>
 					</s:iterator> 
 					</tbody>
 				</table>
 			</div>
 	   </div>
-	   <%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 	</div>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-    <script type="text/javascript" src="js/artDialog4.1.7/jquery.artDialog.source.js"></script>
-    <script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
 	</script>

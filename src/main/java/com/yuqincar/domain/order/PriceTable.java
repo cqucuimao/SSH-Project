@@ -15,6 +15,7 @@ import com.yuqincar.utils.Text;
 
 @Entity
 public class PriceTable extends BaseEntity {
+	@Text("名称")
 	private String title;
 	
 	@Text("客户单位")

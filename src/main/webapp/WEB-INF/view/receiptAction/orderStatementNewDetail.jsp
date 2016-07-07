@@ -17,17 +17,16 @@
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
-			<h1>对账单信息</h1>
+			<h1>新建对账单信息</h1>
 			<p>&nbsp;&nbsp;</p>
 		</div>
 		<div>
 		    <input type="button" class="inputButton" id="excludeOrder" value="排除订单" />
-		    <input type="button" class="inputButton" id="confirmReceipt" value="确认收款" />
+		    <input type="button" class="inputButton" id="invoice" value="开票" />
 		    <input type="button" class="inputButton" id="cancelOrderStatement" value="取消对账单" />
 		</div>
 		<br/>
 		<div>
-		<s:hidden id="orderStatementNameId" name="orderStatementName"/>
 		</div>
 		<div id="totalMoneyDiv" style="display:none;text-align:right;">
 		      <span style="color:red;font-size:18px;">总金额: </span>
@@ -69,11 +68,7 @@
 						    <td><input type="checkbox" id="${id}" class="checkboxItems"/></td>
 							<td>${customerOrganization.name}</td>
 							<td>${customer.name}</td>
-                			<td>
-                			    <s:if test="chargeMode.toString()==@com.yuqincar.domain.order.ChargeModeEnum@MILE.toString()">按行驶里程收费</s:if>
-                                <s:elseif test="chargeMode.toString()==@com.yuqincar.domain.order.ChargeModeEnum@DAY.toString()">日租</s:elseif>
-                                <s:else>协议价</s:else>
-                			</td>
+                			<td>${status.label}</td>
 							<td>${carServiceType.title}</td>
 							<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
 							<td>${fromAddress}-${fromAddress}</td>
@@ -164,16 +159,9 @@
 	    	 }
 	      });  
 	     
-	     $("#confirmReceipt").bind("click",function(){
-	    	 if(confirm("确定收款？此操作将标记该对账单中所有的订单状态为已收款。")){
-	    		 var orderStatementName=$("#orderStatementNameId").val();
-			    	$.get("orderStatement_confirmReceipt.action?orderStatementName="+encodeURI(orderStatementName)+"&timestamp="+new Date().getTime(),function(json){
-			              if(json.status==1){
-			            	 window.location = "orderStatement_list.action";
-			              }
-			        });
-	    	 }
-	      });
+	     $("#invoice").click(function(){
+	            self.location.href='orderStatement_invoice.action?orderStatementId=${id}';
+	        });
 	</script>
 </body>
 </html>

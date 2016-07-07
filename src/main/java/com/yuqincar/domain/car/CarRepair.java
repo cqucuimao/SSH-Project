@@ -33,13 +33,7 @@ public class CarRepair extends BaseEntity {
 	@Text("付款日期")
 	@Column
 	private Date payDate;  //维修付款日期
-
-	public Date getPayDate() {
-		return payDate;
-	}
-	public void setPayDate(Date payDate) {
-		this.payDate = payDate;
-	}
+	
 	@Text("起始时间")
 	@Column(nullable=false)
 	private Date fromDate;	//起始时间
@@ -53,11 +47,19 @@ public class CarRepair extends BaseEntity {
 	@Text("维修地点")
 	private String repairLocation;   //维修地点
 
-	@Text("备注")
+	@Text("维修内容")
 	private String memo;	//备注
 
 	@Text("是否预约记录")
 	private boolean appointment;	//是否为预约记录
+
+
+	public Date getPayDate() {
+		return payDate;
+	}
+	public void setPayDate(Date payDate) {
+		this.payDate = payDate;
+	}
 	
 	public Car getCar() {
 		return car;

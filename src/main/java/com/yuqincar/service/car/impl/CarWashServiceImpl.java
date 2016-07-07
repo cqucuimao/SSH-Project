@@ -3,6 +3,7 @@ package com.yuqincar.service.car.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.yuqincar.dao.car.CarWashDao;
 import com.yuqincar.dao.car.CarWashShopDao;
@@ -12,6 +13,7 @@ import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.service.car.CarWashService;
 import com.yuqincar.utils.QueryHelper;
 
+@Service
 public class CarWashServiceImpl implements CarWashService {
 	@Autowired
 	private CarWashShopDao carWashShopDao;

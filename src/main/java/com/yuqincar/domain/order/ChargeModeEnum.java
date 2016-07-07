@@ -1,16 +1,57 @@
 package com.yuqincar.domain.order;
 
+import com.yuqincar.domain.car.PlateTypeEnum;
+import com.yuqincar.domain.common.BaseEnum;
 import com.yuqincar.utils.Text;
 
-public enum ChargeModeEnum {
+public enum ChargeModeEnum implements BaseEnum {
 	@Text("按里程计费")
-	MILE,	//按行驶里程收费
+	MILE(0,"按里程计费"),
+	
 	@Text("按天计费")
-	DAY,		//日租
+	DAY(0,"按天计费"),
+	
 	@Text("协议计费")
-	PROTOCOL,	//协议价
+	PROTOCOL(0,"协议计费"),
+	
 	@Text("接送机")
-	PLANE;	//接送机
+	PLANE(0,"接送机");
+	
+	private int id;
+	private String label;
+	
+	ChargeModeEnum(int id, String label) {
+		this.id = id;
+		this.label = label;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public static PlateTypeEnum[] getAllEnum() {
+		return PlateTypeEnum.values();
+	}
+
+	public static PlateTypeEnum getById(int id) {
+		for (PlateTypeEnum u : PlateTypeEnum.values()) {
+			if (u.getId() == id)
+				return u;
+		}
+		return null;
+	}
+
+	public static PlateTypeEnum getByLabel(String label) {
+		for (PlateTypeEnum u : PlateTypeEnum.values()) {
+			if (u.getLabel().equals(label))
+				return u;
+		}
+		return null;
+	}
 	
 	public static ChargeModeEnum fromString(String str){
 		if(str==null || str.length()==0)

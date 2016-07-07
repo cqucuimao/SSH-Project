@@ -440,29 +440,25 @@
 
 		<!-- 未收款订单管理 -->
 		<action name="unpaidOrder_*" class="unpaidOrderAction" method="{1}">
-			<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp
-			</result>
-			<result name="list">/WEB-INF/view/receiptAction/unpaidOrder.jsp
-			</result>
-		</action>
-		<!-- 对账单管理 -->
-		<action name="orderStatement_*" class="orderStatementAction"
-			method="{1}">
-			<result name="home">/WEB-INF/view/receiptAction/orderStatement.jsp
-			</result>
-			<result name="list">/WEB-INF/view/receiptAction/orderStatement.jsp
-			</result>
-			<result name="paidList">/WEB-INF/view/receiptAction/paidOrderStatement.jsp
-			</result>
-			<result name="info">/WEB-INF/view/receiptAction/orderStatementInfo.jsp
-			</result>
-			<result name="success" type="stream">
-				<param name="contentType">application/pdf; charset=gb2312</param>
-				<param name="inputName">pdfStream</param>
-				<param name="contentDisposition">attachment;filename="${fileName}"</param>
-				<param name="bufferSize">2048</param>
-			</result>
-		</action>
+	    	<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
+	    	<result name="list">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
+	     </action>
+	     <!-- 对账单管理 -->
+	     <action name="orderStatement_*" class="orderStatementAction" method="{1}">
+	    	<result name="newList">/WEB-INF/view/receiptAction/orderStatementNewList.jsp</result>
+	    	<result name="invoicedList">/WEB-INF/view/receiptAction/orderStatementInvoicedList.jsp</result>
+	    	<result name="paidList">/WEB-INF/view/receiptAction/orderStatementPaidList.jsp</result>
+	    	<result name="newDetail">/WEB-INF/view/receiptAction/orderStatementNewDetail.jsp</result>
+	    	<result name="invoicedDetail">/WEB-INF/view/receiptAction/orderStatementInvoicedDetail.jsp</result>
+	    	<result name="invoice">/WEB-INF/view/receiptAction/orderStatementInvoice.jsp</result>
+	    	<result name="gatherMoney">/WEB-INF/view/receiptAction/orderStatementGatherMoney.jsp</result>
+	    	<result name="success" type="stream">
+                <param name="contentType">application/pdf; charset=gb2312</param>
+                <param name="inputName">pdfStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">2048</param>
+            </result>
+	     </action>
 
 		<!-- 司机任务管理功能 -->
 		<action name="driver_*" class="driverAction" method="{1}">

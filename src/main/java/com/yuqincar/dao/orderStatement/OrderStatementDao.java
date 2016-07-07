@@ -17,13 +17,19 @@ public interface OrderStatementDao extends BaseDao<OrderStatement> {
 	OrderStatement getOrderStatementByName(String orderStatementName);
 
 	/**
-	 * 获取所有未支付的对账单列表
+	 * 获取所有状态为新建的对账单列表
 	 * @return
 	 */
-	List<OrderStatement> getAllUnpaidOrderStatement();
-
+	List<OrderStatement> getAllNewOrderStatement();
+	
 	/**
-	 * 获取所有已支付的对账单列表
+	 * 获取所有状态为已开票的对账单列表
+	 * @return
+	 */
+	List<OrderStatement> getAllInvoicedOrderStatement();
+	
+	/**
+	 * 获取所有状态为已回款的对账单列表
 	 * @return
 	 */
 	List<OrderStatement> getAllPaidOrderStatement();

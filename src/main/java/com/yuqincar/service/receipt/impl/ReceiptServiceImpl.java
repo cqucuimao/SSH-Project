@@ -10,10 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yuqincar.dao.order.OrderDao;
+import com.yuqincar.dao.orderStatement.MoneyGatherInfoDao;
 import com.yuqincar.dao.orderStatement.OrderStatementDao;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.CustomerOrganization;
+import com.yuqincar.domain.order.MoneyGatherInfo;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatement;
 import com.yuqincar.domain.order.OrderStatementStatusEnum;
@@ -32,13 +33,31 @@ public class ReceiptServiceImpl implements ReceiptService {
 	private OrderService orderService;
 	@Autowired
 	private CustomerOrganizationService customerOrgnizationService;
+	@Autowired
+	private MoneyGatherInfoDao moneyGatherInfoDao;
 	
 	/**
-	 * 查询所有对账单
+	 * 查询出所有状态为新建的对账单
 	 * @return 
 	 */
-	public List<OrderStatement> getAllOrderStatement() {
-		return orderStatementDao.getAll();
+	public List<OrderStatement> getAllNewOrderStatement(){
+		return orderStatementDao.getAllNewOrderStatement();
+	}
+	
+	/**
+	 * 查询出所有状态为已开票的对账单
+	 * @return 
+	 */
+	public List<OrderStatement> getAllInvoicedOrderStatement(){
+		return orderStatementDao.getAllInvoicedOrderStatement();
+	}
+	
+	/**
+	 * 获取所有状态为已回款的对账单列表
+	 * @return
+	 */
+	public List<OrderStatement> getAllPaidOrderStatement(){
+		return orderStatementDao.getAllPaidOrderStatement();
 	}
 	/**
 	 * 获取一条账单
@@ -53,8 +72,13 @@ public class ReceiptServiceImpl implements ReceiptService {
 	 * 保存对账单信息
 	 */
 	@Transactional
-	public void save(OrderStatement orderStatement) {
+	public void saveOrderStatement(OrderStatement orderStatement) {
 		orderStatementDao.save(orderStatement);
+	}
+	
+	@Transactional
+	public void updateOrderStatement(OrderStatement orderStatement) {
+		orderStatementDao.update(orderStatement);
 	}
 
 	/**
@@ -108,7 +132,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 		//对账单中的订单序列
 		orderStatement.setOrders(orders);
 		//设置对账单状态,新建对账单都为 UNPAYED状态
-		orderStatement.setStatus(OrderStatementStatusEnum.UNPAYED);
+		orderStatement.setStatus(OrderStatementStatusEnum.NEW);
 		//保存orderStatement对象
 		orderStatementDao.save(orderStatement);
 		//改变对应的所有订单的状态
@@ -116,14 +140,6 @@ public class ReceiptServiceImpl implements ReceiptService {
 			Order order=orders.get(i);
 			order.setOrderStatement(orderStatement);
 		}
-	}
-
-	/**
-	 * 获取所有未支付的对账单列表
-	 * @return
-	 */
-	public List<OrderStatement> getAllUnpaidOrderStatement() {
-		return orderStatementDao.getAllUnpaidOrderStatement();
 	}
 
 	/**
@@ -176,14 +192,6 @@ public class ReceiptServiceImpl implements ReceiptService {
 	}
 
 	/**
-	 * 获取所有已支付的对账单列表
-	 * @return
-	 */
-	public List<OrderStatement> getAllPaidOrderStatement() {
-		return orderStatementDao.getAllPaidOrderStatement();
-	}
-
-	/**
 	 * 分页公共类
 	 */
 	public PageBean<OrderStatement> getPageBean(int pageNum, QueryHelper helper) {
@@ -219,14 +227,14 @@ public class ReceiptServiceImpl implements ReceiptService {
 	 * @param ids
 	 */
 	@Transactional
-	public void excludeOrdersFromOrderStatement(String orderStatementName, Long[] ids) {
+	public void excludeOrdersFromOrderStatement(Long orderStatementId, Long[] ids) {
 		//查找相应的对账单
-		OrderStatement orderStatement=orderStatementDao.getOrderStatementByName(orderStatementName);
+		OrderStatement orderStatement=orderStatementDao.getById(orderStatementId);
 		List<Order> orders=orderStatement.getOrders();
 		List<Long> idList=Arrays.asList(ids);
 		//判断取消的订单数是否等于订单总数，如果等于订单总数，则删除该对账单
 		if(orders.size()==ids.length){
-		   cancelOrderStatement(orderStatementName);
+		   cancelOrderStatement(orderStatementId);
 		}else{
 		   //根据订单id修改相应订单的orderStatement状态
 		   for(Order order:orders){
@@ -273,14 +281,14 @@ public class ReceiptServiceImpl implements ReceiptService {
 		}
 	}
 
-    /**
+    /** 
 	 * 根据对账单的名称取消相应的对账单
      * 包括两个步骤:(1)重置该对账单对应的order的orderStatement为null,(2)删除该对账单
 	 * @param orderStatementName
 	 */
 	@Transactional
-	public void cancelOrderStatement(String orderStatementName) {
-	     OrderStatement orderStatement=orderStatementDao.getOrderStatementByName(orderStatementName);
+	public void cancelOrderStatement(Long orderStatementId) {
+	     OrderStatement orderStatement=orderStatementDao.getById(orderStatementId);
 	     List<Order> orders=orderStatement.getOrders();
 	     for(Order order:orders){
 	         order.setOrderStatement(null);
@@ -300,10 +308,28 @@ public class ReceiptServiceImpl implements ReceiptService {
 	     for(Order order:orders){
 	         order.setStatus(OrderStatusEnum.PAYED);
 	     }
-	     orderStatement.setStatus(OrderStatementStatusEnum.PAYED);
+	     orderStatement.setStatus(OrderStatementStatusEnum.PAID);
 	}
+	
 	public BigDecimal statisticOrderStatement(Date fromDate, Date toDate) {
 		return orderStatementDao.statisticOrderStatement(fromDate, toDate);
+	}
+	
+	@Transactional
+	public void saveMoneyGatherInfo(MoneyGatherInfo moneyGatherInfo){
+		moneyGatherInfoDao.save(moneyGatherInfo);
+		
+		OrderStatement orderStatement=moneyGatherInfo.getOrderStatement();
+		if(orderStatement.getActualTotalMoney()==null)
+			orderStatement.setActualTotalMoney(BigDecimal.ZERO);
+		orderStatement.setActualTotalMoney(orderStatement.getActualTotalMoney().add(moneyGatherInfo.getMoney()));
+		orderStatementDao.update(orderStatement);
+	}
+	
+	@Transactional	
+	public void moneyGatherComplete(OrderStatement orderStatement){
+		orderStatement.setStatus(OrderStatementStatusEnum.PAID);
+		orderStatementDao.update(orderStatement);
 	}
 	
 }

@@ -205,8 +205,10 @@ public class Installer {
 		privilegeDao.save(new Privilege("","/orderStatement_orderStatementList",unpaidOrderMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_addOrderStatement",unpaidOrderMenu));
 		
-		Privilege orderStatementMenu=new Privilege("对账单","/orderStatement_list",receiptMenu);
+		Privilege orderStatementMenu=new Privilege("对账单","/orderStatement_newList",receiptMenu);
 		privilegeDao.save(orderStatementMenu);
+		privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_invoicedList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_paidList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_info",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_generatePDF",orderStatementMenu));

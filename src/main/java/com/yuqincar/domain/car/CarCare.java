@@ -34,7 +34,7 @@ public class CarCare extends BaseEntity {
 	private int mileInterval;	//下次保养间隔里程数
 	@Text("保养花费")
 	private BigDecimal money;	//保养花费
-	@Text("备注")
+	@Text("保养内容")
 	private String memo;	//备注
 	@Text("是否预约记录")
 	private boolean appointment;	//是否为预约记录

@@ -3,13 +3,13 @@ package com.yuqincar.action.receipt;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -27,12 +27,13 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.lowagie.text.Cell;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.DayOrderDetail;
+import com.yuqincar.domain.order.MoneyGatherInfo;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatement;
 import com.yuqincar.domain.order.OrderStatementStatusEnum;
@@ -66,24 +67,56 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	private String fileName;
 	//图片流
     private ByteArrayInputStream imageStream;
-
-	public String home(){
-		return "home";
+    private Long orderStatementId;
+    private BigDecimal money;
+    private Date date;
+    private String memo;
+	
+	public String invoice(){
+		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
+		ActionContext.getContext().getValueStack().push(orderStatement);
+		return "invoice";
 	}
 	
-	/**
-	 * 对账单确认收款
-	 */
-	public void confirmReceipt(){
-		receiptService.confirmReceipt(orderStatementName);
-		this.writeJson("{\"status\":\"1\"}");
+	public String invoiceDo(){
+		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
+		orderStatement.setInvoiceNumber(model.getInvoiceNumber());
+		orderStatement.setInvoiceMoney(model.getInvoiceMoney());
+		orderStatement.setInvoiceDate(model.getInvoiceDate());
+		orderStatement.setStatus(OrderStatementStatusEnum.INVOICED);
+		receiptService.updateOrderStatement(orderStatement);
+		
+		return newList();
+	}
+	
+	public String gatherMoney(){
+		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
+		ActionContext.getContext().getValueStack().push(orderStatement);
+		return "gatherMoney";
+	}
+	
+	public String gatherMoneyDo(){
+		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
+		MoneyGatherInfo mgi=new MoneyGatherInfo();
+		mgi.setOrderStatement(orderStatement);
+		mgi.setMoney(money);
+		mgi.setDate(date);
+		mgi.setMemo(memo);
+		receiptService.saveMoneyGatherInfo(mgi);
+		return gatherMoney();
+	}
+	
+	public String gatherComplete(){
+		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
+		receiptService.moneyGatherComplete(orderStatement);
+		return invoicedDetail();
 	}
 	
 	/**
 	 * 取消对账单
 	 */
 	public void cancelOrderStatement(){
-		receiptService.cancelOrderStatement(orderStatementName);
+		receiptService.cancelOrderStatement(orderStatementId);
 		this.writeJson("{\"status\":\"1\"}");
 	}
 	
@@ -91,23 +124,25 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	 * 对账单具体信息及相应操作页面
 	 * @return
 	 */
-	public String info(){
-		
-		OrderStatement orderStatement=receiptService.getOrderStatementByName(orderStatementName);
+	public String newDetail(){		
+		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
 		//排除订单后，该对账单已经被删除，所以为null
 		if(orderStatement!=null){
 		   List<Order> orderList=orderStatement.getOrders();
 		   ActionContext.getContext().put("orderList", orderList);
-		   orderStatementName=orderStatement.getName();
-		   return "info";
+		   ActionContext.getContext().put("orderStatement", orderStatement);
+		   return "newDetail";
 		}else{
-			//如果该对账单中所有订单偷别排除，则该对账单被取消，返回到对账单列表页面
-			List<OrderStatement> orderStatementList=receiptService.getAllOrderStatement();
-			ActionContext.getContext().put("orderStatementList", orderStatementList);
-			
-			return "list";
+			//如果该对账单中所有订单都被排除，则该对账单被取消，返回到对账单列表页面
+			return newList();
 		}
 		
+	}
+	
+	public String invoicedDetail(){
+		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
+		ActionContext.getContext().getValueStack().push(orderStatement);
+		return "invoicedDetail";
 	}
 	
 	/**
@@ -119,7 +154,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		for(int i=0;i<idStrArray.length;i++){
 			ids[i]=Long.parseLong(idStrArray[i]);
 		}
-		receiptService.excludeOrdersFromOrderStatement(orderStatementName,ids);
+		receiptService.excludeOrdersFromOrderStatement(orderStatementId,ids);
 		this.writeJson("{\"status\":\"1\"}");
 	}
 	
@@ -127,12 +162,16 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	 * 显示未付款orderStatement数据
 	 * @return
 	 */
-	public String list(){
-		
-		List<OrderStatement> orderStatementList=receiptService.getAllUnpaidOrderStatement();
+	public String newList(){		
+		List<OrderStatement> orderStatementList=receiptService.getAllNewOrderStatement();
 		ActionContext.getContext().put("orderStatementList", orderStatementList);
-		
-		return "list";
+		return "newList";
+	}
+	
+	public String invoicedList(){		
+		List<OrderStatement> orderStatementList=receiptService.getAllInvoicedOrderStatement();
+		ActionContext.getContext().put("orderStatementList", orderStatementList);
+		return "invoicedList";
 	}
 	
 	public void isOrderStatementExist(){
@@ -143,31 +182,44 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 			this.writeJson("{\"status\":\"0\"}");
 	}
 	
-	/**
-	 * 显示所有已付款的orderStatement
-	 * @return
-	 */
-	public String paidList(){
-	    QueryHelper helper = new QueryHelper(OrderStatement.class, "o");
-		helper.addWhereCondition("o.status=?", OrderStatementStatusEnum.PAYED);
+	public String paidList() {
+	    QueryHelper helper = new QueryHelper(OrderStatement.class, "os");
+		helper.addWhereCondition("os.status=?", OrderStatementStatusEnum.PAID);
+		PageBean<OrderStatement> pageBean = receiptService.getPageBean(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("orderStatementHelper", helper);
+		return "paidList";
+	}
+	
+	public String freshPaidList(){
+		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("orderStatementHelper");
+		PageBean<OrderStatement> pageBean = receiptService.getPageBean(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		return "list";
+	}
+	
+	public String paidListQueryForm(){
+	    QueryHelper helper = new QueryHelper(OrderStatement.class, "os");
+		helper.addWhereCondition("os.status=?", OrderStatementStatusEnum.PAID);
 		//设置单位名称
 	    if(model.getCustomerOrganization()!=null&&!"".equals(model.getCustomerOrganization().getName())){
-	    	helper.addWhereCondition("o.customerOrganization.name=?", model.getCustomerOrganization().getName());
+	    	helper.addWhereCondition("os.customerOrganization.name=?", model.getCustomerOrganization().getName());
 	    }
 	    //设置开始时间
 	    if(model.getFromDate()!=null&&!"".equals(model.getFromDate())){
 	    	//将开始时间设置成当天的00:00:00
 	    	Date newFromDate=DateUtils.getMinDate(model.getFromDate());
-	    	helper.addWhereCondition("o.fromDate>=?", newFromDate);
+	    	helper.addWhereCondition("os.fromDate>=?", newFromDate);
 	    }
 	    //设置结束时间
 	    if(model.getToDate()!=null&&!"".equals(model.getToDate())){
 	    	//将结束事件设置成当天的11:59:59
 	    	Date newToDate=DateUtils.getMaxDate(model.getToDate());
-	    	helper.addWhereCondition("o.toDate<=?", newToDate);
+	    	helper.addWhereCondition("os.toDate<=?", newToDate);
 	    }
 	    PageBean<OrderStatement> pageBean = receiptService.getPageBean(pageNum, helper);
 	    ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("orderStatementHelper", helper);
 	    
 		return "paidList";
 	}
@@ -176,7 +228,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	 * 返回页面订单名称的下拉列表json数据
 	 */
 	public void orderStatementList(){
-		List<OrderStatement> orderStatements=receiptService.getAllUnpaidOrderStatement();
+		List<OrderStatement> orderStatements=receiptService.getAllNewOrderStatement();
 		List<String> orderStatementNames=new ArrayList<String>(orderStatements.size());
 		for(int i=0;i<orderStatements.size();i++){
 			orderStatementNames.add(orderStatements.get(i).getName());
@@ -327,7 +379,10 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   cell = new PdfPCell(new Paragraph ("联系人/电话",font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
-		   cell = new PdfPCell (new Paragraph (orders.get(k).getDriver().getName()+"："+orders.get(k).getPhone(),font));
+		   if(orders.get(k).getDriver()!=null)
+			   cell = new PdfPCell (new Paragraph (orders.get(k).getDriver().getName()+"："+orders.get(k).getDriver().getPhoneNumber(),font));
+		   else
+			   cell = new PdfPCell (new Paragraph ("",font));
 		   cell.setColspan (6);
 		   table.addCell (cell);
 		   //表格第5行
@@ -549,4 +604,35 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		this.imageStream = imageStream;
 	}
 
+	public Long getOrderStatementId() {
+		return orderStatementId;
+	}
+
+	public void setOrderStatementId(Long orderStatementId) {
+		this.orderStatementId = orderStatementId;
+	}
+
+	public BigDecimal getMoney() {
+		return money;
+	}
+
+	public void setMoney(BigDecimal money) {
+		this.money = money;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
 }

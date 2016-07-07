@@ -12,6 +12,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title></title>
 	<link href="skins/main.css" rel="stylesheet" type="text/css" />
+	<style>
+	.tdInput{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:130px;}
+    .tdInput:focus{ background:#f0fff3;border: 1px solid #65bd77;color: #65bd77;}
+    .tdInput1{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:130px;}
+    
+	</style>
 </head>
 <body class="minW">
     <div class="space">
@@ -49,6 +55,68 @@
                         <th><s:property value="tr.getText('car.CarInsurance.policyNumber')" /><span class="required">*</span></th>
                         <td>
                         	<input class="inputText" type="text" name="policyNumber"/>
+						</td>
+                    </tr>
+                    <tr>
+                    	<th></th>
+                    	<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    			类型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    			生效日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    		    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    		    截止日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    		    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    		    承保金额&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    		    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;金额（元）
+                    	</th>
+                    </tr>
+                    <tr>
+                    	<th>交强险<span class="required">*</span></th>
+                    	<td>
+                    		<input class="tdInput1" type="text" value="交强险" readonly style="border:0;text-align:center"/>
+                    		<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;
+							<input class="tdInput" type="text" name="compulsoryMoney"/>
+						</td>
+                    </tr>
+                     <tr>
+                    	<th>车船税<span class="required">*</span></th>
+                    	<td>
+                    		<input class="tdInput1" type="text" value="车船税" readonly style="border:0;text-align:center"/>
+                    		<input class="Wdate half" name="vehicleTaxBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="vehicleTaxEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="tdInput1" type="text" readonly value="——" style="border:1px solid #ffffff;text-align:center"/>&nbsp;
+							<input class="tdInput" type="text" name="vehicleTaxMoney"/>
+						</td>
+                    </tr>
+                    <s:iterator value="commercialInsuranceList">
+                    <tr>
+                    	<th>商业保险<span class="required">*</span></th>
+                    	<td>
+                    		<s:select name="commercialInsuranceTypeId" 
+                        		list="commercialInsuranceTypeList" listKey="id" listValue="name"
+                        		headerKey="" headerValue="选择商保类型" style="width:140px;"
+                        		/>
+                    		<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;
+							<input class="tdInput" type="text" name="compulsoryMoney"/>&nbsp;&nbsp;&nbsp;&nbsp;
+						</td>
+                    </tr>
+                    </s:iterator>
+                     <tr>
+                    	<th>商业保险<span class="required">*</span></th>
+                    	<td>
+                    		<s:select name="commercialInsuranceTypeId" 
+                        		list="commercialInsuranceTypeList" listKey="id" listValue="name"
+                        		headerKey="" headerValue="选择商保类型" style="width:140px;"
+                        		/>
+                    		<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;
+							<input class="tdInput" type="text" name="compulsoryMoney"/>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input class="" type="submit" value="新增一条" />
 						</td>
                     </tr>
                     <tr>
@@ -108,6 +176,18 @@
 						required:true,
 					},
 					policyNumber:{
+						required:true,
+					},
+					compulsoryBeginDate:{
+						required:true,
+					},
+					compulsoryEndDate:{
+						required:true,
+					},
+					compulsoryCoverageMoney:{
+						required:true,
+					},
+					compulsoryMoney:{
 						required:true,
 					},
 					fromDate:{

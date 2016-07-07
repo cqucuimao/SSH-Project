@@ -34,6 +34,7 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<input id="remind" class="inputButton" type="button" value="保险提醒" name="button" />
+						<input id="carInsuranceType" class="inputButton" type="button" value="商业保险类型管理" name="button" />
 					</td>
 				</tr>
 			</table>
@@ -86,6 +87,9 @@
 	        });
 	        $("#remind").click(function(){
 	            self.location.href='carInsurance_remind.action';
+	        });
+	        $("#carInsuranceType").click(function(){
+	        	self.location.href = 'commercialInsuranceType_list.action';
 	        });
 	    })
 	</script>

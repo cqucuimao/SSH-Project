@@ -59,7 +59,7 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	public BigDecimal statisticCarInsurance(Date fromDate, Date toDate){
 		return carInsuranceDao.statisticCarInsurance(fromDate, toDate);
 	}
-		
+	@Transactional	
 	public void saveCommercialInsuranceType(CommercialInsuranceType commercialInsuranceType){
 		commercialInsuranceTypeDao.save(commercialInsuranceType);
 	}
@@ -67,19 +67,27 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	public boolean canDeleteCommercialInsuranceType(Long id){
 		return commercialInsuranceTypeDao.canDeleteCommercialInsuranceType(id);
 	}
-	
+	@Transactional
 	public void deleteCommercialInsuranceType(Long id){
 		commercialInsuranceTypeDao.delete(id);
+	}
+	
+	public CommercialInsuranceType getCommercialInsuranceTypeById(Long id){
+		return commercialInsuranceTypeDao.getById(id);
+	}
+	@Transactional
+	public void updateCommercialInsuranceType(CommercialInsuranceType commercialInsuranceType){
+		commercialInsuranceTypeDao.update(commercialInsuranceType);
 	}
 	
 	public List<CommercialInsuranceType> getAllCommercialInsuranceType(){
 		return commercialInsuranceTypeDao.getAll();
 	}
-	
+	@Transactional
 	public void saveCommercialInsurance(CommercialInsurance commercialInsurance){
 		commercialInsuranceDao.save(commercialInsurance);
 	}
-	
+	@Transactional
 	public void deleteCommercialInsurance(Long id){
 		commercialInsuranceDao.delete(id);
 	}

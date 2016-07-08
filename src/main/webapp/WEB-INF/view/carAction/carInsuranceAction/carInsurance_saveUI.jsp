@@ -90,21 +90,8 @@
 							<input class="tdInput" type="text" name="vehicleTaxMoney"/>
 						</td>
                     </tr>
-                    <s:iterator value="commercialInsuranceList">
-                    <tr>
-                    	<th>商业保险<span class="required">*</span></th>
-                    	<td>
-                    		<s:select name="commercialInsuranceTypeId" 
-                        		list="commercialInsuranceTypeList" listKey="id" listValue="name"
-                        		headerKey="" headerValue="选择商保类型" style="width:140px;"
-                        		/>
-                    		<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;
-							<input class="tdInput" type="text" name="compulsoryMoney"/>&nbsp;&nbsp;&nbsp;&nbsp;
-						</td>
-                    </tr>
-                    </s:iterator>
+                    <tr class="commercialInsuranceList">
+                    </tr>                   
                      <tr>
                     	<th>商业保险<span class="required">*</span></th>
                     	<td>
@@ -116,7 +103,7 @@
 							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;
 							<input class="tdInput" type="text" name="compulsoryMoney"/>&nbsp;&nbsp;&nbsp;&nbsp;
-							<input class="" type="submit" value="新增一条" />
+							<input class="" id="btn" type="button" value="新增一条" />
 						</td>
                     </tr>
                     <tr>
@@ -209,7 +196,21 @@
 					},
 				}
 			});
+			
+			 $("#btn").click(function(){
+			    	//alert("111");
+					$(".commercialInsuranceList").append('<th>商业保险<span class="required">*</span></th>'+
+								'<td><select theme="simple" name="commercialInsuranceTypeId" '+
+                        		'list="commercialInsuranceTypeList" listKey="id" listValue="name"'+
+                        		'headerKey="" headerValue="选择商保类型" style="width:140px;"/>'+							
+                    		'<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="" />'+
+							'<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:yyyy-MM-dd})" />'+
+							'<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;'+
+							'<input class="tdInput" type="text" name="compulsoryMoney"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>');
+			    });
 		});
+	    
+	   
     </script>
 </body>
 </html>

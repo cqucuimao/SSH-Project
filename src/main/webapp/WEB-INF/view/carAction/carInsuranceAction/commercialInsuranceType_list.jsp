@@ -23,6 +23,7 @@
 				<tr>
 					<td>
 						<input id="register" class="inputButton" type="button" value="商业保险类型登记" name="button" />
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>										
 				</tr>
 			</table>

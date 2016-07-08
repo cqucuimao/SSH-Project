@@ -37,7 +37,7 @@
 					<col></col>
 					<col width="120"></col>
 				</colgroup>
-                <tbody>
+                <tbody id="tab">
                 	<tr>
                         <th><s:property value="tr.getText('car.Car.plateNumber')" /><span class="required">*</span></th>
 						<td>
@@ -89,23 +89,21 @@
 							<input class="tdInput1" type="text" readonly value="——" style="border:1px solid #ffffff;text-align:center"/>&nbsp;
 							<input class="tdInput" type="text" name="vehicleTaxMoney"/>
 						</td>
-                    </tr>
-                    <tr class="commercialInsuranceList">
                     </tr>                   
-                     <tr>
+                    <tr>
                     	<th>商业保险<span class="required">*</span></th>
                     	<td>
-                    		<s:select name="commercialInsuranceTypeId" 
+                    		<s:select name="commercialInsuranceTypeId" class="selectClass"
                         		list="commercialInsuranceTypeList" listKey="id" listValue="name"
-                        		headerKey="" headerValue="选择商保类型" style="width:140px;"
+                        		headerKey="" headerValue="请选择类型" style="width:140px;"
                         		/>
-                    		<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;
-							<input class="tdInput" type="text" name="compulsoryMoney"/>&nbsp;&nbsp;&nbsp;&nbsp;
-							<input class="" id="btn" type="button" value="新增一条" />
+                    		<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="tdInput" type="text" name="commercialInsuranceCoverageMoney"/>&nbsp;
+							<input class="tdInput" type="text" name="commercialInsuranceMoney"/>&nbsp;&nbsp;
+							<input class="" id="btn" type="button" value="新增" />
 						</td>
-                    </tr>
+                    </tr>              
                     <tr>
                         <th>保险起止时间<span class="required">*</span></th>
                         <td>
@@ -134,7 +132,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="2">
-                            <input class="inputButton" type="submit" value="提交" />
+                            <input class="inputButton" name="sub" type="submit" value="提交"/>
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
                     </tr>
@@ -152,6 +150,31 @@
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
 	    $(function(){
+	    		
+	    	 $("#btn").click(function(){
+	    		 	var row = $("#tab").find('tr').length-5;	//获取table行数，减去5得到增加行的位置
+	    		 	var row1 = row+1;
+					$($('#tab').find('tr')[row]).after('<tr id='+row1+'><th>&nbsp;&nbsp;&nbsp;&nbsp;<span class="required"></span></th>'+
+						'<td><select id=select'+row1+' style="width:140px"></select>&nbsp;'+							
+                		'<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
+						'<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
+						'<input class="tdInput" type="text" name="commercialInsuranceCoverageMoney"/>&nbsp;&nbsp;'+
+						'<input class="tdInput" type="text" name="commercialInsuranceMoney"/>&nbsp;&nbsp;&nbsp;<input type="button" name="deleteTr" value="删除" /></td></tr>'); 
+	    		 	$(".selectClass option").each(function(){
+	    		 		$("#select"+row1).append('<option value='+$(this).val()+'>'+$(this).text()+'</option>');
+	    		 	});
+	    		 	$("input[name=deleteTr]").click(function(){
+	    		 		$("#"+row1).remove();
+	    		 	});
+	    		 	
+			 })
+			
+			 $("input[name=sub]").click(function(){
+	    		 var ss = $("input[name=commercialInsuranceBeginDate]").val();
+	    		 alert(ss);
+	    	 });
+	    	 
+			 
 			$("#pageForm").validate({
 				onfocusout: function(element) { $(element).valid(); },
 				rules:{
@@ -197,17 +220,7 @@
 				}
 			});
 			
-			 $("#btn").click(function(){
-			    	//alert("111");
-					$(".commercialInsuranceList").append('<th>商业保险<span class="required">*</span></th>'+
-								'<td><select theme="simple" name="commercialInsuranceTypeId" '+
-                        		'list="commercialInsuranceTypeList" listKey="id" listValue="name"'+
-                        		'headerKey="" headerValue="选择商保类型" style="width:140px;"/>'+							
-                    		'<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="" />'+
-							'<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:yyyy-MM-dd})" />'+
-							'<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;'+
-							'<input class="tdInput" type="text" name="compulsoryMoney"/>&nbsp;&nbsp;&nbsp;&nbsp;</td>');
-			    });
+			
 		});
 	    
 	   

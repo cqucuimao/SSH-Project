@@ -38,7 +38,16 @@ public interface CarInsuranceService {
 	
 	public void deleteCommercialInsuranceType(Long id);
 	
+	public CommercialInsuranceType getCommercialInsuranceTypeById(Long id);
+	
+	public void updateCommercialInsuranceType(CommercialInsuranceType commercialInsuranceType);
+	
 	public List<CommercialInsuranceType> getAllCommercialInsuranceType();
+	
+	
+	
+	
+	
 	
 	public void saveCommercialInsurance(CommercialInsurance commercialInsurance);
 	

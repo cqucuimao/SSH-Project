@@ -1,5 +1,6 @@
 package com.yuqincar.action.car;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	private Long commercialInsuranceTypeId;
 	
+	private Date[] commercialInsuranceBeginDateList;
+	
 	/** 列表 */
 	public String list() throws Exception {
 		QueryHelper helper = new QueryHelper(CarInsurance.class, "ci");
@@ -52,7 +55,6 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	/** 添加页面 */
 	public String addUI() throws Exception {
 		ActionContext.getContext().put("commercialInsuranceTypeList", carInsuranceService.getAllCommercialInsuranceType());	 
-		List<CommercialInsurance> commercialInsuranceList;
 		return "saveUI";
 	}
 	
@@ -62,6 +64,10 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 		  
 		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 		model.setCar(car1);
+		
+		//System.out.println("commercialInsuranceBeginDate="+commercialInsuranceBeginDateList.length);
+		//List<CommercialInsurance> commercialInsuranceList1 = carInsuranceService.getCarInsuranceById(model.getId()).getCommercialInsuranceList();
+		//System.out.println("commercialInsuranceList1.size="+commercialInsuranceList1.size());
 		
 		carInsuranceService.saveCarInsurance(model);
 		return "toList";
@@ -132,6 +138,17 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	public void setCommercialInsuranceTypeId(long commercialInsuranceTypeId) {
 		this.commercialInsuranceTypeId = commercialInsuranceTypeId;
 	}
+
+	public Date[] getCommercialInsuranceBeginDateList() {
+		return commercialInsuranceBeginDateList;
+	}
+
+	public void setCommercialInsuranceBeginDateList(Date[] commercialInsuranceBeginDateList) {
+		this.commercialInsuranceBeginDateList = commercialInsuranceBeginDateList;
+	}
+
+
+	
 	
 	
 

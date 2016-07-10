@@ -68,7 +68,7 @@
 				        
 						<tr>
 							<td>${car.plateNumber}</td>
-							<td>${driver.id}</td>
+							<td>${driver.name}</td>
 							<td ><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>${shop.name}</td>
 							<td >${money }</td>

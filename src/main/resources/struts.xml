@@ -258,7 +258,7 @@
 		<action name="carWashShop_*" class="carWashShopAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carWashAction/washShop_list.jsp
 			</result>
-			<result name="SaveUI">/WEB-INF/view/carAction/carWashAction/washShop_saveUI.jsp
+			<result name="saveUI">/WEB-INF/view/carAction/carWashAction/washShop_saveUI.jsp
 			</result>
 			<result name="toList" type="redirectAction">carWashShop_list</result>
 		</action>

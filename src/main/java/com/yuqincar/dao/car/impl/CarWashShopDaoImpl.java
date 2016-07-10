@@ -3,12 +3,12 @@ package com.yuqincar.dao.car.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.yuqincar.dao.car.CarWashShopDao;
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
 import com.yuqincar.domain.car.CarWash;
 import com.yuqincar.domain.car.CarWashShop;
-
 @Repository
 public class CarWashShopDaoImpl extends BaseDaoImpl<CarWashShop> implements CarWashShopDao {
 	public boolean canDeleteCarWashShop(Long id){

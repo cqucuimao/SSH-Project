@@ -68,7 +68,7 @@
 						<td>
 						    <s:select name="shop.id" cssClass="SelectStyle"
                         		list="carWashShopList" listKey="id" listValue="name"
-                        		headerKey="" headerValue="洗车点"/>
+                        		headerKey="" headerValue="选择洗车点"/>
                         		
 						</td>
                     </tr>
@@ -135,9 +135,13 @@
 						required:true,
 					},
 					money:{
+						required:true,
 						number:true,
 						min:0
 					},
+					'shop.id':{
+						required:true,
+					}
 				}
 			});
 			formatDateField1($("#date"));

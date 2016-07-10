@@ -42,7 +42,7 @@
 						<tr>
 							<td class="alignCenter">${name}</td>
 							<td class="alignCenter">								
-								<s:a action="carWashShop_editUI?id=%{id}" ><i class="icon-operate-edit" title="修改"></i></s:a>	
+								<%-- <s:a action="carWashShop_editUI?id=%{id}" ><i class="icon-operate-edit" title="修改"></i></s:a> --%>	
 							<s:if test="canDeleteCarWashShop">
 								<s:a action="carWashShop_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
 							</s:if>
@@ -62,7 +62,7 @@
 	<script type="text/javascript">
 		$(function(){
 			$("#register").click(function(){
-				location.href='carWashShop_savaUI.action';
+				location.href='carWashShop_addUI.action';
 			});
 			
 			$("#back").click(function(){

@@ -81,7 +81,6 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 		return "list";
 	}
    public String delete(){
-	   System.out.println("----------------"+model.getId());
        carWashService.deleteCarWash(model.getId());
 	   return freshList();
 	}

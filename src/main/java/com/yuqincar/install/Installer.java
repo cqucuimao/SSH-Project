@@ -207,7 +207,7 @@ public class Installer {
 		
 		Privilege orderStatementMenu=new Privilege("对账单","/orderStatement_newList",receiptMenu);
 		privilegeDao.save(orderStatementMenu);
-		privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
+		//privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_invoicedList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_paidList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_info",orderStatementMenu));
@@ -333,6 +333,23 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/materialReceive_saveUI", materialReceiveMenu));
 		privilegeDao.save(new Privilege("", "/materialReceive_save", materialReceiveMenu));
 		privilegeDao.save(new Privilege("", "/materialReceive_edit", materialReceiveMenu));
+		
+		//洗车登记
+		Privilege carWashMenu = new Privilege("洗车登记", "/carWash_list", carMenu);
+		privilegeDao.save(carWashMenu);
+		privilegeDao.save(new Privilege("", "/carWash_queryForm", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWash_delete", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWash_editUI", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWash_freshList", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWash_saveUI", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWash_save", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWash_edit", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWashShop_list", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWashShop_addUI", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWashShop_delete", carWashMenu));	
+		privilegeDao.save(new Privilege("", "/carWashShop_add", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWashShop_editUI", carWashMenu));
+		privilegeDao.save(new Privilege("", "/carWashShop_edit", carWashMenu));
 		
 		//客户管理
 		Privilege customerMenu = new Privilege("客户管理", "/customer", null);

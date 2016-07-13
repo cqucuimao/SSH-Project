@@ -1,7 +1,9 @@
 package com.yuqincar.service.car;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.common.PageBean;
@@ -16,5 +18,7 @@ public interface CarRefuelService {
 	public PageBean<CarRefuelService> queryCarRefuel(int pageNum , QueryHelper helper);
 	
 	public BigDecimal statisticCarRefuel(Date fromDate, Date toDate);
-
+	
+	public void importExcelFile(InputStream is,int rowFrom,int colFrom,int colTo,int sheetIndex);
+	
 }

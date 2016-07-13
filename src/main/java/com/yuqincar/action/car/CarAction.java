@@ -16,6 +16,8 @@ import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarStatusEnum;
+import com.yuqincar.domain.car.PlateTypeEnum;
+import com.yuqincar.domain.car.TransmissionTypeEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.monitor.Device;
@@ -48,7 +50,9 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private String carSelectorId;
 	private String synchDriverName;
 	private String synchDriverId;
-	
+	private int transmissionTypeId;
+	private int plateTypeId;
+	private String actionFlag;
 	/** 列表 */
 	public String list() throws Exception {
 		
@@ -90,6 +94,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	/** 添加页面 */
 	public String addUI() throws Exception {
+		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备数据：carServiceTypeList
 		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
 		// 准备数据：servicePointList
@@ -113,6 +118,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		model.setServicePoint(carService.getServicePointById(servicePointId));
 		model.setDriver(userService.getById(driverId));
 		model.setStatus(CarStatusEnum.NORMAL);
+		model.setPlateType(PlateTypeEnum.getById(plateTypeId));
+		model.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
 		// 保存到数据库
 		carService.saveCar(model);
 
@@ -121,6 +128,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	/** 修改页面 */
 	public String editUI() throws Exception {
+		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备回显的数据
 		Car car = carService.getCarById(model.getId());
 		ActionContext.getContext().getValueStack().push(car);
@@ -320,6 +328,25 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 	public void setSynchDriverId(String synchDriverId) {
 		this.synchDriverId = synchDriverId;
+	}
+	
+	public int getTransmissionTypeId() {
+		return transmissionTypeId;
+	}
+	public void setTransmissionTypeId(int transmissionTypeId) {
+		this.transmissionTypeId = transmissionTypeId;
+	}
+	public int getPlateTypeId() {
+		return plateTypeId;
+	}
+	public void setPlateTypeId(int plateTypeId) {
+		this.plateTypeId = plateTypeId;
+	}
+	public String getActionFlag() {
+		return actionFlag;
+	}
+	public void setActionFlag(String actionFlag) {
+		this.actionFlag = actionFlag;
 	}
 	
 	

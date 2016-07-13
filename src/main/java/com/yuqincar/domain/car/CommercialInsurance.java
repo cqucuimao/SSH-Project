@@ -25,61 +25,71 @@ public class CommercialInsurance extends BaseEntity {
 	@Text("类型")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
-	private CommercialInsuranceType type;
+	private CommercialInsuranceType commercialInsuranceType;
 	
 	@Text("金额")
 	@Column(nullable=false)
-	private BigDecimal money;
+	private BigDecimal commercialInsuranceMoney;
 	
 	@Text("承保金额")
 	@Column(nullable=false)
-	private BigDecimal coverageMoney;
+	private BigDecimal commercialInsuranceCoverageMoney;
 	
 	@Text("生效日期")
 	@Column(nullable=false)
-	private Date beginDate;
+	private Date commercialInsuranceBeginDate;
 	
 	@Text("截至日期")
 	@Column(nullable=false)
-	private Date endDate;
-
-	public CommercialInsuranceType getType() {
-		return type;
+	private Date commercialInsuranceEndDate;
+	
+	public CarInsurance getInsurance() {
+		return insurance;
 	}
 
-	public void setType(CommercialInsuranceType type) {
-		this.type = type;
+	public void setInsurance(CarInsurance insurance) {
+		this.insurance = insurance;
 	}
 
-	public BigDecimal getMoney() {
-		return money;
+	public CommercialInsuranceType getCommercialInsuranceType() {
+		return commercialInsuranceType;
 	}
 
-	public void setMoney(BigDecimal money) {
-		this.money = money;
+	public void setCommercialInsuranceType(CommercialInsuranceType commercialInsuranceType) {
+		this.commercialInsuranceType = commercialInsuranceType;
 	}
 
-	public BigDecimal getCoverageMoney() {
-		return coverageMoney;
+	public BigDecimal getCommercialInsuranceMoney() {
+		return commercialInsuranceMoney;
 	}
 
-	public void setCoverageMoney(BigDecimal coverageMoney) {
-		this.coverageMoney = coverageMoney;
+	public void setCommercialInsuranceMoney(BigDecimal commercialInsuranceMoney) {
+		this.commercialInsuranceMoney = commercialInsuranceMoney;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
+	public BigDecimal getCommercialInsuranceCoverageMoney() {
+		return commercialInsuranceCoverageMoney;
 	}
 
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
+	public void setCommercialInsuranceCoverageMoney(BigDecimal commercialInsuranceCoverageMoney) {
+		this.commercialInsuranceCoverageMoney = commercialInsuranceCoverageMoney;
 	}
 
-	public Date getEndDate() {
-		return endDate;
+	public Date getCommercialInsuranceBeginDate() {
+		return commercialInsuranceBeginDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setCommercialInsuranceBeginDate(Date commercialInsuranceBeginDate) {
+		this.commercialInsuranceBeginDate = commercialInsuranceBeginDate;
 	}
+
+	public Date getCommercialInsuranceEndDate() {
+		return commercialInsuranceEndDate;
+	}
+
+	public void setCommercialInsuranceEndDate(Date commercialInsuranceEndDate) {
+		this.commercialInsuranceEndDate = commercialInsuranceEndDate;
+	}
+
+	
 }

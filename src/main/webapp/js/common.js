@@ -549,3 +549,19 @@ function formatDateField2(obj){
 		obj.val(dateStr);
 	}
 }
+
+function formatDateField3(obj){
+	//将16-6-21 00:00:00.000 或00:00:00转换为 2016-06-21 00:00:00
+	var dateStr=obj.val();
+	if(dateStr.length>0){
+		var arr1=dateStr.split(" ");
+		var arr=arr1[0].split("-");
+		var arr2=arr1[1].split(".");
+		var arr3=arr2[0].split(":");
+		if(arr[0].length==2)
+			arr[0]="20"+arr[0];
+		var date = new Date(arr[0],arr[1]-1,arr[2],arr3[0],arr3[1],arr3[2]);
+		var dateStr=date.Format("yyyy-MM-dd hh:mm:ss");
+		obj.val(dateStr);
+	}
+}

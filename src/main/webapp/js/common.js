@@ -565,3 +565,26 @@ function formatDateField3(obj){
 		obj.val(dateStr);
 	}
 }
+
+function formatDateField4(obj){
+	//将Wed Jul 13 22:40:00 CST 2016转换为 2016-07-13 22:40:00
+	var dateStr=obj.val();
+	if(dateStr.length>0){
+		var year = dateStr.getFullYear(); 
+		alert("year="+year);
+	    var month = dateStr.getMonth() + 1; 
+	    var day= dateStr.getDate(); 
+	    if (month < 10) {
+	    	month = "0" + month; 
+	    } 
+	    if (date < 10) { 
+	    	date = "0" + date; 
+	    } 
+	    var hour = dateStr.getHours();
+	    var min = dateStr.getMinutes();
+	    var second = dateStr.getSeconds();
+		var date = new Date(year,month,day,hour,min,second);
+		var dateStr=date.Format("yyyy-MM-dd hh:mm:ss");
+		obj.val(dateStr);
+	}
+}

@@ -240,7 +240,6 @@ public class OrderAction extends BaseAction {
 	 * 编辑派车单
 	 */
 	public String editOrderBill(){
-		System.out.println("IDDDDD="+orderId);
 		User user = (User)ActionContext.getContext().getSession().get("user");
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);

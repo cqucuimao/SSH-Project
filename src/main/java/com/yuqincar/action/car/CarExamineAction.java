@@ -3,10 +3,12 @@ package com.yuqincar.action.car;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
@@ -43,6 +45,10 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	@Autowired
 	private UserService userService;
 	
+	private String plateNumber;
+	
+	private Date recentExamineDate;
+	
 	/** 列表 */
 	public String list() throws Exception {
 		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
@@ -62,6 +68,20 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		return "list";
 	}
 	
+	/**获取下次年审的时间 */
+	public void getNextExamineDate(){
+		System.out.println("in getNextExamineDate!!!");
+		System.out.println("recentExamineDate="+recentExamineDate);
+		System.out.println("plateNumber="+plateNumber);
+		Car car = carService.getCarByPlateNumber(plateNumber);
+		Date nextExamineDate = carExamineService.getNextExamineDate(car, recentExamineDate);
+		NextExamineDateVO nedvo = new NextExamineDateVO();
+		nedvo.setNextExamineDate(nextExamineDate);
+		
+		String json = JSON.toJSONString(nedvo);
+		writeJson(json);
+	}
+	
 	/** 删除 */
 	public String delete() throws Exception {
 		carExamineService.deleteCarExamineById(model.getId());
@@ -76,7 +96,6 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	/** 添加 */
 	public String add() throws Exception {
 		// 保存到数据库
-		
 		boolean before = model.getNextExamineDate().before(model.getDate());
 		//System.out.println(before);
 		if(before){
@@ -247,5 +266,38 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		}
 		return "toList";
 	}
+
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+	
+	public Date getRecentExamineDate() {
+		return recentExamineDate;
+	}
+
+	public void setRecentExamineDate(Date recentExamineDate) {
+		this.recentExamineDate = recentExamineDate;
+	}
+
+
+
+	class NextExamineDateVO{
+		private Date nextExamineDate;
+
+		public Date getNextExamineDate() {
+			return nextExamineDate;
+		}
+
+		public void setNextExamineDate(Date nextExamineDate) {
+			this.nextExamineDate = nextExamineDate;
+		}
+		
+		
+	}
+	
 
 }

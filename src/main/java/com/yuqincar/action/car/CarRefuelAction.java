@@ -1,11 +1,21 @@
 package com.yuqincar.action.car;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
@@ -19,6 +29,7 @@ import com.yuqincar.service.car.CarRefuelService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.privilege.UserService;
+import com.yuqincar.utils.ExcelUtil;
 import com.yuqincar.utils.QueryHelper;
 
 @Controller
@@ -43,6 +54,11 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	
 	private Date date2;
 	
+	private File upload;
+	
+	private String uploadFileName;
+	
+	private String uploadContentType;
 	/** 列表 */
 	public String list() throws Exception {
 		QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
@@ -66,6 +82,20 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	/** 添加页面 */
 	public String addUI() throws Exception {
 		return "saveUI";
+	}
+	
+	/** 导入excel页面 */
+	public String excel() throws Exception {
+		return "excel";
+	}
+	/**
+	 * 导入excel
+	 * @throws Exception
+	 */
+	public String importExcelFile() throws Exception{
+		InputStream is = new FileInputStream(upload);
+		carRefuelService.importExcelFile(is, 1, 1, 6, 0);
+		return "toList";
 	}
 	
 	/** 添加 */
@@ -126,4 +156,31 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	public void setDate2(Date date2) {
 		this.date2 = date2;
 	}
+
+	public File getUpload() {
+		return upload;
+	}
+
+	public void setUpload(File upload) {
+		this.upload = upload;
+	}
+
+	public String getUploadFileName() {
+		return uploadFileName;
+	}
+
+	public void setUploadFileName(String uploadFileName) {
+		this.uploadFileName = uploadFileName;
+	}
+
+	public String getUploadContentType() {
+		return uploadContentType;
+	}
+
+	public void setUploadContentType(String uploadContentType) {
+		this.uploadContentType = uploadContentType;
+	}
+	
+	
+	
 }

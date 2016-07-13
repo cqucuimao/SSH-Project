@@ -61,4 +61,10 @@ public interface CarExamineService {
 	 * @return
 	 */
 	public List<Car> getAllNeedExamineCars();
+	
+	/**
+	 * 获取下一次年审的日期。
+	 * @return Date
+	 */
+	public Date getNextExamineDate(Car car, Date recentExamineDate);
 }

@@ -1,5 +1,7 @@
 package com.yuqincar.action.car;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,9 +33,17 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	@Autowired
 	private CarService carService;
 	
-	private Long commercialInsuranceTypeId;
+	private int inputRows;
 	
-	private Date[] commercialInsuranceBeginDateList;
+	private List<Long> commercialInsuranceType =new ArrayList<Long>();	
+	
+	private List<Date> commercialInsuranceBeginDate = new ArrayList<Date>();
+	
+	private List<Date> commercialInsuranceEndDate = new ArrayList<Date>();
+	
+	private List<BigDecimal> commercialInsuranceCoverageMoney = new ArrayList<BigDecimal>();
+	
+	private List<BigDecimal> commercialInsuranceMoney = new ArrayList<BigDecimal>();
 	
 	/** 列表 */
 	public String list() throws Exception {
@@ -54,22 +64,27 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	/** 添加页面 */
 	public String addUI() throws Exception {
-		ActionContext.getContext().put("commercialInsuranceTypeList", carInsuranceService.getAllCommercialInsuranceType());	 
+		ActionContext.getContext().put("commercialInsuranceTypes", carInsuranceService.getAllCommercialInsuranceType());	 
 		return "saveUI";
 	}
 	
 	/** 添加 */
 	public String add() throws Exception {
 		// 保存到数据库
-		  
 		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		model.setCar(car1);
-		
-		//System.out.println("commercialInsuranceBeginDate="+commercialInsuranceBeginDateList.length);
-		//List<CommercialInsurance> commercialInsuranceList1 = carInsuranceService.getCarInsuranceById(model.getId()).getCommercialInsuranceList();
-		//System.out.println("commercialInsuranceList1.size="+commercialInsuranceList1.size());
-		
+		model.setCar(car1);	
 		carInsuranceService.saveCarInsurance(model);
+		CarInsurance cia = carInsuranceService.getCarInsuranceById(model.getId());
+		for(int i=0;i<inputRows;i++){
+			CommercialInsurance commercialInsurance = new CommercialInsurance();
+			commercialInsurance.setInsurance(cia);
+			commercialInsurance.setCommercialInsuranceType(carInsuranceService.getCommercialInsuranceTypeById(commercialInsuranceType.get(i)));
+			commercialInsurance.setCommercialInsuranceBeginDate(commercialInsuranceBeginDate.get(i));
+			commercialInsurance.setCommercialInsuranceEndDate(commercialInsuranceBeginDate.get(i));
+			commercialInsurance.setCommercialInsuranceCoverageMoney(commercialInsuranceCoverageMoney.get(i));
+			commercialInsurance.setCommercialInsuranceMoney(commercialInsuranceMoney.get(i));
+			carInsuranceService.saveCommercialInsurance(commercialInsurance);
+		}		
 		return "toList";
 	}
 	
@@ -102,12 +117,13 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 		
 		// 准备回显的数据
 		CarInsurance carInsurance = carInsuranceService.getCarInsuranceById(model.getId());
+		List<CommercialInsurance> commercialInsurances = carInsurance.getCommercialInsuranceList();
+		ActionContext.getContext().put("commercialInsurances", commercialInsurances);
 		ActionContext.getContext().getValueStack().push(carInsurance);
 		return "carInsuranceDetail";
 	}
 	
 	public CarInsurance getModel() {
-		// TODO Auto-generated method stub
 		return model;
 	}
 	
@@ -130,26 +146,56 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
 		}
 	}
+	
 
-	public long getCommercialInsuranceTypeId() {
-		return commercialInsuranceTypeId;
+	public List<Long> getCommercialInsuranceType() {
+		return commercialInsuranceType;
 	}
 
-	public void setCommercialInsuranceTypeId(long commercialInsuranceTypeId) {
-		this.commercialInsuranceTypeId = commercialInsuranceTypeId;
+	public void setCommercialInsuranceType(List<Long> commercialInsuranceType) {
+		this.commercialInsuranceType = commercialInsuranceType;
 	}
 
-	public Date[] getCommercialInsuranceBeginDateList() {
-		return commercialInsuranceBeginDateList;
+	public int getInputRows() {
+		return inputRows;
 	}
 
-	public void setCommercialInsuranceBeginDateList(Date[] commercialInsuranceBeginDateList) {
-		this.commercialInsuranceBeginDateList = commercialInsuranceBeginDateList;
+	public void setInputRows(int inputRows) {
+		this.inputRows = inputRows;
 	}
 
+	public List<Date> getCommercialInsuranceBeginDate() {
+		return commercialInsuranceBeginDate;
+	}
 
+	public void setCommercialInsuranceBeginDate(List<Date> commercialInsuranceBeginDate) {
+		this.commercialInsuranceBeginDate = commercialInsuranceBeginDate;
+	}
+
+	public List<Date> getCommercialInsuranceEndDate() {
+		return commercialInsuranceEndDate;
+	}
+
+	public void setCommercialInsuranceEndDate(List<Date> commercialInsuranceEndDate) {
+		this.commercialInsuranceEndDate = commercialInsuranceEndDate;
+	}
+
+	public List<BigDecimal> getCommercialInsuranceCoverageMoney() {
+		return commercialInsuranceCoverageMoney;
+	}
+
+	public void setCommercialInsuranceCoverageMoney(List<BigDecimal> commercialInsuranceCoverageMoney) {
+		this.commercialInsuranceCoverageMoney = commercialInsuranceCoverageMoney;
+	}
+
+	public List<BigDecimal> getCommercialInsuranceMoney() {
+		return commercialInsuranceMoney;
+	}
+
+	public void setCommercialInsuranceMoney(List<BigDecimal> commercialInsuranceMoney) {
+		this.commercialInsuranceMoney = commercialInsuranceMoney;
+	}
 	
 	
 	
-
 }

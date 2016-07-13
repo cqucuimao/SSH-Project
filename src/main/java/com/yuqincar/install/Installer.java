@@ -141,8 +141,9 @@ public class Installer {
 		privilegeDao.save(orderMenu);
 		privilegeDao.save(new Privilege("","/schedule_updateOrder",orderMenu));
 		privilegeDao.save(new Privilege("","/order_print",orderMenu));
-		privilegeDao.save(new Privilege("","/order_editDriverAction",orderMenu));
+		privilegeDao.save(new Privilege("","/order_editOrderBillUI",orderMenu));
 		privilegeDao.save(new Privilege("","/order_editOrderBill",orderMenu));
+		privilegeDao.save(new Privilege("","/order_editDriverAction",orderMenu));
 		privilegeDao.save(new Privilege("","/order_getAcceptAction",orderMenu));
 		privilegeDao.save(new Privilege("","/order_getBeginAction",orderMenu));
 		privilegeDao.save(new Privilege("","/order_getGetonAction",orderMenu));
@@ -150,6 +151,7 @@ public class Installer {
 		privilegeDao.save(new Privilege("","/order_getEndAction",orderMenu));
 		privilegeDao.save(new Privilege("","/order_deleteDriverAction",orderMenu));
 		privilegeDao.save(new Privilege("","/order_popupModify",orderMenu));
+		privilegeDao.save(new Privilege("","/order_modifyDriverActionTime",orderMenu));
 		privilegeDao.save(new Privilege("","/order_view",orderMenu));
 		privilegeDao.save(new Privilege("","/order_cancel",orderMenu));
 		privilegeDao.save(new Privilege("","/order_cancelDo",orderMenu));
@@ -207,7 +209,7 @@ public class Installer {
 		
 		Privilege orderStatementMenu=new Privilege("对账单","/orderStatement_newList",receiptMenu);
 		privilegeDao.save(orderStatementMenu);
-		//privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_invoicedList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_paidList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_info",orderStatementMenu));
@@ -276,6 +278,12 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/carInsurance_detail", carInsuranceMenu));
 		privilegeDao.save(new Privilege("", "/carInsurance_insurance", carInsuranceMenu));
 		privilegeDao.save(new Privilege("", "/carInsurance_validateAdd", carInsuranceMenu));
+		privilegeDao.save(new Privilege("", "/commercialInsuranceType_list", carInsuranceMenu));
+		privilegeDao.save(new Privilege("", "/commercialInsuranceType_addUI", carInsuranceMenu));
+		privilegeDao.save(new Privilege("", "/commercialInsuranceType_add", carInsuranceMenu));
+		privilegeDao.save(new Privilege("", "/commercialInsuranceType_editUI", carInsuranceMenu));
+		privilegeDao.save(new Privilege("", "/commercialInsuranceType_edit", carInsuranceMenu));
+		privilegeDao.save(new Privilege("", "/commercialInsuranceType_delete", carInsuranceMenu));
 		
 		Privilege carRepairMenu = new Privilege("车辆维修", "/carRepair_list", carMenu);
 		privilegeDao.save(carRepairMenu);
@@ -296,6 +304,8 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/carRefuel_editUI", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_detail", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_refuel", carRefuelMenu));
+		privilegeDao.save(new Privilege("", "/carRefuel_importExcelFile", carRefuelMenu));
+		privilegeDao.save(new Privilege("", "/carRefuel_excel", carRefuelMenu));
 		
 		Privilege carExamineMenu = new Privilege("车辆年审", "/carExamine_list", carMenu);
 		privilegeDao.save(carExamineMenu);
@@ -310,6 +320,7 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/carExamine_detail", carExamineMenu));
 		privilegeDao.save(new Privilege("", "/carExamine_examine", carExamineMenu));
 		privilegeDao.save(new Privilege("", "/carExamine_saveAppointment", carExamineMenu));
+		privilegeDao.save(new Privilege("", "/carExamine_getNextExamineDate", carExamineMenu));
 		
 		Privilege tollChargeMenu = new Privilege("路桥费", "/tollCharge_list", carMenu);
 		privilegeDao.save(tollChargeMenu);

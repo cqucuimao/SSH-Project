@@ -49,6 +49,10 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	
 	<script type="text/javascript">
+		//alert("11");
+		//formatDateField4($("input[name=time]"));
+		//alert($("input[name=time]").val());
+		//alert("22");
 		var actionId = $("input[name=actionId]").val();
 		var id = actionId.substr(2,1);	
 		
@@ -75,9 +79,10 @@
 		var time = $("input[name=time]").val();
 		var beforeTime = $("input[name=beforeTime]").val();
 		var afterTime = $("input[name=afterTime]").val();
-		//alert("beforeTime="+beforeTime);
-		//alert("afterTime="+afterTime);
-		$("#timeId").val(time.substr(0,19));
+		alert("beforeTime="+beforeTime);
+		alert("afterTime="+afterTime);
+		//$("#timeId").val(time.substr(0,19));
+		$("#timeId").val(time);
 		
 		$("#btn").click(function(){
 			var inputTime = $("#timeId").val();	

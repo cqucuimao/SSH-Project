@@ -144,11 +144,11 @@ public class Installer {
 		privilegeDao.save(new Privilege("","/order_editOrderBillUI",orderMenu));
 		privilegeDao.save(new Privilege("","/order_editOrderBill",orderMenu));
 		privilegeDao.save(new Privilege("","/order_editDriverAction",orderMenu));
-		privilegeDao.save(new Privilege("","/order_getAcceptAction",orderMenu));
-		privilegeDao.save(new Privilege("","/order_getBeginAction",orderMenu));
-		privilegeDao.save(new Privilege("","/order_getGetonAction",orderMenu));
-		privilegeDao.save(new Privilege("","/order_getGetoffAction",orderMenu));
-		privilegeDao.save(new Privilege("","/order_getEndAction",orderMenu));
+		privilegeDao.save(new Privilege("","/order_addAcceptAction",orderMenu));
+		privilegeDao.save(new Privilege("","/order_addBeginAction",orderMenu));
+		privilegeDao.save(new Privilege("","/order_addGetonAction",orderMenu));
+		privilegeDao.save(new Privilege("","/order_addGetoffAction",orderMenu));
+		privilegeDao.save(new Privilege("","/order_addEndAction",orderMenu));
 		privilegeDao.save(new Privilege("","/order_deleteDriverAction",orderMenu));
 		privilegeDao.save(new Privilege("","/order_popupModify",orderMenu));
 		privilegeDao.save(new Privilege("","/order_modifyDriverActionTime",orderMenu));

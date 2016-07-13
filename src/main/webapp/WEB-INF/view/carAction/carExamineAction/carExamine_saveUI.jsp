@@ -58,13 +58,14 @@
                     <tr>
                     	<th><s:property value="tr.getText('car.CarExamine.date')" /><span class="required">*</span></th>
                         <td>
-							<s:textfield cssClass="inputText" name="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+							<s:textfield cssClass="inputText" id="date" name="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 						</td>
                     </tr>
                 	<tr>
                         <th><s:property value="tr.getText('car.CarExamine.nextExamineDate')" /><span class="required">*</span></th>
                         <td>
-							<s:textfield cssClass="inputText" name="nextExamineDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+							<s:textfield cssClass="inputText" id="nextExamineDate" name="nextExamineDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+							<input class="btn" type="button" name="getNextExamineDate" value="点击获取">
 						</td>
                     </tr>                    
                     <tr>
@@ -116,6 +117,47 @@
 					},
 				}
 			});
+			
+			$("input[name=getNextExamineDate]").click(function(){
+				var plateNumber = $("#car_platenumber").val();
+				var recentExamineDate = $("#date").val();
+				if(plateNumber != "" && recentExamineDate != ""){
+					$.ajax({
+						url : 'carExamine_getNextExamineDate.action', 
+						data : {
+							plateNumber:plateNumber,
+							recentExamineDate:recentExamineDate
+						},
+						type : 'post',
+						dataType : 'json',
+						success : function(data) {
+							var time = new Date(data.nextExamineDate);
+							var month = time.getMonth()+1;
+							var day = time.getDate();
+							if(month<10){
+								if(day<10){
+									var time1 = time.getFullYear()+"-0"+month+"-0"+day;
+								}else{
+									var time1 = time.getFullYear()+"-0"+month+"-"+day;
+								}				
+							}else{
+								if(day<10){
+									var time1 = time.getFullYear()+"-"+month+"-0"+day;
+								}else{
+									var time1 = time.getFullYear()+"-"+month+"-"+day;
+								}	
+							}							
+							$("#nextExamineDate").val(time1);
+						},
+						error : function(msg) {  			         
+					    	console.log("异常"+msg);  
+					    } 
+					});
+				}
+			});
+			
+			formatDateField1($("#date"));
+			
 		});
     </script>
 </body>

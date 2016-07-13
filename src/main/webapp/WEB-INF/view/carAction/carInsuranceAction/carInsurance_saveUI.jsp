@@ -15,8 +15,10 @@
 	<style>
 	.tdInput{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:130px;}
     .tdInput:focus{ background:#f0fff3;border: 1px solid #65bd77;color: #65bd77;}
-    .tdInput1{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:130px;}
-    
+    .tdInput1{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:132px;}
+    .tdDiv{width:100px;text-align:center;float:left;margin-left:20px}
+    .tdDiv1{width:150px;text-align:center;float:left;margin-left:35px}
+    .tdDiv2{width:120px;text-align:center;float:left;margin-left:33px}
 	</style>
 </head>
 <body class="minW">
@@ -58,70 +60,71 @@
 						</td>
                     </tr>
                     <tr>
-                    	<th></th>
-                    	<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    			类型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    			生效日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    		    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    		    截止日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    		    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    		    承保金额&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    		    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;金额（元）
-                    	</th>
                     </tr>
+                    <tr>
+                    	<th></th>
+                    	<th>
+                    			<div class="tdDiv">类型</div>
+                    			<div class="tdDiv1">生效日期</div>
+                    		    <div class="tdDiv1"> 截止日期</div>
+                    		    <div class="tdDiv2"> 承保金额（元）</div>
+                    		    <div class="tdDiv2">金额（元）</div>
+                    	</th>
+                    </tr>      
                     <tr>
                     	<th>交强险<span class="required">*</span></th>
                     	<td>
-                    		<input class="tdInput1" type="text" value="交强险" readonly style="border:0;text-align:center"/>
+                    		<!-- <input class="tdInput1" type="text" value="交强险" readonly style="border:0;text-align:center"/> -->
+                    		<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>
                     		<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="tdInput" type="text" name="compulsoryCoverageMoney"/>&nbsp;
-							<input class="tdInput" type="text" name="compulsoryMoney"/>
+							<input class="tdInput" type="text" name="compulsoryCoverageMoney" />&nbsp;
+							<input class="tdInput" type="text" name="compulsoryMoney" />
 						</td>
                     </tr>
                      <tr>
                     	<th>车船税<span class="required">*</span></th>
                     	<td>
-                    		<input class="tdInput1" type="text" value="车船税" readonly style="border:0;text-align:center"/>
+                    		<!-- <input class="tdInput1" type="text" value="车船税" readonly style="border:0;text-align:center"/> -->
+                    		<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>
                     		<input class="Wdate half" name="vehicleTaxBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="Wdate half" name="vehicleTaxEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="tdInput1" type="text" readonly value="——" style="border:1px solid #ffffff;text-align:center"/>&nbsp;
-							<input class="tdInput" type="text" name="vehicleTaxMoney"/>
+							<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>&nbsp;
+							<input class="tdInput" type="text" name="vehicleTaxMoney" />
 						</td>
-                    </tr>                   
-                    <tr>
+                    </tr>      
+                    <tr class="trClass">
                     	<th>商业保险<span class="required">*</span></th>
                     	<td>
-                    		<s:select name="commercialInsuranceTypeId" class="selectClass"
-                        		list="commercialInsuranceTypeList" listKey="id" listValue="name"
-                        		headerKey="" headerValue="请选择类型" style="width:140px;"
+                    		<s:select name="commercialInsuranceType" class="selectClass"
+                        		list="commercialInsuranceTypes" listKey="id" listValue="name"
+                        		headerKey="" headerValue="请选择类型" style="width:142px;"
                         		/>
                     		<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput" type="text" name="commercialInsuranceCoverageMoney"/>&nbsp;
 							<input class="tdInput" type="text" name="commercialInsuranceMoney"/>&nbsp;&nbsp;
-							<input class="" id="btn" type="button" value="新增" />
+							<input class="btn" id="btn" type="button" value="点击新增" />
 						</td>
-                    </tr>              
+                    </tr>                                    
                     <tr>
                         <th>保险起止时间<span class="required">*</span></th>
                         <td>
-							<input class="Wdate half" name="fromDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="fromDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 							<input class="Wdate half" name="toDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<s:fielderror style="color:red"></s:fielderror>
 						</td>
                     </tr>
                     <tr><th><s:property value="tr.getText('car.CarInsurance.money')" />(元)<span class="required">*</span></th>
                     	<td>
-                        	<input class="inputText" type="text" name="money"/>
+                        	<input class="inputText" type="text" name="money"/> &nbsp;&nbsp;<input class="btn" id="getMoney" type="button" value="点击获取" />
 						</td>
-                    </tr>
-                    <tr><th><s:property value="tr.getText('car.CarInsurance.memo')" /></th>
+                    </tr>     
+                     <tr><th><s:property value="tr.getText('car.CarInsurance.memo')" /></th>
                     	<td>
                         	<textarea class="inputText" style="height:100px" name="memo"></textarea>
                         </td>
-                    </tr>
+                    </tr>                  
                     <tr>
                     	<th><s:property value="tr.getText('car.CarInsurance.payDate')" /><span class="required">*</span></th>
                     	<td>
@@ -132,13 +135,15 @@
                 <tfoot>
                     <tr>
                         <td colspan="2">
-                            <input class="inputButton" name="sub" type="submit" value="提交"/>
+                        	<input type="hidden" name="inputRows"/>
+                            <input class="inputButton" name="sub" type="submit" value="确定"/>
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
                     </tr>
                 </tfoot>
             </table>
         </s:form>
+        
         </div>
     </div>
     <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
@@ -150,76 +155,145 @@
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
 	    $(function(){
-	    		
+	    	 //点击新增一条商业保险
 	    	 $("#btn").click(function(){
 	    		 	var row = $("#tab").find('tr').length-5;	//获取table行数，减去5得到增加行的位置
-	    		 	var row1 = row+1;
-					$($('#tab').find('tr')[row]).after('<tr id='+row1+'><th>&nbsp;&nbsp;&nbsp;&nbsp;<span class="required"></span></th>'+
-						'<td><select id=select'+row1+' style="width:140px"></select>&nbsp;'+							
-                		'<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
-						'<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
-						'<input class="tdInput" type="text" name="commercialInsuranceCoverageMoney"/>&nbsp;&nbsp;'+
-						'<input class="tdInput" type="text" name="commercialInsuranceMoney"/>&nbsp;&nbsp;&nbsp;<input type="button" name="deleteTr" value="删除" /></td></tr>'); 
-	    		 	$(".selectClass option").each(function(){
+	 		 		var row1 = row+1;	 
+					$($('#tab').find('tr')[row]).after('<tr class="trClass"><th>&nbsp;&nbsp;&nbsp;&nbsp;<span class="required"></span></th>'+
+						'<td><select name="commercialInsuranceType" id=select'+row1+' style="width:140px"></select>&nbsp;'+							
+               			'<input  class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
+						'<input  class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
+						'<input  class="tdInput" type="text" name="commercialInsuranceCoverageMoney">&nbsp;&nbsp;'+
+						'<input  class="tdInput" type="text" name="commercialInsuranceMoney"/>&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>'); 			
+					$(".selectClass option").each(function(){
 	    		 		$("#select"+row1).append('<option value='+$(this).val()+'>'+$(this).text()+'</option>');
-	    		 	});
-	    		 	$("input[name=deleteTr]").click(function(){
-	    		 		$("#"+row1).remove();
-	    		 	});
-	    		 	
+	    		 	});	    
+					//点击删除一条商业保险
+					$(".deleteTr").click(function(){
+		    		 	$(this).parent('td').parent('tr').empty();
+		    		}); 
 			 })
 			
+			 
 			 $("input[name=sub]").click(function(){
-	    		 var ss = $("input[name=commercialInsuranceBeginDate]").val();
-	    		 alert(ss);
+					 
+		    		 
+		    		 //提交时对商业保险中的字段进行判断
+		    		 $("select[name=commercialInsuranceType] option:selected").each(function(){
+		    			 var value =$(this).attr("value");
+	   					 if(value==""){
+	   						 alert("请选择商业保险类型！");
+	   						 return false;
+	   					 }
+		    		 }); 
+		    		 
+		    		$("input[name=commercialInsuranceBeginDate]").each(function(){
+		    			 var value =$(this).val();
+		    			 if(value==""){
+	   						 alert("请输入商业保险生效日期！");
+	   						 return false;
+	   					 }
+		    		 }); 
+		    		
+		    		$("input[name=commercialInsuranceEndDate]").each(function(){
+		    			 var value =$(this).val();
+		    			 if(value==""){
+	  						 alert("请输入商业保险截止日期！");
+	  						 return false;
+	  					 }
+		    		 }); 
+		    		
+		    		$("input[name=commercialInsuranceCoverageMoney]").each(function(){
+		    			 var value =$(this).val();
+		    			 if(value==""){
+	  						 alert("请输入商业保险承保金额！");
+	  						 return false;
+	  					 }
+		    		 }); 
+		    		
+		    		$("input[name=commercialInsuranceMoney]").each(function(){
+		    			 var value =$(this).val();
+		    			 if(value==""){
+	 						 alert("请输入商业保险金额！");
+	 						 return false;
+	 					 }
+		    		 }); 
+		    		//获取商业保险的条数，方便在action中处理数据
+					 var inputRows = 0;
+		    		 $('tr.trClass').each(function(){
+		    			 if($(this).text() != ""){
+		    				 inputRows++;
+		    			 }
+		    		 }) 
+		    		 $("input[name=inputRows]").val(inputRows); 
+		    		
 	    	 });
 	    	 
-			 
-			$("#pageForm").validate({
-				onfocusout: function(element) { $(element).valid(); },
-				rules:{
-					// 配置具体的验证规则
-					'car.plateNumber':{
-						required:true,
-					},
-					insureCompany:{
-						required:true,
-					},
-					policyNumber:{
-						required:true,
-					},
-					compulsoryBeginDate:{
-						required:true,
-					},
-					compulsoryEndDate:{
-						required:true,
-					},
-					compulsoryCoverageMoney:{
-						required:true,
-					},
-					compulsoryMoney:{
-						required:true,
-					},
-					fromDate:{
-						required:true,
-					},
-					toDate:{
-						required:true,
-					},
-					money:{
-						required:true,
-						digits:true,
-						min:1
-					},
-					insureType:{
-						required:true,
-					},
-					payDate:{
-						required:true,
-					},
-				}
-			});
-			
+	    	 //计算保险金额（总金额）  实现数字相加，Number(a1)+Number(a2);	
+	    	 $("#getMoney").click(function(){    		
+		    		var compulsoryMoney = $("input[name=compulsoryMoney]").val();
+		    		var vehicleTaxMoney = $("input[name=vehicleTaxMoney]").val();
+		    		var money = Number(compulsoryMoney) + Number(vehicleTaxMoney);
+		    		$("input[name=commercialInsuranceMoney]").each(function(){
+		    			 var value =$(this).val();
+		    			 money=Number(money)+Number(value);
+		    		 }); 
+		    		$("input[name=money]").val(money); 
+	    	 });
+	    	
+	    	 $("#pageForm").validate({
+					onfocusout: function(element) { $(element).valid(); },
+					rules:{
+						// 配置具体的验证规则
+						'car.plateNumber':{
+							required:true,
+						},
+						insureCompany:{
+							required:true,
+						},
+						policyNumber:{
+							required:true,
+						},
+						compulsoryBeginDate:{
+							required:true,
+						},
+						compulsoryEndDate:{
+							required:true,
+						},
+						compulsoryCoverageMoney:{
+							required:true,
+						},
+						compulsoryMoney:{
+							required:true,
+						},
+						vehicleTaxBeginDate:{
+							required:true,
+						},
+						vehicleTaxEndDate:{
+							required:true,
+						},
+						vehicleTaxMoney:{
+							required:true,
+						},
+						fromDate:{
+							required:true,
+						},
+						toDate:{
+							required:true,
+						},
+						money:{
+							required:true,
+							digits:true,
+							min:1
+						},
+						insureType:{
+							required:true,
+						},
+						payDate:{
+							required:true,
+						},
+					}
+				});
 			
 		});
 	    

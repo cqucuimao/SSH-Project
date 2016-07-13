@@ -62,7 +62,7 @@
 							<td><s:a action="carExamine_detail?id=%{id}">${car.plateNumber}</s:a></td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
-							<td style="text-align:right"><s:date name="examineIntervalYear" format="yyyy-MM-dd"/></td>
+							<td style="text-align:right"><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
 							<td>${memo}</td>
 							<td>
 								<s:if test="appointment==true">

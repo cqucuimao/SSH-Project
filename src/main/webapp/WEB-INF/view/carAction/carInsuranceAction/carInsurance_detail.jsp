@@ -12,6 +12,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="skins/main.css">
+	<style>
+	  .tdDiv{width:150px;text-align:left;float:left;margin-left:0px;}
+    .tdDiv1{width:110px;text-align:center;float:left;margin-left:0px;}
+    .tdDiv2{width:110px;text-align:center;float:left;margin-left:33px;}
+    .tdDiv3{width:110px;text-align:center;float:left;margin-left:33px;}
+	</style>
 </head>
 <body class="minW">
 	<div class="space">
@@ -43,8 +49,53 @@
                     			<td>${policyNumber}</td>
                 			</tr>
                 			<tr>
+		                    	<th></th>
+		                    	<th>
+		                    			<div class="tdDiv">类型</div>
+		                    			<div class="tdDiv1">生效日期</div>
+		                    		    <div class="tdDiv2"> 截止日期</div>
+		                    		    <div class="tdDiv3"> 承保金额（元）</div>
+		                    		    <div class="tdDiv3">金额（元）</div>
+		                    	</th>
+		                    </tr>  
+                			<tr>
+                    			<th>交强险：</th>
+                    			<td>
+                    			<div class="tdDiv">——</div>
+                    			<div class="tdDiv1"><s:date name="compulsoryBeginDate" format="yyyy-MM-dd"/></div>
+                    			
+		                    	<div class="tdDiv2"><s:date name="compulsoryEndDate" format="yyyy-MM-dd"/></div>
+		                    			
+		                    	<div class="tdDiv3">${compulsoryCoverageMoney }</div>
+		                    			
+		                    	<div class="tdDiv3"> ${compulsoryMoney }</div>
+                    			</td>
+                			</tr>
+                			<tr>
+                    			<th>车船税：</th>
+                    			<td>
+                    			<div class="tdDiv">——</div>
+                    			<div class="tdDiv1"><s:date name="vehicleTaxBeginDate" format="yyyy-MM-dd"/></div>
+		                    	<div class="tdDiv2"><s:date name="vehicleTaxEndDate" format="yyyy-MM-dd"/></div>
+		                    	<div class="tdDiv3">——</div>
+		                    	<div class="tdDiv3">${vehicleTaxMoney }</div>
+                    			</td>
+                			</tr>
+                			<s:iterator value="commercialInsurances">
+                			<tr>
+                				<th>商业保险：</th>
+                				<td>
+                				<div class="tdDiv">${commercialInsuranceType.name }</div>
+                				<div class="tdDiv1"><s:date name="commercialInsuranceBeginDate" format="yyyy-MM-dd"/></div>
+                				<div class="tdDiv2"><s:date name="commercialInsuranceEndDate" format="yyyy-MM-dd"/></div>
+                				<div class="tdDiv3">${commercialInsuranceCoverageMoney }</div>
+                				<div class="tdDiv3">${commercialInsuranceMoney }</div>
+                				</td>
+                			</tr>
+                			</s:iterator>             			
+                			<tr>
                     			<th>保险起止时间：</th>
-                    			<td><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
+                    			<td><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;—&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
                 			</tr>
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarInsurance.money')" />(元)：</th>

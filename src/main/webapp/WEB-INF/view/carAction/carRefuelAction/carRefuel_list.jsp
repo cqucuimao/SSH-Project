@@ -40,6 +40,12 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
+					<td>
+						<input class="inputButton" id="btn" type="button" value="导入加油信息"/>
+					</td>
+					<td>
+						<a href="file/加油信息.xls">点击下载Excel模板</a>
+					</td>
 				</tr>
 			</table>
 			</s:form>
@@ -88,6 +94,10 @@
 		$(function(){
 	        $("#register").click(function(){
 	            self.location.href='carRefuel_addUI.action';
+	        });
+	        
+	        $("#btn").click(function(){
+	        	self.location.href='carRefuel_excel.action';
 	        });
 	    })
 	</script>

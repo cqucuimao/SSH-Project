@@ -24,6 +24,7 @@
 				<tr>
 					<td>
 						<input id="export" class="inputButton" type="button" value="导出"/>
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>
 				</tr>
 			</table>

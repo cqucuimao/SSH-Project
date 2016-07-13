@@ -54,6 +54,7 @@
 							<th><s:property value="tr.getText('car.CarServiceType.title')" /></th>
               				<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
                 			<th><s:property value="tr.getText('car.Car.model')" /></th>
+                			<th><s:property value="tr.getText('car.Car.transmissionType')" /></th>
                 			<th><s:property value="tr.getText('car.Car.registDate')" /></th>
                 			<th><s:property value="tr.getText('car.Car.driver')" /></th>
                 			<th><s:property value="tr.getText('car.ServicePoint.name')" /></th>
@@ -66,11 +67,12 @@
 							<td>${serviceType.title }</td>
 							<td>${plateNumber }</td>
 							<td>${model }</td>
-							<td><s:date name="registDate" format="yyyy-MM-dd hh:mm:ss"/></td>
+							<td>${transmissionType.label }</td>
+							<td><s:date name="registDate" format="yyyy-MM-dd HH:mm:ss"/></td>
 							<td>${driver.name }</td>
                 			<td>${servicePoint.name }</td>							
 							<td>							
-			                    <s:a action="car_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+			                    <s:a action="car_editUI?id=%{id}&actionFlag=edit"><i class="icon-operate-edit" title="修改"></i></s:a>
 			                    <s:a action="car_detail?id=%{id}"><i class="icon-operate-detail" title="GPS定位器"></i></s:a>	 
 			                    <s:if test="canDeleteCar">
 			                	<s:a action="car_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
@@ -98,7 +100,7 @@
 	<script type="text/javascript">
 		$(function(){
 	        $("#register").click(function(){
-	            self.location.href='car_addUI.action';
+	            self.location.href='car_addUI.action?actionFlag=register';
 	        });
 	    })
 	</script>

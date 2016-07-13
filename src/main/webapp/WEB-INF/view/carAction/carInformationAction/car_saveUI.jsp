@@ -85,9 +85,34 @@
 						</td>
 					</tr>
 					<tr>
+						<th><s:property value="tr.getText('car.Car.plateType')" /><span class="required">*</span></th>
+						<td>
+								<s:radio list="#{'0':'蓝牌','1':'黄牌'}" name="plateTypeId" value="plateType.id"/>
+						</td>
+					</tr>
+					<tr>
+						<th><s:property value="tr.getText('car.Car.seatNumber')" /><span class="required">*</span></th>
+						<td>
+								<s:textfield cssClass="inputText" id="seatNumber" name="seatNumber"/>
+						
+						</td>
+					</tr>
+					<tr>
+						<th><s:property value="tr.getText('car.Car.transmissionType')" /><span class="required">*</span></th>
+						<td>
+								<s:radio list="#{'0':'自动','1':'手动'}" name="transmissionTypeId" value="transmissionType.id"/>
+						</td>
+					</tr>
+					<tr>
+						<th><s:property value="tr.getText('car.Car.registDate')" /><span class="required">*</span></th>
+						<td >
+								<s:textfield class="Wdate half" id="registDate" name="registDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+						</td>
+					</tr>	
+					<tr>
 						<th><s:property value="tr.getText('car.Car.enrollDate')" /><span class="required">*</span></th>
 						<td >
-								<input class="Wdate half" name="enrollDate" id="enrollDateId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<s:textfield class="Wdate half" name="enrollDate" id="enrollDateId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
 						</td>
 					</tr>				
 					<tr>
@@ -113,7 +138,8 @@
 						</td>
 					</tr>
 					<tr>
-	                <td colspan="2">	                		 
+	                <td colspan="2">	    
+	                		<input name="actionFlag" type="hidden" value="${actionFlag }">            		 
 		                	<input type="submit" class="inputButton" value="确定" id="sureButton"/>
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a>
 		                
@@ -153,6 +179,9 @@
 					EngineSN:{
 						required:true,
 					},
+					plateType:{
+						required:true,
+					},
 					enrollDate:{
 						required:true,
 					},
@@ -170,18 +199,25 @@
 // 					alert("非备用车的情况");
 // 			});
 			
-			//获取当前日期
-	    	today = new Date();  
-			centry="";
-			if  (today.getFullYear()<2000 )  
-			    centry = "19" ; 
-			date = centry + (today.getFullYear())+ "-" + 
-			    		(today.getMonth() + 1 ) + "-" + 
-			    		today.getDate() + " "+
-			    		today.getHours()+ ":"+
-			    		today.getMinutes()+":"+
-			    		today.getSeconds(); 
-			$("#enrollDateId").val(date);
+			//登记车辆的时候获取当前日期
+			var actionFlag = $("input[name=actionFlag]").val();
+			if(actionFlag == "register"){
+				today = new Date();  
+				centry="";
+				if  (today.getFullYear()<2000 )  
+				    centry = "19" ; 
+				date = centry + (today.getFullYear())+ "-" + 
+				    		(today.getMonth() + 1 ) + "-" + 
+				    		today.getDate() + " "+
+				    		today.getHours()+ ":"+
+				    		today.getMinutes()+":"+
+				    		today.getSeconds(); 
+				$("#enrollDateId").val(date);
+				$("#seatNumber").val("");
+			}
+			
+			formatDateField3($("#registDate"));
+			formatDateField3($("#enrollDateId"));
 		});
 	</script>
 </body>

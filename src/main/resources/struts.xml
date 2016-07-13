@@ -164,6 +164,8 @@
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_saveUI.jsp
 			</result>
+			<result name="saveUI2">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_saveUI2.jsp
+			</result>
 			<result name="input">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_saveUI.jsp
 			</result>
 			<result name="remindList">/WEB-INF/view/carAction/carInsuranceAction/carInsurance_checkRemind.jsp
@@ -204,6 +206,8 @@
 			<result name="list">/WEB-INF/view/carAction/carRefuelAction/carRefuel_list.jsp
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carRefuelAction/carRefuel_saveUI.jsp
+			</result>
+			<result name="excel">/WEB-INF/view/carAction/carRefuelAction/carRefuel_excel.jsp
 			</result>
 			<result name="carRefuelDetail">/WEB-INF/view/carAction/carRefuelAction/carRefuel_detail.jsp
 			</result>

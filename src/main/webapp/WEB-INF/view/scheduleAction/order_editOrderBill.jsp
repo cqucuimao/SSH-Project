@@ -77,8 +77,8 @@
 			<s:iterator value="abstractTrackList" status="track" >
 			<tr>
 				<td align="center"><s:date name="getonDate" format="yyyy-MM-dd"/></td>
-				<td align="center"><s:textfield class="Wdate half" name="%{'dayDetails['+#track.index+'].getonDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
-				<td align="center"><s:textfield class="Wdate half" name="%{'dayDetails['+#track.index+'].getoffDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
+				<td align="center"><s:textfield class="Wdate half" id="date" name="%{'dayDetails['+#track.index+'].getonDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
+				<td align="center"><s:textfield class="Wdate half" id="date" name="%{'dayDetails['+#track.index+'].getoffDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
 				<td colspan="3" align="center"><s:textfield name="%{'dayDetails['+#track.index+'].pathAbstract'}" /></td>
 				<td align="center"><s:textfield name="%{'dayDetails['+#track.index+'].actualMile'}"/></td>
 				<td align="center"><s:textfield name="%{'dayDetails['+#track.index+'].chargeMile'}" /></td>
@@ -197,7 +197,12 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
     <script type="text/javascript">
     $(function(){
-		 
+    	
+    	$("input[id=date]").each(function(){
+    		formatDateField3($(this));
+    		//alert($(this).val());
+    	})
+    	
 		var obj= $("#signatureId");
 		if(obj.val() != null&&obj.val() != 0){
 			$("#imgId").show();

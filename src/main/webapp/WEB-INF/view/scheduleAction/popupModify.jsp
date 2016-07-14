@@ -21,9 +21,8 @@
 		                		<input name="actionId" type="hidden"  value="${actionId }"/>			                		
 		                </th>       
 		                <td>
-								<input class="Wdate half" name="inputTime" id="timeId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<s:textfield class="Wdate half" name="time" id="timeId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
 								<input name="actionId" type="hidden"  value="${actionId }"/>
-								<input name="time" type="hidden"  value="${time }"/>
 								<input name="beforeTime" type="hidden"  value="${beforeTime }"/>
 								<input name="afterTime" type="hidden"  value="${afterTime }"/>
 						</td>
@@ -49,10 +48,13 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	
 	<script type="text/javascript">
-		//alert("11");
-		//formatDateField4($("input[name=time]"));
-		//alert($("input[name=time]").val());
-		//alert("22");
+		if($("#timeId").val().length < 28){
+			formatDateField3($("#timeId"));
+		}
+		//将Wed Jul 13 22:40:00 CST 2016转换为 2016-07-13 22:40:00
+		if($("#timeId").val().length == 28){
+			formatDateField4($("#timeId"));
+		}
 		var actionId = $("input[name=actionId]").val();
 		var id = actionId.substr(2,1);	
 		
@@ -76,17 +78,10 @@
 			$(".driverAction").text("已取消");
 		}
 		
-		var time = $("input[name=time]").val();
-		var beforeTime = $("input[name=beforeTime]").val();
-		var afterTime = $("input[name=afterTime]").val();
-		alert("beforeTime="+beforeTime);
-		alert("afterTime="+afterTime);
-		//$("#timeId").val(time.substr(0,19));
-		$("#timeId").val(time);
-		
+		var beforeTime = $("input[name=beforeTime]").val().replace('-','/').replace('-','/').substr(0,19);
+		var afterTime = $("input[name=afterTime]").val().replace('-','/').replace('-','/').substr(0,19);
 		$("#btn").click(function(){
-			var inputTime = $("#timeId").val();	
-			//alert("inputTime="+inputTime+"beforeTime="+beforeTime+"afterTime="+afterTime);
+			var inputTime = $("#timeId").val().replace('-','/').replace('-','/').substr(0,19);	
 			if(Date.parse(inputTime)-Date.parse(beforeTime)<0){
 				alert("时间不合法！");
 				return false;
@@ -100,8 +95,6 @@
 			var win=artDialog.open.origin;
 			art.dialog.close();
 			win.location.reload();
-			//top.location.href="order_editDriverAction.action";
-			//popdown("popupModify");
 		}) 
 	</script>
 </body>

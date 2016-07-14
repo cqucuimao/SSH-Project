@@ -82,7 +82,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="2">
-                            <input class="inputButton" type="submit" value="提交" />
+                            <input class="inputButton" type="submit" value="确定" />
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
                     </tr>

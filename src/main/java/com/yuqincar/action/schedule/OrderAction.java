@@ -66,7 +66,6 @@ public class OrderAction extends BaseAction {
 	private String actionId;
 	private Date actionTime;
 	private String time;
-	private String inputTime;
 	private String beforeTime;
 	private String afterTime;
 	private String reason;
@@ -191,7 +190,6 @@ public class OrderAction extends BaseAction {
 	 * 订单打印页,非弹出框
 	 */
 	public String print() {
-		System.out.println("in print, orderId="+orderId);
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
@@ -215,7 +213,6 @@ public class OrderAction extends BaseAction {
 	 * @return
 	 */
 	public String editOrderBillUI() {
-		System.out.println("in print, orderId="+orderId);
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(orderId);
@@ -301,9 +298,6 @@ public class OrderAction extends BaseAction {
 	 * 编辑司机动作
 	 */
 	public String editDriverAction() {
-		System.out.println("ID="+orderId);
-		System.out.println(ActionContext.getContext().getValueStack().peek().getClass().toString());
-		System.out.println("orderForView="+ActionContext.getContext().get("orderForView"));
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
@@ -325,15 +319,11 @@ public class OrderAction extends BaseAction {
 	public String addAcceptAction(){
 
 		User user = (User)ActionContext.getContext().getSession().get("user");
-		//System.out.println("date="+DateUtils.getYMDHMSString(date));
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
-			ActionContext.getContext().getValueStack().push(order);
-			
-			orderService.addAcceptAction(order, user, actionTime);
-			
+			ActionContext.getContext().getValueStack().push(order);		
+			orderService.addAcceptAction(order, user, actionTime);	
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
-			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 		
@@ -344,15 +334,11 @@ public class OrderAction extends BaseAction {
 	public String addBeginAction(){
 
 		User user = (User)ActionContext.getContext().getSession().get("user");
-		//System.out.println("date="+DateUtils.getYMDHMSString(date));
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
-			ActionContext.getContext().getValueStack().push(order);
-			
-			orderService.addBeginAction(order, user, actionTime);
-			
+			ActionContext.getContext().getValueStack().push(order);	
+			orderService.addBeginAction(order, user, actionTime);		
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
-			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 		
@@ -363,15 +349,11 @@ public class OrderAction extends BaseAction {
 	public String addGetonAction(){
 
 		User user = (User)ActionContext.getContext().getSession().get("user");
-		//System.out.println("date="+DateUtils.getYMDHMSString(date));
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
-			
 			orderService.addGetonAction(order, user, actionTime);
-			
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
-			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 		
@@ -382,15 +364,11 @@ public class OrderAction extends BaseAction {
 	public String addGetoffAction(){
 
 		User user = (User)ActionContext.getContext().getSession().get("user");
-		//System.out.println("date="+DateUtils.getYMDHMSString(date));
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
-			ActionContext.getContext().getValueStack().push(order);
-			
+			ActionContext.getContext().getValueStack().push(order);		
 			orderService.addGetoffAction(order, user, actionTime);
-			
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
-			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 		
@@ -401,15 +379,11 @@ public class OrderAction extends BaseAction {
 	public String addEndAction(){
 
 		User user = (User)ActionContext.getContext().getSession().get("user");
-		//System.out.println("date="+DateUtils.getYMDHMSString(date));
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
-			ActionContext.getContext().getValueStack().push(order);
-			
-			orderService.addEndAction(order, user, actionTime);
-			
+			ActionContext.getContext().getValueStack().push(order);		
+			orderService.addEndAction(order, user, actionTime);		
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
-			//System.out.println("List="+driverActionVOList.get(1).getStatus().getLabel());
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 		
@@ -420,11 +394,8 @@ public class OrderAction extends BaseAction {
 	public String deleteDriverAction() throws Exception{
 		
 		User user = (User)ActionContext.getContext().getSession().get("user");
-		System.out.println("actionId="+actionId);
-		
 		orderService.deleteDriverAction(actionId, user);
 		orderId = Long.parseLong(actionId.substring(0, 1));
-		System.out.println("orderId="+orderId);
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);		
@@ -439,7 +410,7 @@ public class OrderAction extends BaseAction {
 	public String popupModify(){
 		
 		ActionContext.getContext().getValueStack().push(actionId);
-		ActionContext.getContext().getValueStack().push(time);
+		ActionContext.getContext().put("time",time);
 		ActionContext.getContext().getValueStack().push(beforeTime);
 		ActionContext.getContext().getValueStack().push(afterTime);
 		return "popupModify";
@@ -447,12 +418,10 @@ public class OrderAction extends BaseAction {
 	
 	//修改时间
 	public void modifyDriverActionTime() throws ParseException{
-		System.out.println("++++");
+
 		User user = (User)ActionContext.getContext().getSession().get("user");
-		System.out.println("actionId="+actionId);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = sdf.parse(inputTime);
-		System.out.println("date="+date);
+		Date date = sdf.parse(time);
 		orderService.EditDriverAction(actionId, date, user);
 		orderId = Long.parseLong(actionId.substring(0, 1));
 		if(orderId>0){
@@ -791,16 +760,6 @@ public class OrderAction extends BaseAction {
 		this.time = time;
 	}
 	
-	
-
-	public String getInputTime() {
-		return inputTime;
-	}
-
-	public void setInputTime(String inputTime) {
-		this.inputTime = inputTime;
-	}
-
 	public String getBeforeTime() {
 		return beforeTime;
 	}

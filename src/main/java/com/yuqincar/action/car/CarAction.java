@@ -108,7 +108,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			model.setDriver(null);
 		else{
 			if(driverId==null){
-				addFieldError("driver", "非备用车必须制定司机！");
+				addFieldError("driver", "非备用车必须指定司机！");
 				return addUI();
 			}
 		}	
@@ -172,7 +172,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			model.setDriver(null);
 		else{
 			if(driverId==null){
-				addFieldError("driver", "非备用车必须制定司机！");
+				addFieldError("driver", "非备用车必须指定司机！");
 				return addUI();
 			}
 		}	
@@ -186,6 +186,10 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		car.setModel(model.getModel());
 		car.setVIN(model.getVIN());
 		car.setEngineSN(model.getEngineSN());
+		car.setEnrollDate(model.getEnrollDate());
+		car.setSeatNumber(model.getSeatNumber());
+		car.setPlateType(PlateTypeEnum.getById(plateTypeId));
+		car.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
 		car.setRegistDate(model.getRegistDate());
 		car.setDriver(userService.getById(driverId));
 		car.setServicePoint(carService.getServicePointById(servicePointId));

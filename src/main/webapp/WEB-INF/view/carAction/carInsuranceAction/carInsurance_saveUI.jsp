@@ -155,6 +155,61 @@
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
 	    $(function(){
+	    	
+	    	 $("#pageForm").validate({
+					onfocusout: function(element) { $(element).valid(); },
+					rules:{
+						// 配置具体的验证规则
+						'car.plateNumber':{
+							required:true,
+						},
+						insureCompany:{
+							required:true,
+						},
+						policyNumber:{
+							required:true,
+						},
+						compulsoryBeginDate:{
+							required:true,
+						},
+						compulsoryEndDate:{
+							required:true,
+						},
+						compulsoryCoverageMoney:{
+							required:true,
+						},
+						compulsoryMoney:{
+							required:true,
+						},
+						vehicleTaxBeginDate:{
+							required:true,
+						},
+						vehicleTaxEndDate:{
+							required:true,
+						},
+						vehicleTaxMoney:{
+							required:true,
+						},
+						fromDate:{
+							required:true,
+						},
+						toDate:{
+							required:true,
+						},
+						money:{
+							required:true,
+							digits:true,
+							min:1
+						},
+						insureType:{
+							required:true,
+						},
+						payDate:{
+							required:true,
+						},
+					}
+				});
+	    	
 	    	 //点击新增一条商业保险
 	    	 $("#btn").click(function(){
 	    		 	var row = $("#tab").find('tr').length-5;	//获取table行数，减去5得到增加行的位置
@@ -241,59 +296,7 @@
 		    		$("input[name=money]").val(money); 
 	    	 });
 	    	
-	    	 $("#pageForm").validate({
-					onfocusout: function(element) { $(element).valid(); },
-					rules:{
-						// 配置具体的验证规则
-						'car.plateNumber':{
-							required:true,
-						},
-						insureCompany:{
-							required:true,
-						},
-						policyNumber:{
-							required:true,
-						},
-						compulsoryBeginDate:{
-							required:true,
-						},
-						compulsoryEndDate:{
-							required:true,
-						},
-						compulsoryCoverageMoney:{
-							required:true,
-						},
-						compulsoryMoney:{
-							required:true,
-						},
-						vehicleTaxBeginDate:{
-							required:true,
-						},
-						vehicleTaxEndDate:{
-							required:true,
-						},
-						vehicleTaxMoney:{
-							required:true,
-						},
-						fromDate:{
-							required:true,
-						},
-						toDate:{
-							required:true,
-						},
-						money:{
-							required:true,
-							digits:true,
-							min:1
-						},
-						insureType:{
-							required:true,
-						},
-						payDate:{
-							required:true,
-						},
-					}
-				});
+	    	
 			
 		});
 	    

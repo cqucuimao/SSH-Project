@@ -570,21 +570,37 @@ function formatDateField4(obj){
 	//将Wed Jul 13 22:40:00 CST 2016转换为 2016-07-13 22:40:00
 	var dateStr=obj.val();
 	if(dateStr.length>0){
-		var year = dateStr.getFullYear(); 
-		alert("year="+year);
-	    var month = dateStr.getMonth() + 1; 
-	    var day= dateStr.getDate(); 
-	    if (month < 10) {
-	    	month = "0" + month; 
-	    } 
-	    if (date < 10) { 
-	    	date = "0" + date; 
-	    } 
-	    var hour = dateStr.getHours();
-	    var min = dateStr.getMinutes();
-	    var second = dateStr.getSeconds();
-		var date = new Date(year,month,day,hour,min,second);
-		var dateStr=date.Format("yyyy-MM-dd hh:mm:ss");
+		var arr = dateStr.split(" ");
+		var year = arr[5];
+	    var month = 0;
+	    if(arr[1] == "Jan"){
+	    	month = "0"+1;
+	    }if(arr[1] == "Feb"){
+	    	month = "0"+2;
+	    }if(arr[1] == "Mar"){
+	    	month = "0"+3;
+	    }if(arr[1] == "Apr"){
+	    	month = "0"+4;
+	    }if(arr[1] == "May"){
+	    	month = "0"+5;
+	    }if(arr[1] == "Jun"){
+	    	month = "0"+6;
+	    }if(arr[1] == "Jul"){
+	    	month = "0"+7;
+	    }if(arr[1] == "Aug"){
+	    	month = "0"+8;
+	    }if(arr[1] == "Sep"){
+	    	month = "0"+9;
+	    }if(arr[1] == "Oct"){
+	    	month = 10;
+	    }if(arr[1] == "Nov"){
+	    	month = 11;
+	    }if(arr[1] == "Dec"){
+	    	month = 12;
+	    }
+	    var day = arr[2];
+	    var time = arr[3];
+		dateStr = year+"-"+month+"-"+day+" "+time;
 		obj.val(dateStr);
 	}
 }

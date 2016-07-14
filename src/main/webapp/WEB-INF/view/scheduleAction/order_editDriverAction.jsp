@@ -104,7 +104,7 @@
                         <td colspan="4">  
                         <form id="actionForm" action="">                   
                         		操作时间：
-                        		<input class="Wdate half" name="actionTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /><span class="required">*</span>&nbsp;&nbsp;
+                        		<input class="Wdate half" id="actionTime" name="actionTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /><span class="required">*</span>&nbsp;&nbsp;
                         		<input type="hidden" name="orderId" value="${id }">
                         		<s:if test="canAddAcceptAction">                       			
                         				<input type="submit" id="accept" class="inputButton" value="接受订单"/>                      		
@@ -155,8 +155,8 @@
     
    	
    	$(".inputButton").click(function(){
-   		var last = $(".last").text();
-   		var actionTime = $("input[name=actionTime]").val();
+   		var last = $(".last").text().replace('-','/').replace('-','/');
+   		var actionTime = $("#actionTime").val().replace('-','/').replace('-','/');
    		if(actionTime == ""){
    	   		alert("操作时间不能为空！");
    	   		return false;

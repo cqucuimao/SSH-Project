@@ -33,7 +33,10 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	private CarDao carDao;
 
 	@Transactional
-	public void saveCarInsurance(CarInsurance carInsurance) {
+	public void saveCarInsurance(CarInsurance carInsurance,List<CommercialInsuranceType> commercialInsuranceType,List<Date> commercialInsuranceBeginDate,
+			List<Date> commercialInsuranceEndDate,List<BigDecimal> commercialInsuranceCoverageMoney,
+			List<BigDecimal> commercialInsuranceMoney,int inputRows) {
+		
 		carInsuranceDao.save(carInsurance);
 		
 		carInsurance.getCar().setInsuranceExpiredDate(carInsurance.getToDate());
@@ -42,6 +45,19 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 		else
 			carInsurance.getCar().setInsuranceExpired(true);
 		carDao.update(carInsurance.getCar());
+		
+		for(int i=0;i<inputRows;i++){
+			CommercialInsurance commercialInsurance = new CommercialInsurance();
+			commercialInsurance.setInsurance(carInsurance);
+			commercialInsurance.setCommercialInsuranceType(commercialInsuranceType.get(i));
+			if(commercialInsuranceBeginDate.get(i).before(commercialInsuranceEndDate.get(i))){
+				commercialInsurance.setCommercialInsuranceBeginDate(commercialInsuranceBeginDate.get(i));
+				commercialInsurance.setCommercialInsuranceEndDate(commercialInsuranceEndDate.get(i));
+			}			
+			commercialInsurance.setCommercialInsuranceCoverageMoney(commercialInsuranceCoverageMoney.get(i));
+			commercialInsurance.setCommercialInsuranceMoney(commercialInsuranceMoney.get(i));
+			commercialInsuranceDao.save(commercialInsurance);
+		}
 	}
 
 	public CarInsurance getCarInsuranceById(long id) {

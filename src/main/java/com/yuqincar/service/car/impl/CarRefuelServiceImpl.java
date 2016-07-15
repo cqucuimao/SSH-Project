@@ -52,7 +52,7 @@ public class CarRefuelServiceImpl implements CarRefuelService {
 	}
 
 	@Transactional
-	public void importExcelFile(InputStream is,int rowFrom,int colFrom,int colTo,int sheetIndex){
+	public int importExcelFile(InputStream is,int rowFrom,int colFrom,int colTo,int sheetIndex){
 		ExcelUtil eu = new ExcelUtil();
 		List<List<String>> excelLines = eu.getLinesFromExcel(is, rowFrom, colFrom, colTo, sheetIndex);
 		if(excelLines.size()>0){
@@ -86,12 +86,13 @@ public class CarRefuelServiceImpl implements CarRefuelService {
 						cr.setDate(date);
 						
 						carRefuelDao.save(cr);
-					
-					} catch (ParseException e) {
+						
+					} catch (Exception e) {
 						e.printStackTrace();
-					} 
+					}
 			}
 		}
+		return excelLines.size()-1;
 	}
 
 

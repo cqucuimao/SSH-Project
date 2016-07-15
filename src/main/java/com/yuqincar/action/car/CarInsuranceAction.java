@@ -16,6 +16,7 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarInsurance;
 import com.yuqincar.domain.car.CommercialInsurance;
+import com.yuqincar.domain.car.CommercialInsuranceType;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.service.car.CarInsuranceService;
 import com.yuqincar.service.car.CarService;
@@ -73,18 +74,19 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 		// 保存到数据库
 		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 		model.setCar(car1);	
-		carInsuranceService.saveCarInsurance(model);
-		CarInsurance cia = carInsuranceService.getCarInsuranceById(model.getId());
+		//CarInsurance cia = carInsuranceService.getCarInsuranceById(model.getId());
+		List<CommercialInsuranceType> cit =new ArrayList<CommercialInsuranceType>();
 		for(int i=0;i<inputRows;i++){
-			CommercialInsurance commercialInsurance = new CommercialInsurance();
-			commercialInsurance.setInsurance(cia);
-			commercialInsurance.setCommercialInsuranceType(carInsuranceService.getCommercialInsuranceTypeById(commercialInsuranceType.get(i)));
-			commercialInsurance.setCommercialInsuranceBeginDate(commercialInsuranceBeginDate.get(i));
-			commercialInsurance.setCommercialInsuranceEndDate(commercialInsuranceBeginDate.get(i));
-			commercialInsurance.setCommercialInsuranceCoverageMoney(commercialInsuranceCoverageMoney.get(i));
-			commercialInsurance.setCommercialInsuranceMoney(commercialInsuranceMoney.get(i));
-			carInsuranceService.saveCommercialInsurance(commercialInsurance);
-		}		
+			if(commercialInsuranceBeginDate.get(i).after(commercialInsuranceEndDate.get(i))){
+				addFieldError("commercialInsurance", "商业保险生效日期晚于了截止日期！");
+				return addUI();
+			}
+			cit.add(carInsuranceService.getCommercialInsuranceTypeById(commercialInsuranceType.get(i)));
+		}
+		carInsuranceService.saveCarInsurance(model,cit,commercialInsuranceBeginDate,commercialInsuranceEndDate,
+				commercialInsuranceCoverageMoney,commercialInsuranceMoney,inputRows);
+		
+				
 		return "toList";
 	}
 	
@@ -136,16 +138,16 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	
 	/** 验证截止时间不能早于起始时间*/
-	public void validateAdd(){
+	/*public void validateAdd(){
 		boolean before = model.getToDate().before(model.getFromDate());
-		//System.out.println(before);
+		System.out.println("in validateAdd!");
 		if(before){
 		
 			//addActionError("预约时间必须晚于今天！");
 			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
 			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
 		}
-	}
+	}*/
 	
 
 	public List<Long> getCommercialInsuranceType() {

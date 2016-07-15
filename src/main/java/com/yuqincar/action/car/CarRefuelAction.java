@@ -59,6 +59,8 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	private String uploadFileName;
 	
 	private String uploadContentType;
+	
+	private int result;
 	/** 列表 */
 	public String list() throws Exception {
 		QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
@@ -94,8 +96,17 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	 */
 	public String importExcelFile() throws Exception{
 		InputStream is = new FileInputStream(upload);
-		carRefuelService.importExcelFile(is, 1, 1, 6, 0);
-		return "toList";
+		try {
+			result = carRefuelService.importExcelFile(is, 1, 1, 6, 0);
+			if(result>0){
+				ActionContext.getContext().getValueStack().push(result);
+				return "success";
+			}else{
+				return "false";
+			}
+		} catch (Exception e) {
+			return "false";
+		}	
 	}
 	
 	/** 添加 */
@@ -179,6 +190,14 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 
 	public void setUploadContentType(String uploadContentType) {
 		this.uploadContentType = uploadContentType;
+	}
+
+	public int getResult() {
+		return result;
+	}
+
+	public void setResult(int result) {
+		this.result = result;
 	}
 	
 	

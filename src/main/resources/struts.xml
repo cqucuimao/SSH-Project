@@ -205,6 +205,10 @@
 		<action name="carRefuel_*" class="carRefuelAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carRefuelAction/carRefuel_list.jsp
 			</result>
+			<result name="success">/WEB-INF/view/carAction/carRefuelAction/success.jsp
+			</result>
+			<result name="false">/WEB-INF/view/carAction/carRefuelAction/false.jsp
+			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carRefuelAction/carRefuel_saveUI.jsp
 			</result>
 			<result name="excel">/WEB-INF/view/carAction/carRefuelAction/carRefuel_excel.jsp

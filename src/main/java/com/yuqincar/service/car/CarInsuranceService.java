@@ -17,7 +17,9 @@ public interface CarInsuranceService {
 	 * 需要设置car.insuranceExpiredDate为toDate
 	 * @param carInsurance
 	 */
-	public void saveCarInsurance(CarInsurance carInsurance);
+	public void saveCarInsurance(CarInsurance carInsurance,List<CommercialInsuranceType> commercialInsuranceType,List<Date> commercialInsuranceBeginDate,
+			List<Date> commercialInsuranceEndDate,List<BigDecimal> commercialInsuranceCoverageMoney,
+			List<BigDecimal> commercialInsuranceMoney,int inputRows);
 	
 	public CarInsurance getCarInsuranceById(long id);
 	
@@ -43,11 +45,6 @@ public interface CarInsuranceService {
 	public void updateCommercialInsuranceType(CommercialInsuranceType commercialInsuranceType);
 	
 	public List<CommercialInsuranceType> getAllCommercialInsuranceType();
-	
-	
-	
-	
-	
 	
 	public void saveCommercialInsurance(CommercialInsurance commercialInsurance);
 	

@@ -19,6 +19,6 @@ public interface CarRefuelService {
 	
 	public BigDecimal statisticCarRefuel(Date fromDate, Date toDate);
 	
-	public void importExcelFile(InputStream is,int rowFrom,int colFrom,int colTo,int sheetIndex);
+	public int importExcelFile(InputStream is,int rowFrom,int colFrom,int colTo,int sheetIndex);
 	
 }

@@ -26,6 +26,15 @@
         <!-- 标题 -->
         <div class="title">
             <h1>保险信息</h1>
+            <p style="color: red">
+				<s:if test="hasFieldErrors()">
+					<s:iterator value="fieldErrors">
+						<s:iterator value="value">
+							<s:property />
+						</s:iterator>
+					</s:iterator>
+				</s:if>
+			</p>
         </div>
         <div class="editBlock detail p30">
         <s:form action="carInsurance_%{id == null ? 'add' : 'edit'}" id="pageForm">
@@ -79,7 +88,7 @@
                     		<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput" type="text" name="compulsoryCoverageMoney" />&nbsp;
-							<input class="tdInput" type="text" name="compulsoryMoney" />
+							<input class="tdInput" type="text" name="compulsoryMoney" onblur="getAllMoney()"/>
 						</td>
                     </tr>
                      <tr>
@@ -90,7 +99,7 @@
                     		<input class="Wdate half" name="vehicleTaxBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="Wdate half" name="vehicleTaxEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>&nbsp;
-							<input class="tdInput" type="text" name="vehicleTaxMoney" />
+							<input class="tdInput" type="text" name="vehicleTaxMoney" onblur="getAllMoney()"/>
 						</td>
                     </tr>      
                     <tr class="trClass">
@@ -103,7 +112,7 @@
                     		<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput" type="text" name="commercialInsuranceCoverageMoney"/>&nbsp;
-							<input class="tdInput" type="text" name="commercialInsuranceMoney"/>&nbsp;&nbsp;
+							<input class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;
 							<input class="btn" id="btn" type="button" value="点击新增" />
 						</td>
                     </tr>                                    
@@ -111,13 +120,12 @@
                         <th>保险起止时间<span class="required">*</span></th>
                         <td>
 							<input class="Wdate half" name="fromDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-							<input class="Wdate half" name="toDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<s:fielderror style="color:red"></s:fielderror>
+							<input class="Wdate half" name="toDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />						
 						</td>
                     </tr>
                     <tr><th><s:property value="tr.getText('car.CarInsurance.money')" />(元)<span class="required">*</span></th>
                     	<td>
-                        	<input class="inputText" type="text" name="money"/> &nbsp;&nbsp;<input class="btn" id="getMoney" type="button" value="点击获取" />
+                        	<input class="inputText" type="text" name="money" readonly/>
 						</td>
                     </tr>     
                      <tr><th><s:property value="tr.getText('car.CarInsurance.memo')" /></th>
@@ -154,6 +162,19 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+    
+	  	 //计算保险金额（总金额）  实现数字相加，Number(a1)+Number(a2);	
+		 function getAllMoney(){    		
+	   		var compulsoryMoney = $("input[name=compulsoryMoney]").val();
+	   		var vehicleTaxMoney = $("input[name=vehicleTaxMoney]").val();
+	   		var money = Number(compulsoryMoney) + Number(vehicleTaxMoney);
+	   		$("input[name=commercialInsuranceMoney]").each(function(){
+	   			 var value =$(this).val();
+	   			 money=Number(money)+Number(value);
+	   		 }); 
+	   		$("input[name=money]").val(money); 
+		 }	
+    
 	    $(function(){
 	    	
 	    	 $("#pageForm").validate({
@@ -210,29 +231,53 @@
 					}
 				});
 	    	
+	    	 function checkEndTime(startTime, endTime) {
+	 			var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+	 			var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+	 			if (end < start) {
+	 				return false;
+	 			}
+	 			return true;
+	 		}
+	    	 
 	    	 //点击新增一条商业保险
 	    	 $("#btn").click(function(){
 	    		 	var row = $("#tab").find('tr').length-5;	//获取table行数，减去5得到增加行的位置
 	 		 		var row1 = row+1;	 
 					$($('#tab').find('tr')[row]).after('<tr class="trClass"><th>&nbsp;&nbsp;&nbsp;&nbsp;<span class="required"></span></th>'+
-						'<td><select name="commercialInsuranceType" id=select'+row1+' style="width:140px"></select>&nbsp;'+							
+						'<td><select name="commercialInsuranceType" id=select'+row1+' style="width:142px"></select>&nbsp;'+							
                			'<input  class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
 						'<input  class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
 						'<input  class="tdInput" type="text" name="commercialInsuranceCoverageMoney">&nbsp;&nbsp;'+
-						'<input  class="tdInput" type="text" name="commercialInsuranceMoney"/>&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>'); 			
+						'<input  class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>'); 			
 					$(".selectClass option").each(function(){
 	    		 		$("#select"+row1).append('<option value='+$(this).val()+'>'+$(this).text()+'</option>');
 	    		 	});	    
 					//点击删除一条商业保险
 					$(".deleteTr").click(function(){
 		    		 	$(this).parent('td').parent('tr').empty();
+		    		 	getAllMoney();
 		    		}); 
 			 })
 			
 			 
 			 $("input[name=sub]").click(function(){
 					 
-		    		 
+					 if(!checkEndTime($("input[name=compulsoryBeginDate]").val(),$("input[name=compulsoryEndDate]").val())){
+		    			 alert("交强险的生效时间晚于了截止时间！");
+		    			 return false;
+		    		 }	
+					 
+					 if(!checkEndTime($("input[name=vehicleTaxBeginDate]").val(),$("input[name=vehicleTaxEndDate]").val())){
+		    			 alert("车船税的生效时间晚于了截止时间！");
+		    			 return false;
+		    		 }	
+				 
+		    		 if(!checkEndTime($("input[name=fromDate]").val(),$("input[name=toDate]").val())){
+		    			 alert("开始时间晚于了截止时间！");
+		    			 return false;
+		    		 }
+				 	
 		    		 //提交时对商业保险中的字段进行判断
 		    		 $("select[name=commercialInsuranceType] option:selected").each(function(){
 		    			 var value =$(this).attr("value");
@@ -284,17 +329,7 @@
 		    		
 	    	 });
 	    	 
-	    	 //计算保险金额（总金额）  实现数字相加，Number(a1)+Number(a2);	
-	    	 $("#getMoney").click(function(){    		
-		    		var compulsoryMoney = $("input[name=compulsoryMoney]").val();
-		    		var vehicleTaxMoney = $("input[name=vehicleTaxMoney]").val();
-		    		var money = Number(compulsoryMoney) + Number(vehicleTaxMoney);
-		    		$("input[name=commercialInsuranceMoney]").each(function(){
-		    			 var value =$(this).val();
-		    			 money=Number(money)+Number(value);
-		    		 }); 
-		    		$("input[name=money]").val(money); 
-	    	 });
+	    	 
 	    	
 	    	
 			

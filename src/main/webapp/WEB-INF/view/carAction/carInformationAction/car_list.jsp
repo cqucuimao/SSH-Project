@@ -68,7 +68,7 @@
 							<td>${plateNumber }</td>
 							<td>${model }</td>
 							<td>${transmissionType.label }</td>
-							<td><s:date name="registDate" format="yyyy-MM-dd HH:mm:ss"/></td>
+							<td><s:date name="registDate" format="yyyy-MM-dd"/></td>
 							<td>${driver.name }</td>
                 			<td>${servicePoint.name }</td>							
 							<td>							

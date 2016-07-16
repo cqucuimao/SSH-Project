@@ -106,13 +106,13 @@
 					<tr>
 						<th><s:property value="tr.getText('car.Car.registDate')" /><span class="required">*</span></th>
 						<td >
-								<s:textfield class="Wdate half" id="registDate" name="registDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<s:textfield class="Wdate half" id="registDate" name="registDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						</td>
 					</tr>	
 					<tr>
 						<th><s:property value="tr.getText('car.Car.enrollDate')" /><span class="required">*</span></th>
 						<td >
-								<s:textfield class="Wdate half" name="enrollDate" id="enrollDateId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<s:textfield class="Wdate half" name="enrollDate" id="enrollDateId" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						</td>
 					</tr>				
 					<tr>
@@ -208,16 +208,13 @@
 				    centry = "19" ; 
 				date = centry + (today.getFullYear())+ "-" + 
 				    		(today.getMonth() + 1 ) + "-" + 
-				    		today.getDate() + " "+
-				    		today.getHours()+ ":"+
-				    		today.getMinutes()+":"+
-				    		today.getSeconds(); 
+				    		today.getDate(); 
 				$("#enrollDateId").val(date);
 				$("#seatNumber").val("");
 			}
 			
-			formatDateField3($("#registDate"));
-			formatDateField3($("#enrollDateId"));
+			formatDateField1($("#registDate"));
+			formatDateField1($("#enrollDateId"));
 		});
 	</script>
 </body>

@@ -29,6 +29,7 @@
         </div>
         <div class="editBlock detail p30">
         <s:form action="orderStatement_invoiceDo" id="pageForm">
+        	<s:hidden name="orderStatementId"/>
             <table>
             	<colgroup>
 					<col width="80"></col>
@@ -61,7 +62,7 @@
                     </tr>
                 	<tr>
                         <th><s:property value="tr.getText('order.OrderStatement.status')" />：</th>
-						<td>${status}</td>
+						<td>${status.label}</td>
                     </tr>
                     <tr>
 						<th><s:property value="tr.getText('order.OrderStatement.invoiceNumber')" /><span class="required">*</span>：</th>
@@ -114,7 +115,7 @@
 					},
 					invoiceMoney:{
 						required:true,
-						digits:true,
+						number:true,
 						min:0
 					},
 					invoiceDate:{

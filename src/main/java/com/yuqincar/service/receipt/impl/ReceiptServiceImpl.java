@@ -73,6 +73,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 	 */
 	@Transactional
 	public void saveOrderStatement(OrderStatement orderStatement) {
+		orderStatement.setActualTotalMoney(BigDecimal.ZERO);
 		orderStatementDao.save(orderStatement);
 	}
 	
@@ -133,6 +134,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 		orderStatement.setOrders(orders);
 		//设置对账单状态,新建对账单都为 UNPAYED状态
 		orderStatement.setStatus(OrderStatementStatusEnum.NEW);
+		orderStatement.setActualTotalMoney(BigDecimal.ZERO);
 		//保存orderStatement对象
 		orderStatementDao.save(orderStatement);
 		//改变对应的所有订单的状态

@@ -66,14 +66,4 @@ public enum ChargeModeEnum implements BaseEnum {
 			return PLANE;
 		return null;
 	} 
-	
-	public String toString(){
-		switch(this){
-		case MILE:	return "按里程计费";
-		case DAY:	return "按天计费";
-		case PROTOCOL:	return "按协议计费";
-		case PLANE:	return "接送机";
-		}
-		return "";
-	}
 }

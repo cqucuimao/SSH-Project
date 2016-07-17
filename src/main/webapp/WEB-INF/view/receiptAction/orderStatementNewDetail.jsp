@@ -24,6 +24,7 @@
 		    <input type="button" class="inputButton" id="excludeOrder" value="排除订单" />
 		    <input type="button" class="inputButton" id="invoice" value="开票" />
 		    <input type="button" class="inputButton" id="cancelOrderStatement" value="取消对账单" />
+            <a class="p15" href="javascript:history.go(-1);">返回</a>
 		</div>
 		<br/>
 		<div>
@@ -89,7 +90,6 @@
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
-	
 	//选中的订单的总价格
     var totalPrice=0;
     $(document).ready(function(){
@@ -141,9 +141,9 @@
     	 	    }
     	 	    //去掉最后一个多余的","
     	 	    idStr=idStr.substring(0,idStr.length-1);
-    	 	    $.get("orderStatement_cancelOrders.action?orderIds="+idStr+"&orderStatementName="+encodeURI(orderStatementName)+"&timestamp="+new Date().getTime(),function(json){
+    	 	    $.get("orderStatement_cancelOrders.action?orderIds="+idStr+"&orderStatementId="+${orderStatement.id}+"&timestamp="+new Date().getTime(),function(json){
     	 	          if(json.status==1){
-    	 	             window.location = "orderStatement_info.action?orderStatementName="+orderStatementName;
+    	 	             window.location = "orderStatement_newDetail.action?orderStatementId="+${orderStatement.id};
     	 	          }
     	 	    });
 	     }
@@ -151,16 +151,16 @@
 	     $("#cancelOrderStatement").bind("click",function(){
 	    	 if(confirm("确定取消对账单？")){
 	    		var orderStatementName=$("#orderStatementNameId").val();
-			    	$.get("orderStatement_cancelOrderStatement.action?orderStatementName="+encodeURI(orderStatementName)+"&timestamp="+new Date().getTime(),function(json){
+			    	$.get("orderStatement_cancelOrderStatement.action?orderStatementId="+${orderStatement.id}+"&timestamp="+new Date().getTime(),function(json){
 			              if(json.status==1){
-			            	 window.location = "orderStatement_list.action";
+			            	 window.location = "orderStatement_newList.action";
 			              }
 			        });
 	    	 }
 	      });  
 	     
 	     $("#invoice").click(function(){
-	            self.location.href='orderStatement_invoice.action?orderStatementId=${id}';
+	            self.location.href='orderStatement_invoice.action?orderStatementId=${orderStatement.id}';
 	        });
 	</script>
 </body>

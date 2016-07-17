@@ -22,11 +22,12 @@
 		</div>
 		<div>
 		    <input type="button" class="inputButton" id="gatherMoney" value="收款" />
+            <a class="p15" href="javascript:history.go(-1);">返回</a>
 		</div>
 		<br/>
 		<div>
 		</div>
-		<div id="totalMoneyDiv" style="display:none;text-align:right;">
+		<div id="totalMoneyDiv" style="text-align:right;">
 		      <span style="color:red;font-size:18px;">总金额: </span>
 		      <span id="totalPrice" style="color:red;font-size:18px;"></span>
 		      <span style="color:red;font-size:18px;">${totalMoney} 元</span>

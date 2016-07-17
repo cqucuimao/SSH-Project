@@ -23,7 +23,7 @@
 		<br/>
 		<div>
 		</div>
-		<div id="totalMoneyDiv" style="display:none;text-align:right;">
+		<div id="totalMoneyDiv" style="text-align:right;">
 		      <span style="color:red;font-size:18px;">总金额: </span>
 		      <span id="totalPrice" style="color:red;font-size:18px;"></span>
 		      <span style="color:red;font-size:18px;">${totalMoney} 元</span>
@@ -73,6 +73,9 @@
 				</table>
 			</div>
 	   </div>
+	   <br/>
+	   <br/>
+	   <a class="p15" href="javascript:history.go(-1);">返回</a>
 	</div>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>

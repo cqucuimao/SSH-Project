@@ -469,6 +469,7 @@
 	    	<result name="paidList">/WEB-INF/view/receiptAction/orderStatementPaidList.jsp</result>
 	    	<result name="newDetail">/WEB-INF/view/receiptAction/orderStatementNewDetail.jsp</result>
 	    	<result name="invoicedDetail">/WEB-INF/view/receiptAction/orderStatementInvoicedDetail.jsp</result>
+	    	<result name="paidDetail">/WEB-INF/view/receiptAction/orderStatementPaidDetail.jsp</result>
 	    	<result name="invoice">/WEB-INF/view/receiptAction/orderStatementInvoice.jsp</result>
 	    	<result name="gatherMoney">/WEB-INF/view/receiptAction/orderStatementGatherMoney.jsp</result>
 	    	<result name="success" type="stream">

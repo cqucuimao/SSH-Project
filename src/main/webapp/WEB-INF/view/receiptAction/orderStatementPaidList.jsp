@@ -23,7 +23,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-					<td><s:a action="orderStatement_newlist"><span>未收款对账单列表</span></s:a></td>
+					<td><s:a action="orderStatement_newList"><span>未收款对账单列表</span></s:a></td>
 				    <td><s:a action="orderStatement_invoicedList"><span>已开票对账单列表</span></s:a></td>
 				    <td class="on"><a href="#"><span>已收款对账单列表</span></a></td>
 				</tr>

@@ -29,6 +29,7 @@
         </div>
         <div class="editBlock detail p30">
         <s:form action="orderStatement_gatherMoneyDo" id="pageForm">
+        	<s:hidden name="orderStatementId"/>
             <table>
             	<colgroup>
 					<col width="80"></col>
@@ -92,7 +93,7 @@
 										</tr>
 									</thead>
 									<tbody class="tableHover" id="htcList">
-										<s:iterator value="moneyGatherInfoList">
+										<s:iterator value="gatherList">
 										<tr>
 					    					<td>${money}</td>
 					    					<td><s:date name="date" format="yyyy-MM-dd"/></td>
@@ -102,13 +103,13 @@
 										</s:iterator> 
 										<tr>
 											<td>
-                    							<s:textfield cssClass="inputText" name="money"/>
+                    							<s:textfield cssClass="inputText" name="infoMoney"/>
 											</td>
 											<td>
-                    							<s:textfield cssClass="inputText" name="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+                    							<s:textfield cssClass="inputText" name="infoDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 											</td>
 											<td>
-                    							<s:textfield cssClass="inputText" name="memo"/>
+                    							<s:textfield cssClass="inputText" name="infoMemo"/>
 											</td>
 											<td>
 												<input class="inputButton" type="submit" value="提交" />
@@ -146,12 +147,12 @@
 				onfocusout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					money:{
+					infoMoney:{
 						required:true,
-						digits:true,
+						number:true,
 						min:0
 					},
-					date:{
+					infoDate:{
 						required:true,
 					},
 				}

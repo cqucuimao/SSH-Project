@@ -32,40 +32,53 @@ public class User extends BaseEntity implements Serializable {
 	private Set<Role> roles = new HashSet<Role>();
 	
 	@Text("部门")
-	@ManyToOne(fetch=FetchType.LAZY )
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(nullable=false)
 	private Department department;
 	
 	@Text("用户类型")
+	@Column(nullable=false)
 	private UserTypeEnum userType; //用户类型
 	
 	@Text("生日")
-	@Temporal(TemporalType.DATE)	//生日
+	@Temporal(TemporalType.DATE)
 	private Date birth;
 	
-	@Column(unique=true)
 	@Text("登录名")
-	private String loginName; // 登录名
+	@Column(nullable=false,unique=true)
+	private String loginName;
+	
 	@Text("密码")
-	private String password; // 密码
+	@Column(nullable=false)
+	private String password;
+	
 	@Text("姓名")
-	private String name; // 真实姓名
+	@Column(nullable=false)
+	private String name; 
+	
 	@Text("性别")
-	private String gender; // 
-	@Column(unique=true)
-	@Text("电话")
-	private String phoneNumber; // 电话号码
+	private String gender; 
+	
+	@Column(nullable=false, unique=true)
+	@Text("手机")
+	private String phoneNumber; 
+	
 	@Text("邮箱")
-	private String email; // 电子邮件
+	private String email; 
+	
 	@Text("说明")
-	private String description; // 说明
+	private String description;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@Text("驾照")
 	private DriverLicense driverLicense;	//驾照。只有当userType==DRIVER时才有意义。
+	
 	@Text("用户状态")
 	private UserStatusEnum status;	//用户状态
+	
 	@Text("APP设备类型")
 	private UserAPPDeviceTypeEnum appDeviceType;
+	
 	@Text("APP标识Token")
 	private String appDeviceToken;
 

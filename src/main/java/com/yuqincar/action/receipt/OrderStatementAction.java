@@ -68,9 +68,9 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	//图片流
     private ByteArrayInputStream imageStream;
     private Long orderStatementId;
-    private BigDecimal money;
-    private Date date;
-    private String memo;
+    private BigDecimal infoMoney;
+    private Date infoDate;
+    private String infoMemo;
 	
 	public String invoice(){
 		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
@@ -99,17 +99,20 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
 		MoneyGatherInfo mgi=new MoneyGatherInfo();
 		mgi.setOrderStatement(orderStatement);
-		mgi.setMoney(money);
-		mgi.setDate(date);
-		mgi.setMemo(memo);
+		mgi.setMoney(infoMoney);
+		mgi.setDate(infoDate);
+		mgi.setMemo(infoMemo);
 		receiptService.saveMoneyGatherInfo(mgi);
+		infoMoney=null;
+		infoDate=null;
+		infoMemo=null;
 		return gatherMoney();
 	}
 	
 	public String gatherComplete(){
 		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
 		receiptService.moneyGatherComplete(orderStatement);
-		return invoicedDetail();
+		return invoicedList();
 	}
 	
 	/**
@@ -141,8 +144,18 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	
 	public String invoicedDetail(){
 		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
+		List<Order> orderList=orderStatement.getOrders();
+		ActionContext.getContext().put("orderList", orderList);
 		ActionContext.getContext().getValueStack().push(orderStatement);
 		return "invoicedDetail";
+	}
+	
+	public String paidDetail(){
+		OrderStatement orderStatement=receiptService.getOrderStatementById(orderStatementId);
+		List<Order> orderList=orderStatement.getOrders();
+		ActionContext.getContext().put("orderList", orderList);
+		ActionContext.getContext().getValueStack().push(orderStatement);
+		return "paidDetail";
 	}
 	
 	/**
@@ -612,27 +625,27 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		this.orderStatementId = orderStatementId;
 	}
 
-	public BigDecimal getMoney() {
-		return money;
+	public BigDecimal getInfoMoney() {
+		return infoMoney;
 	}
 
-	public void setMoney(BigDecimal money) {
-		this.money = money;
+	public void setInfoMoney(BigDecimal infoMoney) {
+		this.infoMoney = infoMoney;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getInfoDate() {
+		return infoDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setInfoDate(Date infoDate) {
+		this.infoDate = infoDate;
 	}
 
-	public String getMemo() {
-		return memo;
+	public String getInfoMemo() {
+		return infoMemo;
 	}
 
-	public void setMemo(String memo) {
-		this.memo = memo;
+	public void setInfoMemo(String infoMemo) {
+		this.infoMemo = infoMemo;
 	}
 }

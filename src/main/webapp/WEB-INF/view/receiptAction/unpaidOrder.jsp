@@ -91,11 +91,7 @@
 						    <td><input type="checkbox" id="${id}" class="checkboxItems"/></td>
 							<td>${customerOrganization.name}</td>
 							<td>${customer.name}</td>
-                			<td>
-                			    <s:if test="chargeMode.toString()==@com.yuqincar.domain.order.ChargeModeEnum@MILE.toString()">按行驶里程收费</s:if>
-                                <s:elseif test="chargeMode.toString()==@com.yuqincar.domain.order.ChargeModeEnum@DAY.toString()">日租</s:elseif>
-                                <s:else>协议价</s:else>
-                			</td>
+                			<td>${status.label}</td>
 							<td>${carServiceType.title}</td>
 							<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
 							<td>${fromAddress}-${fromAddress}</td>

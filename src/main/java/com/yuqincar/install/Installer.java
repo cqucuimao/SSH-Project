@@ -212,11 +212,19 @@ public class Installer {
 		privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_invoicedList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_paidList",orderStatementMenu));
-		privilegeDao.save(new Privilege("","/orderStatement_info",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_newDetail",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_invoicedDetail",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_paidDetail",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_generatePDF",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_cancelOrders",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_cancelOrderStatement",orderStatementMenu));
-		privilegeDao.save(new Privilege("","/orderStatement_confirmReceipt",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_gatherMoneyDo",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_gatherComplete",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_invoiceDo",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_gatherMoney",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_invoice",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_paidListQueryForm",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_freshPaidList",orderStatementMenu));
 		
 		//车辆管理
 		Privilege carMenu = new Privilege("车辆管理", "/car", null);

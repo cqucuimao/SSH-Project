@@ -208,9 +208,9 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/orderStatement_list') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/orderStatement_newList') ">
 			<dd>
-				<s:a action="orderStatement_list">对账单</s:a>
+				<s:a action="orderStatement_newList">对账单</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

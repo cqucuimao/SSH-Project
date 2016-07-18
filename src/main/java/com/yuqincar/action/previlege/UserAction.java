@@ -15,10 +15,12 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.DriverLicense;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
+import com.yuqincar.domain.privilege.UserGenderEnum;
 import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.privilege.DepartmentService;
@@ -54,25 +56,37 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private Date expireDate;
 	
 	private String actionFlag;
-	
+	private int genderId;
 	private int userTypeId;
 	private int statusId;
 
 	/** 列表 */
 	public String list() throws Exception {
 		QueryHelper helper = new QueryHelper(User.class, "u");
-
-		if(model.getName()!=null && !"".equals(model.getName()))
-			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
-		
-		System.out.println(pageNum);
-		
-		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);
-		
+		helper.addOrderByProperty("u.id", false);
+		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("userHelper", helper);
 		return "list";
 	}
 	
+	/** 查询 */
+	public String queryList() throws Exception {
+		QueryHelper helper = new QueryHelper(User.class, "u");
+		if(model.getName()!=null && !"".equals(model.getName()))
+			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
+		PageBean pageBean = userService.getPageBean(pageNum, helper);	
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("userHelper", helper);
+		return "list";
+	}
+	
+	public String freshList() throws Exception {
+		QueryHelper helper = (QueryHelper)ActionContext.getContext().getSession().get("userHelper");
+		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
+		ActionContext.getContext().getValueStack().push(pageBean);
+		return "list";
+	}
 	
 	public String popup() {
 		List<TreeNode> nodes ;
@@ -86,7 +100,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	/** 删除 */
 	public String delete() throws Exception {
 		userService.delete(model.getId());
-		return "toList";
+		return freshList();
 	}
 
 	/** 添加页面 */
@@ -104,25 +118,22 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	/** 添加 */
 	public String add() throws Exception {
-		
-		// 封装对象
-		if(model.getUserType() == UserTypeEnum.DRIVER){
+		if(UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
 			DriverLicense dl = new DriverLicense();
 			dl.setLicenseID(licenseID);
 			dl.setExpireDate(expireDate);
-			userService.saveDriverLicense(dl);
 			model.setDriverLicense(dl);
 		}
+		model.setGender(UserGenderEnum.getById(genderId));
 		model.setUserType(UserTypeEnum.getById(userTypeId));
 		model.setStatus(UserStatusEnum.NORMAL);//默认为正常状态
 		model.setDepartment(departmentService.getById(departmentId));
 		List<Role> roleList = roleService.getByIds(roleIds);
 		model.setRoles(new HashSet<Role>(roleList));
-		
 		// 保存到数据库
 		userService.save(model);
-
-		return "toList";
+		ActionContext.getContext().getValueStack().push(new User());
+		return freshList();
 	}
 
 	/** 修改页面 */
@@ -165,8 +176,9 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		//设置要修改的属性
 		user.setLoginName(model.getLoginName());
 		user.setName(model.getName());
-		user.setUserType(UserTypeEnum.getById(userTypeId));
-		user.setGender(model.getGender());
+		user.setBirth(model.getBirth());
+		//
+		user.setGender(UserGenderEnum.getById(genderId));
 		user.setPhoneNumber(model.getPhoneNumber());
 		user.setEmail(model.getEmail());
 		user.setDescription(model.getDescription());
@@ -176,20 +188,38 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		//处理关联的多个岗位
 		List<Role> roleList = roleService.getByIds(roleIds);
 		user.setRoles(new HashSet<Role>(roleList));
-		System.out.println("用户类型="+UserTypeEnum.getById(userTypeId));
-		//处理驾照
-		if(UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
-			
+		
+
+		System.out.println("原来的用户类型="+user.getUserType());
+		System.out.println("修改的用户类型="+UserTypeEnum.getById(userTypeId));
+
+		//办公室员工->司机员工,新建DriverLicense
+		if(user.getUserType() == UserTypeEnum.OFFICE && UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
+			DriverLicense driverLicense = new DriverLicense();
+			driverLicense.setLicenseID(licenseID);
+			driverLicense.setExpireDate(expireDate);
+			//driverLicenseDao.save(driverLicense);
+			user.setDriverLicense(driverLicense);
+		}
+		//司机员工->办公室员工，删除DriverLicense
+		if(user.getUserType() == UserTypeEnum.DRIVER && UserTypeEnum.getById(userTypeId) == UserTypeEnum.OFFICE){
+			DriverLicense driverLicense = user.getDriverLicense();
+			user.setDriverLicense(null);
+			//driverLicenseDao.delete(driverLicense.getId());
+		}
+		//司机员工->司机员工，修改DriverLicense
+		if(user.getUserType() == UserTypeEnum.DRIVER && UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
 			DriverLicense driverLicense = user.getDriverLicense();
 			driverLicense.setLicenseID(licenseID);
 			driverLicense.setExpireDate(expireDate);
-			userService.updateDriverLicense(driverLicense);
+			//driverLicenseDao.update(driverLicense);	
 		}
+		user.setUserType(UserTypeEnum.getById(userTypeId));
 		
 		//更新到数据库
 		userService.update(user);
-
-		return "toList";
+		ActionContext.getContext().getValueStack().push(new User());
+		return freshList();
 	}
 
 	/** 初始化密码为1234 */
@@ -347,6 +377,16 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	public void setStatusId(int statusId) {
 		this.statusId = statusId;
+	}
+
+
+	public int getGenderId() {
+		return genderId;
+	}
+
+
+	public void setGenderId(int genderId) {
+		this.genderId = genderId;
 	}
 	
 	

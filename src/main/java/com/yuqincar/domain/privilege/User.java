@@ -57,7 +57,7 @@ public class User extends BaseEntity implements Serializable {
 	private String name; 
 	
 	@Text("性别")
-	private String gender; 
+	private UserGenderEnum gender; 
 	
 	@Column(nullable=false, unique=true)
 	@Text("手机")
@@ -149,11 +149,11 @@ public class User extends BaseEntity implements Serializable {
 		this.password = password;
 	}
 
-	public String getGender() {
+	public UserGenderEnum getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(UserGenderEnum gender) {
 		this.gender = gender;
 	}
 

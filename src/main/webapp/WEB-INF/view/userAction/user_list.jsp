@@ -19,7 +19,7 @@
 			<h1>用户管理</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="user_list">
+			<s:form id="pageForm" action="user_queryList">
 			<table>
 				<tr>
 					<th><s:property value="tr.getText('privilege.User.name')" /></th>
@@ -70,7 +70,9 @@
 					</tbody>
 				</table>
 			</div>
-			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
+			<s:form id="pageForm" action="user_freshList">
+				<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
+			</s:form>
 		</div>
 	</div>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	

@@ -38,6 +38,18 @@
                         </td>
                     </tr>
                     <tr>
+                    	<th><s:property value="tr.getText('privilege.User.gender')" /></th>
+						<td>
+							   <s:radio list="#{'0':'男','1':'女'}" name="genderId" value="gender.id"/>
+						</td>
+                    </tr>
+                    <tr>
+                    	<th><s:property value="tr.getText('privilege.User.birth')" /></th>
+                    	<td>
+                        	<s:textfield class="Wdate half" id="birth" name="birth"  onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                        </td>
+                    </tr>
+                    <tr>
                     <th><s:property value="tr.getText('privilege.User.userType')" /><span class="required">*</span></th>
 						<td>
 							   <s:radio list="#{'0':'办公室员工','1':'司机员工'}" name="userTypeId" value="userType.id"/>
@@ -96,11 +108,13 @@
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript" src="js/common.js"></script>	
     <script type="text/javascript">
+   		 formatDateField1($("#birth"));
    		 formatDateField1($("input[name=expireDate]"));
     	var actionFlag = $("input[name=actionFlag]").val();
     	//如果是新加用户，用户类型默认选中办公室员工
     	if(actionFlag == "add"){
     		document.getElementsByName('userTypeId')[0].checked=true;
+    		document.getElementsByName('genderId')[0].checked=true;
     	}	
     	//修改用户是显示用户状态
     	if(actionFlag =="edit"){

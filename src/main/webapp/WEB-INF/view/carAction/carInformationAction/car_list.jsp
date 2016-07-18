@@ -19,7 +19,7 @@
 			<h1>基本信息</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form action="car_list">
+			<s:form action="car_queryList">
 			<table>
 				<tr>
 					<td>
@@ -84,7 +84,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="car_queryList">
+			<s:form id="pageForm" action="car_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %> 
 			</s:form>
 		</div>

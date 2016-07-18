@@ -63,6 +63,7 @@ public class Configuration {
 	}
 
 	public static int getPageSize() {
+		//return 1;
 		return pageSize;
 	}
 

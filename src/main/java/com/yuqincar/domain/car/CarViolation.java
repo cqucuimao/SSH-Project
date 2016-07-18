@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.Text;
 
 /*
@@ -22,6 +23,10 @@ public class CarViolation extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
 	private Car car;	//车辆
+	
+	@Text("司机")
+	@OneToOne(fetch=FetchType.LAZY)
+	private User driver;
 
 	@Text("违章时间")
 	@Column(nullable=false)
@@ -46,6 +51,9 @@ public class CarViolation extends BaseEntity {
 
 	@Text("处理日期")
 	private Date dealtDate;	//处理日期
+	
+	@Text("是否自动导入")
+	private boolean imported;
 
 	public Car getCar() {
 		return car;
@@ -109,5 +117,21 @@ public class CarViolation extends BaseEntity {
 
 	public void setDealtDate(Date dealtDate) {
 		this.dealtDate = dealtDate;
+	}
+
+	public User getDriver() {
+		return driver;
+	}
+
+	public void setDriver(User driver) {
+		this.driver = driver;
+	}
+
+	public boolean isImported() {
+		return imported;
+	}
+
+	public void setImported(boolean imported) {
+		this.imported = imported;
 	}
 }

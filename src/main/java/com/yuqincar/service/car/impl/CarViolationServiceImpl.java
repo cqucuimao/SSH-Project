@@ -1,9 +1,5 @@
 package com.yuqincar.service.car.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,20 +21,30 @@ public class CarViolationServiceImpl implements CarViolationService {
 		// TODO Auto-generated method stub
 		
 	}
-	public PageBean<CarViolation> queryCarViolation(int pageNum, QueryHelper helper) {
-		
-		return carViolationDao.getPageBean(pageNum, helper);
-	}
-	public boolean canDealCarViolation(long carViolationId) {
-		// TODO Auto-generated method stub
-		return false;
+
+	@Transactional
+	public void saveCarViolation(CarViolation carViolation){
+		carViolationDao.save(carViolation);
 	}
 	
-	@Transactional
-	public void dealCarViolation(long carViolationId, int penaltyPoint, BigDecimal penaltyMoney, Date dealtDate) {
-		// TODO Auto-generated method stub
-		
+	public boolean canUpdateCarViolation(Long id){
+		return !carViolationDao.getById(id).isDealt();
 	}
+
+	@Transactional
+	public void updateCarViolation(CarViolation carViolation){
+		carViolationDao.update(carViolation);
+	}
+
+	@Transactional
+	public void deleteCarViolation(Long id){
+		carViolationDao.delete(id);
+	}
+	
+	public PageBean<CarViolation> queryCarViolation(int pageNum, QueryHelper helper) {
+		return carViolationDao.getPageBean(pageNum, helper);
+	}
+	
 	public CarViolation getCarViolationById(long id) {
 	
 		return carViolationDao.getById(id);

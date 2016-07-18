@@ -1393,7 +1393,12 @@ public class InitTestData {
 	}
 	
 	private void initUser(){
+		Department business = new Department();
+		business.setName("管理部门");
+		departmentDao.save(business);
+		
 		User user1=new User();
+		user1.setDepartment(business);
 		user1.setLoginName("调度员1");
 		user1.setName("调度员1");
 		user1.setPhoneNumber("12345678901");
@@ -1405,6 +1410,7 @@ public class InitTestData {
 		userDao.save(user1);		
 
 		User user2=new User();
+		user2.setDepartment(business);
 		user2.setLoginName("调度员2");
 		user2.setName("调度员2");
 		user2.setPhoneNumber("12345678902");
@@ -1417,6 +1423,7 @@ public class InitTestData {
 		userDao.save(user2);
 		
 		User user4=new User();
+		user4.setDepartment(business);
 		user4.setLoginName("监控员1");
 		user4.setName("监控员1");
 		user4.setPhoneNumber("18875208072");
@@ -1428,6 +1435,7 @@ public class InitTestData {
 		userDao.save(user4);
 		
 		User user5=new User();
+		user5.setDepartment(business);
 		user5.setLoginName("财务人员1");
 		user5.setName("财务人员1");
 		user5.setPhoneNumber("18875208073");
@@ -1439,6 +1447,7 @@ public class InitTestData {
 		userDao.save(user5);
 		
 		User user3=new User();
+		user3.setDepartment(business);
 		user3.setLoginName("车辆管理员1");
 		user3.setName("车辆管理员1");
 		user3.setPhoneNumber("11111111");
@@ -1450,6 +1459,7 @@ public class InitTestData {
 		userDao.save(user3);
 		
 		User user6 = new User();
+		user6.setDepartment(business);
 		user6.setLoginName("客户管理员1");
 		user6.setName("客户管理员1");
 		user6.setPhoneNumber("12345678903");
@@ -1461,6 +1471,7 @@ public class InitTestData {
 		userDao.save(user6);
 		
 		User user7 = new User();
+		user7.setDepartment(business);
 		user7.setLoginName("公司领导1");
 		user7.setName("公司领导1");
 		user7.setPhoneNumber("12345678904");

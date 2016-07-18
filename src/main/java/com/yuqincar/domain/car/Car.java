@@ -31,7 +31,7 @@ public class Car extends BaseEntity {
 	private String model;	//型号
 
 	@Text("车架号")
-	@Column(nullable = false, unique=true)
+	@Column(nullable = false)
 	private String VIN;	//识别码
 
 	@Text("发动机号")

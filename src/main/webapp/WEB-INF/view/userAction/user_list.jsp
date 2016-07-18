@@ -17,7 +17,6 @@
 		<!-- 标题 -->
 		<div class="title">
 			<h1>用户管理</h1>
-			<p>用户信息的维护</p>
 		</div>
 		<div class="editBlock search">
 			<s:form id="pageForm" action="user_list">
@@ -64,8 +63,7 @@
 							<td>${email}</td>
 							<td>${description}&nbsp;</td>
 							<td>
-			                	<s:a action="user_delete?id=%{id}" onclick="return confirm('确认要删除吗？');">删除</s:a>
-			                    <s:a action="user_editUI?id=%{id}">修改</s:a>
+								<s:a action="user_editUI?id=%{id}&actionFlag=edit"><i class="icon-operate-edit" title="修改"></i></s:a>
 			                </td>
 						</tr>
 						</s:iterator> 
@@ -75,15 +73,13 @@
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 		</div>
 	</div>
-	
-	<s:debug></s:debug>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
 		$(function(){
 	        $("#add").click(function(){
-	            self.location.href='user_addUI.action';
+	            self.location.href='user_addUI.action?actionFlag=add';
 	        });
 	    })
 	</script>

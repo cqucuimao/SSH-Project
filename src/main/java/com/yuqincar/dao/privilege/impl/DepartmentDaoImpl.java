@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
 import com.yuqincar.dao.privilege.DepartmentDao;
+import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.Department;
+import com.yuqincar.domain.privilege.User;
 
 @Repository
 public class DepartmentDaoImpl extends BaseDaoImpl<Department> implements DepartmentDao{
@@ -22,6 +24,15 @@ public class DepartmentDaoImpl extends BaseDaoImpl<Department> implements Depart
 		return getSession().createQuery(//
 				"FROM Department d WHERE d.parent IS NULL")//
 				.list();
+	}
+
+	public boolean canDeleteDepartment(Long id) {
+		
+		List<User> users = getSession().createQuery("from User where department.id=?").
+				setParameter(0, id).list();
+		if(users.size() != 0)
+			return false;
+		return true;
 	}
 
 }

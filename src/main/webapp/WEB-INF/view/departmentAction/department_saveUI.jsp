@@ -16,7 +16,6 @@
         <!-- 标题 -->
         <div class="title">
             <h1>部门信息</h1>
-            <p>编辑部门信息</p>
         </div>
         <div class="editBlock detail p30">
         <s:form action="department_%{id == null ? 'add' : 'edit'}" id="pageForm">
@@ -24,18 +23,18 @@
             <table>
                 <tbody>
                 	<tr>
-                        <th width="100">部门名称：</th>
-                        <td><s:textfield name="name" /> *</td>
+                        <th width="100"><s:property value="tr.getText('privilege.Department.name')" /><span class="required">*</span></th>
+                        <td><s:textfield cssClass="inputText" name="name" /></td>
                     </tr>
                 	<tr>
-                        <th>部门描述：</th>
-                        <td><s:textarea name="description" /></td>
+                        <th><s:property value="tr.getText('privilege.Department.description')" /></th>
+                        <td><s:textarea cssClass="inputText" style="height:100px" name="description" /></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="2">
-                            <input class="inputButton" type="submit" value="保存" />
+                            <input class="inputButton" type="submit" value="确定" />
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
                     </tr>

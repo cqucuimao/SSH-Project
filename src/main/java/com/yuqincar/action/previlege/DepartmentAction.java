@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.Department;
 import com.yuqincar.service.privilege.DepartmentService;
@@ -29,7 +30,7 @@ public class DepartmentAction extends BaseAction implements ModelDriven<Departme
 		ActionContext.getContext().put("depts", depts);
 		return "popup";
 	}
-
+	
 	public String list() throws Exception {
 		QueryHelper helper = new QueryHelper(Department.class, "d");
 
@@ -75,6 +76,14 @@ public class DepartmentAction extends BaseAction implements ModelDriven<Departme
 		// 3，更新到数据库
 		departmentService.update(department);
 		return "toList";
+	}
+	//判断部门是否能删除
+	public boolean isCanDeleteDepartment(){
+		Department department = (Department) ActionContext.getContext().getValueStack().peek();
+		if(departmentService.canDeleteDepartment(department.getId()))
+			return true;
+		else 
+			return false;
 	}
 
 	public Department getModel() {

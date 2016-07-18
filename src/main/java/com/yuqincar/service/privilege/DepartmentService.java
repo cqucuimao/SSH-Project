@@ -21,5 +21,6 @@ public interface DepartmentService extends BaseService {
 
 	PageBean getPageBean(int pageNum, QueryHelper helper);
 
+	boolean canDeleteDepartment(Long id);
 
 }

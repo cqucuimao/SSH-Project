@@ -56,6 +56,10 @@ public class DepartmentsServiceImpl implements DepartmentService {
 		return departmentDao.getPageBean(pageNum, queryHelper);
 	}
 
+	public boolean canDeleteDepartment(Long id) {
+		return departmentDao.canDeleteDepartment(id);
+	}
+
 
 
 }

@@ -17,13 +17,12 @@
 		<!-- 标题 -->
 		<div class="title">
 			<h1>部门管理</h1>
-			<p>部门信息的维护</p>
 		</div>
 		<div class="editBlock search">
 			<s:form id="pageForm" action="department_list">
 			<table>
 				<tr>
-					<th>部门名称</th>
+					<th><s:property value="tr.getText('privilege.Department.name')" /></th>
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
@@ -39,8 +38,8 @@
 					
 					<thead>
 						<tr>
-							<th>部门名称</th>
-              				<th>部门描述</th>
+							<th><s:property value="tr.getText('privilege.Department.name')" /></th>
+              				<th><s:property value="tr.getText('privilege.Department.description')" /></th>
 			                <th>相关操作</th>
 						</tr>
 					</thead>
@@ -50,8 +49,10 @@
 							<td>${name}</td>
 							<td>${description}</td>
 							<td>
-			                	<s:a action="department_delete?id=%{id}" onclick="return confirm('确认要删除吗？');">删除</s:a>
-                    			<s:a action="department_editUI?id=%{id}">修改</s:a>
+							    <s:a action="department_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+							    <s:if test="canDeleteDepartment">
+			                		<s:a action="department_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+			                	</s:if>
 			                </td>
 						</tr>
 						</s:iterator> 
@@ -71,7 +72,5 @@
 	        });
 	    })
 	</script>
-	    	<s:debug></s:debug>
-	
 </body>
 </html>

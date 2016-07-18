@@ -17,21 +17,9 @@
 		<!-- 标题 -->
 		<div class="title">
 			<h1>角色管理</h1>
-			<p>角色信息的维护</p>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="role_list">
-			<table>
-				<tr>
-					<th>角色名称</th>
-					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
-					<td>
-						<input class="inputButton" type="submit" value="查询" />
-						<input id="add" class="inputButton" type="button" value="添加角色" name="button" />
-					</td>
-				</tr>
-			</table>
-			</s:form>
+			
 		</div>
 		<div class="dataGrid">
 			<div class="tableWrap">
@@ -39,20 +27,15 @@
 					
 					<thead>
 						<tr>
-							<th>角色名称</th>
-              				<th>角色描述</th>
-			                <th>相关操作</th>
+							<th><s:property value="tr.getText('privilege.Role.name')" /></th>
+              				<th><s:property value="tr.getText('privilege.Role.description')" /></th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
 							<td>${name}</td>
-							<td>${description}</td>
-							<td>
-			                	<s:a action="role_delete?id=%{id}" onclick="return confirm('确认要删除吗？');">删除</s:a>
-                    			<s:a action="role_editUI?id=%{id}">修改</s:a>
-			                </td>
+							<td>${description}</td>						
 						</tr>
 						</s:iterator> 
 					</tbody>

@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yuqincar.dao.car.DriverLicenseDao;
 import com.yuqincar.dao.privilege.UserDao;
+import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.privilege.User;
@@ -21,6 +23,9 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private DriverLicenseDao driverLicenseDao;
 	
 	public List<User> getByIds(Long[] ids) {
 		return userDao.getByIds(ids);
@@ -120,5 +125,15 @@ public class UserServiceImpl implements UserService{
 		}
 		return null;
 	}
+
+	public void saveDriverLicense(DriverLicense driverLicense) {
+		driverLicenseDao.save(driverLicense);
+		
+	}
+
+	public void updateDriverLicense(DriverLicense driverLicense) {
+		driverLicenseDao.update(driverLicense);
+	}
+	
 
 }

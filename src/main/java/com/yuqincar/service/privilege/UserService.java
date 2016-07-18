@@ -2,6 +2,7 @@ package com.yuqincar.service.privilege;
 
 import java.util.List;
 
+import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.privilege.User;
@@ -57,5 +58,9 @@ public interface UserService extends BaseService{
 	PageBean getPageBean( int pageNum , QueryHelper helper);
 	
 	List<TreeNode> getUserTree(String name,boolean driverOnly);
+	
+	void saveDriverLicense(DriverLicense driverLicense);
+	
+	void updateDriverLicense(DriverLicense driverLicense);
 	
 }

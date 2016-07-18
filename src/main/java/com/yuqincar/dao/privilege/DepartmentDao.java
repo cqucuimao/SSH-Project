@@ -11,4 +11,6 @@ public interface DepartmentDao extends BaseDao<Department> {
 
 	List<Department> findTopList();
 
+	boolean canDeleteDepartment(Long id);
+
 }

@@ -1,5 +1,6 @@
 package com.yuqincar.action.previlege;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -13,10 +14,13 @@ import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
+import com.yuqincar.domain.privilege.UserStatusEnum;
+import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.privilege.DepartmentService;
 import com.yuqincar.service.privilege.RoleService;
 import com.yuqincar.service.privilege.UserService;
@@ -45,6 +49,14 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	
 	private String driverOnly;
 	private String userSelectorId;
+	
+	private String licenseID;
+	private Date expireDate;
+	
+	private String actionFlag;
+	
+	private int userTypeId;
+	private int statusId;
 
 	/** 列表 */
 	public String list() throws Exception {
@@ -79,6 +91,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	/** 添加页面 */
 	public String addUI() throws Exception {
+		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备数据：departmentList
 		ActionContext.getContext().put("departmentList", departmentService.getAll());
 
@@ -91,11 +104,21 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	/** 添加 */
 	public String add() throws Exception {
+		
 		// 封装对象
+		if(model.getUserType() == UserTypeEnum.DRIVER){
+			DriverLicense dl = new DriverLicense();
+			dl.setLicenseID(licenseID);
+			dl.setExpireDate(expireDate);
+			userService.saveDriverLicense(dl);
+			model.setDriverLicense(dl);
+		}
+		model.setUserType(UserTypeEnum.getById(userTypeId));
+		model.setStatus(UserStatusEnum.NORMAL);//默认为正常状态
 		model.setDepartment(departmentService.getById(departmentId));
 		List<Role> roleList = roleService.getByIds(roleIds);
 		model.setRoles(new HashSet<Role>(roleList));
-
+		
 		// 保存到数据库
 		userService.save(model);
 
@@ -104,8 +127,13 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	/** 修改页面 */
 	public String editUI() throws Exception {
+		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备回显的数据
 		User user = userService.getById(model.getId());
+		if(user.getUserType() == UserTypeEnum.DRIVER){
+			licenseID = user.getDriverLicense().getLicenseID();
+			expireDate = user.getDriverLicense().getExpireDate();
+		}
 		ActionContext.getContext().getValueStack().push(user);
 		
 		// 处理部门
@@ -137,16 +165,26 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		//设置要修改的属性
 		user.setLoginName(model.getLoginName());
 		user.setName(model.getName());
+		user.setUserType(UserTypeEnum.getById(userTypeId));
 		user.setGender(model.getGender());
 		user.setPhoneNumber(model.getPhoneNumber());
 		user.setEmail(model.getEmail());
 		user.setDescription(model.getDescription());
+		user.setStatus(UserStatusEnum.getById(statusId));
 		//处理关联的一个部门
 		user.setDepartment(departmentService.getById(departmentId));
 		//处理关联的多个岗位
 		List<Role> roleList = roleService.getByIds(roleIds);
 		user.setRoles(new HashSet<Role>(roleList));
-
+		
+		//处理驾照
+		if(UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
+			DriverLicense driverLicense = model.getDriverLicense();
+			driverLicense.setLicenseID(licenseID);
+			driverLicense.setExpireDate(expireDate);
+			userService.updateDriverLicense(driverLicense);
+		}
+		
 		//更新到数据库
 		userService.update(user);
 
@@ -259,4 +297,56 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	public void setUserSelectorId(String userSelectorId) {
 		this.userSelectorId = userSelectorId;
 	}
+
+
+	public String getLicenseID() {
+		return licenseID;
+	}
+
+
+	public void setLicenseID(String licenseID) {
+		this.licenseID = licenseID;
+	}
+
+
+	public Date getExpireDate() {
+		return expireDate;
+	}
+
+
+	public void setExpireDate(Date expireDate) {
+		this.expireDate = expireDate;
+	}
+
+
+	public String getActionFlag() {
+		return actionFlag;
+	}
+
+
+	public void setActionFlag(String actionFlag) {
+		this.actionFlag = actionFlag;
+	}
+
+
+	public int getUserTypeId() {
+		return userTypeId;
+	}
+
+
+	public void setUserTypeId(int userTypeId) {
+		this.userTypeId = userTypeId;
+	}
+
+
+	public int getStatusId() {
+		return statusId;
+	}
+
+
+	public void setStatusId(int statusId) {
+		this.statusId = statusId;
+	}
+	
+	
 }

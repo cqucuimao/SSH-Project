@@ -60,22 +60,24 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private int userTypeId;
 	private int statusId;
 
-	/** 列表 */
-	public String list() throws Exception {
-		QueryHelper helper = new QueryHelper(User.class, "u");
-		helper.addOrderByProperty("u.id", false);
-		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
+	
+	/** 查询 */
+	public String queryList(){
+		QueryHelper helper = new QueryHelper("User", "u");
+		if(model.getName()!=null && !"".equals(model.getName()))
+			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
+		helper.addOrderByProperty("u.name", true);
+		PageBean pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("userHelper", helper);
 		return "list";
 	}
 	
-	/** 查询 */
-	public String queryList() throws Exception {
-		QueryHelper helper = new QueryHelper(User.class, "u");
-		if(model.getName()!=null && !"".equals(model.getName()))
-			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
-		PageBean pageBean = userService.getPageBean(pageNum, helper);	
+	/** 列表 */
+	public String list(){
+		QueryHelper helper = new QueryHelper("User", "u");
+		helper.addOrderByProperty("u.id", false);
+		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("userHelper", helper);
 		return "list";

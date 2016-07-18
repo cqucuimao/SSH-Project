@@ -104,14 +104,13 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	/** 添加 */
 	public String add() throws Exception {
-		if(model.isStandbyCar())
+		/*if(model.isStandbyCar())
 			model.setDriver(null);
 		else{
-			if(driverId==null){
+			if(driverId==null  || driverId<0){
 				addFieldError("driver", "非备用车必须指定司机！");
-				return addUI();
 			}
-		}	
+		}	*/
 		// 封装对象
 		//System.out.println(carService);
 		model.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
@@ -168,14 +167,6 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	/** 修改 */
 	public String edit() throws Exception {
-		if(model.isStandbyCar())
-			model.setDriver(null);
-		else{
-			if(driverId==null){
-				addFieldError("driver", "非备用车必须指定司机！");
-				return addUI();
-			}
-		}	
 		//从数据库中取出原对象
 		Car car = carService.getCarById(model.getId());
 
@@ -280,6 +271,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			return false;
 	}
 
+
+	
 	public Long getCarServiceTypeId() {
 		return carServiceTypeId;
 	}

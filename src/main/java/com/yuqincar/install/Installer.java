@@ -491,8 +491,32 @@ public class Installer {
 		
 		installWatchKeeper();
 		initPriceTable();
+		initDepartmentTable();
+	}
+	
+	private void initDepartmentTable(){
+		initDepartmentTable("D:\\Yuqin\\文档\\初始化文档\\部门表.xls","部门表");
 	}
 		
+	private void initDepartmentTable(String fileName,String tableName){
+		List<List<String>> tableContent=ExcelUtil.getLinesFromExcel(fileName, 2, 1, 2, 0);
+		for(List<String> line:tableContent){
+			Department parentDepartment = departmentDao.getDepartmentByName(line.get(1));	
+				if(parentDepartment == null){
+					parentDepartment = new Department();
+					parentDepartment.setName(line.get(1));
+					departmentDao.save(parentDepartment);
+				}
+				Department department = departmentDao.getDepartmentByName(line.get(0));
+				if(department == null){
+					department = new Department();
+					department.setName(line.get(0));
+					department.setParent(parentDepartment);
+					departmentDao.save(department);
+				}
+		}
+	}
+	
 	private void initPriceTable(){
 		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\价格表.xls","价格表");
 		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\商社协议价格表.xls","商社协议价");

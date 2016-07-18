@@ -176,10 +176,11 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		//处理关联的多个岗位
 		List<Role> roleList = roleService.getByIds(roleIds);
 		user.setRoles(new HashSet<Role>(roleList));
-		
+		System.out.println("用户类型="+UserTypeEnum.getById(userTypeId));
 		//处理驾照
 		if(UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
-			DriverLicense driverLicense = model.getDriverLicense();
+			
+			DriverLicense driverLicense = user.getDriverLicense();
 			driverLicense.setLicenseID(licenseID);
 			driverLicense.setExpireDate(expireDate);
 			userService.updateDriverLicense(driverLicense);

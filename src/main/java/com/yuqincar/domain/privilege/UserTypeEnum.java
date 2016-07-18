@@ -1,6 +1,5 @@
 package com.yuqincar.domain.privilege;
 
-import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.common.BaseEnum;
 import com.yuqincar.utils.Text;
 

@@ -28,7 +28,6 @@ public class Car extends BaseEntity {
 	private String brand;	//品牌
 
 	@Text("型号")
-	@Column(nullable = false)
 	private String model;	//型号
 
 	@Text("车架号")
@@ -60,7 +59,6 @@ public class Car extends BaseEntity {
 	private int mileage;	//里程数
 
 	@Text("登记时间")
-	@Column(nullable = false)
 	private Date enrollDate;	//登记时间。投入公司使用的时间
 
 	@Text("备注")
@@ -89,7 +87,7 @@ public class Car extends BaseEntity {
 	
 	@Text("注册时间")
 	@Column(nullable = false)
-	private Date registDate;
+	private Date registDate;	//新车在车管所上户的时间
 	
 	@Text("牌照种类")
 	@Column(nullable = false)

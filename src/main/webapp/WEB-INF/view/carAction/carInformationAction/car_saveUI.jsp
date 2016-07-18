@@ -87,7 +87,7 @@
 					<tr>
 						<th><s:property value="tr.getText('car.Car.plateType')" /><span class="required">*</span></th>
 						<td>
-								<s:radio list="#{'0':'蓝牌','1':'黄牌'}" name="plateTypeId" value="plateType.id"/>
+								<s:radio list="#{'0':'蓝牌','1':'黄牌'}" name="plateTypeId" value="plateType.id" class="{required:true}"/>
 						</td>
 					</tr>
 					<tr>
@@ -100,7 +100,7 @@
 					<tr>
 						<th><s:property value="tr.getText('car.Car.transmissionType')" /><span class="required">*</span></th>
 						<td>
-								<s:radio list="#{'0':'自动','1':'手动'}" name="transmissionTypeId" value="transmissionType.id"/>
+								<s:radio list="#{'0':'自动','1':'手动'}" name="transmissionTypeId" value="transmissionType.id" class="{required:true}"/>
 						</td>
 					</tr>
 					<tr>
@@ -140,7 +140,7 @@
 					<tr>
 	                <td colspan="2">	    
 	                		<input name="actionFlag" type="hidden" value="${actionFlag }">            		 
-		                	<input type="submit" class="inputButton" value="确定" id="sureButton"/>
+		                	<input type="submit" id="btn" class="inputButton" value="确定"/>
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a>
 		                
 	                </td>
@@ -159,6 +159,7 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
 	<script type="text/javascript">
+
 	 $(function(){    	
 			$("#pageForm").validate({
 				onfocusout: function(element) { $(element).valid(); },
@@ -191,13 +192,25 @@
 					servicePointId:{
 						required:true,
 					},
+					plateTypeId:{
+						required:true,
+					},
+					transmissionTypeId:{
+						required:true,
+					},
+					seatNumber:{
+						required:true,
+						digits:true  ,
+					},
 				}
 			});
 			
-// 			$("#sureButton").click(function(){
-// 				if(!$("#standbyCar").is(":checked") && $("#driverId").val()=="")
-// 					alert("非备用车的情况");
-// 			});
+			$("#btn").click(function(){
+				if(!$("#standbyCar").is(":checked") && $("#driverId").val()==""){
+					alert("非备用车的情况下必须指定司机！");
+					return false;
+				}
+		 	}); 
 			
 			//登记车辆的时候获取当前日期
 			var actionFlag = $("input[name=actionFlag]").val();

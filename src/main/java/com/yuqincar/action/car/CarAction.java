@@ -17,6 +17,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.PlateTypeEnum;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.car.TransmissionTypeEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
@@ -53,8 +54,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private int transmissionTypeId;
 	private int plateTypeId;
 	private String actionFlag;
-	/** 列表 */
-	public String list() throws Exception {
+	/** 查询 */
+	public String queryList() {
 		
 		QueryHelper helper = new QueryHelper(Car.class, "c");
 		/*车牌号查询*/
@@ -76,9 +77,19 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		return "list";
 	}
 	/*
-	 * 翻页时保留查询条件 
+	 * 列表
 	 */
-	public String queryList(){
+	public String list(){
+		QueryHelper helper = new QueryHelper("Car", "c");
+		helper.addOrderByProperty("c.id", false);
+		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
+		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("carHelper", helper);
+		return "list";
+	}
+	
+	public String freshList(){
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carHelper");
 		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);
@@ -89,7 +100,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	/** 删除 */
 	public String delete() throws Exception {
 		carService.deleteCarById(model.getId());
-		return "toList";
+		return freshList();
 	}
 	
 	/** 添加页面 */
@@ -122,7 +133,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		// 保存到数据库
 		carService.saveCar(model);
 
-		return "toList";
+		return freshList();
 	}
 	
 	/** 修改页面 */
@@ -188,7 +199,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		//更新到数据库
 		carService.updateCar(car);
 
-		return "toList";
+		return freshList();
 	}
 	/*
 	 * 修改车载设备 
@@ -215,7 +226,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			
 			carService.updateCar(car);
 		}
-		return "toList";
+		return freshList();
 	}
 	public Car getModel() {
 		// TODO Auto-generated method stub

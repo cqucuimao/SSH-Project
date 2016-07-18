@@ -1,6 +1,8 @@
 package com.yuqincar.service.privilege.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -14,7 +16,13 @@ import com.yuqincar.dao.privilege.UserDao;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
+import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
+import com.yuqincar.domain.privilege.UserGenderEnum;
+import com.yuqincar.domain.privilege.UserStatusEnum;
+import com.yuqincar.domain.privilege.UserTypeEnum;
+import com.yuqincar.service.privilege.DepartmentService;
+import com.yuqincar.service.privilege.RoleService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.QueryHelper;
 
@@ -26,6 +34,12 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private DriverLicenseDao driverLicenseDao;
+	
+	@Autowired
+	private DepartmentService departmentService;
+	
+	@Autowired
+	private RoleService roleService;
 	
 	public List<User> getByIds(Long[] ids) {
 		return userDao.getByIds(ids);
@@ -46,6 +60,7 @@ public class UserServiceImpl implements UserService{
 
 	@Transactional
 	public void update(User user) {
+		DriverLicense driverLicense = user.getDriverLicense();
 		userDao.update(user);
 	}
 
@@ -54,11 +69,14 @@ public class UserServiceImpl implements UserService{
 		// 默认密码是1234
 		String md5 = DigestUtils.md5Hex("123456"); // 密码要使用MD5摘要
 		user.setPassword(md5);
-
+		DriverLicense driverLicense = user.getDriverLicense();
+		driverLicenseDao.save(driverLicense);
+		
 		// 保存到数据库
 		userDao.save(user);
+		
 	}
-
+	
 	public User getByLoginNameAndPassword(String loginName, String password) {
 		return userDao.getByLoginNameAndPassword(loginName, password);
 	}

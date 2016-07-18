@@ -127,13 +127,13 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 	public List<Car> searchByPlateNumber(String plateNumber) {
 		if(plateNumber!=null && !plateNumber.isEmpty())
 			return (List<Car>) getSession().createQuery(//
-					"FROM Car c WHERE c.status=? and c.plateNumber like ?")
+					"FROM Car c WHERE c.status=? and c.plateNumber like ? order by c.plateNumber")
 					.setParameter(0,CarStatusEnum.NORMAL)
 					.setParameter(1, "%"+plateNumber+"%")
 					.list();
 		else
 			return	(List<Car>) getSession().createQuery(//
-					"FROM Car c WHERE c.status=?")
+					"FROM Car c WHERE c.status=? order by c.plateNumber")
 					.setParameter(0,CarStatusEnum.NORMAL).list();
 	}
 	

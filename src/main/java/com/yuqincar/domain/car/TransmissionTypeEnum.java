@@ -8,7 +8,9 @@ public enum TransmissionTypeEnum implements BaseEnum {
 	@Text("自动")
 	AUTO(0,"自动"),
 	@Text("手动")
-	MANNUAL(1,"手动");
+	MANNUAL(1,"手动"),
+	@Text("不确定")
+	UNKNOWN(2,"不确定");
 	
 	private int id;
 	private String label;

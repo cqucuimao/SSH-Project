@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -29,6 +30,7 @@ public class Department extends BaseEntity{
 	private Set<Department> children = new HashSet<Department>();
 
 	@Text("部门名称")
+	@Column(nullable=false)
 	private String name;
 	
 	@Text("备注")

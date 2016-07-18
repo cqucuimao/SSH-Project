@@ -20,6 +20,7 @@ import com.yuqincar.dao.car.CarServiceTypeDao;
 import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.dao.order.PriceDao;
 import com.yuqincar.dao.order.PriceTableDao;
+import com.yuqincar.dao.privilege.DepartmentDao;
 import com.yuqincar.dao.privilege.PrivilegeDao;
 import com.yuqincar.dao.privilege.RoleDao;
 import com.yuqincar.dao.privilege.UserDao;
@@ -28,6 +29,7 @@ import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.order.WatchKeeper;
+import com.yuqincar.domain.privilege.Department;
 import com.yuqincar.domain.privilege.Privilege;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
@@ -69,16 +71,23 @@ public class Installer {
 	@Resource
 	public WatchKeeperService watchKeeperService;
 	
+	@Resource
+	private DepartmentDao departmentDao;
 
 	@Transactional
 	public void install() {
 		Session session = sessionFactory.getCurrentSession();
 		// =======================================================================
 		// 1，超级管理员
+		Department department = new Department();
+		department.setName("公司");
+		departmentDao.save(department);
 		User user = new User();
 		user.setLoginName("admin");
 		user.setName("超级管理员");
+		user.setPhoneNumber("110");
 		user.setPassword(DigestUtils.md5Hex("admin")); // 密码要使用MD5摘要
+		user.setDepartment(department);
 		user.setStatus(UserStatusEnum.NORMAL);
 		user.setUserType(UserTypeEnum.OFFICE);
 		userDao.save(user); // 保存
@@ -209,7 +218,7 @@ public class Installer {
 		
 		Privilege orderStatementMenu=new Privilege("对账单","/orderStatement_newList",receiptMenu);
 		privilegeDao.save(orderStatementMenu);
-		privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
+		//privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_invoicedList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_paidList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_newDetail",orderStatementMenu));

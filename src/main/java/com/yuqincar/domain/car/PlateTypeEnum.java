@@ -5,10 +5,10 @@ import com.yuqincar.utils.Text;
 
 public enum PlateTypeEnum implements BaseEnum {
 
-	@Text("蓝牌牌照")
-	BLUE(0,"蓝牌牌照"),
-	@Text("黄牌牌照")
-	YELLOW(1,"黄牌牌照");
+	@Text("蓝牌")
+	BLUE(0,"蓝牌"),
+	@Text("黄牌")
+	YELLOW(1,"黄牌");
 	
 	private int id;
 	private String label;

@@ -67,7 +67,7 @@
 						</td>
                     </tr>
                     <tr>
-                        <th><s:property value="tr.getText('car.CarRefuel.volume')" />(L)</th>
+                        <th><s:property value="tr.getText('car.CarRefuel.volume')" />(L)<span class="required">*</span></th>
                         <td>
                         	<input class="inputText" type="text" name="volume"/>
 						</td>
@@ -115,7 +115,12 @@
 					},
 					money:{
 						required:true,
-						digits:true,
+						number:true,
+						min:0,
+					},
+					volume:{
+						required:true,
+						number:true,
 						min:0,
 					},
 				}

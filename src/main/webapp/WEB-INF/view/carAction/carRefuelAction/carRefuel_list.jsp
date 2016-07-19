@@ -19,7 +19,7 @@
 			<h1>加油信息</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carRefuel_list">
+			<s:form id="pageForm" action="carRefuel_queryList">
 			<table>
 				<tr>
 					<td>
@@ -31,20 +31,17 @@
 					</td>
 					<th>从</th>
 					<td>
-						<s:textfield name="date1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+						<s:textfield name="date1" id="date1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<th>到</th>
 					<td>
-						<s:textfield name="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+						<s:textfield name="date2" id="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 					<td>
 						<input class="inputButton" id="btn" type="button" value="导入加油信息"/>
-					</td>
-					<td>
-						<a href="file/加油信息.xls">点击下载Excel模板</a>
 					</td>
 				</tr>
 			</table>
@@ -78,7 +75,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="carRefuel_refuel">
+			<s:form id="pageForm" action="carRefuel_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>
@@ -100,6 +97,8 @@
 	        	self.location.href='carRefuel_excel.action';
 	        });
 	    })
+	    formatDateField2($("#date1"));
+		formatDateField2($("#date2"));
 	</script>
 </body>
 </html>

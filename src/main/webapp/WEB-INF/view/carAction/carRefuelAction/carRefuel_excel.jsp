@@ -17,15 +17,6 @@
         <!-- 标题 -->
         <div class="title">
             <h1>加油信息</h1>
-            <p style="color: red">
-				<s:if test="hasFieldErrors()">
-					<s:iterator value="fieldErrors">
-						<s:iterator value="value">
-							<s:property />
-						</s:iterator>
-					</s:iterator>
-				</s:if>
-			</p>
         </div>
         <div class="editBlock detail p30">
         <s:form action="carRefuel_importExcelFile" id="pageForm" enctype="multipart/form-data">
@@ -40,8 +31,13 @@
 					<col width="120"></col>
 				</colgroup>
                 <tbody>
+                	<tr><th>模板下载</th>
+	                	<td>
+							<a href="file/加油信息.xls">加油信息模板</a>
+						</td>
+					</tr>
                 	<tr>
-                        <th>添加文件：</th>
+                        <th>添加文件</th>
 						<td>									
 									<s:file name="upload" id="file" label="上传文件"/>
 						</td>
@@ -49,7 +45,7 @@
                     <tr>
                         <th></th>
 						<td>
-								<font color="red">请参考Excel模板，目前仅支持xls格式！</font>
+								<font color="red">请参考加油信息模板，目前仅支持xls格式！</font>
 						</td>
                     </tr>
                 	

@@ -34,7 +34,7 @@ public class CarRefuel extends BaseEntity {
 	private Date date;
 	
 	@Text("加油数量")
-	@Column
+	@Column(nullable=false)
 	private float volume;
 	
 	@Text("加油金额")

@@ -13,4 +13,6 @@ public interface DepartmentDao extends BaseDao<Department> {
 
 	boolean canDeleteDepartment(Long id);
 
+	Department getDepartmentByName(String name);
+
 }

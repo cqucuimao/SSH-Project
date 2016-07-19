@@ -1,5 +1,6 @@
 package com.yuqincar.action.car;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,14 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarViolation;
+import com.yuqincar.domain.car.CarWash;
+import com.yuqincar.domain.car.CarWashShop;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.Role;
+import com.yuqincar.domain.privilege.User;
+import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.CarViolationService;
+import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.QueryHelper;
 
 @Controller
@@ -25,84 +31,130 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	
 	@Autowired
 	private CarViolationService carViolationService;
-
 	
+	@Autowired
+	private CarService carService;
 	
-	/** 列表 *//*
-	public String list() throws Exception {
-		
-		QueryHelper helper = new QueryHelper(CarViolation.class, "cv");
-
-		if (model.getCar().getPlateNumber() != null && !"".equals(model.getCar().getPlateNumber() ))
-			helper.addWhereCondition("cv.title like ?", "%"+model.getTitle()+"%");
-		ActionContext.getContext().getValueStack().push(pageBean);
-		return "list";
-	}
+	@Autowired
+	private UserService userService;
 	
-	*//** 删除 *//*
-	public String delete() throws Exception {
-		if(carService.canDeleteCarServiceType(model.getId()))
-			carService.deleteCarServiceType(model.getId());
-		return "toList";
-	}
+    private Date beginDate;
 	
-	*//** 添加页面 *//*
-	public String addUI() throws Exception {
-		
-		return "saveUI";
-	}
+	private Date endDate;
 	
-	*//** 添加 *//*
-	public String add() throws Exception {
-		// 封装对象
-		//model.setDepartment(departmentService.getById(departmentId));
-		//List<Role> roleList = roleService.getByIds(roleIds);
-		//model.setRoles(new HashSet<Role>(roleList));
 
-		// 保存到数据库
-		carService.saveCarViolation(model);
-
-		return "toList";
-	}
+	//头部快速查询
+		public String queryForm(){
+			QueryHelper helper = new QueryHelper("CarViolation", "cv");
+			System.out.println("**************"+model.getCar().getId());
+			if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
+					.equals(model.getCar().getPlateNumber()))
+				helper.addWhereCondition("cv.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+			if(beginDate!=null && endDate!=null)
+				helper.addWhereCondition("(TO_DAYS(cv.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cv.date))>=0", 
+						beginDate ,endDate);
+			else if(beginDate==null && endDate!=null)
+				helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(cv.date))>=0", endDate);
+			else if(beginDate!=null && endDate==null)
+				helper.addWhereCondition("(TO_DAYS(cv.date)-TO_DAYS(?))>=0", beginDate);
+			helper.addOrderByProperty("cv.date", false);
+			
+			PageBean pageBean = carViolationService.queryCarViolation(pageNum, helper);		
+			ActionContext.getContext().getValueStack().push(pageBean);		
+			ActionContext.getContext().getSession().put("carViolationHelper", helper);
+			return "list";		
+		}
 	
-	*//** 修改页面 *//*
-	public String editUI() throws Exception {
-		// 准备回显的数据
-		CarServiceType carServiceType = carService.getCarServiceTypeById(model.getId());
-		ActionContext.getContext().getValueStack().push(carServiceType);
-
-		// 准备数据：departmentList
-		//ActionContext.getContext().put("departmentList", departmentService.findTopList());
-
-		// 准备数据：roleList
-		//List<Role> roleList = roleService.findAll();
-		//ActionContext.getContext().put("roleList", roleList);
-
-		return "saveUI";
-	}
-	
-	*//** 修改 *//*
-	public String edit() throws Exception {
-		//从数据库中取出原对象
-		CarServiceType carServiceType = carService.getCarServiceTypeById(model.getId());
-
-		//设置要修改的属性
-		carServiceType.setTitle(model.getTitle());
-		carServiceType.setPricePerKM(model.getPricePerKM());
-		carServiceType.setPricePerDay(model.getPricePerDay());
-		carServiceType.setPersonLimit(model.getPersonLimit());
-		//更新到数据库
-		carService.updateCarServiceType(carServiceType);
-
-		return "toList";
-	}
-	public CarServiceType getModel() {
-		// TODO Auto-generated method stub
-		return model;
-	}*/
-	
+		 public String list() {
+			 	QueryHelper helper = new QueryHelper("CarViolation", "cv");
+				helper.addOrderByProperty("cv.id", false);
+				PageBean pageBean = carViolationService.queryCarViolation(pageNum, helper);
+				ActionContext.getContext().getValueStack().push(pageBean);
+				ActionContext.getContext().getSession().put("carViolationHelper", helper);
+				return "list";
+			}
+		 
+		//翻页的时候保留条件并显示数据
+		   public String freshList(){
+				QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carViolationHelper");
+				PageBean pageBean = carViolationService.queryCarViolation(pageNum, helper);
+				ActionContext.getContext().getValueStack().push(pageBean);
+				return "list";
+			}
+		   public String delete(){
+			  carViolationService.deleteCarViolation(model.getId());
+			   return freshList();
+			}
+	 
+		   public String saveUI(){
+			   return "saveUI";
+			  
+			}
+		   
+		   public String save(){
+			   System.out.println("***************************************************");
+			   System.out.println("**************"+model.getPlace());
+			    Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+				model.setCar(car);
+				User driver=userService.getById(model.getDriver().getId());
+				model.setDriver(driver);
+				carViolationService.saveCarViolation(model);
+				ActionContext.getContext().getValueStack().push(new CarViolation());
+				return freshList();
+			}
+		   
+		   public String editUI(){
+			    CarViolation carViolation = carViolationService.getCarViolationById(model.getId());
+				ActionContext.getContext().getValueStack().push(carViolation);
+				return "saveUI";
+			}
+		   
+		   public String edit(){
+				  
+			    CarViolation carViolation = carViolationService.getCarViolationById(model.getId());				
+				User driver=userService.getById(model.getDriver().getId());
+				Car car= carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+				carViolation.setCar(car);
+				carViolation.setDriver(driver);
+				carViolation.setDate(model.getDate());
+				carViolation.setPlace(model.getPlace());
+				carViolation.setDescription(model.getDescription());
+				carViolation.setPenaltyPoint(model.getPenaltyPoint());
+				carViolation.setPenaltyMoney(model.getPenaltyMoney());
+				carViolation.setDealt(model.isDealt());
+				carViolation.setDealtDate(model.getDealtDate());
+				carViolationService.updateCarViolation(carViolation);
+				ActionContext.getContext().getValueStack().push(new CarViolation());
+				return freshList();
+			}
+		   
+		   public boolean isCanUpdateCarViolation(){
+				CarViolation carViolation = (CarViolation) ActionContext.getContext().getValueStack().peek();
+				if(carViolationService.canUpdateCarViolation(carViolation.getId()))
+					return true;
+				else 
+					return false;
+			  }
+		 
+		   
 	public CarViolation getModel() {
 		// TODO Auto-generated method stub
-		return null;
+		return model;
+	}
+
+	public Date getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 }

@@ -16,7 +16,7 @@
 			<h1>登记违章信息</h1>
 		</div>
 		<div class="editBlock detail p30">
-			<s:form action="carViolation_%{id == null ? 'add' : 'edit'}" id="pageForm">
+			<s:form action="carViolation_%{id == null ? 'save' : 'edit'}" id="pageForm">
 	        <s:hidden name="id"></s:hidden>
 			<table>
 				<colgroup>
@@ -31,13 +31,20 @@
 					<tr>
 						<th>车牌号<span class="required">*</span></th>
 						<td>
-								<s:textfield cssClass="inputText" name="car.plateNumber" />
+						  <s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber"
+									 type="text" synchDriverName="driver" synchDriverId="driverId"/>
 						</td>
 					</tr>
 					<tr>
+                        <th>司机</th>
+                        <td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
+							<s:textfield id="driverId" name="driver.id" type="hidden" /></td>
+					<td>
+                    </tr>
+					<tr>
 						<th>时间<span class="required">*</span></th>
 						<td>
-								<s:textfield class="Wdate half" name="date" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+								<s:textfield class="Wdate half" name="date" id="date" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"  />
 						</td>
 					</tr>
 					<tr>
@@ -47,26 +54,39 @@
 						</td>
 					</tr>
 					<tr>
-						<th>扣分情况<span class="required">*</span></th>
+						<th>违章事实<span class="required">*</span></th>
 						<td>
-								<s:textfield cssClass="inputText" name="penaltyPoint" />
+								<s:textfield cssClass="inputText" name="description" />
 						</td>
 					</tr>
 					<tr>
-						<th>罚款（元）<span class="required">*</span></th>
+						<th>罚分</th>
 						<td>
-								<s:textfield cssClass="inputText" name="penaltyMoney" />
+								<s:textfield cssClass="inputText" name="penaltyPoint" id="penaltyPoint" />
 						</td>
 					</tr>
 					<tr>
-						<th>备注：</th>
+						<th>罚款（元）</th>
 						<td>
-								<s:textarea cssClass="inputText" class="w" style="width:345px;height:100px"></s:textarea>
+								<s:textfield cssClass="inputText" name="penaltyMoney" id="penaltyMoney" />
 						</td>
 					</tr>
+					<tr>
+						<th>是否已经处理</th>
+						<td>
+							<s:checkbox class="m10" id="dealt" name="dealt"/>
+						</td>
+					</tr>
+					<tr>
+						<th>处理日期</th>
+						<td>
+								<s:textfield class="Wdate half" name="dealtDate" id="dealtDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"  />
+						</td>
+					</tr>
+					
 					<tr>
 	                <td colspan="2">
-		                	<input type="button" class="inputButton" value="确定" />
+		                	<input class="inputButton" type="submit" value="提交" />
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a> 
 	                </td>
 	            </tr>
@@ -99,18 +119,19 @@
 						required:true,				
 					},
 					penaltyPoint:{
-						required:true,
 						digits:true,
-						min:1
+						 min:1
 					},
 					penaltyMoney:{
-						required:true,
 						digits:true,
 						min:1
 					},
 				}
 			});
+			   formatDateField1($("#date"));
+			   formatDateField1($("#dealtDate"));
 		});
+	   
 	</script>
 </body>
 </html>

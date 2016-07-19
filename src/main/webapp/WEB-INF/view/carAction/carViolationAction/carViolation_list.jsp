@@ -19,13 +19,15 @@
 			<h1>违章信息列表</h1>
 		</div>
 		<div class="editBlock search">
+		<s:form id="queryForm" action="carViolation_queryForm">
 			<table>
 				<tr>
 					<td>
 						<input id="register" class="inputButton" type="button" value="违章登记" name="button" />
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-					<td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
+					<td>
+					<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" /></td>
 					<th>从</th>
 					<td>
 						<s:textfield name="beginDate" id="beginDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
@@ -35,10 +37,11 @@
 						<s:textfield name="endDate" id="endDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<td>
-						<input class="inputButton" type="button" value="查询" name="button" />
+						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 				</tr>
 			</table>
+			</s:form>
 		</div>
 		<div class="dataGrid">
 			<div class="tableWrap">
@@ -46,24 +49,45 @@
 					<thead>
 						<tr>
 							<th>车牌号</th>
+							<th>司机</th>
 							<th>时间</th>
 							<th>地点</th>
-							<th>扣分情况</th>
+							<th>违章事实</th>
+							<th>罚分</th>
 							<th>罚款（元）</th>
+							<th>是否已经处理</th>
+							<th>处理日期</th>
 							<th class="alignCenter">操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
+						<s:iterator value="recordList">
+				        
 						<tr>
-							<td>渝A BG349</td>
-							<td>2015/12/9 15:00</td>
-							<td>大坪</td>
-							<td>2分</td>
-							<td>100</td>
-							<td class="alignCenter">
-								<s:a href="#"><i class="icon-operate-print" title="导出"></i></s:a>
+							<td>${car.plateNumber}</td>
+							<td>${driver.name}</td>
+							<td ><s:date name="date" format="yyyy-MM-dd"/></td>
+							<td>${place}</td>
+							<td >${description }</td>
+							<td >${penaltyPoint }</td>
+							<td >${penaltyMoney }</td>
+							<td >
+							<s:if test="dealt==true">
+								<s:text name="是"></s:text>
+								</s:if>
+								<s:else>
+								<s:text name="否"></s:text>
+								</s:else>
 							</td>
+							<td ><s:date name="dealtDate" format="yyyy-MM-dd"/></td>
+							<td>
+                    			<s:a action="carViolation_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:if test="canUpdateCarViolation">
+                    			<s:a action="carViolation_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+                    			</s:if>
+          					</td> 
 						</tr>
+						</s:iterator> 
 						
 					</tbody>
 				</table>
@@ -79,9 +103,10 @@
 	<script type="text/javascript">
 		$(function(){
 			$("#register").click(function(){
-				location.href='carViolation_addUI.action';
+				location.href='carViolation_saveUI.action';
 			});
 		})
+		
 	</script>
 </body>
 </html>

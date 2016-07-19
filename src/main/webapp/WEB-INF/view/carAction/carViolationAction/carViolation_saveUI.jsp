@@ -56,7 +56,7 @@
 					<tr>
 						<th>违章事实<span class="required">*</span></th>
 						<td>
-								<s:textfield cssClass="inputText" name="description" />
+								<s:textfield cssClass="inputText" name="description" id="description" />
 						</td>
 					</tr>
 					<tr>
@@ -117,6 +117,9 @@
 					},
 					place:{
 						required:true,				
+					},
+					description:{
+						required:true,
 					},
 					penaltyPoint:{
 						digits:true,

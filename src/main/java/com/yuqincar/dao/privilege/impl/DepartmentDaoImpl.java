@@ -35,4 +35,12 @@ public class DepartmentDaoImpl extends BaseDaoImpl<Department> implements Depart
 		return true;
 	}
 
+	public Department getDepartmentByName(String name) {
+		
+		return (Department)getSession().createQuery(//
+				"FROM Department d WHERE d.name=?")//
+				.setParameter(0, name)
+				.uniqueResult();
+	}
+
 }

@@ -98,7 +98,6 @@ public class Car extends BaseEntity {
 	private int seatNumber;
 	
 	@Text("变速箱类型")
-	@Column(nullable=false)
 	private TransmissionTypeEnum transmissionType;
 	
 

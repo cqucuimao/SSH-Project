@@ -43,7 +43,7 @@ public class CarRefuelServiceImpl implements CarRefuelService {
 		return carRefuelDao.getById(id);
 	}
 
-	public PageBean<CarRefuelService> queryCarRefuel(int pageNum, QueryHelper helper) {
+	public PageBean<CarRefuel> queryCarRefuel(int pageNum, QueryHelper helper) {
 		return carRefuelDao.getPageBean(pageNum, helper);
 	}
 	

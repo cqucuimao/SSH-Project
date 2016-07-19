@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarRefuel;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.User;
@@ -61,8 +62,8 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	private String uploadContentType;
 	
 	private int result;
-	/** 列表 */
-	public String list() throws Exception {
+	/** 查询 */
+	public String queryList(){
 		QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
 		
 		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
@@ -73,11 +74,33 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 		if(date1!=null && date2!=null)
 			helper.addWhereCondition("(TO_DAYS(cr.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cr.date))>=0", 
 					date1 ,date2);
+		else if(date1==null && date2!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(cr.date))>=0", date2);
+		else if(date1!=null && date2==null)
+			helper.addWhereCondition("(TO_DAYS(cr.date)-TO_DAYS(?))>=0", date1);
 		
+		helper.addOrderByProperty("cr.id", false);
 		PageBean pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
 		
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carRefuelHelper", helper);
+		return "list";
+	}
+	
+	/** 列表 */
+	public String list(){
+		QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
+		helper.addOrderByProperty("cr.id", false);
+		PageBean pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("carRefuelHelper", helper);
+		return "list";
+	}
+
+	public String freshList(){
+		QueryHelper helper = (QueryHelper)ActionContext.getContext().getSession().get("carRefuelHelper");
+		PageBean<CarRefuel> pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
 		return "list";
 	}
 	
@@ -114,21 +137,12 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 		// 保存到数据库
 		
 		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		User driver = userService.getById(model.getDriver().getId());
-		
+		User driver = userService.getById(model.getDriver().getId());	
 		model.setCar(car);
 		model.setDriver(driver);
-		
 		carRefuelService.saveCarRefuel(model);
-		return "toList";
-	}
-	
-	/** 修改页面 */
-	public String editUI() throws Exception {
-		// 准备回显的数据
-		CarRefuel carRefuel = carRefuelService.getCarRefuelById(model.getId());
-		ActionContext.getContext().getValueStack().push(carRefuel);
-		return "saveUI";
+		ActionContext.getContext().getValueStack().push(new CarRefuel());
+		return freshList();
 	}
 	
 	/** 详细信息*/
@@ -143,13 +157,6 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	
 	public CarRefuel getModel() {
 		return model;
-	}
-	
-	public String refuel(){
-		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carRefuelHelper");
-		PageBean pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
-		ActionContext.getContext().getValueStack().push(pageBean);
-		return "list";
 	}
 
 	public Date getDate1() {

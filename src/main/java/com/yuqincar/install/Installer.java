@@ -1,10 +1,15 @@
 package com.yuqincar.install;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -12,11 +17,15 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.CarServiceTypeDao;
+import com.yuqincar.dao.car.DriverLicenseDao;
+import com.yuqincar.dao.car.ServicePointDao;
 import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.dao.order.PriceDao;
 import com.yuqincar.dao.order.PriceTableDao;
@@ -24,8 +33,13 @@ import com.yuqincar.dao.privilege.DepartmentDao;
 import com.yuqincar.dao.privilege.PrivilegeDao;
 import com.yuqincar.dao.privilege.RoleDao;
 import com.yuqincar.dao.privilege.UserDao;
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.car.CarServiceType;
+import com.yuqincar.domain.car.CarStatusEnum;
+import com.yuqincar.domain.car.DriverLicense;
+import com.yuqincar.domain.car.PlateTypeEnum;
+import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.order.WatchKeeper;
@@ -33,9 +47,12 @@ import com.yuqincar.domain.privilege.Department;
 import com.yuqincar.domain.privilege.Privilege;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
+import com.yuqincar.domain.privilege.UserGenderEnum;
 import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.order.WatchKeeperService;
+import com.yuqincar.service.privilege.RoleService;
+import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.ExcelUtil;
 
 /**
@@ -73,7 +90,17 @@ public class Installer {
 	
 	@Resource
 	private DepartmentDao departmentDao;
+	
+	@Resource
+	private DriverLicenseDao driverLicenseDao;
 
+	@Resource
+	private ServicePointDao servicePointDao;
+	
+	@Resource
+	private CarDao carDao;
+
+	
 	@Transactional
 	public void install() {
 		Session session = sessionFactory.getCurrentSession();
@@ -491,14 +518,24 @@ public class Installer {
 		
 		installWatchKeeper();
 		initPriceTable();
+		initServicePoint();
 		initDepartmentTable();
+		initEmployeeTable();
+		initCarTable();
+	}
+	//初始化业务点
+	private void initServicePoint(){
+		ServicePoint sp = new ServicePoint();
+		sp.setName("企业天地业务点");
+		servicePointDao.save(sp);
 	}
 	
+	//初始化部门
 	private void initDepartmentTable(){
-		initDepartmentTable("D:\\Yuqin\\文档\\初始化文档\\部门表.xls","部门表");
+		initDepartmentTable("D:\\Yuqin\\文档\\初始化文档\\部门表.xls");
 	}
 		
-	private void initDepartmentTable(String fileName,String tableName){
+	private void initDepartmentTable(String fileName){
 		List<List<String>> tableContent=ExcelUtil.getLinesFromExcel(fileName, 2, 1, 2, 0);
 		for(List<String> line:tableContent){
 			Department parentDepartment = departmentDao.getDepartmentByName(line.get(1));	
@@ -517,6 +554,78 @@ public class Installer {
 		}
 	}
 	
+	//初始化员工
+	private void initEmployeeTable(){
+		initEmployeeTable("D:\\Yuqin\\文档\\初始化文档\\员工表.xls");
+	}
+	
+	private void initEmployeeTable(String fileName){
+		List<List<String>> tableContent = ExcelUtil.getLinesFromExcel(fileName, 2, 1, 8, 0);
+		for(List<String> line:tableContent){
+			User user = userDao.getByLoginName(line.get(0));
+			if(user == null){
+				user = new User();
+				user.setLoginName(line.get(0));
+				user.setName(line.get(0));
+				user.setPassword(DigestUtils.md5Hex("123456"));
+				Department department = departmentDao.getDepartmentByName(line.get(1));
+				user.setDepartment(department);
+				//设置角色
+				List<Role> role = null;
+				Long [] ids = new Long[1];
+				if(line.get(1) == "公司" || line.get(1).equals("公司")){
+					 ids[0] =(long) 7; 
+					 role= (List<Role>) roleDao.getByIds(ids);	
+					 user.setRoles(new HashSet<Role>(role));
+				}else if(line.get(1) == "财务统计科" || line.get(1).equals("财务统计科")){
+					ids[0] =(long) 4; 
+					role= (List<Role>) roleDao.getByIds(ids);	
+					user.setRoles(new HashSet<Role>(role));
+				}else if(line.get(1) == "技术保障科" || line.get(1).equals("技术保障科")){
+					ids[0] =(long) 5; 
+					role= (List<Role>) roleDao.getByIds(ids);		
+					user.setRoles(new HashSet<Role>(role));
+				}else if((line.get(1) == "运营科" || line.get(1).equals("运营科")) && (line.get(3) == "否" || line.get(3).equals("否"))){
+					ids[0] =(long) 1; 
+					role= (List<Role>) roleDao.getByIds(ids);		
+					user.setRoles(new HashSet<Role>(role));
+				}else{
+					user.setRoles(null);
+				}	
+				user.setPhoneNumber(line.get(2));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");  
+				try {
+				    Date birth = sdf.parse(line.get(4));
+					user.setBirth(birth);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				user.setGender(UserGenderEnum.getByLabel(line.get(5)));
+				
+				if(line.get(3) == "否" || line.get(3).equals("否")){
+					user.setUserType(UserTypeEnum.OFFICE);
+					user.setDriverLicense(null);
+				}
+				if(line.get(3) == "是" || line.get(3).equals("是")){
+					user.setUserType(UserTypeEnum.DRIVER);
+					DriverLicense driverLicense = new DriverLicense();
+					driverLicense.setLicenseID(line.get(6));
+					try {
+						Date expireDate = sdf.parse(line.get(7));
+						driverLicense.setExpireDate(expireDate);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					driverLicenseDao.save(driverLicense);
+					user.setDriverLicense(driverLicense);
+				}
+			    user.setStatus(UserStatusEnum.NORMAL);
+			    userDao.save(user);
+			}
+		}
+	}
+	
+	//初始化价格
 	private void initPriceTable(){
 		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\价格表.xls","价格表");
 		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\商社协议价格表.xls","商社协议价");
@@ -557,6 +666,86 @@ public class Installer {
 		priceTable.setTitle(tableName);
 		priceTable.setCarServiceType(map);
 		priceTableDao.save(priceTable);
+	}
+	
+	//初始化车辆
+	private void initCarTable(){
+		initCarTable("D:\\Yuqin\\文档\\初始化文档\\车辆表.xls");
+	}
+		
+	private void initCarTable(String fileName){
+
+		List<List<String>> tableContent=ExcelUtil.getLinesFromExcel(fileName, 2, 1, 14, 0);
+		for(List<String> line:tableContent){
+			Car car = carDao.getByPlateNumber(line.get(0));
+				if(car == null){
+					car = new Car();
+					car.setPlateNumber(line.get(0));
+					car.setServicePoint(servicePointDao.getById((long)1));
+					car.setBrand(line.get(1));
+					car.setModel(line.get(2));
+					car.setVIN(line.get(3));
+					car.setEngineSN(line.get(4));
+					car.setStatus(CarStatusEnum.NORMAL);
+					car.setServiceType(carServiceTypeDao.getCarServiceTypeByTitle(line.get(5)));
+					//是否为备用车，非备用车指定司机
+					boolean standbyCar = true;
+					if(line.get(7) == "否" || line.get(7).equals("否")){
+						car.setDriver(userDao.getByLoginName(line.get(6)));
+						standbyCar = false;
+						car.setStandbyCar(standbyCar);
+					}else{
+						car.setStandbyCar(standbyCar);
+					}
+					//注册时间
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");  
+					try {
+					    Date registDate = sdf.parse(line.get(8));
+					    car.setRegistDate(registDate);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					car.setPlateType(PlateTypeEnum.getByLabel(line.get(9)));
+					
+					int seatNumber = Integer.parseInt(line.get(10));
+					car.setSeatNumber(seatNumber);
+					
+					if(line.get(11) == "无" || line.get(11).equals("无")){
+						car.setInsuranceExpiredDate(null);
+					}else{
+						try {
+						    Date insuranceExpiredDate = sdf.parse(line.get(11));
+						    car.setInsuranceExpiredDate(insuranceExpiredDate);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					//年检到期日期
+					if(line.get(12) == "无" || line.get(12).equals("无")){
+						car.setNextExaminateDate(null);
+					}else{
+						try {
+						    Date nextExaminateDate = sdf.parse(line.get(12));
+						    car.setNextExaminateDate(nextExaminateDate);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					//下次路桥费日期
+					if(line.get(13) == "无" || line.get(13).equals("无")){
+						car.setNextTollChargeDate(null);
+					}else{
+						try {
+						    Date nextTollChargeDate = sdf.parse(line.get(12));
+						    car.setNextTollChargeDate(nextTollChargeDate);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					carDao.save(car);
+				}
+				
+		}
 	}
 	
 	private void installWatchKeeper(){

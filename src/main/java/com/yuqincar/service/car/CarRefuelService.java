@@ -15,7 +15,7 @@ public interface CarRefuelService {
 	
 	public CarRefuel getCarRefuelById(long id);
 	
-	public PageBean<CarRefuelService> queryCarRefuel(int pageNum , QueryHelper helper);
+	public PageBean<CarRefuel> queryCarRefuel(int pageNum , QueryHelper helper);
 	
 	public BigDecimal statisticCarRefuel(Date fromDate, Date toDate);
 	

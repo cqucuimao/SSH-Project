@@ -17,7 +17,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.PlateTypeEnum;
-import com.yuqincar.domain.car.TollCharge;
+import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.car.TransmissionTypeEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
@@ -243,22 +243,31 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			nodes= carService.getCarTree(model.getPlateNumber(),synchDriver);
 		else if(!StringUtils.isEmpty(driverName)) {
 			List<Car> cars = carService.findByDriverName(driverName);
-			for(Car c : cars) {
+			Map<ServicePoint,List<Car>> carMap=new HashMap<ServicePoint,List<Car>>();
+			for(Car c : cars){
+				if(!carMap.containsKey(c.getServicePoint()))
+					carMap.put(c.getServicePoint(), new ArrayList<Car>());
+				carMap.get(c.getServicePoint()).add(c);
+			}
+			for(ServicePoint sp : carMap.keySet()) {
 				TreeNode parent = new TreeNode();
-				TreeNode child = new TreeNode();
-				child.setName(c.getPlateNumber());
-				if(synchDriver){
-					if(c.getDriver()!=null){
-						Map<String,Object> param=new HashMap<String,Object>();
-						param.put("driverName", c.getDriver().getName());
-						param.put("driverId", c.getDriver().getId());
-						child.setParam(param);
-					}
-				}
 				parent.setOpen(true);
-				parent.setName(c.getServicePoint().getName());
-				parent.setChildren(new ArrayList());
-				parent.getChildren().add(child);
+				parent.setName(sp.getName());
+				parent.setChildren(new ArrayList<TreeNode>());
+				for(Car c : carMap.get(sp)){
+					TreeNode child = new TreeNode();
+					child.setName(c.getPlateNumber());
+					if(synchDriver){
+						if(c.getDriver()!=null){
+							Map<String,Object> param=new HashMap<String,Object>();
+							param.put("driverName", c.getDriver().getName());
+							param.put("driverId", c.getDriver().getId());
+							child.setParam(param);
+						}
+					}
+					parent.getChildren().add(child);
+					
+				}
 				nodes.add(parent);
 			}
 		}

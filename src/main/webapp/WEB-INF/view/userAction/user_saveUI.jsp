@@ -108,8 +108,22 @@
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript" src="js/common.js"></script>	
     <script type="text/javascript">
-   		 formatDateField1($("#birth"));
-   		 formatDateField1($("input[name=expireDate]"));
+    	 
+	    function formatDateField(obj){
+			//将90-6-21 转换为 1990-06-21
+			var dateStr=obj.val();
+			if(dateStr.length>0){
+				var arr=dateStr.split("-");
+				if(arr[0].length==2)
+					arr[0]="19"+arr[0];
+				var date = new Date(arr[0],arr[1]-1,arr[2]);
+				var dateStr=date.Format("yyyy-MM-dd");
+				obj.val(dateStr);
+			}
+		}
+    
+   		formatDateField1($("input[name=expireDate]"));
+   		formatDateField($("#birth"));
     	var actionFlag = $("input[name=actionFlag]").val();
     	//如果是新加用户，用户类型默认选中办公室员工
     	if(actionFlag == "add"){

@@ -15,6 +15,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarInsurance;
+import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CommercialInsurance;
 import com.yuqincar.domain.car.CommercialInsuranceType;
 import com.yuqincar.domain.common.PageBean;
@@ -34,6 +35,10 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	@Autowired
 	private CarService carService;
 	
+	private Date date1;
+	
+	private Date date2;
+	
 	private int inputRows;
 	
 	private List<Long> commercialInsuranceType =new ArrayList<Long>();	
@@ -47,19 +52,41 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	private List<BigDecimal> commercialInsuranceMoney = new ArrayList<BigDecimal>();
 	
 	/** 列表 */
-	public String list() throws Exception {
+	public String queryList(){
 		QueryHelper helper = new QueryHelper(CarInsurance.class, "ci");
 		
 		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !"".equals(model.getCar().getPlateNumber()))
 		helper.addWhereCondition("ci.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
 		
-		//if(model.getInsureCompany()!=null && !"".equals(model.getInsureCompany()))
-			//helper.addWhereCondition("u.insureCompany=?", model.getInsureCompany());
+		if(date1!=null && date2!=null)
+			helper.addWhereCondition("(TO_DAYS(ci.payDate)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(ci.payDate))>=0", 
+					date1 ,date2);
+		else if(date1==null && date2!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(ci.payDate))>=0", date2);
+		else if(date1!=null && date2==null)
+			helper.addWhereCondition("(TO_DAYS(ci.payDate)-TO_DAYS(?))>=0", date1);
 		
+		helper.addOrderByProperty("ci.id", false);		
 		PageBean pageBean = carInsuranceService.queryCarInsurance(pageNum, helper);
-		
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carInsuranceHelper", helper);
+		return "list";
+	}
+	
+	/** 列表 */
+	public String list(){
+		QueryHelper helper = new QueryHelper(CarInsurance.class, "ci");
+		helper.addOrderByProperty("ci.id", false);
+		PageBean pageBean = carInsuranceService.queryCarInsurance(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("carInsuranceHelper", helper);
+		return "list";
+	}
+
+	public String freshList(){
+		QueryHelper helper = (QueryHelper)ActionContext.getContext().getSession().get("carInsuranceHelper");
+		PageBean pageBean = carInsuranceService.queryCarInsurance(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
 		return "list";
 	}
 	
@@ -99,17 +126,8 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	}
 	
 	/** 提醒*/
-	public String remind() throws Exception{
-		QueryHelper helper = new QueryHelper(CarInsurance.class, "ci");
-		
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-				.equals(model.getCar().getPlateNumber()))
-			helper.addWhereCondition("ci.car.plateNumber like ?", 
-					"%"+model.getCar().getPlateNumber()+"%");
-		
-		
-		PageBean pageBean = carInsuranceService.queryCarInsurance(pageNum, helper);
-		
+	public String remind(){
+		PageBean pageBean = carInsuranceService.getNeedInsuranceCars(pageNum);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "remindList";
 	}
@@ -128,14 +146,6 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	public CarInsurance getModel() {
 		return model;
 	}
-	
-	public String insurance(){
-		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carInsuranceHelper");
-		PageBean pageBean = carInsuranceService.queryCarInsurance(pageNum, helper);
-		ActionContext.getContext().getValueStack().push(pageBean);
-		return "list";
-	}
-	
 	
 	/** 验证截止时间不能早于起始时间*/
 	/*public void validateAdd(){
@@ -196,6 +206,22 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 
 	public void setCommercialInsuranceMoney(List<BigDecimal> commercialInsuranceMoney) {
 		this.commercialInsuranceMoney = commercialInsuranceMoney;
+	}
+
+	public Date getDate1() {
+		return date1;
+	}
+
+	public void setDate1(Date date1) {
+		this.date1 = date1;
+	}
+
+	public Date getDate2() {
+		return date2;
+	}
+
+	public void setDate2(Date date2) {
+		this.date2 = date2;
 	}
 	
 	

@@ -706,13 +706,20 @@ public class Installer {
 					
 					int seatNumber = Integer.parseInt(line.get(10));
 					car.setSeatNumber(seatNumber);
-					
+					//保险过期日期
 					if(line.get(11) == "无" || line.get(11).equals("无")){
 						car.setInsuranceExpiredDate(null);
+						car.setInsuranceExpired(true);
 					}else{
 						try {
 						    Date insuranceExpiredDate = sdf.parse(line.get(11));
 						    car.setInsuranceExpiredDate(insuranceExpiredDate);
+						    Date now = new Date();
+						    if(insuranceExpiredDate.after(now)){
+						    	car.setInsuranceExpired(true);
+						    }else{
+						    	car.setInsuranceExpired(false);
+						    }
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

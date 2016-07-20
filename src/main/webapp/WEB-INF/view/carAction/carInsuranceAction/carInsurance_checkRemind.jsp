@@ -37,20 +37,25 @@
 					<thead>
 						<tr>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-							<th><s:property value="tr.getText('car.CarInsurance.insureCompany')" /></th>
-							<th><s:property value="tr.getText('car.CarInsurance.policyNumber')" /></th>
-							<th>起止时间</th>
-							<th><s:property value="tr.getText('car.CarInsurance.insureType')" /></th>
+							<th><s:property value="tr.getText('car.Car.driver')" /></th>
+							<th><s:property value="tr.getText('privilege.User.phoneNumber')" /></th>
+							<th><s:property value="tr.getText('car.Car.insuranceExpiredDate')" /></th>
+							<th><s:property value="tr.getText('car.Car.insuranceExpired')" /></th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td>${car.plateNumber}</td>
-							<td>${insureCompany}</td>
-							<td>${policyNumber}</td>
-							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
-							<td>${insureType}</td>
+							<td>${plateNumber}</td>
+							<td>${driver.name}</td>
+							<td>${driver.phoneNumber}</td>
+							<td style="text-align:right"><s:date name="insuranceExpiredDate" format="yyyy-MM-dd"/></td>
+							<s:if test="insuranceExpired">
+								<td>否</td>
+							</s:if>
+							<s:else>
+								<td><font color="red">是</font></td>
+							</s:else>
 						</tr>
 						</s:iterator> 
 					</tbody>

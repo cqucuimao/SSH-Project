@@ -103,7 +103,7 @@
                 			</tr>
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarInsurance.memo')" />：</th>
-                				<td><textarea readonly>${memo}</textarea></td>
+                				<td>${memo}</td>
                 			</tr>
 					</tbody>
 					<tfoot>

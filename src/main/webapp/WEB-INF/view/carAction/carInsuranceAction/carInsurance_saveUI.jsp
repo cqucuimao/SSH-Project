@@ -198,9 +198,13 @@
 						},
 						compulsoryCoverageMoney:{
 							required:true,
+							number:true,
+							min:0,
 						},
 						compulsoryMoney:{
 							required:true,
+							number:true,
+							min:0,
 						},
 						vehicleTaxBeginDate:{
 							required:true,
@@ -210,6 +214,8 @@
 						},
 						vehicleTaxMoney:{
 							required:true,
+							number:true,
+							min:0,
 						},
 						fromDate:{
 							required:true,
@@ -219,8 +225,8 @@
 						},
 						money:{
 							required:true,
-							digits:true,
-							min:1
+							number:true,
+							min:0,
 						},
 						payDate:{
 							required:true,
@@ -306,6 +312,10 @@
 	  						 alert("请输入商业保险承保金额！");
 	  						 return false;
 	  					 }
+		    			 if(isNaN(value)){
+		    				 alert("请输入合法数字！");
+		    				 return false;
+		    			 }
 		    		 }); 
 		    		
 		    		$("input[name=commercialInsuranceMoney]").each(function(){

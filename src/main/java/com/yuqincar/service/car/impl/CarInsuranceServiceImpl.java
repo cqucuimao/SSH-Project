@@ -73,7 +73,7 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 		Date now = new Date();
 		Date a = new Date(now.getTime() +  24*60*60*1000 * 30L );
 		QueryHelper helper = new QueryHelper(Car.class, "c");
-		helper.addWhereCondition("c.insuranceExpiredDate < ? and d.status=?", a,CarStatusEnum.NORMAL);
+		helper.addWhereCondition("c.insuranceExpiredDate < ? and c.status=?", a,CarStatusEnum.NORMAL);
 		helper.addOrderByProperty("c.insuranceExpiredDate", true);
 		return carDao.getPageBean(pageNum, helper);		
 	}

@@ -20,7 +20,7 @@
 			<h1>车辆保险</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carInsurance_list">
+			<s:form id="pageForm" action="carInsurance_queryList">
 			<table>
 				<tr>
 					<td>
@@ -29,11 +29,18 @@
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
 						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
-						 
+					</td>
+					<th>从</th>
+					<td>
+						<s:textfield name="date1" id="date1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+					</td>
+					<th>到</th>
+					<td>
+						<s:textfield name="date2" id="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<input id="remind" class="inputButton" type="button" value="保险提醒" name="button" />
+						<input id="remind" class="inputButton" type="button" value="保险到期提醒" name="button" />
 						<input id="carInsuranceType" class="inputButton" type="button" value="商业保险类型管理" name="button" />
 					</td>
 				</tr>
@@ -68,7 +75,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="carInsurance_insurance">
+			<s:form id="pageForm" action="carInsurance_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>
@@ -92,6 +99,8 @@
 	        	self.location.href = 'commercialInsuranceType_list.action';
 	        });
 	    })
+	    formatDateField2($("#date1"));
+		formatDateField2($("#date2"));
 	</script>
 </body>
 </html>

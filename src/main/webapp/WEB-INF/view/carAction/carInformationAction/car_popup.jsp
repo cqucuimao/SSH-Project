@@ -17,7 +17,7 @@
 <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 <script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 </head>
-<body>
+<body style="overflow-x:hidden">
     <div class="space">
     	<div class="editBlock search">
 			<s:form id="pageForm" action="car_popup">
@@ -43,6 +43,7 @@
 			</s:form>
 		</div>
         <!-- 数据列表 -->
+        
         <div class="content_wrap">
 	        <div class="dataGrid" >
 	            <div class="tableWrap fixW fixed-height">
@@ -52,7 +53,8 @@
 	            </div>
 	        </div>
         </div>
-        <div class="bottomBar alignCenter">
+        
+        <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:245px;height:60px">
             <input id="sure" class="inputButton" type="button" value="确定" />
             <input id="clear" class="inputButton" type="button" value="清空" />
             <input id="close" class="inputButton" type="button" value="关闭" />

@@ -29,7 +29,7 @@ public interface CarExamineService {
 	
 	public CarExamine getCarExamineById(long id);
 	
-	public PageBean<CarExamineService> queryCarExamine(int pageNum , QueryHelper helper);
+	public PageBean<CarExamine> queryCarExamine(int pageNum , QueryHelper helper);
 	
 	/**
 	 * 
@@ -57,10 +57,10 @@ public interface CarExamineService {
 	
 	/**
 	 * 列出所有需要提醒年审的车辆。条件：nextExaminateDate-nowdate<15
-	 * 按nextExaminateDate-nowdate升序排列
+	 * 按nextExaminateDate升序排列
 	 * @return
 	 */
-	public List<Car> getAllNeedExamineCars();
+	public PageBean<Car> getNeedExamineCars(int pageNum);
 	
 	/**
 	 * 获取下一次年审的日期。

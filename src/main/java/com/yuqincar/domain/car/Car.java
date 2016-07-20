@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.monitor.Device;
@@ -66,6 +67,9 @@ public class Car extends BaseEntity {
 
 	@Text("下次保养里程")
 	private int nextCareMile;	//下次保养里程数
+	
+	@Text("剩下保养里程")
+	private int mileNeedCare;	//nextCareMile-mileage
 
 	@Text("保险过期日期")
 	private Date insuranceExpiredDate;	//保险过期日期
@@ -179,6 +183,7 @@ public class Car extends BaseEntity {
 
 	public void setMileage(int mileage) {
 		this.mileage = mileage;
+		setMileNeedCare(this.nextCareMile-this.mileage);
 	}	
 
 	public Date getEnrollDate() {
@@ -203,6 +208,7 @@ public class Car extends BaseEntity {
 
 	public void setNextCareMile(int nextCareMile) {
 		this.nextCareMile = nextCareMile;
+		setMileNeedCare(this.nextCareMile-this.mileage);
 	}
 
 	public Date getInsuranceExpiredDate() {
@@ -283,5 +289,13 @@ public class Car extends BaseEntity {
 
 	public void setTransmissionType(TransmissionTypeEnum transmissionType) {
 		this.transmissionType = transmissionType;
+	}
+
+	public int getMileNeedCare() {
+		return mileNeedCare;
+	}
+
+	public void setMileNeedCare(int mileNeedCare) {
+		this.mileNeedCare = mileNeedCare;
 	}		
 }

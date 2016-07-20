@@ -65,13 +65,13 @@
                         <th><s:property value="tr.getText('car.CarExamine.nextExamineDate')" /><span class="required">*</span></th>
                         <td>
 							<s:textfield cssClass="inputText" id="nextExamineDate" name="nextExamineDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-							<input class="btn" type="button" name="getNextExamineDate" value="点击获取">
+							<input class="btn" type="button" name="getNextExamineDate" value="点击获取推荐日期">
 						</td>
                     </tr>                    
                     <tr>
                         <th><s:property value="tr.getText('car.CarExamine.money')" /><span class="required">*</span></th>
                         <td>
-                        	<s:textfield cssClass="inputText" name="money"/>
+                        	<s:textfield cssClass="inputText" name="money" id="money"/>
                         </td>
                     </tr>
                     <tr>
@@ -109,8 +109,18 @@
 					'car.plateNumber':{
 						required:true,
 					},
+					'driver.name':{
+						required:true,
+					},
+					nextExamineDate:{
+						required:true,
+					},
 					date:{
 						required:true,
+					},
+					money:{
+						required:true,
+						number:true,
 					},
 					examineIntervalYear:{
 						required:true,
@@ -156,7 +166,8 @@
 				}
 			});
 			
-			formatDateField1($("#date"));
+			formatDateField2($("#date"));
+			formatDateField2($("#nextExamineDate"));
 			
 		});
     </script>

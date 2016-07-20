@@ -14,8 +14,7 @@ public interface CarCareService {
 	/**
 	 * 增加保养记录。事后登记方式。
 	 * 指定appointment为false。
-	 * if(car.nextCareMile>0) 将car.nextCareMile自加上mileInterval作为下次保养里程的提醒依据。
-	 * if(car.nextCareMile==0)将car.nextCareMile设置为car.mileage+mileInterval
+	 * car.nextCareMile设置为car.mileage+mileInterval
 	 * @param carCare
 	 */
 	public void saveCarCare(CarCare carCare);
@@ -61,7 +60,7 @@ public interface CarCareService {
 	 * 按nextCareMile-mileage升序排列
 	 * @return
 	 */
-	public List<Car> getAllNeedCareCars();
+	public PageBean<Car> getNeedCareCars(int pageNum);
 	
 	public BigDecimal statisticCarCare(Date fromDate,Date toDate);
 }

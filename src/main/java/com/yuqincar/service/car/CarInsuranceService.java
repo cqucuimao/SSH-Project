@@ -27,10 +27,10 @@ public interface CarInsuranceService {
 	
 	/**
 	 * 列出所有需要提醒保险过期的车辆。条件： insuranceExpiredDate-nowdate<30
-	 * 按insuranceExpiredDate-nowdate升序排列
+	 * 按insuranceExpiredDate升序排列
 	 * @return
 	 */
-	public List<Car> getAllNeedInsuranceCars();
+	public PageBean<Car> getNeedInsuranceCars(int pageNum);
 	
 	public BigDecimal statisticCarInsurance(Date fromDate, Date toDate);
 	

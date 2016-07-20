@@ -23,7 +23,7 @@
 				<tr>
 					<td>
 						<input id="register" class="inputButton" type="button" value="洗车点登记" name="button" />
-						<input id="back" class="inputButton" type="button" value="返回" name="back" />
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>										
 				</tr>
 			</table>
@@ -63,12 +63,7 @@
 		$(function(){
 			$("#register").click(function(){
 				location.href='carWashShop_addUI.action';
-			});
-			
-			$("#back").click(function(){
-				location.href='carWash_list.action';
-			});
-			
+			});			
 		})
 	</script>
 </body>

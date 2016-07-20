@@ -57,7 +57,7 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.CarCare.date')" /><span class="required">*</span></th>
                         <td>
-                        	<s:textfield cssClass="inputText" name="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+                        	<s:textfield cssClass="inputText" name="date" id="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
                         </td>
                     </tr>
                     <tr>
@@ -100,8 +100,6 @@
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
 	    $(function(){
-	    	
-	    	
 			$("#pageForm").validate({
 				onfocusout: function(element) { $(element).valid(); },
 				rules:{
@@ -130,6 +128,7 @@
 					},
 				}
 			});
+			formatDateField2($("#date"));
 		});
     </script>
 </body>

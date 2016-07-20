@@ -27,7 +27,7 @@ public interface CarRepairService {
 	
 	public CarRepair getCarRepairById(long id);
 	
-	public PageBean<CarRepairService> queryCarRepair(int pageNum , QueryHelper helper);
+	public PageBean<CarRepair> queryCarRepair(int pageNum , QueryHelper helper);
 	
 	/**
 	 * 

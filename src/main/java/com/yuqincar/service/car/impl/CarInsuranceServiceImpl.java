@@ -14,6 +14,7 @@ import com.yuqincar.dao.car.CommercialInsuranceDao;
 import com.yuqincar.dao.car.CommercialInsuranceTypeDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarInsurance;
+import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.CommercialInsurance;
 import com.yuqincar.domain.car.CommercialInsuranceType;
 import com.yuqincar.domain.common.PageBean;
@@ -67,9 +68,14 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	public PageBean<CarInsuranceService> queryCarInsurance(int pageNum, QueryHelper helper) {
 		return carInsuranceDao.getPageBean(pageNum, helper);
 	}
-
-	public List<Car> getAllNeedInsuranceCars() {
-		return carDao.getAllNeedInsuranceCars();
+	
+	public PageBean<Car> getNeedInsuranceCars(int pageNum){
+		Date now = new Date();
+		Date a = new Date(now.getTime() +  24*60*60*1000 * 30L );
+		QueryHelper helper = new QueryHelper(Car.class, "c");
+		helper.addWhereCondition("c.insuranceExpiredDate < ? and d.status=?", a,CarStatusEnum.NORMAL);
+		helper.addOrderByProperty("c.insuranceExpiredDate", true);
+		return carDao.getPageBean(pageNum, helper);		
 	}
 	
 	public BigDecimal statisticCarInsurance(Date fromDate, Date toDate){

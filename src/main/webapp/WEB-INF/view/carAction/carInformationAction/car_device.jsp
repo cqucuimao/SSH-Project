@@ -56,7 +56,7 @@
 					</tr>
 					<tr>
 						<th><s:property value="tr.getText('car.Car.registDate')" />：</th>
-						<td><s:date name="registDate" format="yyyy-MM-dd hh:mm:ss"/></td>
+						<td><s:date name="registDate" format="yyyy-MM-dd"/></td>
 					</tr>				
 					<tr>
 						<th><s:property value="tr.getText('car.Car.driver')" />：</th>

@@ -19,7 +19,6 @@ public class CarViolationServiceImpl implements CarViolationService {
 	@Transactional
 	public void pullViolationFromCQJG() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Transactional

@@ -87,36 +87,6 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 		return true;
 	}
 
-	public List<Car> getAllNeedCareCars() {
-		CarStatusEnum m = CarStatusEnum.NORMAL;
-		return getSession().createQuery(//
-				"FROM Car d WHERE (d.nextCareMile-d.mileage)<300 and d.status=?")//
-				.setParameter(0, m)
-				.list();
-	}
-	
-	public List<Car> getAllNeedExamineCars() {
-		Date now=new Date();
-		Date b = new Date(now.getTime() +  24*60*60*1000 * 15L );
-		CarStatusEnum n = CarStatusEnum.NORMAL;
-		return getSession().createQuery(//
-				"FROM Car d WHERE d.nextExaminateDate < ? and d.status=?")
-				.setParameter(0, b)//
-				.setParameter(1, n)
-				.list();
-	}
-	
-	public List<Car> getAllNeedInsuranceCars() {
-		Date now = new Date();
-		Date a = new Date(now.getTime() +  24*60*60*1000 * 30L );
-		CarStatusEnum p = CarStatusEnum.NORMAL;
-		return getSession().createQuery(//
-				"FROM Car d WHERE d.insuranceExpiredDate < ? and d.status=?")
-				.setParameter(0, a)//
-				.setParameter(1, p)
-				.list();
-	}
-
 	public Car getByPlateNumber(String plateNumber) {
 		return (Car) getSession().createQuery(//
 				"FROM Car d WHERE d.plateNumber=?")
@@ -127,13 +97,13 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 	public List<Car> searchByPlateNumber(String plateNumber) {
 		if(plateNumber!=null && !plateNumber.isEmpty())
 			return (List<Car>) getSession().createQuery(//
-					"FROM Car c WHERE c.status=? and c.plateNumber like ? order by c.plateNumber")
+					"FROM Car c WHERE c.status=? and c.plateNumber like ? order by c.plateNumber asc")
 					.setParameter(0,CarStatusEnum.NORMAL)
 					.setParameter(1, "%"+plateNumber+"%")
 					.list();
 		else
 			return	(List<Car>) getSession().createQuery(//
-					"FROM Car c WHERE c.status=? order by c.plateNumber")
+					"FROM Car c WHERE c.status=? order by c.plateNumber asc")
 					.setParameter(0,CarStatusEnum.NORMAL).list();
 	}
 	
@@ -183,8 +153,8 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 
 	public List<Car> findByDriverName(String driverName) {
 		return getSession().createQuery(//
-				"FROM Car c WHERE c.driver.name=?")
-				.setParameter(0, driverName)//
+				"FROM Car c WHERE c.driver.name like ?")
+				.setParameter(0, "%"+driverName+"%")//
 				.list();
 	}
 

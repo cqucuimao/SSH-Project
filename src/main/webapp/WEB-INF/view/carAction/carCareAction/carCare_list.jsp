@@ -20,7 +20,7 @@
 			<h1>车辆保养</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carCare_list">
+			<s:form id="pageForm" action="carCare_queryForm">
 			<table>
 				<tr>
 					<td>
@@ -34,15 +34,15 @@
 					<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
 					<td>
 						<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
-							<s:textfield id="driverId" name="driver.id" type="hidden"/>
+						<s:textfield id="driverId" name="driver.id" type="hidden"/>
 					</td>
 					<th>从</th>
 					<td>
-						<s:textfield name="date1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+						<s:textfield name="date1" id="date1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<th>到</th>
 					<td>
-						<s:textfield name="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+						<s:textfield name="date2" id="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
@@ -120,8 +120,8 @@
 	        $("#remind").click(function(){
 	            self.location.href='carCare_remind.action';
 	        });
-	        
-	       
+			formatDateField2($("#date1"));
+			formatDateField2($("#date2"));
 	    })
 	</script>
 </body>

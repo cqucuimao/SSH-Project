@@ -24,6 +24,7 @@
 				<tr>
 					<td>
 						<input id="export" class="inputButton" type="button" value="导出"/>
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>
 				</tr>
 			</table>
@@ -36,22 +37,26 @@
 					<thead>
 						<tr>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-							<th><s:property value="tr.getText('car.CarExamine.date')" /></th>
-							<th><s:property value="tr.getText('car.CarExamine.memo')" /></th>
+							<th><s:property value="tr.getText('car.Car.driver')" /></th>
+							<th><s:property value="tr.getText('privilege.User.phoneNumber')" /></th>
+							<th><s:property value="tr.getText('car.Car.nextExaminateDate')" /></th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td>${car.plateNumber}</td>
-							<td style="text-align:right"><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
-							<td>${memo}</td>
+							<td>${plateNumber}</td>
+							<td>${driver.name}</td>
+							<td>${driver.phoneNumber}</td>
+							<td style="text-align:right"><s:date name="nextExaminateDate" format="yyyy-MM-dd"/></td>
 						</tr>
 						</s:iterator> 
 					</tbody>
 				</table>
 			</div>
+			<s:form id="pageForm" action="carExamine_remind">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
+			</s:form>
 		</div>
 	</div>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	

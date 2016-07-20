@@ -24,6 +24,7 @@
 				<tr>
 					<td>
 						<input id="export" class="inputButton" type="button" value="导出"/>
+                        <a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>
 				</tr>
 			</table>
@@ -40,22 +41,26 @@
 							<th>联系方式</th>
 							<th>保养里程</th>
 							<th>目前里程</th>
+							<th>距离保养剩余里程</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td>${car.plateNumber}</td>
+							<td>${plateNumber}</td>
 							<td>${driver.name}</td>
 							<td style="text-align:right">${driver.phoneNumber}</td>
-							<td style="text-align:right">${car.nextCareMile}</td>
-							<td style="text-align:right">${car.mileage}</td>
+							<td style="text-align:right">${nextCareMile}</td>
+							<td style="text-align:right">${mileage}</td>
+							<td style="text-align:right">${mileNeedCare}</td>
 						</tr>
 						</s:iterator> 
 					</tbody>
 				</table>
 			</div>
+			<s:form id="pageForm" action="carCare_remind">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
+			</s:form>
 		</div>
 	</div>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	

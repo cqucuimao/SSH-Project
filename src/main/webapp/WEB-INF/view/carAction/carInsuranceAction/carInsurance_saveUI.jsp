@@ -25,7 +25,7 @@
     <div class="space">
         <!-- 标题 -->
         <div class="title">
-            <h1>保险信息</h1>
+            <h1>登记保险信息</h1>
             <p style="color: red">
 				<s:if test="hasFieldErrors()">
 					<s:iterator value="fieldErrors">
@@ -178,7 +178,7 @@
 	    $(function(){
 	    	
 	    	 $("#pageForm").validate({
-					onfocusout: function(element) { $(element).valid(); },
+	    		 	onsubmit: function(element) { $(element).valid(); },
 					rules:{
 						// 配置具体的验证规则
 						'car.plateNumber':{
@@ -221,9 +221,6 @@
 							required:true,
 							digits:true,
 							min:1
-						},
-						insureType:{
-							required:true,
 						},
 						payDate:{
 							required:true,

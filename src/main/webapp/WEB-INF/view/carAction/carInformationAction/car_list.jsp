@@ -64,8 +64,8 @@
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td>${serviceType.title }</td>
 							<td>${plateNumber }</td>
+							<td>${serviceType.title }</td>
 							<td>${model }</td>
 							<td>${transmissionType.label }</td>
 							<td><s:date name="registDate" format="yyyy-MM-dd"/></td>

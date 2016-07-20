@@ -14,6 +14,8 @@ import com.yuqincar.dao.car.CarCareDao;
 import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
+import com.yuqincar.domain.car.CarExamine;
+import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarCareService;
@@ -34,6 +36,9 @@ public class CarCareServiceImpl implements CarCareService {
     public void saveCarCare(CarCare carCare) {
     	carCareDao.save(carCare);
     
+    	Car car=carCare.getCar();
+    	car.setNextCareMile(car.getMileage()+carCare.getMileInterval());
+    	carDao.update(car);
     }
 
 	@Transactional
@@ -78,8 +83,11 @@ public class CarCareServiceImpl implements CarCareService {
 
 	}
 
-	public List<Car> getAllNeedCareCars() {
-		return carDao.getAllNeedCareCars();
+	public PageBean<Car> getNeedCareCars(int pageNum) {
+		QueryHelper helper = new QueryHelper(Car.class, "c");
+		helper.addWhereCondition("mileNeedCare<300 and c.status=?", CarStatusEnum.NORMAL);
+		helper.addOrderByProperty("mileNeedCare", true);
+		return carDao.getPageBean(pageNum, helper);
 	}
 
 	public BigDecimal statisticCarCare(Date fromDate,Date toDate){

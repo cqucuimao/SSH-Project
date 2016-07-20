@@ -15,6 +15,7 @@ import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.CarExamineDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarExamine;
+import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
@@ -35,7 +36,10 @@ public class CarExamineServiceImpl implements CarExamineService {
 	@Transactional
 	public void saveCarExamine(CarExamine carExamine) {
 		carExamineDao.save(carExamine);
-
+		
+		Car car=carExamine.getCar();
+		car.setNextExaminateDate(carExamine.getNextExamineDate());
+		carDao.update(car);
 	}
 
 	@Transactional
@@ -57,7 +61,7 @@ public class CarExamineServiceImpl implements CarExamineService {
 		return carExamineDao.getById(id);
 	}
 
-	public PageBean<CarExamineService> queryCarExamine(int pageNum, QueryHelper helper) {
+	public PageBean<CarExamine> queryCarExamine(int pageNum, QueryHelper helper) {
 		return carExamineDao.getPageBean(pageNum, helper);
 	}
 
@@ -78,11 +82,19 @@ public class CarExamineServiceImpl implements CarExamineService {
 	@Transactional
 	public void updateCarExamine(CarExamine carExamine) {
 		carExamineDao.update(carExamine);
-
+		
+		Car car=carExamine.getCar();
+		car.setNextExaminateDate(carExamine.getNextExamineDate());
+		carDao.update(car);
 	}
-
-	public List<Car> getAllNeedExamineCars() {
-		return carDao.getAllNeedExamineCars();
+	
+	public PageBean<Car> getNeedExamineCars(int pageNum) {
+		Date now=new Date();
+		Date b = new Date(now.getTime() +  24*60*60*1000 * 15L );
+		QueryHelper helper = new QueryHelper(Car.class, "c");
+		helper.addWhereCondition("c.nextExaminateDate < ? and c.status=?", b,CarStatusEnum.NORMAL);
+		helper.addOrderByProperty("c.nextExaminateDate", true);
+		return carDao.getPageBean(pageNum, helper);
 	}
 
 	public Date getNextExamineDate(Car car, Date recentExamineDate) {

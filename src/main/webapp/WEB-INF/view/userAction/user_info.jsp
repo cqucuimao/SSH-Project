@@ -21,7 +21,7 @@
     </div>
     <div class="tab_next_con pt_10">
         <div class="editBlock" id="tab1_c">
-        <s:form action="user_changePassword">
+        <s:form id="passwordForm" action="user_changePassword">
             <table>
                 <tbody>
                     <tr>
@@ -31,12 +31,12 @@
                     <tr>
                         <th><span class="orang">*</span>新密码</th>
                         <td>
-                            <input name="newPassword" type="password" class="inputText" />
+                            <input name="newPassword" id="newPassword" type="password" class="inputText" />
                         </td>
                     </tr>
                     <tr>
                         <th><span class="orang">*</span>确认密码</th>
-                        <td><input name="confirmPassword" name="textfield" type="password" class="inputText" id="textfield" /></td>
+                        <td><input name="confirmPassword" id="confirmPassword" name="textfield" type="password" class="inputText" id="textfield" /></td>
                     </tr>
                    	<tr>
                    		<th></th>
@@ -47,8 +47,7 @@
                     <tr>
                         <td></td>
                         <td>
-                            <input type="submit" class="inputButton" value="确定" />
-                            <a class="p15" href="#">取消</a>
+                            <input type="submit" id="passwordSubmit" class="inputButton" value="确定" />
                         </td>
                     </tr>
                 </tfoot>
@@ -56,7 +55,7 @@
         </s:form>
         </div>
         <div class="editBlock" id="tab3_c">
-        <s:form action="user_changePhoneNumber">
+        <s:form id="phoneForm" action="user_changePhoneNumber">
             <table>
             
                 <tbody>
@@ -75,7 +74,6 @@
                         <td></td>
                         <td>
                             <input type="submit" class="inputButton" value="确定" />
-                            <a class="p15" href="#">取消</a>
                         </td>
                     </tr>
                 </tfoot>
@@ -103,10 +101,6 @@
                 <tfoot>
                     <tr>
                         <td></td>
-                        <!-- <td>
-                            <input type="submit" class="inputButton" value="确定" />
-                            <a class="p15" href="#">取消</a>
-                        </td> -->
                     </tr>
                 </tfoot>
             </table>
@@ -116,7 +110,45 @@
     </div>
     <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="js/common.js"></script>
-    <s:debug></s:debug>
+     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
+    <script type="text/javascript">	
+	    $(function(){				
+			$("#passwordForm").validate({
+				onsubmit: function(element) { $(element).valid(); },
+				rules:{
+					// 配置具体的验证规则
+					oldPassword:{
+						required:true,
+					},
+					newPassword:{
+						required:true,
+					},
+					confirmPassword:{
+						required:true,
+					}
+				}
+			});
+			
+			$("#phoneForm").validate({
+				onsubmit: function(element) { $(element).valid(); },
+				rules:{
+					phoneNumber:{
+						required:true,
+					}
+				}
+			});			
+
+		    $("#passwordSubmit").click(function(){
+		    	if($("#newPassword").val()!=$("#confirmPassword").val()){
+		    		alert("两次输入的新密码不相同，请重新输入！");
+		    		return false;
+		    	}
+		    	return true;
+		    });
+		});
+	    
+    </script>
 </body>
 </html>
 

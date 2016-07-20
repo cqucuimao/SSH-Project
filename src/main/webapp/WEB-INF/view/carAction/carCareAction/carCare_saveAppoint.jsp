@@ -16,7 +16,7 @@
 	<div class="space">
 		<!-- 标题 -->
         <div class="title">
-            <h1>预约信息</h1>
+            <h1>保养预约信息</h1>
             <p style="color: red">
 				<s:if test="hasFieldErrors()">
 					<s:iterator value="fieldErrors">
@@ -56,10 +56,7 @@
                     <tr>
                     	<th>预约时间<span class="required">*</span></th>
 						<td>
-							<input name="date" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-							<!-- 
-							<s:fielderror style="color:red"></s:fielderror>
-							 -->
+							<s:textfield cssClass="inputText" name="date" id="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 						</td>
                     </tr>
 				</tbody>
@@ -109,6 +106,7 @@
 					},
 				}
 			});
+			formatDateField2($("#date"));
 		});
     </script>
 </body>

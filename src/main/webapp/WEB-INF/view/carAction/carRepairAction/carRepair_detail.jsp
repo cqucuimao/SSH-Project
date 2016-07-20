@@ -47,16 +47,16 @@
                 				<td>${repairLocation}</td>
                 			</tr>
                 			<tr>
-                				<th><s:property value="tr.getText('car.CarRepair.reason')" />：</th>
-                				<td><textarea readonly>${reason}</textarea></td>
-                			</tr>
-                			<tr>
                 				<th><s:property value="tr.getText('car.CarRepair.money')" />(元)：</th>
                 				<td><fmt:formatNumber value="${money}" pattern="#0"/></td>
                 			</tr>
                 			<tr>
+                				<th><s:property value="tr.getText('car.CarRepair.reason')" />：</th>
+                				<td>${reason}</td>
+                			</tr>
+                			<tr>
                 				<th><s:property value="tr.getText('car.CarRepair.memo')" />：</th>
-                				<td><textarea readonly>${memo}</textarea></td>
+                				<td>${memo}</td>
                 			</tr>
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarRepair.appointment')" />：</th>

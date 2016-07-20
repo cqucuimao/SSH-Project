@@ -1,15 +1,12 @@
 package com.yuqincar.install;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -17,7 +14,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +47,6 @@ import com.yuqincar.domain.privilege.UserGenderEnum;
 import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.order.WatchKeeperService;
-import com.yuqincar.service.privilege.RoleService;
-import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.ExcelUtil;
 
 /**
@@ -310,8 +304,9 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/carCare_appoint", carCareMenu));
 		privilegeDao.save(new Privilege("", "/carCare_remind", carCareMenu));
 		privilegeDao.save(new Privilege("", "/carCare_detail", carCareMenu));
-		privilegeDao.save(new Privilege("", "/carCare_care", carCareMenu));
 		privilegeDao.save(new Privilege("", "/carCare_saveAppointment", carCareMenu));
+		privilegeDao.save(new Privilege("", "/carCare_queryForm", carCareMenu));
+		privilegeDao.save(new Privilege("", "/carCare_freshList", carCareMenu));
 		
 		Privilege carInsuranceMenu = new Privilege("车辆保险", "/carInsurance_list", carMenu);
 		privilegeDao.save(carInsuranceMenu);
@@ -339,7 +334,8 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/carRepair_edit", carRepairMenu));
 		privilegeDao.save(new Privilege("", "/carRepair_appoint", carRepairMenu));
 		privilegeDao.save(new Privilege("", "/carRepair_detail", carRepairMenu));
-		privilegeDao.save(new Privilege("", "/carRepair_repair", carRepairMenu));
+		privilegeDao.save(new Privilege("", "/carRepair_refreshList", carRepairMenu));
+		privilegeDao.save(new Privilege("", "/carRepair_queryForm", carRepairMenu));
 		
 		Privilege carRefuelMenu = new Privilege("加油信息", "/carRefuel_list", carMenu);
 		privilegeDao.save(carRefuelMenu);
@@ -362,9 +358,10 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/carExamine_appoint", carExamineMenu));
 		privilegeDao.save(new Privilege("", "/carExamine_remind", carExamineMenu));
 		privilegeDao.save(new Privilege("", "/carExamine_detail", carExamineMenu));
-		privilegeDao.save(new Privilege("", "/carExamine_examine", carExamineMenu));
+		privilegeDao.save(new Privilege("", "/carExamine_freshList", carExamineMenu));
 		privilegeDao.save(new Privilege("", "/carExamine_saveAppointment", carExamineMenu));
 		privilegeDao.save(new Privilege("", "/carExamine_getNextExamineDate", carExamineMenu));
+		privilegeDao.save(new Privilege("", "/carExamine_queryForm", carExamineMenu));
 		
 		Privilege tollChargeMenu = new Privilege("路桥费", "/tollCharge_list", carMenu);
 		privilegeDao.save(tollChargeMenu);

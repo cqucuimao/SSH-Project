@@ -57,8 +57,8 @@
                 	<tr>
                         <th>维修时间<span class="required">*</span></th>
                         <td>
-							<s:textfield cssClass="inputText" class="Wdate half" name="fromDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<s:textfield cssClass="inputText" class="Wdate half" name="toDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<s:textfield cssClass="inputText" class="Wdate half" name="fromDate" id="fromDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<s:textfield cssClass="inputText" class="Wdate half" name="toDate" id="toDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<!-- 
 							<s:fielderror style="color:red"></s:fielderror>
 							 -->
@@ -93,7 +93,7 @@
                     <tr>
                     	<th><s:property value="tr.getText('car.CarRepair.payDate')" /><span class="required">*</span></th>
                     	<td>
-                    		<s:textfield cssClass="inputText" class="Wdate half" name="payDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                    		<s:textfield cssClass="inputText" class="Wdate half" name="payDate" id="payDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
                     	</td>
                     </tr>
                 </tbody>
@@ -125,6 +125,9 @@
 					'car.plateNumber':{
 						required:true,
 					},
+					'driver.name':{
+						required:true,
+					},
 					fromDate:{
 						required:true,
 					},
@@ -150,6 +153,9 @@
 					},
 				}
 			});
+			formatDateField2($("#fromDate"));
+			formatDateField2($("#toDate"));
+			formatDateField2($("#payDate"));
 		});
     </script>
 </body>

@@ -58,18 +58,18 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		System.out.println("driverOnly="+driverOnly);
 		if(name!=null && !name.isEmpty())
 			if(driverOnly)
-				return getSession().createQuery("from User u where u.name like ? and userType=? and status=?")
+				return getSession().createQuery("from User u where u.name like ? and u.userType=? and u.status=? order by u.name asc")
 						.setParameter(0, "%"+name+"%").setParameter(1,UserTypeEnum.DRIVER)
 						.setParameter(2, UserStatusEnum.NORMAL).list();
 			else
-				return getSession().createQuery("from User u where u.name like ? and status=?")
+				return getSession().createQuery("from User u where u.name like ? and u.status=? order by u.name asc")
 						.setParameter(0, "%"+name+"%").setParameter(1, UserStatusEnum.NORMAL).list();
 		else
 			if(driverOnly)
-				return getSession().createQuery("from User u where userType=? and status=?")
+				return getSession().createQuery("from User u where u.userType=? and u.status=? order by u.name asc")
 						.setParameter(0, UserTypeEnum.DRIVER).setParameter(1, UserStatusEnum.NORMAL).list();
 			else
-				return getSession().createQuery("from User u where status=?")
+				return getSession().createQuery("from User u where u.status=? order by u.name asc")
 						.setParameter(0, UserStatusEnum.NORMAL).list();
 	}
 	

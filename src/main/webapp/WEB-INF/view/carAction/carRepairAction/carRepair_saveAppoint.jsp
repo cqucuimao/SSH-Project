@@ -19,7 +19,7 @@
 	<div class="space">
 		<!-- 标题 -->
         <div class="title">
-            <h1>预约信息</h1>
+            <h1>维修预约信息</h1>
             <p style="color: red">
 				<s:if test="hasFieldErrors()">
 					<s:iterator value="fieldErrors">
@@ -59,8 +59,8 @@
                     <tr>
                     	<th>预约时间<span class="required">*</span></th>
                         <td>
-							<input class="Wdate half" name="fromDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="Wdate half" name="toDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<s:textfield cssClass="inputText" class="Wdate half" name="fromDate" id="fromDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<s:textfield cssClass="inputText" class="Wdate half" name="toDate" id="toDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						</td>
                     </tr>
 				</tbody>
@@ -97,6 +97,9 @@
 					'car.plateNumber':{
 						required:true,
 					},
+					'driver.name':{
+						required:true,
+					},
 					fromDate:{
 						required:true,
 					},
@@ -105,6 +108,8 @@
 					},
 				}
 			});
+			formatDateField2($("#fromDate"));
+			formatDateField2($("#toDate"));
 		});
     </script>
 </body>

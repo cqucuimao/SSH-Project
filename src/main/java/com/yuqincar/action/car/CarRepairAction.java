@@ -1,6 +1,7 @@
 package com.yuqincar.action.car;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ import com.yuqincar.utils.QueryHelper;
 @Scope("prototype")
 public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair> {
 	
-	private CarRepair model = new CarRepair();
+	private CarRepair model;
 	
 	@Autowired
 	private CarRepairService carRepairService;
@@ -43,8 +44,11 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	@Autowired
 	private UserService userService;
 	
-	/** 列表 */
-	public String list() throws Exception {
+	private Date date1;
+	
+	private Date date2;
+	
+	public String queryForm() throws Exception {
 		QueryHelper helper = new QueryHelper(CarRepair.class, "cr");
 		
 		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null 
@@ -53,21 +57,40 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		
 		if(model.getDriver()!=null && model.getDriver().getId()!=null)
 			helper.addWhereCondition("cr.driver.id = ?", model.getDriver().getId());
-		
-		//if(model.getMoney()!=null && !"".equals(model.getMoney()))
-		//helper.addWhereCondition("cr.money=?", model.getMoney());
-		
-		PageBean pageBean = carRepairService.queryCarRepair(pageNum, helper);
-		
+
+		if(date1!=null && date2!=null)
+			helper.addWhereCondition("(TO_DAYS(cr.fromDate)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cr.fromDate))>=0", 
+					date1 ,date2);
+		else if(date1==null && date2!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(cr.fromDate))>=0", date2);
+		else if(date1!=null && date2==null)
+			helper.addWhereCondition("(TO_DAYS(cr.fromDate)-TO_DAYS(?))>=0", date1);
+		helper.addOrderByProperty("cr.id", false);		
+		PageBean<CarRepair> pageBean = carRepairService.queryCarRepair(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carRepairHelper", helper);
 		return "list";
 	}
 	
-	/** 删除 */
+	public String list() {
+		QueryHelper helper = new QueryHelper(CarRepair.class, "cr");
+		helper.addOrderByProperty("cr.id", false);
+		PageBean<CarRepair> pageBean = carRepairService.queryCarRepair(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("carRepairHelper", helper);
+		return "list";
+	}
+	
+	public String freshList(){
+		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carRepairHelper");
+		PageBean<CarRepair> pageBean = carRepairService.queryCarRepair(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		return "list";
+	}
+	
 	public String delete() throws Exception {
 		carRepairService.deleteCarRepairById(model.getId());
-		return "toList";
+		return freshList();
 	}
 	
 	/** 添加页面 */
@@ -77,14 +100,15 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	
 	/** 添加 */
 	public String add() throws Exception {
-		// 保存到数据库
-		boolean before = model.getToDate().before(model.getFromDate());
-		//System.out.println(before);
-		if(before){
+
+		if(DateUtils.compareYMD(model.getToDate(), new Date())>0){
+			addFieldError("toDate", "你输入的维修时间段不能晚于今天！");
+			return "saveUI";
+		}
 		
-			//addActionError("预约时间必须晚于今天！");
+		boolean before = model.getToDate().before(model.getFromDate());
+		if(before){
 			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
 			return "saveUI";
 		}
 		
@@ -95,11 +119,17 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		model.setDriver(driver);
 		model.setAppointment(false);
 		carRepairService.saveCarRepair(model);
-		
-		return "toList";
+		model=null;
+		ActionContext.getContext().getValueStack().push(getModel());
+		return freshList();
 	}
 	
 	public String saveAppointment(){
+		if(DateUtils.compareYMD(new Date(), model.getFromDate())>0){
+			addFieldError("toDate", "你输入的维修时间段不能早于今天！");
+			return "saveAppoint";
+		}
+		
 		boolean before = model.getToDate().before(model.getFromDate());
 		if(before){
 			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
@@ -148,9 +178,11 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 			return "saveAppoint";
 		}else{
 			carRepairService.carRepairAppointment(car, driver, model.getFromDate(), model.getToDate());
+			model=null;
+			ActionContext.getContext().getValueStack().push(getModel());
 		}
-		
-		return "toList";
+
+		return freshList();
 	}
 	
 	/** 修改页面 */
@@ -171,15 +203,13 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	
 	/** 修改 */
 	public String edit() throws Exception {
-		//从数据库中取出原对象
-		
+		if(DateUtils.compareYMD(model.getToDate(), new Date())>0){
+			addFieldError("toDate", "你输入的维修时间段不能晚于今天！");
+			return "saveUI";
+		}
 		boolean before = model.getToDate().before(model.getFromDate());
-		//System.out.println(before);
 		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
 			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
 			return "saveUI";
 		}
 		
@@ -201,8 +231,10 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 
 		//更新到数据库
 		carRepairService.updateCarRepair(carRepair);
+		model=null;
+		ActionContext.getContext().getValueStack().push(getModel());
 
-		return "toList";
+		return freshList();
 	}
 	
 	/** 预约*/
@@ -221,14 +253,25 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	}
 
 	public CarRepair getModel() {
+		if(model==null)
+			model=new CarRepair();
 		return model;
 	}
-	
-	public String repair(){
-		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carRepairHelper");
-		PageBean pageBean = carRepairService.queryCarRepair(pageNum, helper);
-		ActionContext.getContext().getValueStack().push(pageBean);
-		return "list";
+
+	public Date getDate1() {
+		return date1;
+	}
+
+	public void setDate1(Date date1) {
+		this.date1 = date1;
+	}
+
+	public Date getDate2() {
+		return date2;
+	}
+
+	public void setDate2(Date date2) {
+		this.date2 = date2;
 	}
 
 }

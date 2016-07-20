@@ -126,7 +126,7 @@
 						 min:1
 					},
 					penaltyMoney:{
-						digits:true,
+						number:true,
 						min:1
 					},
 				}

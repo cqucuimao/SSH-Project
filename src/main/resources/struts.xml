@@ -120,7 +120,7 @@
 		</action>
 
 		<!-- 违章信息管理 -->
-		<action name="carViolation_*" class="carAction" method="{1}">
+		<action name="carViolation_*" class="carViolationAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carViolationAction/carViolation_list.jsp
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carViolationAction/carViolation_saveUI.jsp
@@ -154,7 +154,6 @@
 			</result>
 			<result name="carCareDetail">/WEB-INF/view/carAction/carCareAction/carCare_detail.jsp
 			</result>
-			<result name="toList" type="redirectAction">carCare_list</result>
 		</action>
 
 		<!-- 车辆保险管理 -->
@@ -198,7 +197,6 @@
 			</result>
 			<result name="carRepairDetail">/WEB-INF/view/carAction/carRepairAction/carRepair_detail.jsp
 			</result>
-			<result name="toList" type="redirectAction">carRepair_list</result>
 		</action>
 
 		<!-- 车辆加油管理 -->
@@ -232,7 +230,6 @@
 			</result>
 			<result name="carExamineDetail">/WEB-INF/view/carAction/carExamineAction/carExamine_detail.jsp
 			</result>
-			<result name="toList" type="redirectAction">carExamine_list</result>
 		</action>
 
 		<!-- 路桥费 -->

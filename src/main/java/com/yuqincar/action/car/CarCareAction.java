@@ -16,6 +16,7 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.car.CarRepair;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
@@ -31,7 +32,7 @@ import com.yuqincar.utils.QueryHelper;
 @Scope("prototype")
 public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
-	private CarCare model = new CarCare();
+	private CarCare model;
 	
 	@Autowired
 	private CarCareService carCareService;
@@ -47,35 +48,11 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
 	private Date date;
 
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
 	private Date date1;
+	
 	private Date date2;
 
-	public Date getDate1() {
-		return date1;
-	}
-
-	public void setDate1(Date date1) {
-		this.date1 = date1;
-	}
-
-	public Date getDate2() {
-		return date2;
-	}
-
-	public void setDate2(Date date2) {
-		this.date2 = date2;
-	}
-
-	/** 列表 */
-	public String list() throws Exception {
+	public String queryForm(){
 		QueryHelper helper = new QueryHelper(CarCare.class, "u");
 		
 		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
@@ -88,19 +65,37 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		if(date1!=null && date2!=null)
 			helper.addWhereCondition("(TO_DAYS(u.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(u.date))>=0", 
 					date1 ,date2);
-		
-		PageBean pageBean = carCareService.queryCarCare(pageNum, helper);
-		
-		ActionContext.getContext().getValueStack().push(pageBean);
-		
+		else if(date1==null && date2!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(u.date))>=0", date2);
+		else if(date1!=null && date2==null)
+			helper.addWhereCondition("(TO_DAYS(u.date)-TO_DAYS(?))>=0", date1);
+		helper.addOrderByProperty("u.id", false);
+		PageBean pageBean = carCareService.queryCarCare(pageNum, helper);		
+		ActionContext.getContext().getValueStack().push(pageBean);		
 		ActionContext.getContext().getSession().put("carCareHelper", helper);
+		return "list";	
+	}
+
+	public String list() {
+		QueryHelper helper = new QueryHelper(CarCare.class, "u");
+		helper.addOrderByProperty("u.id", false);
+		PageBean<CarCare> pageBean = carCareService.queryCarCare(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("carCareHelper", helper);
+		return "list";
+	}
+	
+	public String freshList(){
+		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carCareHelper");
+		PageBean<CarCare> pageBean = carCareService.queryCarCare(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
 		return "list";
 	}
 	
 	/** 删除 */
 	public String delete() throws Exception {
 		carCareService.deleteCarCareById(model.getId());
-		return "toList";
+		return freshList();
 	}
 	
 	/** 添加页面 */
@@ -114,7 +109,7 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		// 保存到数据库
 		
 		if(DateUtils.compareYMD(model.getDate(), new Date())>0){
-			addFieldError("date", "你输入的时间不能晚于今天！");
+			addFieldError("date", "你输入的保养日期不能晚于今天！");
 			return "saveUI";
 		}
 		
@@ -126,8 +121,9 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		model.setAppointment(false);
 		carCareService.saveCarCare(model);
 		model=null;
+		ActionContext.getContext().getValueStack().push(getModel());
 		System.out.println("in add1, model="+model);
-		return "toList";
+		return freshList();
 	}
 	
 	/** 修改页面 */
@@ -144,10 +140,8 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
 	/** 修改 */
 	public String edit() throws Exception {
-		//从数据库中取出原对象
-
 		if(DateUtils.compareYMD(model.getDate(), new Date())>0){		
-			addFieldError("date", "你输入的时间不能晚于今天！");
+			addFieldError("date", "你输入的保养日期不能晚于今天！");
 			return "saveUI";
 		}
 		
@@ -162,8 +156,9 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 
 		//更新到数据库
 		carCareService.updateCarCare(carCare);
-
-		return "toList";
+		model=null;
+		ActionContext.getContext().getValueStack().push(getModel());
+		return freshList();
 	}
 	
 	/** 预约*/
@@ -172,19 +167,8 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	}
 	
 	/** 提醒*/
-	public String remind() throws Exception{
-		QueryHelper helper = new QueryHelper(CarCare.class, "cc");
-		
-		
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-				.equals(model.getCar().getPlateNumber()))
-			helper.addWhereCondition("cc.car.plateNumber like ?", 
-					"%"+model.getCar().getPlateNumber()+"%");
-		
-		
-		
-		PageBean pageBean = carCareService.queryCarCare(pageNum, helper);
-		
+	public String remind(){
+		PageBean pageBean=carCareService.getNeedCareCars(pageNum);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "remindList";
 	}
@@ -200,19 +184,14 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 
 	public CarCare getModel() {
 		System.out.println("in getModel,model="+model);
+		if(model==null)
+			model=new CarCare();
 		return model;
-	}
-	
-	public String care(){
-		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carCareHelper");
-		PageBean pageBean = carCareService.queryCarCare(pageNum, helper);
-		ActionContext.getContext().getValueStack().push(pageBean);
-		return "list";
 	}
 	
 	public String saveAppointment(){
 		if(DateUtils.compareYMD(model.getDate(), new Date())<0){
-			addFieldError("date", "你输入的预约时间不能早于今天！");
+			addFieldError("date", "你输入的预约日期不能早于今天！");
 			return "saveAppoint";
 		}
 		
@@ -262,10 +241,34 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		}else{
 			//插入预约保养记录
 			carCareService.carCareAppointment(car, driver, model.getDate());
+			model=null;
+			ActionContext.getContext().getValueStack().push(getModel());
 		}
-		
-		return "toList";
-		
+
+		return freshList();		
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
+	public Date getDate1() {
+		return date1;
+	}
+
+	public void setDate1(Date date1) {
+		this.date1 = date1;
+	}
+
+	public Date getDate2() {
+		return date2;
+	}
+
+	public void setDate2(Date date2) {
+		this.date2 = date2;
+	}
 }

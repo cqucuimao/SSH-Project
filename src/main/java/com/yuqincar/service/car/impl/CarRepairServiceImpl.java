@@ -52,7 +52,7 @@ public class CarRepairServiceImpl implements CarRepairService {
 		return carRepairDao.getById(id);
 	}
 
-	public PageBean<CarRepairService> queryCarRepair(int pageNum, QueryHelper helper) {
+	public PageBean<CarRepair> queryCarRepair(int pageNum, QueryHelper helper) {
 		return carRepairDao.getPageBean(pageNum, helper);
 	}
 

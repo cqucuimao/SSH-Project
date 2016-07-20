@@ -15,13 +15,6 @@ public interface CarDao extends BaseDao<Car> {
 
 	boolean canDeleteCar(long id);
 
-
-	List<Car> getAllNeedCareCars();
-
-	List<Car> getAllNeedExamineCars();
-
-	List<Car> getAllNeedInsuranceCars();
-
 	Car getByPlateNumber(String plateNumber);
 
 	/**

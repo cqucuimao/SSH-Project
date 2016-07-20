@@ -174,7 +174,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	public String edit() throws Exception {
 		//从数据库中取出原对象
 		User user = userService.getById(model.getId());
-
+		User oldUser = userService.getById(model.getId());
 		//设置要修改的属性
 		user.setLoginName(model.getLoginName());
 		user.setName(model.getName());
@@ -190,34 +190,22 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		//处理关联的多个岗位
 		List<Role> roleList = roleService.getByIds(roleIds);
 		user.setRoles(new HashSet<Role>(roleList));
-		
-
-		System.out.println("原来的用户类型="+user.getUserType());
-		System.out.println("修改的用户类型="+UserTypeEnum.getById(userTypeId));
+		user.setUserType(UserTypeEnum.getById(userTypeId));
 
 		//办公室员工->司机员工,新建DriverLicense
-		if(user.getUserType() == UserTypeEnum.OFFICE && UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
+		if(oldUser.getUserType() == UserTypeEnum.OFFICE && user.getUserType() == UserTypeEnum.DRIVER){
 			DriverLicense driverLicense = new DriverLicense();
 			driverLicense.setLicenseID(licenseID);
 			driverLicense.setExpireDate(expireDate);
-			//driverLicenseDao.save(driverLicense);
 			user.setDriverLicense(driverLicense);
 		}
-		//司机员工->办公室员工，删除DriverLicense
-		if(user.getUserType() == UserTypeEnum.DRIVER && UserTypeEnum.getById(userTypeId) == UserTypeEnum.OFFICE){
-			DriverLicense driverLicense = user.getDriverLicense();
-			user.setDriverLicense(null);
-			//driverLicenseDao.delete(driverLicense.getId());
-		}
 		//司机员工->司机员工，修改DriverLicense
-		if(user.getUserType() == UserTypeEnum.DRIVER && UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
+		if(oldUser.getUserType() == UserTypeEnum.DRIVER && user.getUserType() == UserTypeEnum.DRIVER){
 			DriverLicense driverLicense = user.getDriverLicense();
 			driverLicense.setLicenseID(licenseID);
 			driverLicense.setExpireDate(expireDate);
-			//driverLicenseDao.update(driverLicense);	
-		}
-		user.setUserType(UserTypeEnum.getById(userTypeId));
-		
+			user.setDriverLicense(driverLicense);
+		}	
 		//更新到数据库
 		userService.update(user);
 		ActionContext.getContext().getValueStack().push(new User());

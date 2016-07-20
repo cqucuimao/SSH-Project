@@ -60,7 +60,22 @@ public class UserServiceImpl implements UserService{
 
 	@Transactional
 	public void update(User user) {
+		User oldUser = userDao.getById(user.getId());
 		DriverLicense driverLicense = user.getDriverLicense();
+		//办公室员工->司机员工,新建DriverLicense
+		if(oldUser.getUserType() == UserTypeEnum.OFFICE && user.getUserType() == UserTypeEnum.DRIVER){
+			driverLicenseDao.save(driverLicense);
+		}
+		//司机员工->办公室员工，删除DriverLicense
+		if(oldUser.getUserType() == UserTypeEnum.DRIVER && user.getUserType() == UserTypeEnum.OFFICE){
+			user.setDriverLicense(null);
+			driverLicenseDao.delete(driverLicense.getId());
+		}
+		//司机员工->司机员工，修改DriverLicense
+		if(oldUser.getUserType() == UserTypeEnum.DRIVER && user.getUserType() == UserTypeEnum.DRIVER){
+
+			driverLicenseDao.update(driverLicense);	
+		}
 		userDao.update(user);
 	}
 

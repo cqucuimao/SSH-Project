@@ -8,14 +8,14 @@
 	<span class="page">${recordCount}&nbsp;条结果&nbsp;&nbsp;${currentPage}/${pageCount}页&nbsp;&nbsp;
    	<span class="PageSelectorNum" style="cursor: hand;" onClick="gotoPage(${num});">${num}</span>
    	
-   	<s:if test=" 1 != currentPage "><%-- 非首页 --%>
+   	<s:if test=" 1 != currentPage && 0 != currentPage"><%-- 非首页 --%>
    		<a href="javascript: gotoPage(1)" title="首页" ><img src="skins/images/page/page_first_a.gif" alt="first page" /></a>
 	</s:if>
 	<s:else>
    		<a  title="首页" ><img src="skins/images/page/page_first_b.gif" alt="first page" /></a>
 	</s:else>
 	
-	<s:if test=" 1 != currentPage "><%-- 非首页 --%>
+	<s:if test=" 1 != currentPage && 0 != currentPage"><%-- 非首页 --%>
    	<a href="javascript: gotoPage(${currentPage}-1)"><img src="skins/images/page/page_pre_a.gif" alt="previous page"/></a>
    	</s:if>
    	<s:else>

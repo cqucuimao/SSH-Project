@@ -32,7 +32,7 @@ public class User extends BaseEntity implements Serializable {
 	private Set<Role> roles = new HashSet<Role>();
 	
 	@Text("部门")
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(nullable=false)
 	private Department department;
 	
@@ -69,7 +69,7 @@ public class User extends BaseEntity implements Serializable {
 	@Text("说明")
 	private String description;
 	
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne
 	@Text("驾照")
 	private DriverLicense driverLicense;	//驾照。只有当userType==DRIVER时才有意义。
 	
@@ -98,6 +98,7 @@ public class User extends BaseEntity implements Serializable {
 			BASE_PRIVILEGE_URLS.add("/user_popup");
 			BASE_PRIVILEGE_URLS.add("/user_changePassword");
 			BASE_PRIVILEGE_URLS.add("/user_changePhoneNumber");
+			BASE_PRIVILEGE_URLS.add("/user_detail");
 		}
 		return BASE_PRIVILEGE_URLS;
 	}

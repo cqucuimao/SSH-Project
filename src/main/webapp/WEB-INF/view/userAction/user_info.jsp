@@ -13,9 +13,9 @@
         <table>
             <tr>
             
-                <td id="tab1" <s:if test='#tabid == "1"'>class="on"</s:if>  ><a href="#"><span>修改密码</span></a></td>
+                <td id="tab1" <s:if test='#tabid == "1"'>class="on"</s:if> ><a href="#"><span>修改密码</span></a></td>
                 <td id="tab3" <s:if test='#tabid == "2"'>class="on"</s:if> ><a href="#"><span>修改手机</span></a></td>
-                <td id="tab2"><a href="#"><span>个人信息</span></a></td>
+                <td id="tab2" <s:if test='#tabid == "3"'>class="on"</s:if> ><a href="user_detail.action"><span>个人信息</span></a></td>
             </tr>
         </table>
     </div>
@@ -92,7 +92,7 @@
                 </tr>
                 <tr>
                     <th>部门</th>
-                    <td>${department}</td>
+                    <td>${department.name}</td>
                 </tr>
                 <tr>
                     <th>电话</th>

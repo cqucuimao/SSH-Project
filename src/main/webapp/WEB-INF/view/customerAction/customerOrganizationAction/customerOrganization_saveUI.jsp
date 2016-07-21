@@ -45,31 +45,6 @@
                         	<s:textfield cssClass="inputText" name="abbreviation"/>
 						</td>
                     </tr>
-                    <!-- 
-                    <tr>
-                        <th>单位地址<span class="required">*</span></th>
-                        <td>
-                        	<s:textfield cssClass="inputText" text="单位地址" name="address.description"/>
-						</td>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <td>
-                        	<s:textarea cssClass="inputText" style="height:100px" text="详细地址" name="address.detail"></s:textarea>
-						</td>
-                    </tr>
-                     -->
-                    <tr>
-						<th>单位地址<span class="required">*</span></th>
-						<td>
-						<!-- 地址匹配收藏输入框-->
-						<!-- 地址详情输入框 -->	
-							<jsp:include page="../../addressComponmentAction/addressComponmentMap.jsp" >
-								<jsp:param value="0" name="id" />
-							</jsp:include>
-							<s:fielderror style="color:red"></s:fielderror>																
-						</td>
-					</tr>
                 </tbody>
                 <tfoot>
                     <tr>

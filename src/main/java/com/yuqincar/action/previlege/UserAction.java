@@ -229,17 +229,13 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	
 	public String info() {
 		User user = (User) ActionContext.getContext().getSession().get("user");
-
 		ActionContext.getContext().getValueStack().push(user);
-		ActionContext.getContext().put("tabid", 1);
-
-		
+		ActionContext.getContext().put("tabid", 1);		
 		return "info";
 	}
 	
 	public String changePassword() {
 		User user = (User) ActionContext.getContext().getSession().get("user");
-		
 		if(DigestUtils.md5Hex(oldPassword).equals(user.getPassword())) {
 			user.setPassword(DigestUtils.md5Hex(newPassword));
 			userService.update(user);
@@ -260,6 +256,13 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		ActionContext.getContext().put("tabid", 2);
 		ActionContext.getContext().put("phone_msg", "修改手机号码成功！");
 
+		return "info";
+	}
+	
+	public String detail(){
+		User user = (User) ActionContext.getContext().getSession().get("user");
+		ActionContext.getContext().getValueStack().push(user);
+		ActionContext.getContext().put("tabid", 3);		
 		return "info";
 	}
 

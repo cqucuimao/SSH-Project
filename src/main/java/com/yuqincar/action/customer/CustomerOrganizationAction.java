@@ -38,13 +38,6 @@ public class CustomerOrganizationAction extends BaseAction implements
 			helper.addWhereCondition("co.name like ?", "%" + model.getName()
 					+ "%");
 
-		/*
-		 * if(model.getAbbreviation()!=null &&
-		 * !"".equals(model.getAbbreviation()))
-		 * helper.addWhereCondition("co.abbreviation like ?",
-		 * "%"+model.getAbbreviation()+"%");
-		 */
-
 		PageBean<CustomerOrganization> pageBean = customerOrganizationService
 				.queryCustomerOrganization(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -74,40 +67,6 @@ public class CustomerOrganizationAction extends BaseAction implements
 
 	/** 添加 */
 	public String add() throws Exception {
-		
-		
-//		if (address == null || address.size() == 0 || address.get(0).getDescription().length() == 0
-//				|| address.get(0).getDetail().length() == 0 || address.get(0).getLocation().getLongitude() == 0
-//				|| address.get(0).getLocation().getLatitude() == 0) {
-//			addFieldError("pAddress", "地址信息不能为空！");
-//			return "saveUI";
-//		}
-		/*
-		 * String descriptionAddress = model.getAddress().getDescription();
-		 * String detailAddress = model.getAddress().getDetail();
-		 * 
-		 * Address desAddress =
-		 * addressService.getAddressByDescription(descriptionAddress); //Address
-		 * detAddress = addressService.getAddressByDetail(detailAddress);
-		 * 
-		 * if(desAddress==null){ Address address1 = new Address();
-		 * address1.setDescription(descriptionAddress);
-		 * address1.setDetail(detailAddress);
-		 * 
-		 * Location location=new Location();
-		 * 
-		 * customerOrganizationService.saveLocation(location);
-		 * 
-		 * //Location location2=customerOrganizationService.getLocationById(1L);
-		 * address1.setLocation(location);
-		 * 
-		 * addressService.saveAddress(address1); }
-		 * model.setAddress(addressService
-		 * .getAddressByDescription(descriptionAddress));
-//		 */
-//		addressService.saveAddresses(address);
-//		model.setPAddress(address.get(0));
-
 		customerOrganizationService.saveCustomerOrganization(model);
 		return "toList";
 	}
@@ -139,15 +98,6 @@ public class CustomerOrganizationAction extends BaseAction implements
 		CustomerOrganization customerOrganization = customerOrganizationService
 				.getById(model.getId());
 
-		// 设置要修改的属性
-//		long oldId=customerOrganization.getpAddress().getId();
-//		customerOrganization.setName(model.getName());
-//		customerOrganization.setAbbreviation(model.getAbbreviation());
-//		addressService.saveAddresses(address);
-//		customerOrganization.setpAddress(address.get(0));
-//		customerOrganizationService
-//				.updateCustomerOrganization(customerOrganization);
-//		addressService.deleteAddress(oldId);
 		if(customerId>0){
 			customerOrganization.setManager(customerService.getById(customerId));
 		}
@@ -158,44 +108,6 @@ public class CustomerOrganizationAction extends BaseAction implements
 	public CustomerOrganization getModel() {
 		return model;
 	}
-	
-	/** 验证客户单位地址 */
-	/*public void validateAdd() {
-		if (customerOrganizationService.isNameExist(0, model.getName()) == false
-				&& customerOrganizationService.isAbbreviationExist(0,
-						model.getAbbreviation()) == false) {
-			customerOrganizationService.saveCustomerOrganization(model);
-		} else if (customerOrganizationService.isNameExist(0, model.getName()) == true
-				|| customerOrganizationService.isAbbreviationExist(0,
-						model.getAbbreviation()) == true) {
-			addFieldError("name", "你输入的用户单位名已经存在，请重新输入！");
-		} else if (model.getPAddress() == null)
-			addFieldError("pAddress", "客户单位地址不能为空！");
-		
-		
-		if (address == null || address.size() == 0 || address.get(0).getDescription().length() == 0
-				|| address.get(0).getDetail().length() == 0 || address.get(0).getLocation().getLongitude() == 0
-				|| address.get(0).getLocation().getLatitude() == 0) {
-			addFieldError("pAddress", "地址信息不能为空！");
-		}
-	}*/
-
-	
-
-	/** 验证客户单户名称和简称同名 */
-	/*public void validateEdit() {
-		
-		 * if(customerOrganizationService .isNameExist(0,
-		 * model.getName())==false && customerOrganizationService
-		 * .isAbbreviationExist(0, model.getAbbreviation())==false){
-		 * customerOrganizationService.saveCustomerOrganization(model);
-		 
-		if (customerOrganizationService.isNameExist(1, model.getName()) == true
-				|| customerOrganizationService.isAbbreviationExist(1,
-						model.getAbbreviation()) == true) {
-			addFieldError("name", "你输入的用户单位名已经存在，请重新输入！");
-		}
-	}*/
 
 	public boolean isCanDelete() {
 		CustomerOrganization customerOrganization = (CustomerOrganization) ActionContext

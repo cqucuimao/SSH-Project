@@ -224,17 +224,17 @@
 				客户管理
 				<div class="group-collapsed"></div>
 			</dt>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/customerOrganization_list') ">
+			<dd>
+				<s:a action="customerOrganization_list">单位信息</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
 			<s:if test=" #session.user.hasPrivilegeByUrl('/customer_list') ">
 			<dd>
 				<s:a action="customer_list">客户信息</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/customerOrganization_list') ">
-			<dd>
-				<s:a action="customerOrganization_list">单位信息</s:a>
-				<i class="icon-menu-arrow"></i>
-			</dd>
 			</s:if>
 		</dl>
 		</s:if>

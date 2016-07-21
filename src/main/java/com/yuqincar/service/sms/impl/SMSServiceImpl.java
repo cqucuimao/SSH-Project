@@ -46,32 +46,34 @@ public class SMSServiceImpl implements SMSService {
 	}
 
 	public String sendTemplateSMS(String phoneNumber,String templateId, Map<String, String> params) {
-		System.out.println("in sendTemplateSMS");
-		Gson gson = new Gson();
-		String template_param = gson.toJson(params);
-		System.out.println(template_param);
-		
-		//sendSMSToFile(phoneNumber,templateId,template_param);
-		
-		String postEntity;
-		try {
-			postEntity = "app_id=" + APP_ID + "&access_token="
-					+ Configuration.getSmsToken() + "&acceptor_tel=" + phoneNumber + "&template_id="
-					+ templateId + "&template_param=" + template_param
-					+ "&timestamp=" + URLEncoder.encode(DateUtils.getYMDHMSString(new Date()), "utf-8");
-		} catch (UnsupportedEncodingException e1) {
-			throw new RuntimeException(e1);
-		}
-		String resJson = "";
-		try {
-			resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		System.out.println("resJson="+resJson);
-		return resJson;
+		return "Success";
+//		
+//		System.out.println("in sendTemplateSMS");
+//		Gson gson = new Gson();
+//		String template_param = gson.toJson(params);
+//		System.out.println(template_param);
+//		
+//		//sendSMSToFile(phoneNumber,templateId,template_param);
+//		
+//		String postEntity;
+//		try {
+//			postEntity = "app_id=" + APP_ID + "&access_token="
+//					+ Configuration.getSmsToken() + "&acceptor_tel=" + phoneNumber + "&template_id="
+//					+ templateId + "&template_param=" + template_param
+//					+ "&timestamp=" + URLEncoder.encode(DateUtils.getYMDHMSString(new Date()), "utf-8");
+//		} catch (UnsupportedEncodingException e1) {
+//			throw new RuntimeException(e1);
+//		}
+//		String resJson = "";
+//		try {
+//			resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		} catch (Exception e) {
+//			throw new RuntimeException(e);
+//		}
+//		System.out.println("resJson="+resJson);
+//		return resJson;
 	}
 	
 	/**

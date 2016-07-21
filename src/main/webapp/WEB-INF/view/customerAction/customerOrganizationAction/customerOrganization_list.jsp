@@ -54,7 +54,6 @@
 						<tr>
 							<th>单位名称</th>
               				<th>简称</th>
-              				<th>地址</th>
               				<th>单位管理员</th>
                 			<th>操作</th>
 						</tr>
@@ -64,7 +63,6 @@
 						<tr>
 							<td>${name}</td>
 							<td>${abbreviation}</td>
-							<td>${pAddress.detail}</td>
 							<td>${manager.name}</td>
 							<td>
 								<s:a action="customerOrganization_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>

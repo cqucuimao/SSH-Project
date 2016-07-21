@@ -36,16 +36,7 @@
                 	<tr>
                         <th>单位名称<span class="required">*</span></th>
                         <td>
-                        	<!-- 
-                        	<s:textfield cssClass="inputText" name="customerOrganization.name"/>
-                        	 -->
-                        	<!-- 
-							<s:textfield cssClass="inputText" name="customerOrganization.name" type="text" />
-						 	-->
 						 	<s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
-						 	<!-- 
-						 	<input id="customer_organization_name" type="text" style="padding:4px; width:16em; margin-right:10px">
-						  	-->
 						 	<input id="customer_organization_id" type="hidden">
                         </td>
                     </tr>
@@ -104,6 +95,9 @@
 					name:{
 						required:true,
 					},
+					phonesStr:{
+						required:true,
+					}
 				}
 			});
 		});

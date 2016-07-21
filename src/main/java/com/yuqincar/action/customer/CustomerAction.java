@@ -99,8 +99,6 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 		
 		String[] array = phonesStr.split(",");
 		List<String> list = java.util.Arrays.asList(array);
-		//List<String> phones=new ArrayList<String>();
-		//phones.add(phonesStr);
 		model.setPhones(list);
 		
 		customerService.saveCustomer(model);
@@ -128,17 +126,9 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 	public String edit() throws Exception {
 		//从数据库中取出原对象
 		Customer customer = customerService.getById(model.getId());
-		//System.out.println("name="+customer.getName());
-		
-		//设置要修改的属性
-		//customer.setCustomerOrganization(model.getCustomerOrganization());
 		customer.setName(model.getName());
-		/*List<String> phones=new ArrayList<String>();
-		phones.add("5555");
-		phones.add("6666");*/
 		String[] array = phonesStr.split(",");
 		List<String> list = java.util.Arrays.asList(array);
-		
 		customer.setPhones(list);
 		customer.setGender(model.isGender());
 		customer.setAddresses(model.getAddresses());
@@ -154,7 +144,6 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 	
 	/** 验证联系方式*/
 	public void validateAdd(){
-		//String regExp = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
 		String regExp = "^(1([38]\\d|4[57]|5[0-35-9]|7[06-8])\\d{8})(,(1([38]\\d|4[57]|5[0-35-9]|7[06-8])\\d{8}))*$";
 		Pattern p = Pattern.compile(regExp);
 		Matcher m = p.matcher(phonesStr);
@@ -167,7 +156,6 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 	
 	/** 验证联系方式*/
 	public void validateEdit(){
-		//String regExp = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
 		String regExp = "^(1([38]\\d|4[57]|5[0-35-9]|7[06-8])\\d{8})(,(1([38]\\d|4[57]|5[0-35-9]|7[06-8])\\d{8}))*$";
 		Pattern p = Pattern.compile(regExp);
 		Matcher m = p.matcher(phonesStr);

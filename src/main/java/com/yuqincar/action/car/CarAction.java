@@ -115,13 +115,18 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	/** 添加 */
 	public String add() throws Exception {
-		/*if(model.isStandbyCar())
-			model.setDriver(null);
-		else{
-			if(driverId==null  || driverId<0){
-				addFieldError("driver", "非备用车必须指定司机！");
-			}
-		}	*/
+		if(carService.isPlateNumberExist(0, model.getPlateNumber())){
+				addFieldError("plateNumber", "车牌号已经存在！");
+				return addUI();
+		}
+		if(carService.isVINExist(0, model.getVIN())){
+				addFieldError("VIN", "车架号已经存在！");
+				return addUI();
+		}
+		if(carService.isEngineSNExist(0, model.getEngineSN())){
+				addFieldError("EngineSN", "发动机号已经存在！");
+				return addUI();
+		}
 		// 封装对象
 		//System.out.println(carService);
 		model.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
@@ -178,9 +183,21 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	/** 修改 */
 	public String edit() throws Exception {
+		
+		if(carService.isPlateNumberExist(model.getId(), model.getPlateNumber())){
+				addFieldError("plateNumber", "车牌号已经存在！");
+				return editUI();
+		}
+		if(carService.isVINExist(model.getId(), model.getVIN())){
+				addFieldError("VIN", "车架号已经存在！");
+				return editUI();
+		}
+		if(carService.isEngineSNExist(model.getId(), model.getEngineSN())){
+				addFieldError("EngineSN", "发动机号已经存在！");
+				return editUI();
+		}
 		//从数据库中取出原对象
 		Car car = carService.getCarById(model.getId());
-
 		//设置要修改的属性
 		car.setPlateNumber(model.getPlateNumber());
 		car.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));

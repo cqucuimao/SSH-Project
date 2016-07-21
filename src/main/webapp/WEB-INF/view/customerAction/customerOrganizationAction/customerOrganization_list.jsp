@@ -19,24 +19,15 @@
 			<h1>客户单位列表</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="customerOrganization_list">
+			<s:form id="pageForm" action="customerOrganization_queryList">
 			<table>
 				<tr>
 					<td>
 						<input id="addCustomerOrganization" class="inputButton" type="button" value="新增客户单位" name="button" />
 					</td>
-					<th>单位名称</th>
+					<th><s:property value="tr.getText('order.CustomerOrganization.name')" /></th>
 					<td>
-						<!-- 
-						<s:textfield cssClass="inputText" name="name" type="text" />
-						 -->
-						 <!-- 
-						<s:textfield cssClass="inputText" name="customerOrganization.name" type="text" />
-						 -->
 						 <s:textfield id="customer_organization_name" name="name" cssClass="inputText" type="text"/>
-						 <!-- 
-						 <input id="customer_organization_name" type="text" style="padding:4px; width:16em; margin-right:10px">
-						  -->
 						 <input id="customer_organization_id" type="hidden">
 					</td>
 					<td>
@@ -52,9 +43,9 @@
 					
 					<thead>
 						<tr>
-							<th>单位名称</th>
-              				<th>简称</th>
-              				<th>单位管理员</th>
+							<th><s:property value="tr.getText('order.CustomerOrganization.name')" /></th>
+              				<th><s:property value="tr.getText('order.CustomerOrganization.abbreviation')" /></th>
+              				<th><s:property value="tr.getText('order.CustomerOrganization.manager')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
@@ -77,7 +68,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="customerOrganization_customerOrganization">
+			<s:form id="pageForm" action="customerOrganization_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>

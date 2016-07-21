@@ -19,6 +19,15 @@
         <!-- 标题 -->
         <div class="title">
             <h1>客户单位信息</h1>
+            <p style="color: red">
+				<s:if test="hasFieldErrors()">
+					<s:iterator value="fieldErrors">
+						<s:iterator value="value">
+							<s:property />
+						</s:iterator>
+					</s:iterator>
+				</s:if>
+			</p>
         </div>
         <div class="editBlock detail p30">
         <s:form action="customerOrganization_%{id == null ? 'add' : 'edit'}" id="pageForm">
@@ -34,19 +43,19 @@
 				</colgroup>
                 <tbody>
                 	<tr>
-                        <th>单位名称<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('order.CustomerOrganization.name')" /><span class="required">*</span></th>
                         <td>
                         	<s:textfield cssClass="inputText" name="name"/>
                         </td>
                     </tr>
                     <tr>
-                        <th>单位简称<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('order.CustomerOrganization.abbreviation')" /><span class="required">*</span></th>
                         <td>
                         	<s:textfield cssClass="inputText" name="abbreviation"/>
 						</td>
                     </tr>
 					<tr>
-                        <th>单位管理员</th>
+                        <th><s:property value="tr.getText('order.CustomerOrganization.manager')" /></th>
                         <td>
                         	<s:select name="customerId" cssClass="SelectStyle"
                         		list="customerList" listKey="id" listValue="name"
@@ -64,7 +73,6 @@
                     </tr>
                 </tfoot>
             </table>
-            <s:hidden id="flagId" name="flag"/>
         </s:form>
         </div>
     </div>
@@ -83,13 +91,16 @@
     <script type="text/javascript">
 	    $(function(){
 			$("#pageForm").validate({
-				onfocusout: function(element) { $(element).valid(); },
+				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
 					name:{
 						required:true,
 					},
 					abbreviation:{
+						required:true,
+					},
+					customerId:{
 						required:true,
 					},
 				}

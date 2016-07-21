@@ -18,6 +18,7 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.car.ServicePoint;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.car.TransmissionTypeEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
@@ -69,7 +70,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		/*司机姓名查询*/
 		if(model.getDriver()!=null&&model.getDriver().getName()!=null && !"".equals(model.getDriver().getName()))
 			helper.addWhereCondition("c.driver.name like ?", "%"+model.getDriver().getName()+"%");
-		
+		helper.addOrderByProperty("c.id", false);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);		
 		ActionContext.getContext().getValueStack().push(pageBean);	
 		ActionContext.getContext().getSession().put("carHelper", helper);
@@ -137,7 +138,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		model.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
 		// 保存到数据库
 		carService.saveCar(model);
-
+		ActionContext.getContext().getValueStack().push(new Car());
 		return freshList();
 	}
 	
@@ -215,7 +216,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 
 		//更新到数据库
 		carService.updateCar(car);
-
+		ActionContext.getContext().getValueStack().push(new Car());
 		return freshList();
 	}
 	/*
@@ -243,10 +244,10 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			
 			carService.updateCar(car);
 		}
+		ActionContext.getContext().getValueStack().push(new Car());
 		return freshList();
 	}
 	public Car getModel() {
-		// TODO Auto-generated method stub
 		return model;
 	}
 	

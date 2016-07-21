@@ -59,7 +59,7 @@
 	<script type="text/javascript">
     $(function(){    	
 		$("#myForm").validate({
-			onfocusout: function(element) { $(element).valid(); },
+			submitout: function(element) { $(element).valid(); },
 			rules:{				
 				driverName:{
 					required:true

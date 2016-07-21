@@ -19,7 +19,7 @@
 			<h1>客户列表</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="customer_list">
+			<s:form id="pageForm" action="customer_queryList">
 			<table>
 				<tr>
 					<td>
@@ -27,13 +27,7 @@
 					</td>
 					<th>单位名称</th>
 					<td>
-						<!-- 
-						<s:textfield cssClass="inputText" name="customerOrganization.name" type="text" />
-						 -->
 						 <s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
-						 <!-- 
-						 <input id="customer_organization_name" type="text" style="padding:4px; width:16em; margin-right:10px">
-						  -->
 						 <input id="customer_organization_id" type="hidden">
 						 
 					</td>
@@ -54,10 +48,10 @@
 					
 					<thead>
 						<tr>
-							<th>单位</th>
-              				<th>姓名</th>
-              				<th>性别</th>
-              				<th>联系方式</th>
+							<th><s:property value="tr.getText('order.CustomerOrganization.name')" /></th>
+              				<th><s:property value="tr.getText('order.Customer.name')" /></th>
+              				<th><s:property value="tr.getText('order.Customer.gender')" /></th>
+              				<th><s:property value="tr.getText('order.Customer.phones')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
@@ -94,7 +88,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="customer_customer">
+			<s:form id="pageForm" action="customer_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>

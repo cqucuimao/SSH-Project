@@ -122,7 +122,7 @@
 	
 	    $(function(){	    	
 			$("#pageForm").validate({
-				onfocusout: function(element) { $(element).valid(); },
+				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
 					'car.plateNumber':{

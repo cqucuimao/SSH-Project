@@ -18,6 +18,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Result;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.order.CustomerOrganization;
@@ -48,8 +49,8 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 	@Autowired
 	private CustomerOrganizationService customerOrganizationService;
 	
-	/** 列表*/
-	public String list() throws Exception {
+	/** 查询*/
+	public String queryList() throws Exception {
 		QueryHelper helper = new QueryHelper(Customer.class, "c");
 		
 		if(model.getName()!=null && !"".equals(model.getName()))
@@ -62,19 +63,33 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 		
 		if(phonesStr!=null && phonesStr.length()!=0)
 			helper.addWhereCondition("? in elements(c.phones)", phonesStr);
-		/*if(model.getPhones()!=null && !"".equals(model.getPhones()))
-			helper.addWhereCondition("c.phones like ?", "%"+model.getPhones()+"%");*/
-		
+		helper.addOrderByProperty("c.id", false);
 		PageBean<Customer> pageBean = customerService.queryCustomer(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("customerHelper", helper);
+		return "list";
+	}
+	/**列表*/
+	public String list(){
+		QueryHelper helper = new QueryHelper(Customer.class, "c");
+		helper.addOrderByProperty("c.id", false);
+		PageBean pageBean = customerService.queryCustomer(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("customerHelper", helper);
+		return "list";
+	}
+	
+	public String freshList(){
+		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("customerHelper");
+		PageBean pageBean = customerService.queryCustomer(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
 		return "list";
 	}
 	
 	/** 删除*/
 	public String delete() throws Exception {
 		customerService.deleteCustomer(model.getId());
-		return "toList";
+		return freshList();
 	}
 	
 	/** 添加页面 */
@@ -102,7 +117,8 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 		model.setPhones(list);
 		
 		customerService.saveCustomer(model);
-		return "toList";
+		ActionContext.getContext().getValueStack().push(new Customer());
+		return freshList();
 	}
 	
 	/** 修改页面*/
@@ -135,7 +151,8 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 		
 		//更新到数据库
 		customerService.updateCustomer(customer);
-		return "toList";
+		ActionContext.getContext().getValueStack().push(new Customer());
+		return freshList();
 	}
 
 	public Customer getModel() {
@@ -195,14 +212,7 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 			
 		return "list";
 	}
-	
-	public String customer(){
-		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("customerHelper");
-		PageBean pageBean = customerService.queryCustomer(pageNum, helper);
-		ActionContext.getContext().getValueStack().push(pageBean);
-		return "list";
-	}
-	
+
 }
 
 

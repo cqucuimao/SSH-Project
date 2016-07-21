@@ -18,7 +18,7 @@
         <s:form id="pageForm" action="customerOrganization_popup">
 			<table>
 				<tr>
-					<th>单名名称:</th>
+					<th><s:property value="tr.getText('order.CustomerOrganization.name')" /></th>
 					<td><s:textfield cssClass="inputText" name="customerOrganizationName" type="text" /></td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
@@ -40,7 +40,7 @@
                     <thead>
                         <tr>
                             <th class="alignCenter"></th>
-                            <th>单位名称</th>
+                            <th><s:property value="tr.getText('order.CustomerOrganization.name')" /></th>
                             <th>单位地址</th>
                         </tr>
                     </thead>
@@ -62,7 +62,7 @@
         			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
         	</s:form>
         <br/>
-        <div class="bottomBar alignCenter">
+        <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:300px;height:60px">
             <input id="sure" class="inputButton" type="button" value="确定" />
             <input id="clear" class="inputButton" type="button" value="清空" />
             <input id="close" class="inputButton" type="button" value="关闭" />

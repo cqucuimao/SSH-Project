@@ -84,8 +84,9 @@ public class CustomerOrganizationDaoImpl extends
 
 		List<CustomerOrganization> customerOrganizations = getSession()
 				.createQuery(
-						"from CustomerOrganization co where co.abbreviation=?")
+						"from CustomerOrganization co where co.abbreviation=? and co.id<>?")
 				.setParameter(0, abbreviation)
+				.setParameter(1, selfId)
 				.list();
 		if (customerOrganizations.size() != 0)
 			return true;

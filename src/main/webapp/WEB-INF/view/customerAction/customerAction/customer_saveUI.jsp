@@ -34,26 +34,26 @@
 				</colgroup>
                 <tbody>
                 	<tr>
-                        <th>单位名称<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('order.CustomerOrganization.name')" /><span class="required">*</span></th>
                         <td>
 						 	<s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
 						 	<input id="customer_organization_id" type="hidden">
                         </td>
                     </tr>
                     <tr>
-                        <th>姓名<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('order.Customer.name')" /><span class="required">*</span></th>
                         <td>
                         	<s:textfield cssClass="inputText" name="name"/>
 						</td>
                     </tr>
                     <tr>
-                    	<th>性别<span class="required">*</span></th>
+                    	<th><s:property value="tr.getText('order.Customer.gender')" /><span class="required">*</span></th>
                     	<td>
                     		<s:radio name="gender" list="%{#{'true':'男性','false':'女性'}}" value="name==null ? 'true' : gender"></s:radio>
                     	</td>
                     </tr>
                     <tr>
-                        <th>联系方式<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('order.Customer.phones')" /><span class="required">*</span></th>
                         <td>
                         	<s:textfield cssClass="inputText" name="phonesStr"/>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray">(多个号码之间用英文逗号隔开)</span>
                         	<s:fielderror style="color:red"></s:fielderror>
@@ -86,7 +86,7 @@
     <script type="text/javascript">
 	    $(function(){
 			$("#pageForm").validate({
-				onfocusout: function(element) { $(element).valid(); },
+				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
 					'customerOrganization.name':{

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
@@ -30,21 +31,37 @@ public class CustomerOrganizationAction extends BaseAction implements
 	
 	private long customerId;
 	
-	/** 列表 */
-	public String list() throws Exception {
+	/** 查询*/
+	public String queryList() throws Exception {
 		QueryHelper helper = new QueryHelper(CustomerOrganization.class, "co");
 
 		if (model.getName() != null && !"".equals(model.getName()))
 			helper.addWhereCondition("co.name like ?", "%" + model.getName()
 					+ "%");
-
+		helper.addOrderByProperty("co.id", false);
 		PageBean<CustomerOrganization> pageBean = customerOrganizationService
 				.queryCustomerOrganization(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("customerOrganizationHelper", helper);
 		return "list";
 	}
-	    
+	/** 列表*/
+	public String list(){
+		QueryHelper helper = new QueryHelper(CustomerOrganization.class, "co");
+		helper.addOrderByProperty("co.id", false);
+		PageBean pageBean = customerOrganizationService.queryCustomerOrganization(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("customerOrganizationHelper", helper);
+		return "list";
+	}
+	
+	public String freshList(){
+		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("customerOrganizationHelper");
+		PageBean pageBean = customerOrganizationService.queryCustomerOrganization(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		return "list";
+	}
+	
     public String popup() {  
     	System.out.println("in customerOrganization popup");
     	QueryHelper helper = new QueryHelper(CustomerOrganization.class, "c");		
@@ -57,7 +74,7 @@ public class CustomerOrganizationAction extends BaseAction implements
 	/** 删除 */
 	public String delete() throws Exception {
 		customerOrganizationService.deleteCustomerOrganization(model.getId());
-		return "toList";
+		return freshList();
 	}
 
 	/** 添加页面 */
@@ -67,8 +84,17 @@ public class CustomerOrganizationAction extends BaseAction implements
 
 	/** 添加 */
 	public String add() throws Exception {
+		
+		if (customerOrganizationService.isNameExist(0, model.getName()) == true
+				|| customerOrganizationService.isAbbreviationExist(0,
+						model.getAbbreviation()) == true) {
+			addFieldError("name", "你输入的用户单位名或简称已经存在，请重新输入！");
+			return addUI();
+		}
+
 		customerOrganizationService.saveCustomerOrganization(model);
-		return "toList";
+		ActionContext.getContext().getValueStack().push(new CustomerOrganization());
+		return freshList();
 	}
 
 	/** 修改页面 */
@@ -87,14 +113,14 @@ public class CustomerOrganizationAction extends BaseAction implements
 
 	/** 修改 */
 	public String edit() throws Exception {
-		
+		System.out.println("in edit!");
 		if (customerOrganizationService.isNameExist(model.getId(), model.getName()) == true
-				&& customerOrganizationService.isAbbreviationExist(model.getId(),
+				|| customerOrganizationService.isAbbreviationExist(model.getId(),
 						model.getAbbreviation()) == true) {
 			addFieldError("name", "你输入的用户单位名或简称已经存在，请重新输入！");
-			return "managerUI";
+			return editUI();
 		}
-		
+		System.out.println("in edit2222!");
 		CustomerOrganization customerOrganization = customerOrganizationService
 				.getById(model.getId());
 
@@ -102,7 +128,9 @@ public class CustomerOrganizationAction extends BaseAction implements
 			customerOrganization.setManager(customerService.getById(customerId));
 		}
 		customerOrganizationService.updateCustomerOrganization(customerOrganization);
-		return "toList";
+		
+		ActionContext.getContext().getValueStack().push(new CustomerOrganization());
+		return freshList();
 	}
 
 	public CustomerOrganization getModel() {
@@ -127,13 +155,6 @@ public class CustomerOrganizationAction extends BaseAction implements
 
 	public void setCustomerId(long customerId) {
 		this.customerId = customerId;
-	}
-
-	public String customerOrganization(){
-		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("customerOrganizationHelper");
-		PageBean pageBean = customerOrganizationService.queryCustomerOrganization(pageNum, helper);
-		ActionContext.getContext().getValueStack().push(pageBean);
-		return "list";
 	}
 
 }

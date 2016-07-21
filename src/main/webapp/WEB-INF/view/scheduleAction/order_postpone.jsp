@@ -163,7 +163,7 @@
     <script type="text/javascript">
     $(function(){    	
 		$("#myForm").validate({
-			onfocusout: function(element) { $(element).valid(); },
+			submitout: function(element) { $(element).valid(); },
 			rules:{		
 				postponeDate:{
 					required:true

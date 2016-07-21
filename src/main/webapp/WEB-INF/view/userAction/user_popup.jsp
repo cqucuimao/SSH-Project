@@ -43,7 +43,7 @@
 	            </div>
 	        </div>
         </div>
-        <div class="bottomBar alignCenter">
+        <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:245px;height:60px">
             <input id="sure" class="inputButton" type="button" value="确定" />
             <input id="clear" class="inputButton" type="button" value="清空" />
             <input id="close" class="inputButton" type="button" value="关闭" />

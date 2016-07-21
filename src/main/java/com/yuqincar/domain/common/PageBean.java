@@ -33,7 +33,10 @@ public class PageBean<T> {
 
 		// 计算pageCount
 		pageCount = (recordCount + pageSize - 1) / pageSize;
-
+		//pageCount==0时，currentPage=0
+		if(pageCount == 0){
+			this.currentPage = 0;
+		}
 		// 计算begPageIndex和endPageIndex
 		// a, 总页数不超过10页，就全部显示
 		if (pageCount <= 10) {

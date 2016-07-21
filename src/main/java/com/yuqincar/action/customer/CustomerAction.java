@@ -185,10 +185,15 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 	
 	public boolean isCanDelete(){
 		Customer customer = (Customer)ActionContext.getContext().getValueStack().peek();
-		if(customerService.canDeleteCustomer(customer.getId()))
-			return true;
-		else
-		return false;
+		Customer manager = customer.getCustomerOrganization().getManager();
+		if(manager == null || customer.getId() != manager.getId()){
+			if(customerService.canDeleteCustomer(customer.getId()))
+				return true;
+			else
+				return false;
+		}else{
+			return false;
+		}	
 	}
 	
 	/**  查看人员*/

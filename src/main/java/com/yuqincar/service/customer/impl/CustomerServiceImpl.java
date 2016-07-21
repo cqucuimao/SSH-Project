@@ -10,6 +10,7 @@ import com.yuqincar.dao.customer.CustomerDao;
 import com.yuqincar.dao.customer.OtherPassengerDao;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Customer;
+import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.domain.order.OtherPassenger;
 import com.yuqincar.service.customer.CustomerService;
 import com.yuqincar.utils.QueryHelper;

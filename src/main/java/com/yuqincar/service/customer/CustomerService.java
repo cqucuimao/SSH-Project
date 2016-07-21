@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Customer;
+import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.domain.order.OtherPassenger;
 import com.yuqincar.service.base.BaseService;
 import com.yuqincar.utils.QueryHelper;

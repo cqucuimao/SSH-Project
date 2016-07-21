@@ -7,11 +7,11 @@ import com.yuqincar.domain.car.Car;
 
 public interface CarDao extends BaseDao<Car> {
 
-	boolean isPlateNumberExist(String plateNumber);
+	boolean isPlateNumberExist(long selfId, String plateNumber);
 
-	boolean isVINExist(String VIN);
+	boolean isVINExist(long selfId, String VIN);
 
-	boolean isEngineSNExist(String EngineSN);
+	boolean isEngineSNExist(long selfId, String EngineSN);
 
 	boolean canDeleteCar(long id);
 

@@ -223,7 +223,9 @@
 				    		(today.getMonth() + 1 ) + "-" + 
 				    		today.getDate(); 
 				$("#enrollDateId").val(date);
-				$("#seatNumber").val("");
+				if($("#seatNumber").val() == 0){
+					$("#seatNumber").val("");
+				}
 			}
 			
 			formatDateField1($("#registDate"));

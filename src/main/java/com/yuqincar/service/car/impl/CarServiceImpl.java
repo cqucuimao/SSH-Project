@@ -51,16 +51,16 @@ public class CarServiceImpl implements CarService {
 		return carDao.getById(id);
 	}
 
-	public boolean isPlateNumberExist(String plateNumber) {
-		return carDao.isPlateNumberExist(plateNumber);
+	public boolean isPlateNumberExist(long selfId, String plateNumber) {
+		return carDao.isPlateNumberExist(selfId, plateNumber);
 	}
 
-	public boolean isVINExist(String VIN) {
-		return carDao.isVINExist(VIN);
+	public boolean isVINExist(long selfId, String VIN) {
+		return carDao.isVINExist(selfId,VIN);
 	}
 
-	public boolean isEngineSNExist(String engineSN) {
-		return carDao.isEngineSNExist(engineSN);
+	public boolean isEngineSNExist(long selfId, String engineSN) {
+		return carDao.isEngineSNExist(selfId,engineSN);
 	}
 
 	public boolean canDeleteCar(long id) {
@@ -229,4 +229,5 @@ public class CarServiceImpl implements CarService {
 	public Car getCarByDeviceSN(String SN){
 		return carDao.getCarByDeviceSN(SN);
 	}
+
 }

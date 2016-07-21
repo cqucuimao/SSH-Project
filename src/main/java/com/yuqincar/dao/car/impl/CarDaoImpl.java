@@ -25,37 +25,43 @@ import com.yuqincar.utils.QueryHelper;
 @Repository
 public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 
-	public boolean isPlateNumberExist(String plateNumber) {
+	public boolean isPlateNumberExist(long selfId, String plateNumber) {
 		if(plateNumber == null || plateNumber.equals("")){
 			return false;
 		}	
 		
-		List<Car> cars = getSession().createQuery("from Car c where c.plateNumber=?").
-				setParameter(0, plateNumber).list();
+		List<Car> cars = getSession().createQuery("from Car c where c.plateNumber=? and c.id<>?")
+				.setParameter(0, plateNumber)
+				.setParameter(1, selfId)
+				.list();
 		if(cars.size()!=0) 
 			return true;
 		return false;		
 	}
 
-	public boolean isVINExist(String VIN) {
+	public boolean isVINExist(long selfId, String VIN) {
 		if(VIN == null || VIN.equals("")){
 			return false;
 		}
 		
-		List<Car> cars = getSession().createQuery("from Car c where c.VIN=?").
-				setParameter(0, VIN).list();
+		List<Car> cars = getSession().createQuery("from Car c where c.VIN=? and c.id<>?")
+				.setParameter(0, VIN)
+				.setParameter(1, selfId)
+				.list();
 		if(cars.size()!=0) 
 			return true;
 		return false;
 	}
 
-	public boolean isEngineSNExist(String EngineSN) {
+	public boolean isEngineSNExist(long selfId, String EngineSN) {
 		if(EngineSN == null || EngineSN.equals("")){
 			return false;
 		}
 		
-		List<Car> cars = getSession().createQuery("from Car c where c.EngineSN=?").
-				setParameter(0, EngineSN).list();
+		List<Car> cars = getSession().createQuery("from Car c where c.EngineSN=? and c.id<>?")
+				.setParameter(0, EngineSN)
+				.setParameter(1, selfId)
+				.list();
 		if(cars.size()!=0) 
 			return true;
 		return false;

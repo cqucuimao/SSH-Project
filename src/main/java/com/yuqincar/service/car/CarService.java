@@ -18,12 +18,6 @@ public interface CarService {
 	
 	public Car getCarById(long id);
 	
-	public boolean isPlateNumberExist(String plateNumber);
-	
-	public boolean isVINExist(String VIN);
-	
-	public boolean isEngineSNExist(String engineSN);
-	
 	/**
 	 * 删除车辆。
 	 * 当有订单与车辆关联时，不能删除车辆。
@@ -122,4 +116,25 @@ public interface CarService {
 	public List<Car> getAllNormalCars();
 	
 	public Car getCarByDeviceSN(String SN);
+	/**
+	 * 车牌号是否存在
+	 * @param selfId
+	 * @param plateNumber
+	 * @return
+	 */
+	public boolean isPlateNumberExist(long selfId, String plateNumber);
+	/**
+	 * 车架号是否存在
+	 * @param selfId
+	 * @param VIN
+	 * @return
+	 */
+	public boolean isVINExist(long selfId, String VIN);
+	/**
+	 * 发动机号是否存在
+	 * @param selfId
+	 * @param plateNumber
+	 * @return
+	 */
+	public boolean isEngineSNExist(long selfId, String plateNumber);
 }

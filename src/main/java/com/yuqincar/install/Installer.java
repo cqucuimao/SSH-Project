@@ -239,7 +239,7 @@ public class Installer {
 		
 		Privilege orderStatementMenu=new Privilege("对账单","/orderStatement_newList",receiptMenu);
 		privilegeDao.save(orderStatementMenu);
-		//privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
+		privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_invoicedList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_paidList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_newDetail",orderStatementMenu));
@@ -262,6 +262,7 @@ public class Installer {
 		Privilege informationMenu=new Privilege("基本信息","/car_list",carMenu);
 		privilegeDao.save(informationMenu);
 		privilegeDao.save(new Privilege("","/car_queryList",informationMenu));
+		privilegeDao.save(new Privilege("","/car_freshList",informationMenu));
 		privilegeDao.save(new Privilege("","/car_delete",informationMenu));
 		privilegeDao.save(new Privilege("","/car_addUI",informationMenu));
 		privilegeDao.save(new Privilege("","/car_add",informationMenu));
@@ -310,6 +311,8 @@ public class Installer {
 		
 		Privilege carInsuranceMenu = new Privilege("车辆保险", "/carInsurance_list", carMenu);
 		privilegeDao.save(carInsuranceMenu);
+		privilegeDao.save(new Privilege("", "/carInsurance_queryList", carInsuranceMenu));
+		privilegeDao.save(new Privilege("", "/carInsurance_freshList", carInsuranceMenu));
 		privilegeDao.save(new Privilege("", "/carInsurance_addUI", carInsuranceMenu));
 		privilegeDao.save(new Privilege("", "/carInsurance_add", carInsuranceMenu));
 		privilegeDao.save(new Privilege("", "/carInsurance_editUI", carInsuranceMenu));
@@ -339,6 +342,9 @@ public class Installer {
 		
 		Privilege carRefuelMenu = new Privilege("加油信息", "/carRefuel_list", carMenu);
 		privilegeDao.save(carRefuelMenu);
+		privilegeDao.save(new Privilege("", "/carRefuel_queryList", carRefuelMenu));
+		privilegeDao.save(new Privilege("", "/carRefuel_freshList", carRefuelMenu));
+		privilegeDao.save(new Privilege("", "/carRefuel_addUI", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_addUI", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_add", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_editUI", carRefuelMenu));

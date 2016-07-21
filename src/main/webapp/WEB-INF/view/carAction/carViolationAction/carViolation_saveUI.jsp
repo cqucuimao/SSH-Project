@@ -50,7 +50,7 @@
 					<tr>
 						<th>地点<span class="required">*</span></th>
 						<td>
-								<s:textfield cssClass="inputText" name="place" />
+								<s:textfield cssClass="inputText" name="place" id="place" />
 						</td>
 					</tr>
 					<tr>
@@ -68,7 +68,7 @@
 					<tr>
 						<th>罚款（元）</th>
 						<td>
-								<s:textfield cssClass="inputText" name="penaltyMoney" id="penaltyMoney" />
+								<s:textfield cssClass="inputText"  name="penaltyMoney" id="penaltyMoney" />
 						</td>
 					</tr>
 					<tr>
@@ -86,7 +86,7 @@
 					
 					<tr>
 	                <td colspan="2">
-		                	<input class="inputButton" type="submit" value="提交" />
+		                	<input class="inputButton" type="submit" id="submit" value="提交" />
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a> 
 	                </td>
 	            </tr>
@@ -131,10 +131,22 @@
 					},
 				}
 			});
+			  if($("#penaltyPoint").val()==0)
+				   {
+				   $("#penaltyPoint").val("");
+				   }
 			   formatDateField1($("#date"));
 			   formatDateField1($("#dealtDate"));
-		});
-	   
+			   $("#submit").click(function (){
+				   if($("#dealt").is(':checked') && $("#dealtDate").val().length==0)
+				   {  
+					  alert("提交前请填写处理日期");
+					  return false;
+				   }
+				});
+			   
+			   });
+	  
 	</script>
 </body>
 </html>

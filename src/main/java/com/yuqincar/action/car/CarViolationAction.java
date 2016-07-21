@@ -46,7 +46,6 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	//头部快速查询
 		public String queryForm(){
 			QueryHelper helper = new QueryHelper("CarViolation", "cv");
-			System.out.println("**************"+model.getCar().getId());
 			if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
 					.equals(model.getCar().getPlateNumber()))
 				helper.addWhereCondition("cv.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
@@ -92,12 +91,11 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 			}
 		   
 		   public String save(){
-			   System.out.println("***************************************************");
-			   System.out.println("**************"+model.getPlace());
 			    Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 				model.setCar(car);
 				User driver=userService.getById(model.getDriver().getId());
 				model.setDriver(driver);
+				model.setImported(false);
 				carViolationService.saveCarViolation(model);
 				ActionContext.getContext().getValueStack().push(new CarViolation());
 				return freshList();

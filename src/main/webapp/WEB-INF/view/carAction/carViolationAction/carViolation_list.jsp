@@ -92,7 +92,9 @@
 					</tbody>
 				</table>
 			</div>
-			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
+			 <s:form id="pageForm" action="carViolation_freshList">
+				<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
+			</s:form>
 		</div>
 	</div>
 	<script type="text/javascript" src="<%=basePath%>js/jquery-1.7.1.min.js"></script>	
@@ -105,6 +107,8 @@
 			$("#register").click(function(){
 				location.href='carViolation_saveUI.action';
 			});
+			formatDateField2($("#beginDate"));
+			formatDateField2($("#endDate"));
 		})
 		
 	</script>

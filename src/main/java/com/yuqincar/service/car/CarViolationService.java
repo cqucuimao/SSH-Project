@@ -1,12 +1,15 @@
 package com.yuqincar.service.car;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+
 import com.yuqincar.domain.car.CarViolation;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.utils.QueryHelper;
 
 public interface CarViolationService {
 	
-	public void pullViolationFromCQJG();
+	public void pullViolationFromCQJG() throws UnsupportedEncodingException, ParseException;
 	
 	public void saveCarViolation(CarViolation carViolation);
 	

@@ -414,6 +414,8 @@ public class Installer {
 		privilegeDao.save(customerMenu);
 		Privilege customerInformationMenu = new Privilege("客户信息", "/customer_list", customerMenu);
 		privilegeDao.save(customerInformationMenu);
+		privilegeDao.save(new Privilege("","/customer_queryList",customerInformationMenu));
+		privilegeDao.save(new Privilege("","/customer_freshList",customerInformationMenu));
 		privilegeDao.save(new Privilege("","/customer_delete",customerInformationMenu));
 		privilegeDao.save(new Privilege("","/customer_addUI",customerInformationMenu));
 		privilegeDao.save(new Privilege("","/customer_add",customerInformationMenu));
@@ -427,6 +429,8 @@ public class Installer {
 		
 		Privilege customerOrganizationMenu = new Privilege("单位信息", "/customerOrganization_list", customerMenu);
 		privilegeDao.save(customerOrganizationMenu);
+		privilegeDao.save(new Privilege("", "/customerOrganization_queryList", customerOrganizationMenu));
+		privilegeDao.save(new Privilege("", "/customerOrganization_freshList", customerOrganizationMenu));
 		privilegeDao.save(new Privilege("", "/customerOrganization_popup", customerOrganizationMenu));
 		privilegeDao.save(new Privilege("", "/customerOrganization_delete", customerOrganizationMenu));
 		privilegeDao.save(new Privilege("", "/customerOrganization_addUI", customerOrganizationMenu));

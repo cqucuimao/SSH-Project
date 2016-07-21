@@ -236,9 +236,11 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	
 	public String changePassword() {
 		User user = (User) ActionContext.getContext().getSession().get("user");
+		user = userService.getById(user.getId());
 		if(DigestUtils.md5Hex(oldPassword).equals(user.getPassword())) {
 			user.setPassword(DigestUtils.md5Hex(newPassword));
 			userService.update(user);
+			ActionContext.getContext().getSession().put("user", user);
 			ActionContext.getContext().put("pass_msg", "修改密码成功！");
 		} else {
 			ActionContext.getContext().put("pass_msg", "旧密码错误！");

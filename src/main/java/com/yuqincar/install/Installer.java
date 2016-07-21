@@ -98,23 +98,8 @@ public class Installer {
 	@Transactional
 	public void install() {
 		Session session = sessionFactory.getCurrentSession();
-		// =======================================================================
-		// 1，超级管理员
-		Department department = new Department();
-		department.setName("公司");
-		departmentDao.save(department);
-		User user = new User();
-		user.setLoginName("admin");
-		user.setName("超级管理员");
-		user.setPhoneNumber("110");
-		user.setPassword(DigestUtils.md5Hex("admin")); // 密码要使用MD5摘要
-		user.setDepartment(department);
-		user.setStatus(UserStatusEnum.NORMAL);
-		user.setUserType(UserTypeEnum.OFFICE);
-		userDao.save(user); // 保存
-
-		// =======================================================================
-		// 2，权限数据
+		
+		//权限数据
 		Privilege  menu1, menu2, menu3, menu4, menu5;
 
 		//权限管理
@@ -122,23 +107,25 @@ public class Installer {
 		privilegeDao.save(menu1);
 		Privilege menu1_1 = new Privilege("角色管理", "/role_list", menu1);
 		privilegeDao.save(menu1_1);
-		privilegeDao.save(new Privilege("角色删除", "/role_delete", menu1_1));
-		privilegeDao.save(new Privilege("角色添加", "/role_add", menu1_1));
-		privilegeDao.save(new Privilege("角色修改", "/role_edit", menu1_1));
-		privilegeDao.save(new Privilege("角色设置权限", "/role_setPrivilege", menu1_1));
+		privilegeDao.save(new Privilege("", "/role_delete", menu1_1));
+		privilegeDao.save(new Privilege("", "/role_add", menu1_1));
+		privilegeDao.save(new Privilege("", "/role_edit", menu1_1));
+		privilegeDao.save(new Privilege("", "/role_setPrivilege", menu1_1));
 
 		Privilege menu1_2 = new Privilege("部门管理", "/department_list", menu1);
 		privilegeDao.save(menu1_2);
-		privilegeDao.save(new Privilege("部门删除", "/department_delete", menu1_2));
-		privilegeDao.save(new Privilege("部门添加", "/department_add", menu1_2));
-		privilegeDao.save(new Privilege("部门修改", "/department_edit", menu1_2));
+		privilegeDao.save(new Privilege("", "/department_delete", menu1_2));
+		privilegeDao.save(new Privilege("", "/department_add", menu1_2));
+		privilegeDao.save(new Privilege("", "/department_edit", menu1_2));
 
 		Privilege menu1_3 = new Privilege("用户管理", "/user_list", menu1);
 		privilegeDao.save(menu1_3);
-		privilegeDao.save(new Privilege("用户删除", "/user_delete", menu1_3));
-		privilegeDao.save(new Privilege("用户添加", "/user_add", menu1_3));
-		privilegeDao.save(new Privilege("用户修改", "/user_edit", menu1_3));
-		privilegeDao.save(new Privilege("用户初始化密码", "/user_initPassword", menu1_3));
+		privilegeDao.save(new Privilege("", "/user_queryList", menu1_3));
+		privilegeDao.save(new Privilege("", "/user_freshList", menu1_3));
+		privilegeDao.save(new Privilege("", "/user_delete", menu1_3));
+		privilegeDao.save(new Privilege("", "/user_add", menu1_3));
+		privilegeDao.save(new Privilege("", "/user_edit", menu1_3));
+		privilegeDao.save(new Privilege("", "/user_initPassword", menu1_3));
 		
 		//车辆调度
 		Privilege scheduleMenu = new Privilege("车辆调度", "/schedule", null);
@@ -239,7 +226,6 @@ public class Installer {
 		
 		Privilege orderStatementMenu=new Privilege("对账单","/orderStatement_newList",receiptMenu);
 		privilegeDao.save(orderStatementMenu);
-		privilegeDao.save(new Privilege("","/orderStatement_newList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_invoicedList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_paidList",orderStatementMenu));
 		privilegeDao.save(new Privilege("","/orderStatement_newDetail",orderStatementMenu));
@@ -344,7 +330,6 @@ public class Installer {
 		privilegeDao.save(carRefuelMenu);
 		privilegeDao.save(new Privilege("", "/carRefuel_queryList", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_freshList", carRefuelMenu));
-		privilegeDao.save(new Privilege("", "/carRefuel_addUI", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_addUI", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_add", carRefuelMenu));
 		privilegeDao.save(new Privilege("", "/carRefuel_editUI", carRefuelMenu));
@@ -505,11 +490,94 @@ public class Installer {
 		receiptRole.getPrivileges().add(receiptMenu);
 		roleDao.save(receiptRole);
 		
-		Role carManagerRole=new Role();
-		carManagerRole.setName("车辆管理员");
-		carManagerRole.setPrivileges(new HashSet<Privilege>());
-		carManagerRole.getPrivileges().add(carMenu);
-		roleDao.save(carManagerRole);
+		Role carInfoManagerRole=new Role();
+		carInfoManagerRole.setName("车辆信息管理员");
+		carInfoManagerRole.setPrivileges(new HashSet<Privilege>());
+		carInfoManagerRole.getPrivileges().add(informationMenu);
+		roleDao.save(carInfoManagerRole);
+		
+		Role carViolationManagerRole=new Role();
+		carViolationManagerRole.setName("违章信息管理员");
+		carViolationManagerRole.setPrivileges(new HashSet<Privilege>());
+		carViolationManagerRole.getPrivileges().add(violationMenu);
+		roleDao.save(carViolationManagerRole);
+		
+		Role carCareManagerRole=new Role();
+		carCareManagerRole.setName("车辆保养管理员");
+		carCareManagerRole.setPrivileges(new HashSet<Privilege>());
+		carCareManagerRole.getPrivileges().add(carCareMenu);
+		roleDao.save(carCareManagerRole);
+		
+		Role carInsuranceManagerRole=new Role();
+		carInsuranceManagerRole.setName("保险信息管理员");
+		carInsuranceManagerRole.setPrivileges(new HashSet<Privilege>());
+		carInsuranceManagerRole.getPrivileges().add(carInsuranceMenu);
+		roleDao.save(carInsuranceManagerRole);
+		
+		Role carRepairManagerRole=new Role();
+		carRepairManagerRole.setName("车辆维修管理员");
+		carRepairManagerRole.setPrivileges(new HashSet<Privilege>());
+		carRepairManagerRole.getPrivileges().add(carRepairMenu);
+		roleDao.save(carRepairManagerRole);
+		
+		Role carRefuelManagerRole=new Role();
+		carRefuelManagerRole.setName("加油信息管理员");
+		carRefuelManagerRole.setPrivileges(new HashSet<Privilege>());
+		carRefuelManagerRole.getPrivileges().add(carRefuelMenu);
+		roleDao.save(carRefuelManagerRole);
+		
+		Role carExamineManagerRole=new Role();
+		carExamineManagerRole.setName("车辆年审管理员");
+		carExamineManagerRole.setPrivileges(new HashSet<Privilege>());
+		carExamineManagerRole.getPrivileges().add(carExamineMenu);
+		roleDao.save(carExamineManagerRole);
+		
+		Role carTollChargeManagerRole=new Role();
+		carTollChargeManagerRole.setName("路桥费信息管理员");
+		carTollChargeManagerRole.setPrivileges(new HashSet<Privilege>());
+		carTollChargeManagerRole.getPrivileges().add(tollChargeMenu);
+		roleDao.save(carTollChargeManagerRole);
+		
+		Role materialReceiveManagerRole=new Role();
+		materialReceiveManagerRole.setName("物品领用信息管理员");
+		materialReceiveManagerRole.setPrivileges(new HashSet<Privilege>());
+		materialReceiveManagerRole.getPrivileges().add(materialReceiveMenu);
+		roleDao.save(materialReceiveManagerRole);
+		
+		Role carWashManagerRole=new Role();
+		carWashManagerRole.setName("洗车信息管理员");
+		carWashManagerRole.setPrivileges(new HashSet<Privilege>());
+		carWashManagerRole.getPrivileges().add(carWashMenu);
+		roleDao.save(carWashManagerRole);
+		
+		Role adminRole=new Role();
+		adminRole.setName("超级管理员");
+		adminRole.setPrivileges(new HashSet<Privilege>());
+		adminRole.getPrivileges().add(menu1);
+		adminRole.getPrivileges().add(serviceTypeMenu);
+		adminRole.getPrivileges().add(servicePointMenu);
+		roleDao.save(adminRole);
+		
+		Department department = new Department();
+		department.setName("公司");
+		departmentDao.save(department);
+		User admin = new User();
+		admin.setLoginName("admin");
+		admin.setName("超级管理员");
+		admin.setPhoneNumber("110");
+		admin.setPassword(DigestUtils.md5Hex("admin")); // 密码要使用MD5摘要
+		admin.setDepartment(department);
+		admin.setStatus(UserStatusEnum.NORMAL);
+		admin.setUserType(UserTypeEnum.OFFICE);
+		admin.setRoles(new HashSet<Role>());
+		admin.getRoles().add(adminRole);
+		userDao.save(admin); // 保存
+		
+//		Role carManagerRole=new Role();
+//		carManagerRole.setName("车辆管理员");
+//		carManagerRole.setPrivileges(new HashSet<Privilege>());
+//		carManagerRole.getPrivileges().add(carMenu);
+//		roleDao.save(carManagerRole);
 		
 		Role customerManagerRole = new Role();
 		customerManagerRole.setName("客户管理员");
@@ -522,6 +590,8 @@ public class Installer {
 		companyLeaderRole.setPrivileges(new HashSet<Privilege>());
 		companyLeaderRole.getPrivileges().add(statisticMenu);
 		roleDao.save(companyLeaderRole);
+		
+		
 		
 		installWatchKeeper();
 		initPriceTable();

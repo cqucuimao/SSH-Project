@@ -41,7 +41,9 @@
 					</tbody>
 				</table>
 			</div>
+			<s:form id="pageForm" action="role_list">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
+			</s:form>
 		</div>
 	</div>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	

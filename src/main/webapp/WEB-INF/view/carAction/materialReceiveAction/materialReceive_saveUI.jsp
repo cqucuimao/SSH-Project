@@ -42,32 +42,32 @@
 				</colgroup>
                 <tbody>
                 	<tr>
-                        <th>车辆<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.Material.car')"/><span class="required">*</span></th>
 						<td>
 							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber"
 									 type="text" synchDriverName="driver" synchDriverId="driverId"/>
 						</td>
                     </tr>
                 	<tr>
-                        <th>司机<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.Material.driver')"/><span class="required">*</span></th>
                         <td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
 							<s:textfield id="driverId" name="driver.id" type="hidden" /></td>
 					<td>
                     </tr>
                     <tr>
-                        <th>领用日期<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.Material.date')"/><span class="required">*</span></th>
                         <td>
 						<s:textfield name="date" id="date" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
                     </tr>
                     <tr>
-                        <th>领用物品</th>
+                        <th><s:property value="tr.getText('car.Material.content')"/><span class="required">*</span></th>
                         <td>
                         	<s:textfield id="content" cssClass="inputText" name="content"/>
                         </td>
                     </tr>
                     <tr>
-                        <th>价值</th>
+                        <th><s:property value="tr.getText('car.Material.value')"/><span class="required">*</span></th>
                         <td>
                         	<s:textfield id="vaule" cssClass="inputText" name="value"/>
                         </td>
@@ -110,8 +110,10 @@
 						required:true,
 					},
 					content:{
+						required:true,
 					},
 					value:{
+						required:true,
 						number:true,
 						min:0
 					},

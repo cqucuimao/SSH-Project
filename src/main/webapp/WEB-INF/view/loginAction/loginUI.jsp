@@ -25,7 +25,10 @@
                 <div class="note">
                 	<s:property value="errors['loginError'][0]"/>
                 	<s:property value="errors['loginName'][0]" />
-                	<s:property value="errors['password'][0]" />
+                	<s:if test="!devMode">
+                		<s:property value="errors['password'][0]" />
+                		<s:property value="errors['validationCode'][0]" />
+                	</s:if>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
@@ -49,18 +52,25 @@
                         <span class="input-group-addon">
                             <i class="icon-vaildate"></i>
                         </span>
-                        <input class="inputText" type="text" />
+                        <s:textfield cssClass="inputText" name="validationCode" type="text" id="login-validationCode"/>
                     </div>
-                    <img width="80" height="39" src="app/securityCodeImage.action"/>
+                    <img width="80" height="39" id="validationCodeImage"  onclick="this.src=this.src+'?rand='+Math.random();"/>
                 </div>
                 <div class="form-group">
                     <input class="inputButton" type="submit" value="登 录" />
                 </div>
 			</s:form>
         </div>
-        <!-- <div class="loginFoot">
-            <p class="copyRight">&copy <script>var today = new Date; document.write(today.getFullYear())</script> XXX有限公司. 版权所有</p>
-        </div> -->
     </div>
+    
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
+	<script type="text/javascript">
+		$(function(){
+	        $("#validationCodeImage").click(function(){
+				$("#validationCodeImage").attr("src","app/securityCodeImage.action?rand="+Math.random());
+	        });
+			$("#validationCodeImage").attr("src","app/securityCodeImage.action?rand="+Math.random());
+	    })
+	</script>
 </body>
 </html>

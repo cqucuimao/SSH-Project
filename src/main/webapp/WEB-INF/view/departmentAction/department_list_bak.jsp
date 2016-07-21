@@ -47,10 +47,8 @@
     </div>
 </div>
 <hr />
-<%-- 分页信息 --%>
-<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
-
-
-<s:debug></s:debug>
+<s:form id="pageForm" action="department_list">
+	<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
+</s:form>
 </body>
 </html>

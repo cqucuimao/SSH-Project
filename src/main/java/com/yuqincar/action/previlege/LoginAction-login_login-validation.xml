@@ -5,14 +5,17 @@
  <validator type="requiredstring" short-circuit="true">
  	<param name="fieldname">loginName</param>
  	<message>请输入用户名！</message>
- </validator>
- <!-- 
+ </validator> 
+ 
+ <!--
   <validator type="requiredstring" short-circuit="true">
  	<param name="fieldname">password</param>
  	<message>请输入密码！</message>
  </validator>
- -->
- <!-- 
+  <validator type="requiredstring" short-circuit="true">
+ 	<param name="fieldname">validationCode</param>
+ 	<message>请输入验证码！</message>
+ </validator>
  <validator type="requiredstring">
  	<param name="fieldname">personBean.email</param>
  	<message>Email address is required.</message>

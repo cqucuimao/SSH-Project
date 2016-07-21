@@ -104,11 +104,6 @@ public class User extends BaseEntity implements Serializable {
 	}
 	
 	public boolean hasPrivilegeByUrl(String privUrl) {
-		// 如果是超级管理员，就有所有的权限
-		if ("admin".equals(loginName)) {
-			return true;
-		}
-
 		// 获取访问的路径
 		int pos = privUrl.indexOf("?");
 		if (pos > -1) {
@@ -130,7 +125,6 @@ public class User extends BaseEntity implements Serializable {
 		if (userPrivileges.contains(privUrl)) {
 			return true;
 		}else {
-			System.out.println("Before return false, url="+privUrl);
 			return false;
 		}
 		

@@ -118,8 +118,7 @@
 				</table>
 			</div>
 			<div class="pageToolbar">
-			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
-			<s:debug></s:debug>			   
+			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>		   
 			</div>
 		</div>
 	</div>

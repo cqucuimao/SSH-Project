@@ -21,6 +21,8 @@ public class SecurityCodeImageAction  extends ActionSupport implements SessionAw
     //session域
     private Map<String, Object> session ;
     
+    private String rand;
+    
     public ByteArrayInputStream getImageStream() {
         return imageStream;
     }
@@ -42,4 +44,12 @@ public class SecurityCodeImageAction  extends ActionSupport implements SessionAw
         session.put("securityCode", securityCode);
         return SUCCESS;
     }
+    
+	public String getRand() {
+		return rand;
+	}
+	
+	public void setRand(String rand) {
+		this.rand = rand;
+	}    
 }

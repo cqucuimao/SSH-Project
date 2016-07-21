@@ -33,9 +33,5 @@
 			<a href="javascript:history.go(-1);">返回</a>
 		</div>
 	</s:form>
-
-
-
-	<s:debug></s:debug>
 </body>
 </html>

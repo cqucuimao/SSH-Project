@@ -267,11 +267,6 @@ public class Installer {
 		privilegeDao.save(new Privilege("","/carServiceType_edit",serviceTypeMenu));
 		privilegeDao.save(new Privilege("","/carServiceType_getImage",serviceTypeMenu));
 		
-		Privilege violationMenu=new Privilege("违章信息","/carViolation_list",carMenu);
-		privilegeDao.save(violationMenu);
-		privilegeDao.save(new Privilege("","/carViolation_addUI",violationMenu));
-		
-		
 		Privilege servicePointMenu=new Privilege("驻车点管理","/servicePoint_list",carMenu);
 		privilegeDao.save(servicePointMenu);
 		privilegeDao.save(new Privilege("","/servicePoint_delete",servicePointMenu));
@@ -394,6 +389,17 @@ public class Installer {
 		privilegeDao.save(new Privilege("", "/carWashShop_editUI", carWashMenu));
 		privilegeDao.save(new Privilege("", "/carWashShop_edit", carWashMenu));
 		
+		//车辆违章
+		Privilege carViolationMenu = new Privilege("车辆违章", "/carViolation_list", carMenu);
+		privilegeDao.save(carViolationMenu);
+		privilegeDao.save(new Privilege("", "/carViolation_queryForm", carViolationMenu));
+		privilegeDao.save(new Privilege("", "/carViolation_delete", carViolationMenu));
+		privilegeDao.save(new Privilege("", "/carViolation_editUI", carViolationMenu));
+		privilegeDao.save(new Privilege("", "/carViolation_freshList", carViolationMenu));
+		privilegeDao.save(new Privilege("", "/carViolation_saveUI", carViolationMenu));
+		privilegeDao.save(new Privilege("", "/carViolation_save", carViolationMenu));
+		privilegeDao.save(new Privilege("", "/carViolation_edit", carViolationMenu));
+		
 		//客户管理
 		Privilege customerMenu = new Privilege("客户管理", "/customer", null);
 		privilegeDao.save(customerMenu);
@@ -499,7 +505,7 @@ public class Installer {
 		Role carViolationManagerRole=new Role();
 		carViolationManagerRole.setName("违章信息管理员");
 		carViolationManagerRole.setPrivileges(new HashSet<Privilege>());
-		carViolationManagerRole.getPrivileges().add(violationMenu);
+		carViolationManagerRole.getPrivileges().add( carViolationMenu);
 		roleDao.save(carViolationManagerRole);
 		
 		Role carCareManagerRole=new Role();

@@ -13,4 +13,10 @@ values (18,228)
 , (18,221)
 
 
+insert into privilege(id,name,url,parent_id) values(287,'导入保养信息','/carCare_excel',132)
+insert into privilege(id,name,url,parent_id) values(288,'导入保养信息操作','/carCare_importExcelFile',132)
+
+insert into privilege(id,name,url,parent_id) values(289,'导入维修信息','/carRepair_excel',160)
+insert into privilege(id,name,url,parent_id) values(290,'导入维修信息操作','/carRepair_importExcelFile',160)
+
 

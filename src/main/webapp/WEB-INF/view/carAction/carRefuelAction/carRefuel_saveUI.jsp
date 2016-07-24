@@ -56,7 +56,7 @@
                     <tr>
 						<th><s:property value="tr.getText('car.CarRefuel.driver')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
+							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text"/>
 							<s:textfield id="driverId" name="driver.id" type="hidden"/>
 						</td>
 					</tr>

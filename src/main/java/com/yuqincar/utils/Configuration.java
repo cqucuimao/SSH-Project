@@ -166,8 +166,5 @@ public class Configuration {
 	public static void setBaiduCustomerPushSecretKey(
 			String baiduCustomerPushSecretKey) {
 		BaiduCustomerPushSecretKey = baiduCustomerPushSecretKey;
-	}
-	
-	
-	
+	}	
 }

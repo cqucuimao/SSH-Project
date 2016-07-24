@@ -1,0 +1,1 @@
+alter table carinsurance drop policyNumber

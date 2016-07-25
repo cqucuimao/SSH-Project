@@ -40,6 +40,9 @@ public class CarRefuel extends BaseEntity {
 	@Text("加油金额")
 	@Column(nullable=false)
 	private BigDecimal money;
+	
+	@Text("是否外购")
+	private boolean outSource;
 
 	public Car getCar() {
 		return car;
@@ -87,6 +90,15 @@ public class CarRefuel extends BaseEntity {
 
 	public void setSn(String sn) {
 		this.sn = sn;
+	}
+
+	public boolean isOutSource() {
+		return outSource;
+	}
+
+	public void setOutSource(boolean outSource) {
+		this.outSource = outSource;
 	}	
+	
 	
 }

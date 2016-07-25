@@ -206,6 +206,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		car.setModel(model.getModel());
 		car.setVIN(model.getVIN());
 		car.setEngineSN(model.getEngineSN());
+		car.setTollChargeSN(model.getTollChargeSN());
 		car.setEnrollDate(model.getEnrollDate());
 		car.setSeatNumber(model.getSeatNumber());
 		car.setPlateType(PlateTypeEnum.getById(plateTypeId));

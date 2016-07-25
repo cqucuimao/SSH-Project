@@ -64,6 +64,9 @@ public class Car extends BaseEntity {
 
 	@Text("备注")
 	private String memo;	//备注
+	
+	@Text("路桥卡卡号")
+	private String tollChargeSN;
 
 	@Text("下次保养里程")
 	private int nextCareMile;	//下次保养里程数
@@ -192,6 +195,16 @@ public class Car extends BaseEntity {
 
 	public void setEnrollDate(Date enrollDate) {
 		this.enrollDate = enrollDate;
+	}
+
+	
+	
+	public String getTollChargeSN() {
+		return tollChargeSN;
+	}
+
+	public void setTollChargeSN(String tollChargeSN) {
+		this.tollChargeSN = tollChargeSN;
 	}
 
 	public String getMemo() {

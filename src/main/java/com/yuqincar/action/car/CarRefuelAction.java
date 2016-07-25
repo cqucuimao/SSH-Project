@@ -61,6 +61,8 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	
 	private String uploadContentType;
 	
+	private String unknownCarOrDriver;
+	
 	private int result;
 	/** 查询 */
 	public String queryList(){
@@ -119,17 +121,73 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	 */
 	public String importExcelFile() throws Exception{
 		InputStream is = new FileInputStream(upload);
-		try {
-			result = carRefuelService.importExcelFile(is, 1, 1, 6, 0);
-			if(result>0){
+		
+		ExcelUtil eu = new ExcelUtil();
+		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 7, 0);
+		List<CarRefuel> carRefuels = new ArrayList<CarRefuel>();
+		for(int i=1;i<excelLines.size();i++){
+			try {
+				result = i;
+				CarRefuel cr = new CarRefuel();
+				//流水号
+				//System.out.println("流水号="+excelLines.get(i).get(0));
+				cr.setSn(excelLines.get(i).get(0));
+				//金额
+				//System.out.println("金额="+excelLines.get(i).get(1));
+				BigDecimal bd = new BigDecimal(excelLines.get(i).get(1));
+				cr.setMoney(bd);
+				//油量
+				//System.out.println("油量="+excelLines.get(i).get(2));
+				float volume = Float.parseFloat(excelLines.get(i).get(2));
+				cr.setVolume(volume);
+				//车辆
+				//System.out.println("车牌号="+excelLines.get(i).get(3));
+				Car car = carService.getCarByPlateNumber(excelLines.get(i).get(3));
+				if(car == null){
+					unknownCarOrDriver = "未知车辆";
+					ActionContext.getContext().getValueStack().push(unknownCarOrDriver);
+					ActionContext.getContext().getValueStack().push(result);
+					return "false";
+				}else{
+					cr.setCar(car);
+				}
+				//司机
+				//System.out.println("司机="+excelLines.get(i).get(4));
+				User driver = userService.getByLoginName(excelLines.get(i).get(4));
+				if(driver == null){
+					unknownCarOrDriver = "未知司机";
+					ActionContext.getContext().getValueStack().push(unknownCarOrDriver);
+					ActionContext.getContext().getValueStack().push(result);
+					return "false";
+				}else{
+					cr.setDriver(driver);				
+				}
+				//交易时间
+				//System.out.println("交易时间="+excelLines.get(i).get(5));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");  
+			    Date date;				
+				date = sdf.parse(excelLines.get(i).get(5));
+				cr.setDate(date);
+				//是否外购
+				System.out.println("是否外购="+excelLines.get(i).get(6));
+				String outSource = excelLines.get(i).get(6);
+				if(outSource == "是" || outSource.equals("是")){
+					cr.setOutSource(true);
+				}else{
+					 cr.setOutSource(false);
+				}
+				carRefuels.add(cr);
+			} catch (Exception e) {
+				unknownCarOrDriver = "不明原因";
+				ActionContext.getContext().getValueStack().push(unknownCarOrDriver);
 				ActionContext.getContext().getValueStack().push(result);
-				return "success";
-			}else{
 				return "false";
-			}
-		} catch (Exception e) {
-			return "false";
+			}	
 		}	
+		result = excelLines.size() - 1;
+		carRefuelService.importExcelFile(carRefuels);
+		ActionContext.getContext().getValueStack().push(result);
+		return "success";		
 	}
 	
 	/** 添加 */
@@ -206,6 +264,15 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	public void setResult(int result) {
 		this.result = result;
 	}
+
+	public String getUnknownCarOrDriver() {
+		return unknownCarOrDriver;
+	}
+
+	public void setUnknownCarOrDriver(String unknownCarOrDriver) {
+		this.unknownCarOrDriver = unknownCarOrDriver;
+	}
+	
 	
 	
 	

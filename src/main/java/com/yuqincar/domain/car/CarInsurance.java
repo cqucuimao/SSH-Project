@@ -27,23 +27,27 @@ public class CarInsurance extends BaseEntity {
 	
 	@Text("缴款日期")
 	@Column(nullable=false)
-	private Date payDate;  //保险付款日期
+	private Date payDate;  
 	
 	@Text("保险起始日期")
 	@Column(nullable=false)
-	private Date fromDate;	//保险起始时间
+	private Date fromDate;	
 
 	@Text("保险过期日期")
 	@Column(nullable=false)
-	private Date toDate;	//保险过期时间	
+	private Date toDate;	
 
 	@Text("保险公司")
 	@Column(nullable=false)
-	private String insureCompany;	//保险公司
+	private String insureCompany;	
 
-	@Text("保单号")
+	@Text("交强险保单号")
 	@Column(nullable=false)
-	private String policyNumber;   //保单号
+	private String compulsoryPolicyNumber;   
+	
+	@Text("商业险保单号")
+	@Column(nullable=false)
+	private String commercialPolicyNumber; 
 	
 	@Text("交强险金额")
 	@Column(nullable=false)
@@ -126,11 +130,18 @@ public class CarInsurance extends BaseEntity {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	public String getPolicyNumber() {
-		return policyNumber;
+	
+	public String getCompulsoryPolicyNumber() {
+		return compulsoryPolicyNumber;
 	}
-	public void setPolicyNumber(String policyNumber) {
-		this.policyNumber = policyNumber;
+	public void setCompulsoryPolicyNumber(String compulsoryPolicyNumber) {
+		this.compulsoryPolicyNumber = compulsoryPolicyNumber;
+	}
+	public String getCommercialPolicyNumber() {
+		return commercialPolicyNumber;
+	}
+	public void setCommercialPolicyNumber(String commercialPolicyNumber) {
+		this.commercialPolicyNumber = commercialPolicyNumber;
 	}
 	public BigDecimal getCompulsoryMoney() {
 		return compulsoryMoney;

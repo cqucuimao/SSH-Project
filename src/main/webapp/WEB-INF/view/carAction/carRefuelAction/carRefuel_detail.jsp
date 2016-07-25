@@ -54,6 +54,11 @@
                 				<th><s:property value="tr.getText('car.CarRefuel.money')" />(元)：</th>
                 				<td><fmt:formatNumber value="${money}" pattern="#0"/></td>
                 			</tr>
+                			<tr>
+	                			<th><s:property value="tr.getText('car.CarRefuel.outSource')" /></th>
+	                			<s:if test="outSource"><td>是</td></s:if>
+								<s:else><td>否</td></s:else>
+                			</tr>
 					</tbody>
 					<tfoot>
                 		<tr>

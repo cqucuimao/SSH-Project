@@ -59,6 +59,7 @@
                 			<th><s:property value="tr.getText('car.CarRefuel.date')" /></th>
                 			<th><s:property value="tr.getText('car.CarRefuel.volume')" />(L)</th>
                 			<th><s:property value="tr.getText('car.CarRefuel.money')" />(元)</th>
+                			<th><s:property value="tr.getText('car.CarRefuel.outSource')" /></th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
@@ -70,6 +71,8 @@
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
                 			<td style="text-align:right">${volume}</td>
 							<td style="text-align:right">${money}</td>
+							<s:if test="outSource"><td>是</td></s:if>
+							<s:else><td>否</td></s:else>
 						</tr>
 						</s:iterator> 
 					</tbody>

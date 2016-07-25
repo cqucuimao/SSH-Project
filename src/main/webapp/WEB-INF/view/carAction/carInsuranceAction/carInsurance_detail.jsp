@@ -45,8 +45,12 @@
                     			<td>${insureCompany}</td>
                 			</tr>
                 			<tr>
-                    			<th><s:property value="tr.getText('car.CarInsurance.policyNumber')" />：</th>
-                    			<td>${policyNumber}</td>
+                    			<th><s:property value="tr.getText('car.CarInsurance.compulsoryPolicyNumber')" />：</th>
+                    			<td>${compulsoryPolicyNumber}</td>
+                			</tr>
+                			<tr>
+                    			<th><s:property value="tr.getText('car.CarInsurance.commercialPolicyNumber')" />：</th>
+                    			<td>${commercialPolicyNumber}</td>
                 			</tr>
                 			<tr>
 		                    	<th></th>

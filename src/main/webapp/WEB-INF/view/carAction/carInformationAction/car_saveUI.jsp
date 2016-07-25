@@ -85,6 +85,13 @@
 						</td>
 					</tr>
 					<tr>
+						<th><s:property value="tr.getText('car.Car.tollChargeSN')" /></th>
+						<td>
+								<s:textfield cssClass="inputText" name="tollChargeSN"/>
+						
+						</td>
+					</tr>
+					<tr>
 						<th><s:property value="tr.getText('car.Car.plateType')" /><span class="required">*</span></th>
 						<td>
 								<s:radio list="#{'0':'蓝牌','1':'黄牌'}" name="plateTypeId" value="plateType.id" class="{required:true}"/>

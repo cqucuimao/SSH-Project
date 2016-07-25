@@ -53,8 +53,9 @@
 					
 					<thead>
 						<tr>
-                			<th><s:property value="tr.getText('car.CarInsurance.policyNumber')" /></th>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+                			<th><s:property value="tr.getText('car.CarInsurance.compulsoryPolicyNumber')" /></th>
+                			<th><s:property value="tr.getText('car.CarInsurance.commercialPolicyNumber')" /></th>
               				<th><s:property value="tr.getText('car.CarInsurance.insureCompany')" /></th>
                 			<th>起止时间</th>
                 			<th><s:property value="tr.getText('car.CarInsurance.money')" />(元)</th>
@@ -64,8 +65,9 @@
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-                			<td><s:a action="carInsurance_detail?id=%{id}">${policyNumber}</s:a></td>
-							<td>${car.plateNumber}</td>
+							<td><s:a action="carInsurance_detail?id=%{id}">${car.plateNumber}</s:a></td>
+                			<td>${compulsoryPolicyNumber}</td>
+                			<td>${commercialPolicyNumber}</td>
 							<td>${insureCompany}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>

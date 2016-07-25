@@ -78,6 +78,12 @@
                         	<input class="inputText" type="text" name="money"/>
 						</td>
                     </tr>
+                    <tr>
+						<th><s:property value="tr.getText('car.CarRefuel.outSource')" /></th>
+						<td>
+							<s:checkbox class="m10" name="outSource"/>
+						</td>
+					</tr>
                 </tbody>
                 <tfoot>
                     <tr>

@@ -15,9 +15,9 @@
 <body>
     <div id="msg" >
         <!--成功提示-->
-        <div class="msgSuccess" >
+        <div class="msgSuccess" style="width:220px">
             <dl>
-                <dt>恭喜您，成功导入&nbsp;${result }&nbsp;条信息！</dt>
+                <dt>恭喜您！<br>成功导入&nbsp;${result }&nbsp;条加油信息。</dt>
                 <dd class="msg_time">
                 </dd>
                 <dd>

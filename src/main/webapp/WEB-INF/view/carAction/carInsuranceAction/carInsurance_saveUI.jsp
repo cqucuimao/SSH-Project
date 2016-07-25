@@ -63,9 +63,15 @@
 						</td>
                     </tr>
                     <tr>
-                        <th><s:property value="tr.getText('car.CarInsurance.policyNumber')" /><span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.CarInsurance.compulsoryPolicyNumber')" /><span class="required">*</span></th>
                         <td>
-                        	<input class="inputText" type="text" name="policyNumber"/>
+                        	<input class="inputText" type="text" name="compulsoryPolicyNumber"/>
+						</td>
+                    </tr>
+                    <tr>
+                        <th><s:property value="tr.getText('car.CarInsurance.commercialPolicyNumber')" /><span class="required">*</span></th>
+                        <td>
+                        	<input class="inputText" type="text" name="commercialPolicyNumber"/>
 						</td>
                     </tr>
                     <tr>
@@ -187,7 +193,10 @@
 						insureCompany:{
 							required:true,
 						},
-						policyNumber:{
+						compulsoryPolicyNumber:{
+							required:true,
+						},
+						commercialPolicyNumber:{
 							required:true,
 						},
 						compulsoryBeginDate:{

@@ -15,9 +15,9 @@
 <body>
     <div id="msg" >
         <!--失败提示-->
-        <div class="msgFalse" >
+        <div class="msgFalse" style="width:220px">
             <dl>
-                <dt>导入失败，请参考Excel模板，仔细检查格式是否正确！</dt>
+                <dt>导入失败，第&nbsp;${result}&nbsp;条加油信息出错。<br>原因:&nbsp;${unknownCarOrDriver }&nbsp;。</dt>
                 <dd>
                     <a href="#" onclick="location.href='carRefuel_list.action';">返回</a>
                 </dd>

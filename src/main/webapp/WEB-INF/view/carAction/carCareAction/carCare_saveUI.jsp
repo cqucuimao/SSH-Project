@@ -61,6 +61,12 @@
                         </td>
                     </tr>
                     <tr>
+                    	<th><s:property value="tr.getText('car.CarCare.careMiles')" /></th>
+                    	<td>
+                    		<s:textfield cssClass="inputText" name="careMiles" />
+                    	</td>
+                    </tr>
+                    <tr>
                     	<th><s:property value="tr.getText('car.CarCare.mileInterval')" /><span class="required">*</span></th>
                     	<td>
                     		<s:textfield cssClass="inputText" name="mileInterval" text="5000"/>
@@ -77,6 +83,12 @@
                         <td>
                         	<s:textarea cssClass="inputText" style="height:100px" name="memo"></s:textarea>
                         </td>
+                    </tr>
+                    <tr>
+                    	<th><s:property value="tr.getText('car.CarCare.careDepo')" /><span class="required">*</span></th>
+                    	<td>
+                    		<s:textfield cssClass="inputText" name="careDepo" />
+                    	</td>
                     </tr>
                 </tbody>
                 <tfoot>

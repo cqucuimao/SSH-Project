@@ -43,6 +43,11 @@
 					<td>
 						<input class="inputButton" id="btn" type="button" value="导入加油信息"/>
 					</td>
+					<td>
+					<a href="#" class="modify" onclick="modify()">
+					    <input class="inputButton" id="outPutOil" type="button" value="导出加油信息月报表"/>
+					</a>
+					</td>
 				</tr>
 			</table>
 			</s:form>
@@ -99,7 +104,20 @@
 	        $("#btn").click(function(){
 	        	self.location.href='carRefuel_excel.action';
 	        });
+	        
 	    })
+	    function modify(){
+	        	url="carRefuel_outPutOil_time.action";
+	        	art.dialog.open(url,{
+	                id: "timeModify",
+	                title: "选择时间",
+	                width: 330,
+	                height: 200,
+	                padding: 0,
+	                lock: true
+	            });
+	        }
+	        
 	    formatDateField2($("#date1"));
 		formatDateField2($("#date2"));
 	</script>

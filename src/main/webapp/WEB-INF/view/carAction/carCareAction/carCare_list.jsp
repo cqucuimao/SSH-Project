@@ -47,6 +47,7 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<input id="remind" class="inputButton" type="button" value="保养提醒"/>
+						<input id="excel" class="inputButton" type="button" value="导入保养"/>
 					</td>
 				</tr>
 			</table>
@@ -61,9 +62,11 @@
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
               				<th><s:property value="tr.getText('car.CarCare.date')" /></th>
+              				<th><s:property value="tr.getText('car.CarCare.careMiles')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.mileInterval')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.money')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.memo')" /></th>
+                			<th><s:property value="tr.getText('car.CarCare.careDepo')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.appointment')" /></th>
                 			<th>操作</th>
 						</tr>
@@ -75,9 +78,11 @@
 							<td><s:a action="carCare_detail?id=%{id}">${car.plateNumber}</s:a></td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
+							<td style="text-align:right">${careMiles}</td>
 							<td style="text-align:right">${mileInterval}</td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
 							<td>${memo}</td>
+							<td>${careDepo}</td>
 							<td>
 								<s:if test="appointment==true">
 								<s:text name="是"></s:text>
@@ -119,6 +124,9 @@
 			});
 	        $("#remind").click(function(){
 	            self.location.href='carCare_remind.action';
+	        });
+	        $("#excel").click(function(){
+	            self.location.href='carCare_excel.action';
 	        });
 			formatDateField2($("#date1"));
 			formatDateField2($("#date2"));

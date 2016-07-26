@@ -1,9 +1,12 @@
 package com.yuqincar.service.car;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
@@ -53,4 +56,6 @@ public interface CarRepairService {
 	public void updateCarRepair(CarRepair carRepair);
 	
 	public BigDecimal statisticCarRepair(Date fromDate, Date toDate);	
+	
+	public void importExcelFile(List<CarRepair> carRepairs);
 }

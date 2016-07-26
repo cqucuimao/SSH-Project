@@ -1,11 +1,13 @@
 package com.yuqincar.service.car;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
+import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
@@ -63,4 +65,6 @@ public interface CarCareService {
 	public PageBean<Car> getNeedCareCars(int pageNum);
 	
 	public BigDecimal statisticCarCare(Date fromDate,Date toDate);
+	
+	public void importExcelFile(List<CarCare> carCares);
 }

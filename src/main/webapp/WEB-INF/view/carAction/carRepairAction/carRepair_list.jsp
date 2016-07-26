@@ -47,6 +47,7 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
+						<input id="repairInput" class="inputButton" type="button" value="维修信息导入"  />
 					</td>
 				</tr>
 			</table>
@@ -121,6 +122,9 @@
 	        });
 	        $("#appoint").click(function(){
 				self.location.href='carRepair_appoint.action';
+			});
+	        $("#repairInput").click(function(){
+				self.location.href='carRepair_excel.action';
 			});
 			formatDateField2($("#date1"));
 			formatDateField2($("#date2"));

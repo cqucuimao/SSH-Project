@@ -67,7 +67,13 @@
 							<s:textfield cssClass="inputText" id="nextExamineDate" name="nextExamineDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 							<input class="btn" type="button" name="getNextExamineDate" value="点击获取推荐日期">
 						</td>
-                    </tr>                    
+                    </tr>  
+                    <tr>
+                        <th><s:property value="tr.getText('car.CarExamine.carPainterMoney')" /></th>
+                        <td>
+                        	<s:textfield cssClass="inputText" name="carPainterMoney" id="carPainterMoney"/>
+                        </td>
+                    </tr>                  
                     <tr>
                         <th><s:property value="tr.getText('car.CarExamine.money')" /><span class="required">*</span></th>
                         <td>
@@ -124,6 +130,10 @@
 					},
 					examineIntervalYear:{
 						required:true,
+					},
+					carPainterMoney:{
+						number:true,
+						min:1
 					},
 				}
 			});

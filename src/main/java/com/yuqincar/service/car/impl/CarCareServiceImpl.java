@@ -1,6 +1,8 @@
 package com.yuqincar.service.car.impl;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,12 +17,16 @@ import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
+import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarCareService;
+import com.yuqincar.service.car.CarService;
+import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.DateUtils;
+import com.yuqincar.utils.ExcelUtil;
 import com.yuqincar.utils.QueryHelper;
 
 @Service
@@ -31,6 +37,12 @@ public class CarCareServiceImpl implements CarCareService {
     private CarDao carDao;
     @Autowired
     private SMSService smsService;
+    
+    @Autowired
+	private CarService carService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Transactional
     public void saveCarCare(CarCare carCare) {
@@ -92,5 +104,15 @@ public class CarCareServiceImpl implements CarCareService {
 
 	public BigDecimal statisticCarCare(Date fromDate,Date toDate){
 		return carCareDao.statisticCarCare(fromDate,toDate);
+	}
+	
+	
+		
+	@Transactional
+	public void importExcelFile(List<CarCare> carCares){
+		
+		for(int i=0;i<carCares.size();i++){
+			carCareDao.save(carCares.get(i));
+		}	
 	}
 }

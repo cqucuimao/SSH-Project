@@ -1,8 +1,11 @@
 package com.yuqincar.service.car.impl;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.car.CarRepairDao;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarRepairService;
+import com.yuqincar.service.car.CarService;
+import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.DateUtils;
+import com.yuqincar.utils.ExcelUtil;
 import com.yuqincar.utils.QueryHelper;
 
 @Service
@@ -25,6 +33,12 @@ public class CarRepairServiceImpl implements CarRepairService {
 	private CarRepairDao carRepairDao;
 	@Autowired
 	private SMSService smsService;
+	
+	@Autowired
+	private CarService carService;
+	
+	@Autowired
+	private UserService userService;
 
 	@Transactional
 	public void saveCarRepair(CarRepair carRepair) {
@@ -79,5 +93,12 @@ public class CarRepairServiceImpl implements CarRepairService {
 	public BigDecimal statisticCarRepair(Date fromDate, Date toDate){
 		return carRepairDao.statisticCarRepair(fromDate, toDate);
 	}
-
+	
+	@Transactional
+	public void importExcelFile(List<CarRepair> carRepairs){
+		
+		for(int i=0;i<carRepairs.size();i++){
+			carRepairDao.save(carRepairs.get(i));
+		}	
+	}
 }

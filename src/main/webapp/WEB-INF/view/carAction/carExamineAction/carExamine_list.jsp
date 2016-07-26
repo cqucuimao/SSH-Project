@@ -59,6 +59,7 @@
 							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
 							<th><s:property value="tr.getText('car.CarExamine.date')" /></th>
               				<th>下次年审日期</th>
+              				<th><s:property value="tr.getText('car.CarExamine.carPainterMoney')" /></th>
                 			<th><s:property value="tr.getText('car.CarExamine.memo')" /></th>
                 			<th><s:property value="tr.getText('car.CarExamine.appointment')" /></th>
                 			<th>操作</th>
@@ -71,6 +72,7 @@
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right"><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
+							<td>${carPainterMoney}</td>
 							<td>${memo}</td>
 							<td>
 								<s:if test="appointment==true">

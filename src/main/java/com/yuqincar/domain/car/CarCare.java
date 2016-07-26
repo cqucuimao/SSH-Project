@@ -30,12 +30,28 @@ public class CarCare extends BaseEntity {
 	@Text("保养日期")
 	@Column(nullable = false)
 	private Date date;	//保养日期
+	@Text("保养里程")
+	private int careMiles;	//保养里程数
 	@Text("下次保养间隔里程")
 	private int mileInterval;	//下次保养间隔里程数
 	@Text("保养花费")
 	private BigDecimal money;	//保养花费
 	@Text("保养内容")
 	private String memo;	//备注
+	@Text("承修单位")
+	private String careDepo;	//承修单位
+	public int getCareMiles() {
+		return careMiles;
+	}
+	public void setCareMiles(int careMiles) {
+		this.careMiles = careMiles;
+	}
+	public String getCareDepo() {
+		return careDepo;
+	}
+	public void setCareDepo(String careDepo) {
+		this.careDepo = careDepo;
+	}
 	@Text("是否预约记录")
 	private boolean appointment;	//是否为预约记录
 	

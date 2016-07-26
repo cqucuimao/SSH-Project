@@ -43,6 +43,15 @@ public class CarExamine extends BaseEntity {
 	@Text("是否预约记录")
 	private boolean appointment;	//是否为预约记录
 	
+	@Text("车身喷漆费用")
+	private BigDecimal carPainterMoney;
+	
+	public BigDecimal getCarPainterMoney() {
+		return carPainterMoney;
+	}
+	public void setCarPainterMoney(BigDecimal carPainterMoney) {
+		this.carPainterMoney = carPainterMoney;
+	}
 	public Car getCar() {
 		return car;
 	}

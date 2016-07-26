@@ -1,9 +1,15 @@
 package com.yuqincar.action.car;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.hssf.dev.ReSave;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -14,6 +20,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
+import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
@@ -24,6 +31,7 @@ import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
+import com.yuqincar.utils.ExcelUtil;
 import com.yuqincar.utils.QueryHelper;
 
 @Controller
@@ -43,6 +51,16 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	
 	@Autowired
 	private UserService userService;
+	
+	 private File upload;
+		
+	private String uploadFileName;
+		
+	private String uploadContentType;
+	
+	private String failReason;
+		
+	private int result;
 	
 	private Date date1;
 	
@@ -91,6 +109,96 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	public String delete() throws Exception {
 		carRepairService.deleteCarRepairById(model.getId());
 		return freshList();
+	}
+	
+	public String excel() throws Exception {
+		return "excel";
+	}
+	
+	public String importExcelFile() throws Exception{
+        InputStream is = new FileInputStream(upload);
+		ExcelUtil eu = new ExcelUtil();
+		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 9, 0);
+		List<CarRepair> carRepairs = new ArrayList<CarRepair>();
+				for(int i=1;i<excelLines.size();i++){
+					try {
+							result=i;
+						    CarRepair cr = new CarRepair();
+							
+							//车辆
+							System.out.println("车牌号="+excelLines.get(i).get(0));
+							Car car = carService.getCarByPlateNumber(excelLines.get(i).get(0));
+							if(car == null){
+								failReason = "未知车辆";
+								ActionContext.getContext().getValueStack().push(failReason);
+								ActionContext.getContext().getValueStack().push(result);
+								return "false";
+							}else{
+								cr.setCar(car);
+							}
+							
+							//承修单位
+							System.out.println("承修单位="+excelLines.get(i).get(1));
+							cr.setRepairLocation(excelLines.get(i).get(1));
+							
+							//维修开始时间
+							System.out.println("维修开始时间="+excelLines.get(i).get(2));
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");  
+						    Date fromDate;				
+						    fromDate = sdf.parse(excelLines.get(i).get(2));
+							cr.setFromDate(fromDate);
+							
+							//维修结束时间
+							System.out.println("维修结束时间="+excelLines.get(i).get(3));
+						    Date toDate;				
+						    toDate = sdf.parse(excelLines.get(i).get(3));
+							cr.setToDate(toDate);
+							
+							//送修人
+							System.out.println("司机="+excelLines.get(i).get(4));
+							User driver = userService.getByLoginName(excelLines.get(i).get(4));
+							if(driver == null){
+								failReason = "未知司机";
+								ActionContext.getContext().getValueStack().push(failReason);
+								ActionContext.getContext().getValueStack().push(result);
+								return "false";
+							}else{
+								cr.setDriver(driver);				
+							}
+							
+							//维修内容
+							System.out.println("维修内容="+excelLines.get(i).get(5));
+							cr.setMemo(excelLines.get(i).get(5));
+							
+							
+							System.out.println("维修原因="+excelLines.get(i).get(6));
+							cr.setReason(excelLines.get(i).get(6));
+							
+							//付款日期
+							System.out.println("付款日期="+excelLines.get(i).get(7));
+						    Date payDate;				
+						    payDate = sdf.parse(excelLines.get(i).get(7));
+							cr.setPayDate(payDate);
+							
+							//金额
+							System.out.println("金额="+excelLines.get(i).get(8));
+							BigDecimal bd = new BigDecimal(excelLines.get(i).get(8));
+							cr.setMoney(bd);
+							
+							cr.setAppointment(false);
+							
+							carRepairs.add(cr);
+						} catch (Exception e) {
+							failReason = "不明原因";
+							ActionContext.getContext().getValueStack().push(failReason);
+							ActionContext.getContext().getValueStack().push(result);
+							return "false";
+						}
+				}
+				result = excelLines.size() - 1;
+				carRepairService.importExcelFile(carRepairs);
+				ActionContext.getContext().getValueStack().push(result);
+				return "success";	
 	}
 	
 	/** 添加页面 */
@@ -272,6 +380,46 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 
 	public void setDate2(Date date2) {
 		this.date2 = date2;
+	}
+
+	public File getUpload() {
+		return upload;
+	}
+
+	public void setUpload(File upload) {
+		this.upload = upload;
+	}
+
+	public String getUploadFileName() {
+		return uploadFileName;
+	}
+
+	public void setUploadFileName(String uploadFileName) {
+		this.uploadFileName = uploadFileName;
+	}
+
+	public String getUploadContentType() {
+		return uploadContentType;
+	}
+
+	public void setUploadContentType(String uploadContentType) {
+		this.uploadContentType = uploadContentType;
+	}
+
+	public int getResult() {
+		return result;
+	}
+
+	public void setResult(int result) {
+		this.result = result;
+	}
+
+	public String getFailReason() {
+		return failReason;
+	}
+
+	public void setFailReason(String failReason) {
+		this.failReason = failReason;
 	}
 
 }

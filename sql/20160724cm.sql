@@ -1,4 +1,4 @@
-alter table carinsurance drop policyNumber
+alter table carinsurance drop policyNumber;
 
 insert into role_privilege(roles_id,privileges_id)
 values (18,108)
@@ -18,4 +18,4 @@ values (18,108)
 , (18,189)
 , (18,190)
 , (18,191)
-, (18,194)
+, (18,194);

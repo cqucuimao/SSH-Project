@@ -378,7 +378,8 @@ public class InitTestData {
 		ci1.setFromDate(new Date());
 		ci1.setToDate(DateUtils.getYMD("2026-01-20"));
 		ci1.setInsureCompany("平安保险");
-		ci1.setPolicyNumber("1111111");
+		ci1.setCompulsoryPolicyNumber("1111111");
+		ci1.setCommercialPolicyNumber("11111111");
 		ci1.setMoney(new BigDecimal(10));
 		carInsuranceDao.save(ci1);
 		
@@ -388,7 +389,8 @@ public class InitTestData {
 		ci2.setFromDate(new Date());
 		ci2.setToDate(DateUtils.getYMD("2026-02-21"));
 		ci2.setInsureCompany("平安保险1");
-		ci2.setPolicyNumber("2222222");
+		ci2.setCompulsoryPolicyNumber("2222222");
+		ci2.setCommercialPolicyNumber("22222222");
 		ci2.setMoney(new BigDecimal(110));
 		carInsuranceDao.save(ci2);
 		
@@ -398,7 +400,8 @@ public class InitTestData {
 		ci3.setFromDate(new Date());
 		ci3.setToDate(DateUtils.getYMD("2026-03-22"));
 		ci3.setInsureCompany("平安保险2");
-		ci3.setPolicyNumber("3333333");
+		ci3.setCompulsoryPolicyNumber("3333333");
+		ci3.setCommercialPolicyNumber("33333333");
 		ci3.setMoney(new BigDecimal(170));
 		carInsuranceDao.save(ci3);
 		
@@ -408,7 +411,8 @@ public class InitTestData {
 		ci4.setFromDate(new Date());
 		ci4.setToDate(DateUtils.getYMD("2026-04-23"));
 		ci4.setInsureCompany("平安保险3");
-		ci4.setPolicyNumber("4444444");
+		ci4.setCompulsoryPolicyNumber("44444444");
+		ci4.setCommercialPolicyNumber("444444444");
 		ci4.setMoney(new BigDecimal(210));
 		carInsuranceDao.save(ci4);
 		
@@ -418,7 +422,8 @@ public class InitTestData {
 		ci5.setFromDate(new Date());
 		ci5.setToDate(DateUtils.getYMD("2026-05-24"));
 		ci5.setInsureCompany("平安保险4");
-		ci5.setPolicyNumber("5555555");
+		ci5.setCompulsoryPolicyNumber("55555555");
+		ci5.setCommercialPolicyNumber("555555555");
 		ci5.setMoney(new BigDecimal(90));
 		carInsuranceDao.save(ci5);
 	}

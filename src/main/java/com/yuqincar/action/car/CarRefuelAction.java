@@ -421,10 +421,11 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
  			
  		}
  		
- 		 System.out.println(listAll.size());
- 		 for (int k=0;k<listAll.size();k++){
-   		 System.out.println(listAll.get(k).toString());
-   	      }
+ 		/* System.out.println(listAll.size());
+ 		 for (int k=0;k<listAll.size();k++)
+ 		 {
+ 			 System.out.println(listAll.get(k).toString());
+   	      }*/
  		 List<String> title=new ArrayList<String>();
  		 title.add("姓名");
  		 title.add("车号");

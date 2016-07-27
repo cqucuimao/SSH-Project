@@ -50,6 +50,9 @@ public interface BaseDao<T> {
 	 */
 	List<T> getAll();
 	
+	List<T> getAllQuerry( QueryHelper queryHelper) ;
+		// 注意空格！
+	
 	/**
 	 * 获取当前对话
 	 * @return

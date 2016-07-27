@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.yuqincar.domain.car.CarRefuel;
+import com.yuqincar.domain.car.CarWashShop;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.utils.QueryHelper;
 
@@ -20,5 +21,7 @@ public interface CarRefuelService {
 	public BigDecimal statisticCarRefuel(Date fromDate, Date toDate);
 	
 	public void importExcelFile(List<CarRefuel> carRefuels);
+	
+	public List<CarRefuel> getAllCarRefuel(QueryHelper queryHelper);
 	
 }

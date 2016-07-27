@@ -38,7 +38,10 @@ public class CarRefuelServiceImpl implements CarRefuelService {
 		carRefuelDao.save(carRefuel);
 
 	}
-
+	public List<CarRefuel> getAllCarRefuel(QueryHelper queryHelper){
+		return carRefuelDao.getAllQuerry(queryHelper);
+	} 
+	
 	public CarRefuel getCarRefuelById(long id) {
 		return carRefuelDao.getById(id);
 	}

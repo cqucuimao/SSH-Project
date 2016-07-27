@@ -78,6 +78,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	public void delete(Long id) {
+		System.out.println("in daoDelete");
 		if (id == null) {
 			return;
 		}
@@ -98,9 +99,12 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 				BaseEntity baseEntity = (BaseEntity)entity;
 				record.setEntityId(((BaseEntity) entity).getId());
 			}
+			System.out.println("in daoDelete2222");
 			getSession().delete(entity);
 			getSession().save(record);
+			System.out.println("in daoDelete3333");
 		}
+		
 	}
 
 	public T getById(Long id) {
@@ -163,5 +167,14 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 
 		return new PageBean(pageNum, pageSize, count.intValue(), list);
 	}
-
+	
+	public List<T> getAllQuerry( QueryHelper queryHelper) {
+		List<Object> parameters = queryHelper.getParameters();
+		Query query = getSession().createQuery(queryHelper.getQueryListHql());
+		if (parameters != null && parameters.size() > 0) {
+			for (int i = 0; i < parameters.size(); i++) {
+				query.setParameter(i, parameters.get(i));
+			}
+		}
+		return query.list();	}
 }

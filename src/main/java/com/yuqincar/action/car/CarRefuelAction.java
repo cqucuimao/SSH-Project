@@ -210,12 +210,12 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 		ActionContext.getContext().getValueStack().push(result);
 		return "success";		
 	}
-	
+	//到处报表弹出时间函数
      public String outPutOil_time() {
 		return "outPutOil_time";
 	}
 	
-     
+     //实现报表导出具体的操作
      public void OilReport() throws ParseException, IOException{
     	 DateUtils du = new DateUtils();
     	 SimpleDateFormat format=new SimpleDateFormat("yyyy-MM");
@@ -228,287 +228,220 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
  					date3 ,date4);
  		helper.addOrderByProperty("cr.car.plateNumber", true);
  		List lists=new ArrayList<CarRefuel>();
- 		PageBean pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
- 		lists=pageBean.getRecordList(); 
+ 		//PageBean pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
+ 		//lists=pageBean.getRecordList(); 
+ 		lists=carRefuelService.getAllCarRefuel(helper);
  		System.out.println("+++++++++++++list_size+++++++++++++"+lists.size());
  		
  		CarRefuel carRefuel=new CarRefuel();
- 		List<List<String>> lines = new ArrayList<List<String>>();
-   	    List<List<String>> lines_noOut = new ArrayList<List<String>>();
    	    List<List<String>> listAll = new ArrayList<List<String>>();
     	  
-   	    //*****************************************************************************
  		for(int j=0;j<lists.size();j++){
 	    carRefuel=(CarRefuel) lists.get(j);
+	    System.out.println("carRefuel=　　"+carRefuel.getCar().getPlateNumber()+" "+carRefuel.getDriver().getName());
 		if(carRefuel.isOutSource()){
 		   	    int flag=1;
-			    for(int h=0;h<lines.size();h++){
-			    	//System.out.println("in_flag=: "+flag);
+			    for(int h=0;h<listAll.size();h++)
+			    {
 			    	//如果外购油已经存在list中了。
-			    	//System.out.println("lines.get(h).get(0)"+lines.get(h).get(0));
 			    	//System.out.println("carRefuel.getCar().getPlateNumber()"+carRefuel.getCar().getPlateNumber());
-			        if(lines.get(h).get(0).equals(carRefuel.getCar().getPlateNumber())){
-				        String volumeString=lines.get(h).get(2);
-				        String moneyString=lines.get(h).get(3);
-				        float volume_old=Float.parseFloat(volumeString);
-				        BigDecimal money_old=new BigDecimal(moneyString);
-				        float volume_new=carRefuel.getVolume();
-				        BigDecimal money_new=carRefuel.getMoney();
-				        BigDecimal money=money_new.add(money_old);
-				        volume_old=volume_new+volume_old;
-				        lines.get(h).set(2,String.valueOf(volume_old));
-				        lines.get(h).set(3, money.toString());
+			        if(listAll.get(h).get(1).equals(carRefuel.getCar().getPlateNumber()))
+			        {
+				        String volumeString=listAll.get(h).get(5);
+				        String moneyString=listAll.get(h).get(6);
+				        String name_old=listAll.get(h).get(4);
+				        if (volumeString.length()!=0) 
+				        {
+					         float volume_old=Float.parseFloat(volumeString);
+					         float volume_new=carRefuel.getVolume();
+					         volume_old=volume_new+volume_old;
+					         listAll.get(h).set(5,String.valueOf(volume_old));
+						}else 
+						{
+							 listAll.get(h).set(5,String.valueOf(carRefuel.getVolume()));
+						}
+				        if (moneyString.length()!=0) {
+				        	 BigDecimal money_old=new BigDecimal(moneyString);
+						     BigDecimal money_new=carRefuel.getMoney();
+						     BigDecimal money=money_new.add(money_old);
+						     listAll.get(h).set(6, money.toString());
+						}else 
+						{
+							 listAll.get(h).set(6, carRefuel.getMoney().toString());
+						}
+				        
+				        if (name_old.length()!=0) {
+				        	String name_new=carRefuel.getDriver().getName();
+				        	if(!(name_old.contains(name_new)))
+				        	{
+					        	name_old=name_old+","+name_new;
+					        	listAll.get(h).set(4, name_old);
+					        }
+						}else 
+						{
+							listAll.get(h).set(4, carRefuel.getDriver().getName());
+						}
+				        
 				        flag=0;
-				        System.out.println("in_flag0=: "+flag);
+				        //System.out.println("in_flag0=: "+flag);
 				        break;
 			        }
 			  }
-			  if(flag==1){
+			  if(flag==1)
+			  {
 				    //外购油不存在的情况下
 				  
 				    //System.out.println("out_flag=: "+flag);
 				    //System.out.println(carRefuel.getCar().getPlateNumber());
 				    List<String> oiList = new ArrayList<String>();
-			        oiList.add(carRefuel.getCar().getPlateNumber());
-			        oiList.add(carRefuel.getDriver().getName());
 			        float volume=carRefuel.getVolume();
-			        oiList.add(String.valueOf(volume));
 			        BigDecimal money=carRefuel.getMoney();
+			        oiList.add("");
+			        oiList.add(carRefuel.getCar().getPlateNumber());
+			        oiList.add("");
+			        oiList.add("");
+			        oiList.add(carRefuel.getDriver().getName());
+			        oiList.add(String.valueOf(volume));
 			        oiList.add(String.valueOf(money));
-			        lines.add(oiList);
+			        oiList.add("");
+			        oiList.add("");
+			        listAll.add(oiList);
 			  }
 			  
-		}else{
+		} 
+	   else{
 			
 				int flag2=1;
-			    for(int s=0;s<lines_noOut.size();s++){
+			    for(int s=0;s<listAll.size();s++){
 			    	//如果非外购油已经存在list中了。
-			        if(lines_noOut.get(s).get(0).equals(carRefuel.getCar().getPlateNumber())){
-				        String volumeString=lines_noOut.get(s).get(2);
-				        String moneyString=lines_noOut.get(s).get(3);
-				        float volume_old=Float.parseFloat(volumeString);
-				        BigDecimal money_old=new BigDecimal(moneyString);
-				        float volume_new=carRefuel.getVolume();
-				        BigDecimal money_new=carRefuel.getMoney();
-				        BigDecimal money=money_new.add(money_old);
-				        volume_old=volume_new+volume_old;
-				        lines_noOut.get(s).set(2,String.valueOf(volume_old));
-				        lines_noOut.get(s).set(3, money.toString());
-				        flag2=0;
-				        break;
+			        if(listAll.get(s).get(1).equals(carRefuel.getCar().getPlateNumber()))
+			        {
+			        	    String volumeString=listAll.get(s).get(2);
+					        String moneyString=listAll.get(s).get(3);
+					        String name_old=listAll.get(s).get(0);
+					        if (volumeString.length()!=0) 
+					        {
+						         float volume_old=Float.parseFloat(volumeString);
+						         float volume_new=carRefuel.getVolume();
+						         volume_old=volume_new+volume_old;
+						         listAll.get(s).set(2,String.valueOf(volume_old));
+							}else 
+							{
+								 listAll.get(s).set(2,String.valueOf(carRefuel.getVolume()));
+							}
+					        if (moneyString.length()!=0) {
+					        	 BigDecimal money_old=new BigDecimal(moneyString);
+							     BigDecimal money_new=carRefuel.getMoney();
+							     BigDecimal money=money_new.add(money_old);
+							     listAll.get(s).set(3, money.toString());
+							}else 
+							{
+								 listAll.get(s).set(3, carRefuel.getMoney().toString());
+							}
+					        
+					        if (name_old.length()!=0) {
+					        	String name_new=carRefuel.getDriver().getName();
+					        	if(!(name_old.contains(name_new)))
+					        	{
+						        	name_old=name_old+","+name_new;
+						        	listAll.get(s).set(0, name_old);
+						        }
+							}else 
+							{
+								listAll.get(s).set(0, carRefuel.getDriver().getName());
+							}
+					        
+					        flag2=0;
+					        //System.out.println("in_flag0=: "+flag);
+					        break;
 			        }
 			  }
 			  if(flag2==1){
 				    //非外购油不存在的情况下
 				    List<String> oiList = new ArrayList<String>();
-			        oiList.add(carRefuel.getCar().getPlateNumber());
-			        oiList.add(carRefuel.getDriver().getName());
 			        float volume=carRefuel.getVolume();
-			        oiList.add(String.valueOf(volume));
 			        BigDecimal money=carRefuel.getMoney();
+			        oiList.add(carRefuel.getDriver().getName());
+			        oiList.add(carRefuel.getCar().getPlateNumber());
+			        oiList.add(String.valueOf(volume));
 			        oiList.add(String.valueOf(money));
-			        lines_noOut.add(oiList);
+			        oiList.add("");
+			        oiList.add("");
+			        oiList.add("");
+			        oiList.add("");
+			        oiList.add("");
+			        listAll.add(oiList);
 			  }
 		       	
 		}
 		
  }
+ 		 List<String> list_add=new ArrayList<String>();
  		
- 		//合并两个list
-	   	 List<String>  listout_no=new ArrayList<String>();
-	   	 List<String>  listout_is=new ArrayList<String>();
-	if(lines_noOut.size()>lines.size()){
-		System.out.println("i am in if ");
-	   	 for(int o=0;o<lines_noOut.size();o++){
-	   		 listout_no=lines_noOut.get(o);
-	   		 int flag3=1;
-	   		 //System.out.println("listout_no= "+listout_no.get(0));
-		    		  for(int k=0;k<lines.size();k++)
-		    		  {
-			    			  listout_is=lines.get(k);
-			    			 // System.out.println("listout_is= "+listout_is.get(0));
-			    			  if(listout_no.get(0).equals(listout_is.get(0)))
-			    			  {
-			    				    List<String> list=new ArrayList<String>();
-			    				  
-			    				    String volumeString_no=listout_no.get(2);
-							        String moneyString_no=listout_no.get(3);
-							        float volume_no=Float.parseFloat(volumeString_no);
-							        BigDecimal money_no=new BigDecimal(moneyString_no);
-							        
-							        String volumeString_is=listout_is.get(2);
-							        String moneyString_is=listout_is.get(3);
-							        float volume_is=Float.parseFloat(volumeString_is);
-							        BigDecimal money_is=new BigDecimal(moneyString_is);
-							        volume_is=volume_is+volume_no;
-							        BigDecimal money=money_is.add(money_no);
-			    				  
-			    				  list.add(listout_no.get(1));
-			    				  list.add(listout_no.get(0));
-			    				  list.add(listout_no.get(2));
-			    				  list.add(listout_no.get(3));
-			    				  list.add(listout_is.get(1));
-			    				  list.add(listout_is.get(2));
-			    				  list.add(listout_is.get(3));
-			    				  list.add(String.valueOf(volume_is));
-			    				  list.add(money.toString());
-			    				  
-			    				  listAll.add(list);
-			    				  flag3=0;
-			    				  break;
-			    			  }
-		    		  }		  
-			    	if(flag3==1){
-			    				  List<String> list=new ArrayList<String>();
-			    				  list.add(listout_is.get(1));
-			    				  list.add(listout_is.get(0));
-			    				  list.add(listout_is.get(2));
-			    				  list.add(listout_is.get(3));
-			    				  list.add("");
-			    				  list.add("");
-			    				  list.add("");
-			    				  list.add(listout_is.get(2));
-			    				  list.add(listout_is.get(3));
-			    				  listAll.add(list);
-			    			} 
-	                   
-   	    }
-	       System.out.println("only one time ");
-	       int all     =lines.size()+lines_noOut.size();
-	       int temp_all=listAll.size();
-	       int left   =all-lines_noOut.size()-(all-temp_all);
-	       if(all>temp_all){
-	    	   for(int begin=left;begin<lines.size();begin++){
-	    		   
-	    		  listout_no=lines.get(begin);
-	    		  List<String> list=new ArrayList<String>();
-				  
-	    		  list.add("");
-	    		  list.add(listout_is.get(1));
-				  list.add("");
-				  list.add("");
-				  list.add(listout_is.get(0));
-				  list.add(listout_is.get(2));
-				  list.add(listout_is.get(3));
-				  list.add(listout_is.get(2));
-				  list.add(listout_is.get(3));
-				  listAll.add(list);
-	    		   
-	    	   }
-	       }
-   	            
-  }else {
-	  
-	  System.out.println("i am in else");
-	  for(int o=0;o<lines.size();o++){
-	   		 listout_is=lines.get(o);
-	   		 int flag3=1;
-	   		 //System.out.println("listout_no= "+listout_no.get(0));
-		      for(int k=0;k<lines_noOut.size();k++)
-		    		  {
-			    			  listout_no=lines_noOut.get(k);
-			    			 // System.out.println("listout_is= "+listout_is.get(0));
-			    			  if(listout_is.get(0).equals(listout_no.get(0)))
-			    			  {
-			    				    List<String> list=new ArrayList<String>();
-			    				  
-			    				    String volumeString_no=listout_no.get(2);
-							        String moneyString_no=listout_no.get(3);
-							        float volume_no=Float.parseFloat(volumeString_no);
-							        BigDecimal money_no=new BigDecimal(moneyString_no);
-							        
-							        String volumeString_is=listout_is.get(2);
-							        String moneyString_is=listout_is.get(3);
-							        float volume_is=Float.parseFloat(volumeString_is);
-							        BigDecimal money_is=new BigDecimal(moneyString_is);
-							        volume_is=volume_is+volume_no;
-							        BigDecimal money=money_is.add(money_no);
-			    				  
-			    				  list.add(listout_no.get(1));
-			    				  list.add(listout_no.get(0));
-			    				  list.add(listout_no.get(2));
-			    				  list.add(listout_no.get(3));
-			    				  list.add(listout_is.get(1));
-			    				  list.add(listout_is.get(2));
-			    				  list.add(listout_is.get(3));
-			    				  list.add(String.valueOf(volume_is));
-			    				  list.add(money.toString());
-			    				  
-			    				  listAll.add(list);
-			    				  flag3=0;
-			    				  break;
-			    			  }
-		    		  }		  
-			if(flag3==1){
-			    				  List<String> list=new ArrayList<String>();
-			    				  
-			    				  list.add("");
-			    				  list.add(listout_is.get(0));
-			    				  list.add("");
-			    				  list.add("");
-			    				  list.add(listout_is.get(1));
-			    				  list.add(listout_is.get(2));
-			    				  list.add(listout_is.get(3));
-			    				  list.add(listout_is.get(2));
-			    				  list.add(listout_is.get(3));
-			    				  listAll.add(list);
-			    			} 
-	                   
-	               }
-	      System.out.println("only one time ");
-	       int all     =lines.size()+lines_noOut.size();
-	       int temp_all=listAll.size();
-	       int left   =all-lines.size()-(all-temp_all);
-	       if(all>temp_all){
-	    	   for(int begin=left;begin<lines_noOut.size();begin++){
-	    		   
-	    		  listout_no=lines_noOut.get(begin);
-	    		  List<String> list=new ArrayList<String>();
-				  
-	    		  list.add(listout_no.get(1));
-				  list.add(listout_no.get(0));
-				  list.add(listout_no.get(2));
-				  list.add(listout_no.get(3));
-				  list.add("");
-				  list.add("");
-				  list.add("");
-				  list.add(listout_no.get(2));
-				  list.add(listout_no.get(3));
-				  listAll.add(list);
-	    		   
-	    	   }
-	       }
-       }
- 	
- 		/*System.out.println("listAll.size()=： "+listAll.size());
- 		for (int zys=0;zys<listAll.size();zys++){
- 		 System.out.println("***************************");
-   		 System.out.println("listAll 0=:    "+listAll.get(zys).get(0));
-   		 System.out.println("listAll 1=:    "+listAll.get(zys).get(1));
-   		 System.out.println("listAll 2=:    "+listAll.get(zys).get(2));
-  		 System.out.println("listAll 3=:    "+listAll.get(zys).get(3));
-  		 System.out.println("listAll 4=:    "+listAll.get(zys).get(4));
-  		 System.out.println("listAll 5=:    "+listAll.get(zys).get(5));
-  		 System.out.println("listAll 6=:    "+listAll.get(zys).get(6));
-  		 System.out.println("listAll 7=:    "+listAll.get(zys).get(7));
-  		 System.out.println("listAll 8=:    "+listAll.get(zys).get(8));
-  		 System.out.println("***************************");
-   	 }*/
+ 		//统计总金额
+ 		for(int k=0;k<listAll.size();k++)
+ 		{    
+ 			  list_add=listAll.get(k);
+ 			  String v_in=list_add.get(2);
+ 			  String m_in=list_add.get(3);
+ 			  String v_out=list_add.get(5);
+ 			  String m_out=list_add.get(6);
+ 			  //合并油量小计
+ 			  if (v_in.length()!=0 && v_out.length()!=0) 
+ 			  {
+				 float v_is=Float.parseFloat(v_out);
+				 float v_no=Float.parseFloat(v_in);
+				 v_is=v_is+v_no;
+				 listAll.get(k).set(7,String.valueOf(v_is));
+			  }
+ 			  else if(v_in.length()==0 && v_out.length()!=0)
+ 			  {
+ 				  listAll.get(k).set(7, v_out);
+ 			  }
+ 			  else if(v_in.length()!=0 && v_out.length()==0)
+ 			  {
+ 				 listAll.get(k).set(7, v_in);
+ 			  }
+ 			  //合并金额小计
+ 			 if (m_in.length()!=0 && m_out.length()!=0) 
+			  {
+ 				 BigDecimal m_is=new BigDecimal(m_in);
+ 				 BigDecimal m_no=new BigDecimal(m_out);
+			     BigDecimal moneyall=m_is.add(m_no);
+				 listAll.get(k).set(8,moneyall.toString());
+			  }
+			  else if(m_in.length()==0 && m_out.length()!=0)
+			  {
+				  listAll.get(k).set(8, m_out);
+			  }
+			  else if(m_in.length()!=0 && m_out.length()==0)
+			  {
+				 listAll.get(k).set(8, m_in);
+			  }
+ 			
+ 		}
  		
- 		
- 		  //*******************************************************************************
-    	 
-    	 
-    	 //exportservice.exportExcel("zys", title, lines, response);
- 		System.out.println(listAll.size());
- 		System.out.println(lines.size());
- 		System.out.println(lines_noOut.size());
+ 		 System.out.println(listAll.size());
  		 for (int k=0;k<listAll.size();k++){
    		 System.out.println(listAll.get(k).toString());
    	      }
+ 		 List<String> title=new ArrayList<String>();
+ 		 title.add("姓名");
+ 		 title.add("车号");
+ 		 title.add("油站油量");
+ 		 title.add("油站金额");
+ 		 title.add("姓名");
+ 		 title.add("外购油量");
+ 		 title.add("外购金额");
+ 		 title.add("油量小计");
+ 		 title.add("金额小计");
+ 		 
+ 		 String report_name="重庆渝勤公司油料表"+" "+gDate.substring(0,4)+"年"+gDate.substring(5,7)+"月";
+ 		 //exportservice.exportExcel(report_name, title, listAll, response);
          System.out.println("this is coming here******************");
  }
-	/** 添加 */
+	
+     /** 添加 */
 	public String add() throws Exception {
 		// 保存到数据库
 		

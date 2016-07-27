@@ -146,6 +146,10 @@
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carCareAction/carCare_saveUI.jsp
 			</result>
+			<result name="success">/WEB-INF/view/carAction/carCareAction/success.jsp
+			</result>
+			<result name="false">/WEB-INF/view/carAction/carCareAction/false.jsp
+			</result>
 			<result name="saveAppoint">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp
 			</result>
 			<!-- <result name="input">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp 
@@ -153,6 +157,8 @@
 			<result name="remindList">/WEB-INF/view/carAction/carCareAction/carCare_checkRemind.jsp
 			</result>
 			<result name="carCareDetail">/WEB-INF/view/carAction/carCareAction/carCare_detail.jsp
+			</result>
+			<result name="excel">/WEB-INF/view/carAction/carCareAction/carCare_excel.jsp
 			</result>
 		</action>
 
@@ -191,6 +197,12 @@
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carRepairAction/carRepair_saveUI.jsp
 			</result>
+			<result name="excel">/WEB-INF/view/carAction/carRepairAction/carRepair_excel.jsp
+			</result>
+			<result name="success">/WEB-INF/view/carAction/carRepairAction/success.jsp
+			</result>
+			<result name="false">/WEB-INF/view/carAction/carRepairAction/false.jsp
+			</result>
 			<!-- <result name="input">/WEB-INF/view/carAction/carRepairAction/carRepair_saveUI.jsp 
 				</result> -->
 			<result name="saveAppoint">/WEB-INF/view/carAction/carRepairAction/carRepair_saveAppoint.jsp
@@ -212,6 +224,8 @@
 			<result name="excel">/WEB-INF/view/carAction/carRefuelAction/carRefuel_excel.jsp
 			</result>
 			<result name="carRefuelDetail">/WEB-INF/view/carAction/carRefuelAction/carRefuel_detail.jsp
+			</result>
+			<result name="outPutOil_time">/WEB-INF/view/carAction/carRefuelAction/outPutOil_time.jsp
 			</result>
 			<result name="toList" type="redirectAction">carRefuel_list</result>
 		</action>

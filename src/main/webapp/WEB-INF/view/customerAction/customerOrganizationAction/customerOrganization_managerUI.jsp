@@ -99,10 +99,7 @@
 					},
 					abbreviation:{
 						required:true,
-					},
-					customerId:{
-						required:true,
-					},
+					}
 				}
 			});
 		});

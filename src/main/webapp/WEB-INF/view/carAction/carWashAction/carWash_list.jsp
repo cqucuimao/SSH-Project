@@ -25,7 +25,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="洗车登记"/>
+						<s:a action="carWash_saveUI"><input id="register" class="inputButton" type="button" value="洗车登记"/></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -118,9 +118,6 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	<script type="text/javascript">
 		$(function(){
-	        $("#register").click(function(){
-	            self.location.href='carWash_saveUI.action';
-	        });
 	        $("#washShop").click(function(){
 	            self.location.href='carWashShop_list.action';
 	        });

@@ -171,43 +171,21 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 
 	/** 修改 */
-	public String edit() throws Exception {
-		//从数据库中取出原对象
-		User user = userService.getById(model.getId());
-		User oldUser = userService.getById(model.getId());
-		//设置要修改的属性
-		user.setLoginName(model.getLoginName());
-		user.setName(model.getName());
-		user.setBirth(model.getBirth());
-		//
-		user.setGender(UserGenderEnum.getById(genderId));
-		user.setPhoneNumber(model.getPhoneNumber());
-		user.setEmail(model.getEmail());
-		user.setDescription(model.getDescription());
-		user.setStatus(UserStatusEnum.getById(statusId));
-		//处理关联的一个部门
-		user.setDepartment(departmentService.getById(departmentId));
-		//处理关联的多个岗位
+	public String edit() throws Exception {		
+		model.setGender(UserGenderEnum.getById(genderId));
+		model.setStatus(UserStatusEnum.getById(statusId));
+		model.setDepartment(departmentService.getById(departmentId));
 		List<Role> roleList = roleService.getByIds(roleIds);
-		user.setRoles(new HashSet<Role>(roleList));
-		user.setUserType(UserTypeEnum.getById(userTypeId));
-
-		//办公室员工->司机员工,新建DriverLicense
-		if(oldUser.getUserType() == UserTypeEnum.OFFICE && user.getUserType() == UserTypeEnum.DRIVER){
-			DriverLicense driverLicense = new DriverLicense();
-			driverLicense.setLicenseID(licenseID);
-			driverLicense.setExpireDate(expireDate);
-			user.setDriverLicense(driverLicense);
+		model.setRoles(new HashSet<Role>(roleList));
+		model.setUserType(UserTypeEnum.getById(userTypeId));
+		if(model.getUserType()==UserTypeEnum.DRIVER){
+			model.setDriverLicense(new DriverLicense());
+			model.getDriverLicense().setLicenseID(licenseID);
+			model.getDriverLicense().setExpireDate(expireDate);
 		}
-		//司机员工->司机员工，修改DriverLicense
-		if(oldUser.getUserType() == UserTypeEnum.DRIVER && user.getUserType() == UserTypeEnum.DRIVER){
-			DriverLicense driverLicense = user.getDriverLicense();
-			driverLicense.setLicenseID(licenseID);
-			driverLicense.setExpireDate(expireDate);
-			user.setDriverLicense(driverLicense);
-		}	
+				
 		//更新到数据库
-		userService.update(user);
+		userService.update(model);
 		ActionContext.getContext().getValueStack().push(new User());
 		return freshList();
 	}

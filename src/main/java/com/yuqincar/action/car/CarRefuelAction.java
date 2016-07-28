@@ -146,8 +146,9 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 		ExcelUtil eu = new ExcelUtil();
 		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 7, 0);
 		List<CarRefuel> carRefuels = new ArrayList<CarRefuel>();
-		for(int i=1;i<excelLines.size();i++){
-			try {
+		System.out.println("excelLines.size()="+excelLines.size());
+		try {
+			for(int i=1;i<excelLines.size();i++){
 				result = i;
 				CarRefuel cr = new CarRefuel();
 				//流水号
@@ -198,12 +199,12 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 					 cr.setOutSource(false);
 				}
 				carRefuels.add(cr);
-			} catch (Exception e) {
-				unknownCarOrDriver = "不明原因";
-				ActionContext.getContext().getValueStack().push(unknownCarOrDriver);
-				ActionContext.getContext().getValueStack().push(result);
-				return "false";
 			}	
+		} catch (Exception e) {
+			unknownCarOrDriver = "不明原因";
+			ActionContext.getContext().getValueStack().push(unknownCarOrDriver);
+			ActionContext.getContext().getValueStack().push(result);
+			return "false";
 		}	
 		result = excelLines.size() - 1;
 		carRefuelService.importExcelFile(carRefuels);

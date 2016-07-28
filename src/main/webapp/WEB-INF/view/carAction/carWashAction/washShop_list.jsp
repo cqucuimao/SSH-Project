@@ -22,7 +22,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="洗车点登记" name="button" />
+						<s:a action="carWashShop_addUI"><input id="register" class="inputButton" type="button" value="洗车点登记" name="button" /></s:a>
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>										
 				</tr>
@@ -59,12 +59,5 @@
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
-	<script type="text/javascript">
-		$(function(){
-			$("#register").click(function(){
-				location.href='carWashShop_addUI.action';
-			});			
-		})
-	</script>
 </body>
 </html>

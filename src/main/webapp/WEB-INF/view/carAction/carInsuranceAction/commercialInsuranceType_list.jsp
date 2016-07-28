@@ -22,7 +22,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="商业保险类型登记" name="button" />
+						<s:a action="commercialInsuranceType_addUI"><input id="register" class="inputButton" type="button" value="商业保险类型登记" name="button" /></s:a>
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>										
 				</tr>
@@ -59,12 +59,5 @@
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
-	<script type="text/javascript">
-		$(function(){
-			$("#register").click(function(){
-				location.href='commercialInsuranceType_addUI.action';
-			});
-		})
-	</script>
 </body>
 </html>

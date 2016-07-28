@@ -23,7 +23,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="违章登记" name="button" />
+						<s:a action="carViolation_saveUI"><input id="register" class="inputButton" type="button" value="违章登记" name="button" /></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -104,9 +104,6 @@
 	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>
 	<script type="text/javascript">
 		$(function(){
-			$("#register").click(function(){
-				location.href='carViolation_saveUI.action';
-			});
 			formatDateField2($("#beginDate"));
 			formatDateField2($("#endDate"));
 		})

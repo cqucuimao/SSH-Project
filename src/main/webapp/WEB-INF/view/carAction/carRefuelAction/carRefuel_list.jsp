@@ -23,7 +23,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="加油登记" name="button" />
+						<s:a action="carRefuel_addUI"><input id="register" class="inputButton" type="button" value="加油登记" name="button" /></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -41,13 +41,15 @@
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 					<td>
-						<input class="inputButton" id="btn" type="button" value="导入加油信息"/>
+						<s:a action="carRefuel_excel"><input class="inputButton" id="btn" type="button" value="导入加油信息"/></s:a>
 					</td>
+					<!-- 
 					<td>
 					<a href="#" class="modify" onclick="modify()">
 					    <input class="inputButton" id="outPutOil" type="button" value="导出加油信息月报表"/>
 					</a>
 					</td>
+					 -->
 				</tr>
 			</table>
 			</s:form>
@@ -96,16 +98,6 @@
 	<script type="text/javascript" src="js/common.js"></script>	
 	
 	<script type="text/javascript">
-		$(function(){
-	        $("#register").click(function(){
-	            self.location.href='carRefuel_addUI.action';
-	        });
-	        
-	        $("#btn").click(function(){
-	        	self.location.href='carRefuel_excel.action';
-	        });
-	        
-	    })
 	    function modify(){
 	        	url="carRefuel_outPutOil_time.action";
 	        	art.dialog.open(url,{

@@ -24,8 +24,8 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="保养登记"/>
-						<input id="appoint" class="inputButton" type="button" value="保养预约"/>
+						<s:a action="carCare_addUI"><input id="register" class="inputButton" type="button" value="保养登记"/></s:a>
+						<s:a action="carCare_appoint"><input id="appoint" class="inputButton" type="button" value="保养预约"/></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -47,7 +47,7 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<input id="remind" class="inputButton" type="button" value="保养提醒"/>
-						<input id="excel" class="inputButton" type="button" value="导入保养"/>
+						<s:a action="carCare_excel"><input id="excel" class="inputButton" type="button" value="导入保养"/></s:a>
 					</td>
 				</tr>
 			</table>
@@ -116,17 +116,8 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	<script type="text/javascript">
 		$(function(){
-	        $("#register").click(function(){
-	            self.location.href='carCare_addUI.action';
-	        });
-	        $("#appoint").click(function(){
-				self.location.href='carCare_appoint.action';
-			});
 	        $("#remind").click(function(){
 	            self.location.href='carCare_remind.action';
-	        });
-	        $("#excel").click(function(){
-	            self.location.href='carCare_excel.action';
 	        });
 			formatDateField2($("#date1"));
 			formatDateField2($("#date2"));

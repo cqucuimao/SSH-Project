@@ -47,6 +47,14 @@
                     			<td><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
                 			</tr>
                 			<tr>
+                				<th><s:property value="tr.getText('car.CarExamine.money')" />：</th>
+                				<td>${money}</td>
+                			</tr>
+                			<tr>
+                				<th><s:property value="tr.getText('car.CarExamine.carPainterMoney')" />：</th>
+                				<td>${carPainterMoney}</td>
+                			</tr>
+                			<tr>
                 				<th><s:property value="tr.getText('car.CarExamine.memo')" />：</th>
                 				<td>${memo}</td>
                 			</tr>

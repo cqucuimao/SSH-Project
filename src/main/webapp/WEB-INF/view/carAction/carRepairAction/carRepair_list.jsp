@@ -24,8 +24,8 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="维修登记" name="button" />
-						<input id="appoint" class="inputButton" type="button" value="维修预约" name="button" />
+						<s:a action="carRepair_addUI"><input id="register" class="inputButton" type="button" value="维修登记" name="button" /></s:a>
+						<s:a action="carRepair_appoint"><input id="appoint" class="inputButton" type="button" value="维修预约" name="button" /></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -47,7 +47,7 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<input id="repairInput" class="inputButton" type="button" value="维修信息导入"  />
+						<s:a action="carRepair_excel"><input id="repairInput" class="inputButton" type="button" value="维修信息导入"  /></s:a>
 					</td>
 				</tr>
 			</table>
@@ -117,15 +117,6 @@
 	
 	<script type="text/javascript">
 		$(function(){
-	        $("#register").click(function(){
-	            self.location.href='carRepair_addUI.action';
-	        });
-	        $("#appoint").click(function(){
-				self.location.href='carRepair_appoint.action';
-			});
-	        $("#repairInput").click(function(){
-				self.location.href='carRepair_excel.action';
-			});
 			formatDateField2($("#date1"));
 			formatDateField2($("#date2"));
 	    })

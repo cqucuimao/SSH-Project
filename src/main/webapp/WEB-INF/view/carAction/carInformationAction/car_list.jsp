@@ -23,7 +23,7 @@
 			<table>
 				<tr>
 					<td>
-					<input id="register" class="inputButton" type="button" value="车辆登记" name="button" />
+					<s:a action="car_addUI.action?actionFlag=register"><input id="register" class="inputButton" type="button" value="车辆登记" name="button" /></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -95,14 +95,5 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>	
 	
-
-
-	<script type="text/javascript">
-		$(function(){
-	        $("#register").click(function(){
-	            self.location.href='car_addUI.action?actionFlag=register';
-	        });
-	    })
-	</script>
 </body>
 </html>

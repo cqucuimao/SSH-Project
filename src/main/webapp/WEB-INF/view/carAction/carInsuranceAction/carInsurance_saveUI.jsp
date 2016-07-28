@@ -291,11 +291,12 @@
 		    		 }
 				 	
 		    		 //提交时对商业保险中的字段进行判断
+		    		 result=true;
 		    		 $("select[name=commercialInsuranceType] option:selected").each(function(){
 		    			 var value =$(this).attr("value");
 	   					 if(value==""){
 	   						 alert("请选择商业保险类型！");
-	   						 return false;
+	   						 result=false;
 	   					 }
 		    		 }); 
 		    		 
@@ -303,7 +304,7 @@
 		    			 var value =$(this).val();
 		    			 if(value==""){
 	   						 alert("请输入商业保险生效日期！");
-	   						 return false;
+	   						 result=false;
 	   					 }
 		    		 }); 
 		    		
@@ -311,7 +312,7 @@
 		    			 var value =$(this).val();
 		    			 if(value==""){
 	  						 alert("请输入商业保险截止日期！");
-	  						 return false;
+	   						 result=false;
 	  					 }
 		    		 }); 
 		    		
@@ -319,11 +320,11 @@
 		    			 var value =$(this).val();
 		    			 if(value==""){
 	  						 alert("请输入商业保险承保金额！");
-	  						 return false;
+	   						 result=false;
 	  					 }
 		    			 if(isNaN(value)){
 		    				 alert("请输入合法数字！");
-		    				 return false;
+	   						 result=false;
 		    			 }
 		    		 }); 
 		    		
@@ -331,7 +332,7 @@
 		    			 var value =$(this).val();
 		    			 if(value==""){
 	 						 alert("请输入商业保险金额！");
-	 						 return false;
+	   						 result=false;
 	 					 }
 		    		 }); 
 		    		//获取商业保险的条数，方便在action中处理数据
@@ -342,6 +343,7 @@
 		    			 }
 		    		 }) 
 		    		 $("input[name=inputRows]").val(inputRows); 
+		    		 return result;
 		    		
 	    	 });
 	    	 

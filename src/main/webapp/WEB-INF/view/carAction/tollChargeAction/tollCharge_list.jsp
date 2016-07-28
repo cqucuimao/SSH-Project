@@ -24,7 +24,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="路桥费缴纳登记"/>
+						<s:a action="tollCharge_saveUI"><input id="register" class="inputButton" type="button" value="路桥费缴纳登记"/></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -91,9 +91,6 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	<script type="text/javascript">
 		$(function(){
-	        $("#register").click(function(){
-	            self.location.href='tollCharge_saveUI.action';
-	        });
 	        $("#remind").click(function(){
 	            self.location.href='tollCharge_remind.action';
 	        });  

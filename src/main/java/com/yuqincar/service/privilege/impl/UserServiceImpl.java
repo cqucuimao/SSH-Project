@@ -60,23 +60,39 @@ public class UserServiceImpl implements UserService{
 
 	@Transactional
 	public void update(User user) {
-		User oldUser = userDao.getById(user.getId());
-		DriverLicense driverLicense = user.getDriverLicense();
+		User updatedUser = userDao.getById(user.getId());
+				
 		//办公室员工->司机员工,新建DriverLicense
-		if(oldUser.getUserType() == UserTypeEnum.OFFICE && user.getUserType() == UserTypeEnum.DRIVER){
-			driverLicenseDao.save(driverLicense);
-		}
-		//司机员工->办公室员工，删除DriverLicense
-		if(oldUser.getUserType() == UserTypeEnum.DRIVER && user.getUserType() == UserTypeEnum.OFFICE){
-			user.setDriverLicense(null);
-			driverLicenseDao.delete(driverLicense.getId());
+		if(updatedUser.getUserType() == UserTypeEnum.OFFICE && user.getUserType() == UserTypeEnum.DRIVER){
+			driverLicenseDao.save(user.getDriverLicense());
+			updatedUser.setDriverLicense(user.getDriverLicense());
 		}
 		//司机员工->司机员工，修改DriverLicense
-		if(oldUser.getUserType() == UserTypeEnum.DRIVER && user.getUserType() == UserTypeEnum.DRIVER){
-
-			driverLicenseDao.update(driverLicense);	
+		if(updatedUser.getUserType() == UserTypeEnum.DRIVER && user.getUserType() == UserTypeEnum.DRIVER){
+			updatedUser.getDriverLicense().setLicenseID(user.getDriverLicense().getLicenseID());
+			updatedUser.getDriverLicense().setExpireDate(user.getDriverLicense().getExpireDate());
+			driverLicenseDao.update(updatedUser.getDriverLicense());
 		}
-		userDao.update(user);
+		//司机员工->办公室员工，删除DriverLicense
+		if(updatedUser.getUserType() == UserTypeEnum.DRIVER && user.getUserType() == UserTypeEnum.OFFICE){
+			DriverLicense dl=updatedUser.getDriverLicense();
+			updatedUser.setDriverLicense(null);
+			driverLicenseDao.delete(dl.getId());
+		}
+		updatedUser.setUserType(user.getUserType());
+		
+		updatedUser.setRoles(user.getRoles());
+		updatedUser.setDepartment(user.getDepartment());
+		updatedUser.setBirth(user.getBirth());
+		updatedUser.setLoginName(user.getLoginName());
+		updatedUser.setName(user.getName());
+		updatedUser.setGender(user.getGender());
+		updatedUser.setPhoneNumber(user.getPhoneNumber());
+		updatedUser.setEmail(user.getEmail());
+		updatedUser.setDescription(user.getDescription());
+		updatedUser.setStatus(user.getStatus());
+		
+		userDao.update(updatedUser);
 	}
 
 	@Transactional
@@ -84,8 +100,10 @@ public class UserServiceImpl implements UserService{
 		// 默认密码是1234
 		String md5 = DigestUtils.md5Hex("123456"); // 密码要使用MD5摘要
 		user.setPassword(md5);
-		DriverLicense driverLicense = user.getDriverLicense();
-		driverLicenseDao.save(driverLicense);
+		if(user.getUserType()==UserTypeEnum.DRIVER){
+			DriverLicense driverLicense = user.getDriverLicense();
+			driverLicenseDao.save(driverLicense);
+		}
 		
 		// 保存到数据库
 		userDao.save(user);

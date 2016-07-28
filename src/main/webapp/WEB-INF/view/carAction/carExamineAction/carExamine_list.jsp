@@ -23,8 +23,8 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="年审登记" name="button" />
-						<input id="appoint" class="inputButton" type="button" value="年审预约" name="button" />
+						<s:a action="carExamine_addUI"><input id="register" class="inputButton" type="button" value="年审登记" name="button" /></s:a>
+						<s:a action="carExamine_appoint"><input id="appoint" class="inputButton" type="button" value="年审预约" name="button" /></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" /></td>
@@ -59,6 +59,7 @@
 							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
 							<th><s:property value="tr.getText('car.CarExamine.date')" /></th>
               				<th>下次年审日期</th>
+              				<th><s:property value="tr.getText('car.CarExamine.money')" /></th>
               				<th><s:property value="tr.getText('car.CarExamine.carPainterMoney')" /></th>
                 			<th><s:property value="tr.getText('car.CarExamine.memo')" /></th>
                 			<th><s:property value="tr.getText('car.CarExamine.appointment')" /></th>
@@ -72,7 +73,8 @@
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right"><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
-							<td>${carPainterMoney}</td>
+							<td style="text-align:right">${money}</td>
+							<td style="text-align:right">${carPainterMoney}</td>
 							<td>${memo}</td>
 							<td>
 								<s:if test="appointment==true">
@@ -108,12 +110,6 @@
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
 		$(function(){
-	        $("#register").click(function(){
-	            self.location.href='carExamine_addUI.action';
-	        });
-	        $("#appoint").click(function(){
-				self.location.href='carExamine_appoint.action';
-			});
 	        $("#remind").click(function(){
 	            self.location.href='carExamine_remind.action';
 	        });

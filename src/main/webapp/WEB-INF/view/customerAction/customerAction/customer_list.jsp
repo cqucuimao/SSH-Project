@@ -25,15 +25,15 @@
 					<td>
 						<input id="addCustomer" class="inputButton" type="button" value="新增客户" name="button" />
 					</td>
-					<th>单位名称</th>
+					<th><s:property value="tr.getText('order.Customer.customerOrganization')" /></th>
 					<td>
 						 <s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
 						 <input id="customer_organization_id" type="hidden">
 						 
 					</td>
-					<th>姓名</th>
+					<th><s:property value="tr.getText('order.Customer.name')" /></th>
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
-					<th>联系方式</th>
+					<th><s:property value="tr.getText('order.Customer.phones')" /></th>
 					<td><s:textfield cssClass="inputText" name="phonesStr" type="text" /></td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>

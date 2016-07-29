@@ -18,7 +18,16 @@
 		<!-- 标题 -->
 		<div class="title">
 			<h1>车辆年审详细信息</h1>
+		</div>      		
+		<div class="tab_next style2">
+			<table>
+				<tr>
+				    <td><s:a action="carExamine_appointList"><span>预约车辆年审</span></s:a></td>
+					<td class="on"><a href="#"><span>车辆年审记录</span></a></td>
+				</tr>
+			</table>
 		</div>
+		<br/>
 		<div class="editBlock detail p30">
 				<table>
 					<colgroup>
@@ -57,17 +66,6 @@
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarExamine.memo')" />：</th>
                 				<td>${memo}</td>
-                			</tr>
-                			<tr>
-                				<th><s:property value="tr.getText('car.CarExamine.appointment')" />：</th>
-                				<td>
-                					<s:if test="appointment==true">
-									<s:text name="是"></s:text>
-									</s:if>
-									<s:else>
-									<s:text name="否"></s:text>
-									</s:else>
-                				</td>
                 			</tr>
 					</tbody>
 					<tfoot>

@@ -580,10 +580,6 @@ public class OrderServiceImpl implements OrderService {
 		return orderDao.getCurrentOrderByCarId(id);
 	}
 
-	public List<Car> getCarsWithoutOrderNow() {
-		return orderDao.getCarsWithoutOrderNow();
-	}
-
 	/**
 	 * 根据单位名称，开始时间，结束时间查询相应的未收款订单
 	 * 未收款订单的条件是，当前订单状态OrderStatusEnum为END,所属orderStatement为null

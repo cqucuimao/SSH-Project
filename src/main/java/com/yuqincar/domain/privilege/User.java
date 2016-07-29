@@ -113,9 +113,6 @@ public class User extends BaseEntity implements Serializable {
 		if (pos > -1) {
 			privUrl = privUrl.substring(0, pos);
 		}
-		if (privUrl.endsWith("UI")) {
-			privUrl = privUrl.substring(0, privUrl.length() - 2);
-		}
 				
 		//如果是基本功能，就可以访问
 		if(getBasePrivilegeUrls().contains(privUrl))
@@ -125,6 +122,7 @@ public class User extends BaseEntity implements Serializable {
 		if (userPrivileges.contains(privUrl)) {
 			return true;
 		}else {
+			System.out.println("Fail authorization, privUrl="+privUrl);
 			return false;
 		}
 		

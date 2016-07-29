@@ -17,7 +17,16 @@
 		<!-- 标题 -->
 		<div class="title">
 			<h1>车辆年审提醒信息列表</h1>
+		</div>      		
+		<div class="tab_next style2">
+			<table>
+				<tr>
+				    <td><s:a action="carExamine_appointList"><span>预约车辆年审</span></s:a></td>
+					<td class="on"><a href="#"><span>车辆年审记录</span></a></td>
+				</tr>
+			</table>
 		</div>
+		<br/>
 		<div class="editBlock search">
 			<s:form id="pageForm" action="carExamine_remind">
 			<table>

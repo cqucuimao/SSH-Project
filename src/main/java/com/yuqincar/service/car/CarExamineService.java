@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
@@ -18,14 +19,6 @@ public interface CarExamineService {
 	 * @param carCare
 	 */
 	public void saveCarExamine(CarExamine carExamine);
-	
-	/**
-	 * 预约年审。事前登记。
-	 * 生成CarExamine，设置fromDate和toDate作为调度的时间依据，并置appointment为true。其余内容使用updateCarExamine设置。
-	 * @param car
-	 * @param date
-	 */
-	public void carExamineAppointment(Car car,User driver, Date date);
 	
 	public CarExamine getCarExamineById(long id);
 	
@@ -67,4 +60,8 @@ public interface CarExamineService {
 	 * @return Date
 	 */
 	public Date getNextExamineDate(Car car, Date recentExamineDate);
+
+	public void saveAppointment(CarExamine carExamine);
+	
+	public void updateAppointment(CarExamine carExamine);
 }

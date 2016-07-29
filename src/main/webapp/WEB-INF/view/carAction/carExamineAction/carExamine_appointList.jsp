@@ -21,18 +21,18 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td><s:a action="carExamine_appointList"><span>预约车辆年审</span></s:a></td>
-					<td class="on"><a href="#"><span>车辆年审记录</span></a></td>
+				    <td class="on"><a href="#"><span>预约车辆年审</span></a></td>
+					<td><s:a action="carExamine_list"><span>车辆年审记录</span></s:a></td>
 				</tr>
 			</table>
 		</div>
 		<br/>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carExamine_queryForm">
+			<s:form id="pageForm" action="carExamine_queryAppointForm">
 			<table>
 				<tr>
 					<td>
-						<s:a action="carExamine_addUI"><input id="register" class="inputButton" type="button" value="年审登记" name="button" /></s:a>
+						<s:a action="carExamine_appoint"><input id="appoint" class="inputButton" type="button" value="年审预约" name="button" /></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" /></td>
@@ -51,7 +51,6 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<input id="remind" class="inputButton" type="button" value="年审提醒" name="button" />
 					</td>
 				</tr>
 			</table>
@@ -65,27 +64,19 @@
 						<tr>
 							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
-							<th><s:property value="tr.getText('car.CarExamine.date')" /></th>
-              				<th>下次年审日期</th>
-              				<th><s:property value="tr.getText('car.CarExamine.money')" /></th>
-              				<th><s:property value="tr.getText('car.CarExamine.carPainterMoney')" /></th>
-                			<th><s:property value="tr.getText('car.CarExamine.memo')" /></th>
-                			<th><s:property value="tr.getText('car.CarExamine.appointment')" /></th>
+              				<th><s:property value="tr.getText('car.CarCare.date')" /></th>
+              				<th><s:property value="tr.getText('car.CarCare.done')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td><s:a action="carExamine_detail?id=%{id}">${car.plateNumber}</s:a></td>
+							<td>${car.plateNumber}</td>
 							<td>${driver.name}</td>
-							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
-							<td style="text-align:right"><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
-							<td style="text-align:right">${money}</td>
-							<td style="text-align:right">${carPainterMoney}</td>
-							<td>${memo}</td>
+							<td><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>
-								<s:if test="appointment==true">
+								<s:if test="done==true">
 								<s:text name="是"></s:text>
 								</s:if>
 								<s:else>
@@ -93,9 +84,9 @@
 								</s:else>
 							</td>
 							<td>
-                				<s:if test="appointment">
-                    			<s:a action="carExamine_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
-                    			<s:a action="carExamine_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+                				<s:if test="done==false">
+                    			<s:a action="carExamine_deleteAppointment?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="carExamine_editAppointmentUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
                     			</s:if>
 								<s:else>
 								</s:else>
@@ -105,7 +96,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="carExamine_freshList">
+			<s:form id="pageForm" action="carExamine_freshAppointList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>
@@ -118,9 +109,6 @@
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
 		$(function(){
-	        $("#remind").click(function(){
-	            self.location.href='carExamine_remind.action';
-	        });
 			formatDateField2($("#date1"));
 			formatDateField2($("#date2"));
 	    })

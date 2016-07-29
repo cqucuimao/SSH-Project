@@ -12,12 +12,12 @@ import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.domain.order.Order;
 
 @Component
-public class DepriveSchedulingOrderEveryMinute {
+public class DepriveSchedulingOrder {
 
 	@Autowired
 	public OrderDao orderDao;
 
-	@Scheduled(cron = "0 * * * * ?") // 每分钟执行一次
+	@Scheduled(cron = "0 * * * * ?") // 每分钟（第0秒）执行一次
 	@Transactional
 	public void deprive() {
 		System.out.println("in deprive");

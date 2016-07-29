@@ -116,9 +116,9 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carCare_list') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carCare_appointList') ">
 			<dd>
-				<s:a action="carCare_list">车辆保养</s:a>
+				<s:a action="carCare_appointList">车辆保养</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
@@ -140,9 +140,9 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carExamine_list') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carExamine_appointList') ">
 			<dd>
-				<s:a action="carExamine_list">车辆年审</s:a>
+				<s:a action="carExamine_appointList">车辆年审</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

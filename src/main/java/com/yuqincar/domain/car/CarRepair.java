@@ -55,6 +55,9 @@ public class CarRepair extends BaseEntity {
 
 	@Text("是否预约记录")
 	private boolean appointment;	//是否为预约记录
+	
+	@Text("是否完成维修")
+	private boolean done;	//是否完成维修，只有当appointment为true时，本字段才有意义。
 
 
 	public Date getPayDate() {
@@ -124,5 +127,10 @@ public class CarRepair extends BaseEntity {
 	public void setMoneyNoGuaranteed(BigDecimal moneyNoGuaranteed) {
 		this.moneyNoGuaranteed = moneyNoGuaranteed;
 	}
-	
+	public boolean isDone() {
+		return done;
+	}
+	public void setDone(boolean done) {
+		this.done = done;
+	}	
 }

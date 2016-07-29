@@ -69,15 +69,41 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(ce.date))>=0", date2);
 		else if(date1!=null && date2==null)
 			helper.addWhereCondition("(TO_DAYS(ce.date)-TO_DAYS(?))>=0", date1);
+		helper.addWhereCondition("ce.appointment=?", false);
 		helper.addOrderByProperty("ce.id", false);		
 		PageBean<CarExamine> pageBean = carExamineService.queryCarExamine(pageNum, helper);		
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carExamineHelper", helper);
 		return "list";
 	}
+	
+	public String queryAppointForm() throws Exception {
+		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
+		
+		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !"".equals(model.getCar().getPlateNumber()))
+			helper.addWhereCondition("ce.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		
+		if(model.getDriver()!=null && model.getDriver().getId()!=null)
+			helper.addWhereCondition("ce.driver.id = ?", model.getDriver().getId());
+		
+		if(date1!=null && date2!=null)
+			helper.addWhereCondition("(TO_DAYS(ce.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(ce.date))>=0", 
+					date1 ,date2);
+		else if(date1==null && date2!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(ce.date))>=0", date2);
+		else if(date1!=null && date2==null)
+			helper.addWhereCondition("(TO_DAYS(ce.date)-TO_DAYS(?))>=0", date1);
+		helper.addWhereCondition("ce.appointment=?", true);
+		helper.addOrderByProperty("ce.id", false);		
+		PageBean<CarExamine> pageBean = carExamineService.queryCarExamine(pageNum, helper);		
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("carExamineAppointHelper", helper);
+		return "appointList";
+	}
 
 	public String list() {
 		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
+		helper.addWhereCondition("ce.appointment=?", false);
 		helper.addOrderByProperty("ce.id", false);
 		PageBean<CarExamine> pageBean = carExamineService.queryCarExamine(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -85,11 +111,28 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		return "list";
 	}
 	
+	public String appointList() {
+		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
+		helper.addWhereCondition("ce.appointment=?", true);
+		helper.addOrderByProperty("ce.id", false);
+		PageBean<CarExamine> pageBean = carExamineService.queryCarExamine(pageNum, helper);	
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("carExamineAppointHelper", helper);
+		return "appointList";
+	}
+	
 	public String freshList(){
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carExamineHelper");
 		PageBean<CarExamine> pageBean = carExamineService.queryCarExamine(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "list";
+	}
+	
+	public String freshAppointList(){
+		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carExamineAppointHelper");
+		PageBean<CarExamine> pageBean = carExamineService.queryCarExamine(pageNum, helper);
+		ActionContext.getContext().getValueStack().push(pageBean);
+		return "appointList";
 	}
 	
 	/**获取下次年审的时间 */
@@ -106,18 +149,20 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		writeJson(json);
 	}
 	
-	/** 删除 */
 	public String delete() throws Exception {
 		carExamineService.deleteCarExamineById(model.getId());
 		return freshList();
 	}
 	
-	/** 添加页面 */
+	public String deleteAppointment() throws Exception {
+		carExamineService.deleteCarExamineById(model.getId());
+		return freshAppointList();
+	}
+	
 	public String addUI() throws Exception {
 		return "saveUI";
 	}
 	
-	/** 添加 */
 	public String add() throws Exception {		
 		if(DateUtils.compareYMD(model.getDate(), new Date())>0){
 			addFieldError("date", "你输入的年审日期不能晚于今天！");
@@ -142,7 +187,6 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		return freshList();
 	}
 	
-	/** 修改页面 */
 	public String editUI() throws Exception {
 		// 准备回显的数据
 		CarExamine carExamine = carExamineService.getCarExamineById(model.getId());
@@ -155,7 +199,15 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		return "saveUI";
 	}
 	
-	/** 修改 */
+	public String editAppointmentUI(){
+		// 准备回显的数据
+		CarExamine carExamine = carExamineService.getCarExamineById(model.getId());
+		carExamine.setDate(DateUtils.getYMD(DateUtils.getYMDString(carExamine.getDate())));
+		ActionContext.getContext().getValueStack().push(carExamine);
+
+		return "saveAppoint";
+	}
+	
 	public String edit() throws Exception {		
 		if(DateUtils.compareYMD(model.getDate(), new Date())>0){
 			addFieldError("date", "你输入的年审日期不能晚于今天！");
@@ -179,7 +231,6 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		carExamine.setNextExamineDate(model.getNextExamineDate());
 		carExamine.setMoney(model .getMoney());
 		carExamine.setMemo(model .getMemo());
-		carExamine.setAppointment(false);
 
 		//更新到数据库
 		carExamineService.updateCarExamine(carExamine);
@@ -189,12 +240,10 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		return freshList();
 	}
 	
-	/** 登记*/
 	public String register() throws Exception{
 		return "saveUI";
 	}
 	
-	/** 预约*/
 	public String appoint() throws Exception{
 		return "saveAppoint";
 	}
@@ -223,14 +272,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		return model;
 	}
 	
-	public String saveAppointment(){
-		Date today = new Date();
-		boolean before = model.getDate().before(today);
-		if(before){
-			addFieldError("date", "你输入的预约日期不能早于今天！");
-			return "saveAppoint";
-		}
-		
+	public String saveAppointment(){		
 		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 		User driver = userService.getById(model.getDriver().getId());
 		List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getDate(), model.getDate());
@@ -272,11 +314,77 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 			addFieldError("", "添加年审记录失败！因为车辆或司机在该时间段内有"+clazz);
 			return "saveAppoint";
 		}else {
-			carExamineService.carExamineAppointment(car, driver, model.getDate());
+			CarExamine carExamine=new CarExamine();
+			carExamine.setCar(car);
+			carExamine.setDriver(driver);
+			carExamine.setDate(model.getDate());
+			carExamine.setAppointment(true);
+			carExamine.setDone(model.isDone());
+			carExamineService.saveAppointment(carExamine);
 			model=null;
 			ActionContext.getContext().getValueStack().push(getModel());
 		}
-		return freshList();
+		return freshAppointList();
+	}
+	
+	public String editAppointment(){		
+		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
+		User driver = userService.getById(model.getDriver().getId());
+		
+		Date date1=carExamineService.getCarExamineById(model.getId()).getDate();
+		Date date2=model.getDate();
+		if(!DateUtils.getYMDString(date1).equals(DateUtils.getYMDString(date2))){
+			List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getDate(), model.getDate());
+			taskList.addAll(orderService.getDriverTask(driver,  model.getDate(), model.getDate()));
+			boolean haveTask=false;
+			int taskType=0;  //1订单  2 保养 3 年审 4 维修
+			for(List<BaseEntity> dayList:taskList){
+				if(dayList!=null && dayList.size()>0){
+					BaseEntity baseEntity = dayList.get(0);
+					haveTask=true;
+					if(baseEntity instanceof Order)
+						taskType=1;
+					else if (baseEntity instanceof CarCare)
+						taskType=2;
+					else if(baseEntity instanceof CarExamine)
+						taskType=3;
+					else if(baseEntity instanceof CarRepair)
+						taskType=4;
+					break;
+				}
+			}
+			
+			if(haveTask){
+				String clazz=null;
+				switch (taskType) {
+				case 1:
+					clazz="订单";
+					break;
+				case 2:
+					clazz="保养记录";
+					break;
+				case 3:
+					clazz="年审记录";
+					break;
+				case 4:
+					clazz="维修记录";
+					break;
+				}
+				addFieldError("", "添加年审记录失败！因为车辆或司机在该时间段内有"+clazz);
+				return "saveAppoint";
+			}
+		}
+			
+		CarExamine carExamine=carExamineService.getCarExamineById(model.getId());
+		carExamine.setCar(car);
+		carExamine.setDriver(driver);
+		carExamine.setDate(model.getDate());
+		carExamine.setAppointment(true);
+		carExamine.setDone(model.isDone());
+		carExamineService.saveAppointment(carExamine);
+		model=null;
+		ActionContext.getContext().getValueStack().push(getModel());
+		return freshAppointList();
 	}
 
 	public String getPlateNumber() {

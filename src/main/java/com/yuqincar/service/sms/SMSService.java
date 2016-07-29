@@ -22,4 +22,5 @@ public interface SMSService {
 	
 	public String sendTemplateSMS(String phoneNumber,String templateId,Map<String,String> params);
 	
+	public void sendSMSInQueue();
 }

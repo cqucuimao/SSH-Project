@@ -17,15 +17,23 @@
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
-			<h1>车辆保养</h1>
+			<h1>车辆保养记录</h1>
 		</div>
+		<div class="tab_next style2">
+			<table>
+				<tr>
+				    <td><s:a action="carCare_appointList"><span>预约车辆保养</span></s:a></td>
+					<td class="on"><a href="#"><span>车辆保养记录</span></a></td>
+				</tr>
+			</table>
+		</div>
+		<br/>
 		<div class="editBlock search">
 			<s:form id="pageForm" action="carCare_queryForm">
 			<table>
 				<tr>
 					<td>
 						<s:a action="carCare_addUI"><input id="register" class="inputButton" type="button" value="保养登记"/></s:a>
-						<s:a action="carCare_appoint"><input id="appoint" class="inputButton" type="button" value="保养预约"/></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -67,7 +75,6 @@
                 			<th><s:property value="tr.getText('car.CarCare.money')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.memo')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.careDepo')" /></th>
-                			<th><s:property value="tr.getText('car.CarCare.appointment')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
@@ -84,27 +91,15 @@
 							<td>${memo}</td>
 							<td>${careDepo}</td>
 							<td>
-								<s:if test="appointment==true">
-								<s:text name="是"></s:text>
-								</s:if>
-								<s:else>
-								<s:text name="否"></s:text>
-								</s:else>
-							</td>
-							<td>
-								<s:if test="appointment">
                     			<s:a action="carCare_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:a action="carCare_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
-                    			</s:if>
-								<s:else>
-								</s:else>                    			
-                			</td>
+              				</td>
 						</tr>
 						</s:iterator> 
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="carCare_care">
+			<s:form id="pageForm" action="carCare_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>

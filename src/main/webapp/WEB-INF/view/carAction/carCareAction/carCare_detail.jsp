@@ -42,6 +42,14 @@
                     			<th><s:property value="tr.getText('car.CarCare.date')" />：</th>
                     			<td><s:date name="date" format="yyyy-MM-dd"/></td>
                 			</tr>
+							<tr>
+                    			<th><s:property value="tr.getText('car.CarCare.careDepo')" />：</th>
+                    			<td>${careDepo}</td>
+                			</tr>
+							<tr>
+                    			<th><s:property value="tr.getText('car.CarCare.careMiles')" />：</th>
+                    			<td>${careMiles}</td>
+                			</tr>
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarCare.mileInterval')" />(KM)：</th>
                 				<td>${mileInterval}</td>
@@ -53,17 +61,6 @@
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarCare.memo')" />：</th>
                 				<td>${memo}</td>
-                			</tr>
-                			<tr>
-                				<th><s:property value="tr.getText('car.CarCare.appointment')" />：</th>
-                				<td>
-                					<s:if test="appointment==true">
-									<s:text name="是"></s:text>
-									</s:if>
-									<s:else>
-									<s:text name="否"></s:text>
-									</s:else>
-                				</td>
                 			</tr>
 					</tbody>
 					<tfoot>

@@ -53,21 +53,6 @@ public class CarCareServiceImpl implements CarCareService {
     	carDao.update(car);
     }
 
-	@Transactional
-	public void carCareAppointment(Car car,User driver, Date date) {
-		CarCare carCare=new CarCare();
-		carCare.setCar(car);
-		carCare.setDriver(driver);
-		carCare.setDate(date);
-		carCare.setAppointment(true);
-		carCareDao.save(carCare);
-		
-		//给司机发送短信
-		Map<String,String> params=new HashMap<String,String>();
-		params.put("carCareDate", DateUtils.getYMDString(date));
-		smsService.sendTemplateSMS(driver.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT, params);
-	}
-
 	public CarCare getCarCareById(long id) {
 		return carCareDao.getById(id);
 	}
@@ -91,8 +76,9 @@ public class CarCareServiceImpl implements CarCareService {
 
 	@Transactional
 	public void updateCarCare(CarCare carCare) {
+		Car car=carCare.getCar();
+		car.setNextCareMile(car.getMileage()+carCare.getMileInterval());
 		carCareDao.update(carCare);
-
 	}
 
 	public PageBean<Car> getNeedCareCars(int pageNum) {
@@ -105,14 +91,23 @@ public class CarCareServiceImpl implements CarCareService {
 	public BigDecimal statisticCarCare(Date fromDate,Date toDate){
 		return carCareDao.statisticCarCare(fromDate,toDate);
 	}
-	
-	
-		
+			
 	@Transactional
 	public void importExcelFile(List<CarCare> carCares){
 		
 		for(int i=0;i<carCares.size();i++){
 			carCareDao.save(carCares.get(i));
 		}	
+	}
+	
+	@Transactional
+	public void saveAppointment(CarCare carCare) {
+		carCare.setAppointment(true);
+		carCareDao.save(carCare);
+	}
+	
+	@Transactional
+	public void updateAppointment(CarCare carCare) {
+		carCareDao.update(carCare);
 	}
 }

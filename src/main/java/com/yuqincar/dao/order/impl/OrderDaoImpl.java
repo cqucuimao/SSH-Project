@@ -79,9 +79,10 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			List<BaseEntity> dayList=null;
 			Date date = DateUtils.getOffsetDate(fromDate, i);
 			// 1、CarCare
-			hql = "from CarCare where car.id=? and TO_DAYS(?)=TO_DAYS(date)";
+			hql = "from CarCare where car.id=? and TO_DAYS(?)=TO_DAYS(date) and appointment=?";
 			entity = (BaseEntity) getSession().createQuery(hql)
 					.setParameter(0, car.getId()).setParameter(1, date)
+					.setParameter(2, true)
 					.uniqueResult();
 			if(entity!=null){
 				dayList=new ArrayList<BaseEntity>();
@@ -90,10 +91,10 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			}
 			
 			// 2、CarRepair
-			hql = "from CarRepair where car.id=? and TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(toDate)";
+			hql = "from CarRepair where car.id=? and TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(toDate) and appointment=?";
 			entity = (BaseEntity) getSession().createQuery(hql)
 					.setParameter(0, car.getId()).setParameter(1, date)
-					.setParameter(2, date).uniqueResult();
+					.setParameter(2, date).setParameter(3,true).uniqueResult();
 			if (entity != null) {
 				if(dayList==null)
 					dayList=new ArrayList<BaseEntity>();
@@ -102,10 +103,10 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			}
 			
 			// 3、CarExam
-			hql = "from CarExamine where car.id=? and TO_DAYS(?)=TO_DAYS(date)";
+			hql = "from CarExamine where car.id=? and TO_DAYS(?)=TO_DAYS(date) and appointment=?";
 			entity = (BaseEntity) getSession().createQuery(hql)
 					.setParameter(0, car.getId()).setParameter(1, date)
-					.uniqueResult();
+					.setParameter(2, true).uniqueResult();
 			if (entity != null) {
 				if(dayList==null)
 					dayList=new ArrayList<BaseEntity>();
@@ -142,10 +143,10 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			List<BaseEntity> dayList=null;
 			Date date = DateUtils.getOffsetDate(fromDate, i);
 			// 1、CarCare
-			hql = "from CarCare where driver.id=? and TO_DAYS(?)=TO_DAYS(date)";
+			hql = "from CarCare where driver.id=? and TO_DAYS(?)=TO_DAYS(date) and appointment=?";
 			entity = (BaseEntity) getSession().createQuery(hql)
 					.setParameter(0, driver.getId()).setParameter(1, date)
-					.uniqueResult();
+					.setParameter(2, true).uniqueResult();
 			if(entity!=null){
 				dayList=new ArrayList<BaseEntity>();
 				dayList.add(entity);
@@ -153,10 +154,10 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			}
 			
 			// 2、CarRepair
-			hql = "from CarRepair where driver.id=? and TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(toDate)";
+			hql = "from CarRepair where driver.id=? and TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(toDate) and appointment=?";
 			entity = (BaseEntity) getSession().createQuery(hql)
 					.setParameter(0, driver.getId()).setParameter(1, date)
-					.setParameter(2, date).uniqueResult();
+					.setParameter(2, date).setParameter(3, true).uniqueResult();
 			if (entity != null) {
 				if(dayList==null)
 					dayList=new ArrayList<BaseEntity>();
@@ -165,10 +166,10 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			}
 			
 			// 3、CarExam
-			hql = "from CarExamine where driver.id=? and TO_DAYS(?)=TO_DAYS(date)";
+			hql = "from CarExamine where driver.id=? and TO_DAYS(?)=TO_DAYS(date) and appointment=?";
 			entity = (BaseEntity) getSession().createQuery(hql)
 					.setParameter(0, driver.getId()).setParameter(1, date)
-					.uniqueResult();
+					.setParameter(2, true).uniqueResult();
 			if (entity != null) {
 				if(dayList==null)
 					dayList=new ArrayList<BaseEntity>();
@@ -303,41 +304,41 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		if(chargeMode==ChargeModeEnum.MILE || chargeMode==ChargeModeEnum.PLANE){
 			String hql = "from Car as car where car.status<>? and serviceType=? and car.standbyCar =?";
 					  hql = hql+" and car not in (select o.car from order_ as o where (o.chargeMode=? or o.chargeMode=?) and o.status<>? and o.status<>? and o.status<>? and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate))";
-					  hql = hql+" and car not in (select cc.car from CarCare as cc where cc.appointment=? and TO_DAYS(cc.date)=TO_DAYS(?))";
-					  hql = hql+" and car not in (select ce.car from CarExamine as ce where ce.appointment=? and TO_DAYS(ce.date)=TO_DAYS(?))";
-					  hql = hql+" and car not in (select cr.car from CarRepair as cr where cr.appointment=? and TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(cr.toDate))";
+					  hql = hql+" and car not in (select cc.car from CarCare as cc where cc.appointment=? and done=? and TO_DAYS(cc.date)=TO_DAYS(?))";
+					  hql = hql+" and car not in (select ce.car from CarExamine as ce where ce.appointment=? and ce.done=? and TO_DAYS(ce.date)=TO_DAYS(?))";
+					  hql = hql+" and car not in (select cr.car from CarRepair as cr where cr.appointment=? and cr.done=? and TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(cr.toDate))";
 					  
 					  hql = hql+" and car.driver is not null";
 					  hql = hql+" and car.driver not in (select o.driver from order_ as o where (o.chargeMode=? or o.chargeMode=?) and o.status<>? and o.status<>? and o.status<>? and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate))";
-					  hql = hql+" and car.driver not in (select cc.driver from CarCare as cc where cc.appointment=? and TO_DAYS(cc.date)=TO_DAYS(?))";
-					  hql = hql+" and car.driver not in (select ce.driver from CarExamine as ce where ce.appointment=? and TO_DAYS(ce.date)=TO_DAYS(?))";
-					  hql = hql+" and car.driver not in (select cr.driver from CarRepair as cr where cr.appointment=? and TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(cr.toDate))";
+					  hql = hql+" and car.driver not in (select cc.driver from CarCare as cc where cc.appointment=? and done=? and TO_DAYS(cc.date)=TO_DAYS(?))";
+					  hql = hql+" and car.driver not in (select ce.driver from CarExamine as ce where ce.appointment=? and ce.done=? and TO_DAYS(ce.date)=TO_DAYS(?))";
+					  hql = hql+" and car.driver not in (select cr.driver from CarRepair as cr where cr.appointment=? and cr.done=? and TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(cr.toDate))";
 			tempCarList=getSession().createQuery(hql)
 					.setParameter(0, CarStatusEnum.SCRAPPED).setParameter(1, serviceType).setParameter(2,false)
 					.setParameter(3, ChargeModeEnum.DAY).setParameter(4, ChargeModeEnum.PROTOCOL)
 					.setParameter(5, OrderStatusEnum.CANCELLED).setParameter(6, OrderStatusEnum.END)
 					.setParameter(7, OrderStatusEnum.PAYED).setParameter(8, planBeginDate)
-					.setParameter(9, planBeginDate).setParameter(10, true)
-					.setParameter(11, planBeginDate).setParameter(12,true)
-					.setParameter(13, planBeginDate).setParameter(14,true)
-					.setParameter(15,planBeginDate).setParameter(16, planBeginDate)
+					.setParameter(9, planBeginDate).setParameter(10, true).setParameter(11, false)
+					.setParameter(12, planBeginDate).setParameter(13,true).setParameter(14, false)
+					.setParameter(15, planBeginDate).setParameter(16,true).setParameter(17, false)
+					.setParameter(18,planBeginDate).setParameter(19, planBeginDate)
 					
-					.setParameter(17, ChargeModeEnum.DAY).setParameter(18, ChargeModeEnum.PROTOCOL)
-					.setParameter(19, OrderStatusEnum.CANCELLED).setParameter(20, OrderStatusEnum.END)
-					.setParameter(21, OrderStatusEnum.PAYED).setParameter(22, planBeginDate)
-					.setParameter(23, planBeginDate).setParameter(24, true)
-					.setParameter(25, planBeginDate).setParameter(26,true)
-					.setParameter(27, planBeginDate).setParameter(28,true)
-					.setParameter(29,planBeginDate).setParameter(30, planBeginDate).list();					
+					.setParameter(20, ChargeModeEnum.DAY).setParameter(21, ChargeModeEnum.PROTOCOL)
+					.setParameter(22, OrderStatusEnum.CANCELLED).setParameter(23, OrderStatusEnum.END)
+					.setParameter(24, OrderStatusEnum.PAYED).setParameter(25, planBeginDate)
+					.setParameter(26, planBeginDate).setParameter(27, true).setParameter(28, false)
+					.setParameter(29, planBeginDate).setParameter(30,true).setParameter(31, false)
+					.setParameter(32, planBeginDate).setParameter(33,true).setParameter(34, false)
+					.setParameter(35,planBeginDate).setParameter(36, planBeginDate).list();					
 		} else {
 			String hql = "from Car as car where car.status<>? and serviceType=? and car.standbyCar =?";
 					  hql = hql+" and car not in (select o.car from order_ as o where o.status<>? and o.status<>? and o.status<>? and (";
 					   		 hql+="(TO_DAYS(?)<=TO_DAYS(o.planBeginDate) and TO_DAYS(o.planBeginDate) <=TO_DAYS(?)) or ";
 					   		 hql+="(TO_DAYS(?)<=TO_DAYS(o.planEndDate) and TO_DAYS(o.planEndDate) <=TO_DAYS(?)) or ";
 					   		 hql+="(TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(o.planEndDate))))";
-					  hql = hql+" and car not in (select cc.car from CarCare as cc where cc.appointment=? and TO_DAYS(?)<=TO_DAYS(cc.date) and TO_DAYS(cc.date)<=TO_DAYS(?))";
-					  hql = hql+" and car not in (select ce.car from CarExamine as ce where ce.appointment=? and TO_DAYS(?)<=TO_DAYS(ce.date) and TO_DAYS(ce.date)<=TO_DAYS(?))";
-					  hql = hql+" and car not in (select cr.car from CarRepair as cr where appointment=? and (";
+					  hql = hql+" and car not in (select cc.car from CarCare as cc where cc.appointment=? and cc.done=? and TO_DAYS(?)<=TO_DAYS(cc.date) and TO_DAYS(cc.date)<=TO_DAYS(?))";
+					  hql = hql+" and car not in (select ce.car from CarExamine as ce where ce.appointment=? and ce.done=? and TO_DAYS(?)<=TO_DAYS(ce.date) and TO_DAYS(ce.date)<=TO_DAYS(?))";
+					  hql = hql+" and car not in (select cr.car from CarRepair as cr where cr.appointment=? and cr.done=? and (";
 					   		hql+="(TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(cr.toDate)) or ";
 					   		hql+="(TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(cr.toDate)) or ";
 					   		hql+="(TO_DAYS(?)<=TO_DAYS(cr.fromDate) and TO_DAYS(cr.toDate) <=TO_DAYS(?))))";
@@ -347,9 +348,9 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					   		 hql+="(TO_DAYS(?)<=TO_DAYS(o.planBeginDate) and TO_DAYS(o.planBeginDate) <=TO_DAYS(?)) or ";
 					   		 hql+="(TO_DAYS(?)<=TO_DAYS(o.planEndDate) and TO_DAYS(o.planEndDate) <=TO_DAYS(?)) or ";
 					   		 hql+="(TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(o.planEndDate))))";
-					  hql = hql+" and car.driver not in (select cc.driver from CarCare as cc where cc.appointment=? and TO_DAYS(?)<=TO_DAYS(cc.date) and TO_DAYS(cc.date)<=TO_DAYS(?))";
-					  hql = hql+" and car.driver not in (select ce.driver from CarExamine as ce where ce.appointment=? and TO_DAYS(?)<=TO_DAYS(ce.date) and TO_DAYS(ce.date)<=TO_DAYS(?))";
-					  hql = hql+" and car.driver not in (select cr.driver from CarRepair as cr where appointment=? and (";
+					  hql = hql+" and car.driver not in (select cc.driver from CarCare as cc where cc.appointment=? and cc.done=? and TO_DAYS(?)<=TO_DAYS(cc.date) and TO_DAYS(cc.date)<=TO_DAYS(?))";
+					  hql = hql+" and car.driver not in (select ce.driver from CarExamine as ce where ce.appointment=? and ce.done=? and TO_DAYS(?)<=TO_DAYS(ce.date) and TO_DAYS(ce.date)<=TO_DAYS(?))";
+					  hql = hql+" and car.driver not in (select cr.driver from CarRepair as cr where cr.appointment=? and cr.done=? and (";
 					   		hql+="(TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(cr.toDate)) or ";
 					   		hql+="(TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(cr.toDate)) or ";
 					   		hql+="(TO_DAYS(?)<=TO_DAYS(cr.fromDate) and TO_DAYS(cr.toDate) <=TO_DAYS(?))))";
@@ -360,25 +361,25 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(6, planBeginDate).setParameter(7, planEndDate)
 					.setParameter(8, planBeginDate).setParameter(9, planEndDate)
 					.setParameter(10, planBeginDate).setParameter(11,planEndDate)
-					.setParameter(12, true).setParameter(13,planBeginDate)
-					.setParameter(14, planEndDate).setParameter(15, true)
-					.setParameter(16,planBeginDate).setParameter(17, planEndDate)
-					.setParameter(18, true).setParameter(19,planBeginDate)
-					.setParameter(20, planBeginDate).setParameter(21,planEndDate)
-					.setParameter(22, planEndDate).setParameter(23,planBeginDate)
-					.setParameter(24, planEndDate)
+					.setParameter(12, true).setParameter(13, false).setParameter(14,planBeginDate)
+					.setParameter(15, planEndDate).setParameter(16, true).setParameter(17, false)
+					.setParameter(18,planBeginDate).setParameter(19, planEndDate)
+					.setParameter(20, true).setParameter(21, false).setParameter(22,planBeginDate)
+					.setParameter(23, planBeginDate).setParameter(24,planEndDate)
+					.setParameter(25, planEndDate).setParameter(26,planBeginDate)
+					.setParameter(27, planEndDate)
 					
-					.setParameter(25, OrderStatusEnum.CANCELLED).setParameter(26, OrderStatusEnum.END).setParameter(27, OrderStatusEnum.PAYED)
-					.setParameter(28, planBeginDate).setParameter(29, planEndDate)
-					.setParameter(30, planBeginDate).setParameter(31, planEndDate)
-					.setParameter(32, planBeginDate).setParameter(33,planEndDate)
-					.setParameter(34, true).setParameter(35,planBeginDate)
-					.setParameter(36, planEndDate).setParameter(37, true)
-					.setParameter(38,planBeginDate).setParameter(39, planEndDate)
-					.setParameter(40, true).setParameter(41,planBeginDate)
-					.setParameter(42, planBeginDate).setParameter(43,planEndDate)
-					.setParameter(44, planEndDate).setParameter(45,planBeginDate)
-					.setParameter(46, planEndDate).list();
+					.setParameter(28, OrderStatusEnum.CANCELLED).setParameter(29, OrderStatusEnum.END).setParameter(30, OrderStatusEnum.PAYED)
+					.setParameter(31, planBeginDate).setParameter(32, planEndDate)
+					.setParameter(33, planBeginDate).setParameter(34, planEndDate)
+					.setParameter(35, planBeginDate).setParameter(36,planEndDate)
+					.setParameter(37, true).setParameter(38,false).setParameter(39,planBeginDate)
+					.setParameter(40, planEndDate).setParameter(41, true).setParameter(42, false)
+					.setParameter(43,planBeginDate).setParameter(44, planEndDate)
+					.setParameter(45, true).setParameter(46, false).setParameter(47,planBeginDate)
+					.setParameter(48, planBeginDate).setParameter(49,planEndDate)
+					.setParameter(50, planEndDate).setParameter(51,planBeginDate)
+					.setParameter(52, planEndDate).list();
 		}
 		carList.addAll(tempCarList);
 			
@@ -623,19 +624,19 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		// 判断有无保养预约记录
 		if (order.getChargeMode() == ChargeModeEnum.MILE || order.getChargeMode() == ChargeModeEnum.PLANE) {
 			System.out.println("8");
-			hql = "from CarCare where car.id=? and appointment=? and TO_DAYS(?)=TO_DAYS(date)";
+			hql = "from CarCare where car.id=? and appointment=? and done=? and TO_DAYS(?)=TO_DAYS(date)";
 			if (getSession().createQuery(hql).setParameter(0, car.getId())
-					.setParameter(1, true)
-					.setParameter(2, order.getPlanBeginDate()).list().size() > 0) {
+					.setParameter(1, true).setParameter(2, false)
+					.setParameter(3, order.getPlanBeginDate()).list().size() > 0) {
 				return 6;
 			}
 		} else {
 			if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null)){  //如果协议订单中没有选择车辆，那么就不做下面的判断
-				hql = "from CarCare where car.id=? and appointment=? and TO_DAYS(?)<=TO_DAYS(date) and TO_DAYS(date)<=TO_DAYS(?)";
+				hql = "from CarCare where car.id=? and appointment=? and done=? and TO_DAYS(?)<=TO_DAYS(date) and TO_DAYS(date)<=TO_DAYS(?)";
 				if (getSession().createQuery(hql).setParameter(0, car.getId())
-						.setParameter(1, true)
-						.setParameter(2, order.getPlanBeginDate())
-						.setParameter(3, order.getPlanEndDate()).list().size() > 0) {
+						.setParameter(1, true).setParameter(2, false)
+						.setParameter(3, order.getPlanBeginDate())
+						.setParameter(4, order.getPlanEndDate()).list().size() > 0) {
 					return 6;
 				}
 			}
@@ -645,16 +646,16 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		// 判断有无维修预约记录
 		if (order.getChargeMode() == ChargeModeEnum.MILE || order.getChargeMode() == ChargeModeEnum.PLANE) {
 			System.out.println("11");
-			hql = "from CarRepair where car.id=? and appointment=? and TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(toDate)";
+			hql = "from CarRepair where car.id=? and appointment=? and done=? and TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(toDate)";
 			if (getSession().createQuery(hql).setParameter(0, car.getId())
-					.setParameter(1, true)
-					.setParameter(2, order.getPlanBeginDate())
-					.setParameter(3, order.getPlanBeginDate()).list().size() > 0) {
+					.setParameter(1, true).setParameter(2, false)
+					.setParameter(3, order.getPlanBeginDate())
+					.setParameter(4, order.getPlanBeginDate()).list().size() > 0) {
 				return 4;
 			}
 		} else {
 			if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null)){  //如果协议订单中没有选择车辆，那么就不做下面的判断
-				hql = "from CarRepair where car.id=? and appointment=? and (";
+				hql = "from CarRepair where car.id=? and appointment=? and done=? and (";
 				hql = hql
 						+ "(TO_DAYS(fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(toDate)) or ";
 				hql = hql
@@ -663,13 +664,13 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 						+ "(TO_DAYS(?)<=TO_DAYS(fromDate) and TO_DAYS(toDate) <=TO_DAYS(?))";
 				hql = hql + ")";
 				List carRepairList = getSession().createQuery(hql)
-						.setParameter(0, car.getId()).setParameter(1, true)
-						.setParameter(2, order.getPlanBeginDate())
+						.setParameter(0, car.getId()).setParameter(1, true).setParameter(2, false)
 						.setParameter(3, order.getPlanBeginDate())
-						.setParameter(4, order.getPlanEndDate())
+						.setParameter(4, order.getPlanBeginDate())
 						.setParameter(5, order.getPlanEndDate())
-						.setParameter(6, order.getPlanBeginDate())
-						.setParameter(7, order.getPlanEndDate()).list();
+						.setParameter(6, order.getPlanEndDate())
+						.setParameter(7, order.getPlanBeginDate())
+						.setParameter(8, order.getPlanEndDate()).list();
 				if (carRepairList.size() > 0) {
 					return 4;
 				}
@@ -680,19 +681,19 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		// 判断有无年检预约记录
 		if (order.getChargeMode() == ChargeModeEnum.MILE || order.getChargeMode() == ChargeModeEnum.PLANE) {
 			System.out.println("14");
-			hql = "from CarExamine where car.id=? and appointment=? and TO_DAYS(?)=TO_DAYS(date)";
+			hql = "from CarExamine where car.id=? and appointment=? and done=? and TO_DAYS(?)=TO_DAYS(date)";
 			if (getSession().createQuery(hql).setParameter(0, car.getId())
-					.setParameter(1, true)
-					.setParameter(2, order.getPlanBeginDate()).list().size() > 0) {
+					.setParameter(1, true).setParameter(2, false)
+					.setParameter(3, order.getPlanBeginDate()).list().size() > 0) {
 				return 5;
 			}
 		} else {
 			if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null)){  //如果协议订单中没有选择车辆，那么就不做下面的判断
-				hql = "from CarExamine where car.id=? and appointment=? and TO_DAYS(?)<=TO_DAYS(date) and TO_DAYS(date)<=TO_DAYS(?)";
+				hql = "from CarExamine where car.id=? and appointment=? and done=? and TO_DAYS(?)<=TO_DAYS(date) and TO_DAYS(date)<=TO_DAYS(?)";
 				if (getSession().createQuery(hql).setParameter(0, car.getId())
-						.setParameter(1, true)
-						.setParameter(2, order.getPlanBeginDate())
-						.setParameter(3, order.getPlanEndDate()).list().size() > 0) {
+						.setParameter(1, true).setParameter(2, false)
+						.setParameter(3, order.getPlanBeginDate())
+						.setParameter(4, order.getPlanEndDate()).list().size() > 0) {
 					return 5;
 				}
 			}
@@ -849,21 +850,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				.setParameter(0, id)//
 				.setParameter(1, OrderStatusEnum.BEGIN)//
 				.uniqueResult();
-	}
-
-	public List<Car> getCarsWithoutOrderNow() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("from Car as car ");
-		sb.append("where car.status=? ");
-		sb.append("and car not in (select o.car from order_ as o where o.status=?) ");// 没有正在执行的订单
-		sb.append("and car not in (select cc.car from CarCare as cc where cc.appointment=? and TO_DAYS(NOW())-TO_DAYS(cc.date)=0) ");// 没有在同一天的预约保养
-		sb.append("and car not in (select cr.car from CarRepair as cr where cr.appointment=? and TO_DAYS(NOW())-TO_DAYS(cr.fromDate)>=0) ");// 没有预约的维修
-		sb.append("and car not in (select ce.car from CarExamine as ce where ce.appointment=? and TO_DAYS(NOW())-TO_DAYS(ce.date)=0))");// 没有在同一天的预约年检
-
-		return getSession().createQuery(sb.toString())
-				.setParameter(0, CarStatusEnum.NORMAL)
-				.setParameter(1, OrderStatusEnum.BEGIN).setParameter(2, true)
-				.setParameter(3, true).setParameter(4, true).list();
 	}
 
 	/**

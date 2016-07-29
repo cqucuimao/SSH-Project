@@ -124,8 +124,6 @@ public interface OrderDao extends BaseDao<Order> {
      * @return
      */
 	public Order getCurrentOrderByCarId(Long id);
-	
-	public List<Car> getCarsWithoutOrderNow();
 
     /**
      * 根据单位名称，开始时间，结束时间查询相应的未收款订单

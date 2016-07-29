@@ -144,6 +144,8 @@
 		<action name="carCare_*" class="carCareAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carCareAction/carCare_list.jsp
 			</result>
+			<result name="appointList">/WEB-INF/view/carAction/carCareAction/carCare_appointList.jsp
+			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carCareAction/carCare_saveUI.jsp
 			</result>
 			<result name="success">/WEB-INF/view/carAction/carCareAction/success.jsp
@@ -234,10 +236,10 @@
 		<action name="carExamine_*" class="carExamineAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carExamineAction/carExamine_list.jsp
 			</result>
+			<result name="appointList">/WEB-INF/view/carAction/carExamineAction/carExamine_appointList.jsp
+			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carExamineAction/carExamine_saveUI.jsp
 			</result>
-			<!-- <result name="input">/WEB-INF/view/carAction/carExamineAction/carExamine_saveUI.jsp 
-				</result> -->
 			<result name="saveAppoint">/WEB-INF/view/carAction/carExamineAction/carExamine_saveAppoint.jsp
 			</result>
 			<result name="remindList">/WEB-INF/view/carAction/carExamineAction/carExamine_checkRemind.jsp

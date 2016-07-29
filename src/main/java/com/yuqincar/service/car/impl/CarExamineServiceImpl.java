@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.CarExamineDao;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.PlateTypeEnum;
@@ -40,21 +41,6 @@ public class CarExamineServiceImpl implements CarExamineService {
 		Car car=carExamine.getCar();
 		car.setNextExaminateDate(carExamine.getNextExamineDate());
 		carDao.update(car);
-	}
-
-	@Transactional
-	public void carExamineAppointment(Car car, User driver, Date date) {
-		CarExamine carExamine = new CarExamine();
-		carExamine.setCar(car);
-		carExamine.setDriver(driver);
-		carExamine.setDate(date);
-		carExamine.setAppointment(true);
-		carExamineDao.save(carExamine);
-
-		//给司机发送短信
-		Map<String,String> params=new HashMap<String,String>();
-		params.put("carExamineDate", DateUtils.getYMDString(date));
-		smsService.sendTemplateSMS(driver.getPhoneNumber(), SMSService.SMS_TEMPLATE_EXAMINE_APPOINTMENT, params);
 	}
 
 	public CarExamine getCarExamineById(long id) {
@@ -159,6 +145,17 @@ public class CarExamineServiceImpl implements CarExamineService {
 			}
 		}
 		return nextExamineDate;
+	}
+	
+	@Transactional
+	public void saveAppointment(CarExamine carExamine) {
+		carExamine.setAppointment(true);
+		carExamineDao.save(carExamine);
+	}
+	
+	@Transactional
+	public void updateAppointment(CarExamine carExamine) {
+		carExamineDao.update(carExamine);
 	}
 
 }

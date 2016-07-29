@@ -16,7 +16,7 @@ import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.CarViolationService;
 
 @Component
-public class PullViolationEveryWeek {
+public class PullViolation {
 	
 	@Autowired
 	CarViolationService carViolationService;

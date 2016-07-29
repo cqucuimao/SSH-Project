@@ -690,17 +690,4 @@ public class OrderServiceTest extends BaseTest {
 
 	}
 
-	@Test
-	@DatabaseSetup({ "classpath:../test-classes/data/order/getCarsWithoutOrderNow_inserts.xml" })
-	public void getCarsWithoutOrderNowTest() {
-		List<Car> carList = orderService.getCarsWithoutOrderNow();
-		Assert.assertEquals(carList.size(), 6);
-		Assert.assertTrue(carList.get(0).getId() == 1);
-		Assert.assertTrue(carList.get(1).getId() == 2);
-		Assert.assertTrue(carList.get(2).getId() == 3);
-		Assert.assertTrue(carList.get(3).getId() == 6);
-		Assert.assertTrue(carList.get(4).getId() == 7);
-		Assert.assertTrue(carList.get(5).getId() == 8);
-
-	}
 }

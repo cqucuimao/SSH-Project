@@ -223,13 +223,6 @@ public interface OrderService extends BaseService {
 	public Order getCurrentOrderByCarId(Long id);
 
 	/**
-	 * 得到当前没有正在执行的订单（status==BEGIN），也没有保养、维修、年审的所有车辆。
-	 * 
-	 * @return
-	 */
-	public List<Car> getCarsWithoutOrderNow();
-
-	/**
 	 * 根据单位名称，开始时间，结束时间查询相应的未收款订单
 	 * 未收款订单的条件是，当前订单状态OrderStatusEnum为END,所属orderStatement为null
 	 * 

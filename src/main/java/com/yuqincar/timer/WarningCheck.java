@@ -20,7 +20,7 @@ import com.yuqincar.service.order.OrderService;
 import com.yuqincar.utils.HttpMethod;
 
 @Component
-public class WarningCheckEveryMinutes {
+public class WarningCheck {
 	private static final String PULL_OUT_WARNING_URL="http://api.capcare.com.cn:1045/api/alarm.all.do?begin=-1&end=-1&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN&_=1450765409539";
 	private static final String DELETE_PULL_OUT_WARNING_URL="http://api2.capcare.com.cn:1045/api/alarm.delete.do?alarm_id=%s-%s&app_name=M2616_BD&language=zh_CN&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&_=1460880585103";
 	private static final String UNPLANNED_RUNNING_URL = "http://api.capcare.com.cn:1045/api/device.get.do?device_sn=%s&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";

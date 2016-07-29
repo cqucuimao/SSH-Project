@@ -20,15 +20,7 @@ public interface CarCareService {
 	 * @param carCare
 	 */
 	public void saveCarCare(CarCare carCare);
-	
-	/**
-	 * 预约保养。事前登记。
-	 * 生成CarCare，设置fromDate和toDate作为调度的时间依据，并置appointment为true。其余内容使用updateCarCare设置。
-	 * @param car
-	 * @param date
-	 */
-	public void carCareAppointment(Car car,User driver, Date date);
-	
+		
 	public CarCare getCarCareById(long id);
 	
 	public PageBean<CarCare> queryCarCare(int pageNum , QueryHelper helper);
@@ -67,4 +59,8 @@ public interface CarCareService {
 	public BigDecimal statisticCarCare(Date fromDate,Date toDate);
 	
 	public void importExcelFile(List<CarCare> carCares);
+
+	public void saveAppointment(CarCare carCare);
+	
+	public void updateAppointment(CarCare carCare);
 }

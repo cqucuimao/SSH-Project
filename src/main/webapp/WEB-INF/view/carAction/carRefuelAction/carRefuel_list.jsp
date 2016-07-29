@@ -43,13 +43,11 @@
 					<td>
 						<s:a action="carRefuel_excel"><input class="inputButton" id="btn" type="button" value="导入加油信息"/></s:a>
 					</td>
-					<!-- 
 					<td>
 					<a href="#" class="modify" onclick="modify()">
 					    <input class="inputButton" id="outPutOil" type="button" value="导出加油信息月报表"/>
 					</a>
 					</td>
-					 -->
 				</tr>
 			</table>
 			</s:form>

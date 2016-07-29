@@ -25,6 +25,7 @@ public class ExportServiceImpl implements ExportService {
 	public void exportExcel(String exportName,
 			List<ExcelSheetContent> sheetContents, HttpServletResponse response)
 			throws IOException {
+		System.out.println("in exportExcel");
 		String fileName = URLEncoder.encode(exportName + ".xls", "UTF-8");
 		fileName = fileName.replaceAll("\\+", "%20");
 		response.setHeader("Content-Disposition", "attachment;filename="

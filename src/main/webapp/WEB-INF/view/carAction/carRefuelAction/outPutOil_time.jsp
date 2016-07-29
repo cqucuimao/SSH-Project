@@ -21,7 +21,7 @@
 		                		 <h4>导出年月</h4>			                		
 		                </th>       
 		                <td>
-								<s:textfield class="Wdate half" name="gDate" id="timeId" onfocus="new WdatePicker({dateFmt:'yyyy-MM'})" />
+								<s:textfield class="Wdate half" name="gDate" id="gDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM'})" />
 						</td>
 		            </tr>
 		            
@@ -43,17 +43,18 @@
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
+    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
 	
-	<script type="text/javascript">
-	 $("#btnOil").click(function(){
-		    //var inputTime=$("#timeId").val();
-			$("#timeForm").attr("action","carRefuel_OilReport.action");
-			//alert("jjj");
-			$("#timeForm").submit();
-			var win=artDialog.open.origin;
-			art.dialog.close();
-			win.location.reload();
-		})  
+	<script type="text/javascript">	
+	 	$("#btnOil").click(function(){
+	 		if($("#gDate").val()==""){
+	 			alert("年月不能为空！");
+	 		}else{
+				$("#timeForm").attr("action","carRefuel_OilReport.action");
+				$("#timeForm").submit();
+	 		}
+		}); 
 	</script>
 </body>
 </html>

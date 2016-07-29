@@ -218,21 +218,19 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	
      //实现报表导出具体的操作
      public void OilReport() throws ParseException, IOException{
-    	 DateUtils du = new DateUtils();
     	 SimpleDateFormat format=new SimpleDateFormat("yyyy-MM");
     	 Date date=format.parse(gDate);
-    	 Date date3 = du.getFirstDateOfMonth(date);
-    	 Date date4 = du.getEndDateOfMonth(date);
+    	 Date date3 = DateUtils.getFirstDateOfMonth(date);
+    	 Date date4 = DateUtils.getEndDateOfMonth(date);
     	 QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
  		 if(date3!=null && date4!=null)
  			helper.addWhereCondition("(TO_DAYS(cr.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cr.date))>=0", 
  					date3 ,date4);
  		helper.addOrderByProperty("cr.car.plateNumber", true);
- 		List lists=new ArrayList<CarRefuel>();
+ 		List<CarRefuel> lists=new ArrayList<CarRefuel>();
  		//PageBean pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
  		//lists=pageBean.getRecordList(); 
  		lists=carRefuelService.getAllCarRefuel(helper);
- 		System.out.println("+++++++++++++list_size+++++++++++++"+lists.size());
  		
  		CarRefuel carRefuel=new CarRefuel();
    	    List<List<String>> listAll = new ArrayList<List<String>>();
@@ -439,7 +437,8 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
  		 title.add("金额小计");
  		 
  		 String report_name="重庆渝勤公司油料表"+" "+gDate.substring(0,4)+"年"+gDate.substring(5,7)+"月";
- 		 //exportservice.exportExcel(report_name, title, listAll, response);
+ 		 System.out.println("report_name="+report_name);
+ 		 exportservice.exportExcel(report_name, title, listAll, response);
          System.out.println("this is coming here******************");
  }
 	

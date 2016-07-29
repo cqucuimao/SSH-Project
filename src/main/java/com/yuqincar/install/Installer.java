@@ -711,7 +711,7 @@ public class Installer {
 	//初始化价格
 	private void initPriceTable(){
 		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\价格表.xls","价格表");
-		initPriceTable("D:\\Yuqin\\文档\\初始化文档\\商社协议价格表.xls","商社协议价");
+		//initPriceTable("D:\\Yuqin\\文档\\初始化文档\\商社协议价格表.xls","商社协议价");
 	}
 	
 	private void initPriceTable(String fileName,String tableName){
@@ -802,9 +802,9 @@ public class Installer {
 						    car.setInsuranceExpiredDate(insuranceExpiredDate);
 						    Date now = new Date();
 						    if(insuranceExpiredDate.after(now)){
-						    	car.setInsuranceExpired(true);
-						    }else{
 						    	car.setInsuranceExpired(false);
+						    }else{
+						    	car.setInsuranceExpired(true);
 						    }
 						} catch (Exception e) {
 							e.printStackTrace();

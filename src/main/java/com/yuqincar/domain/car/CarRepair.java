@@ -44,8 +44,8 @@ public class CarRepair extends BaseEntity {
 	@Text("维修花费")
 	private BigDecimal money;	//维修花费
 	
-	@Text("赔付金额")
-	private BigDecimal moneyNoGuaranteed;	//赔付金额
+	@Text("未赔付金额")
+	private BigDecimal moneyNoGuaranteed;	//未赔付金额
 
 	@Text("维修地点")
 	private String repairLocation;   //维修地点

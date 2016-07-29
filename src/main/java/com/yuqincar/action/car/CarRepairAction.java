@@ -118,7 +118,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	public String importExcelFile() throws Exception{
         InputStream is = new FileInputStream(upload);
 		ExcelUtil eu = new ExcelUtil();
-		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 9, 0);
+		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 10, 0);
 		List<CarRepair> carRepairs = new ArrayList<CarRepair>();
 				for(int i=1;i<excelLines.size();i++){
 					try {
@@ -180,9 +180,17 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 						    payDate = sdf.parse(excelLines.get(i).get(7));
 							cr.setPayDate(payDate);
 							
+							System.out.println("赔付金额="+excelLines.get(i).get(8));
+							if(excelLines.get(i).get(8).length()>0){
+								BigDecimal mng = new BigDecimal(excelLines.get(i).get(8));
+								System.out.println("mng= "+mng);
+								cr.setMoneyNoGuaranteed(mng);
+							}
+							
 							//金额
-							System.out.println("金额="+excelLines.get(i).get(8));
-							BigDecimal bd = new BigDecimal(excelLines.get(i).get(8));
+							System.out.println("金额="+excelLines.get(i).get(9));
+							BigDecimal bd = new BigDecimal(excelLines.get(i).get(9));
+							
 							cr.setMoney(bd);
 							
 							cr.setAppointment(false);
@@ -332,6 +340,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		carRepair.setToDate(model.getToDate());
 		carRepair.setRepairLocation(model.getRepairLocation());
 		carRepair.setMoney(model .getMoney());
+		carRepair.setMoneyNoGuaranteed(model.getMoneyNoGuaranteed());
 		carRepair.setReason(model.getReason());
 		carRepair.setMemo(model .getMemo());
 		carRepair.setPayDate(model.getPayDate());

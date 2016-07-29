@@ -65,6 +65,7 @@
               				<th><s:property value="tr.getText('car.CarRepair.repairLocation')" /></th>
               				<th><s:property value="tr.getText('car.CarRepair.reason')" /></th>
                 			<th><s:property value="tr.getText('car.CarRepair.money')" />(元)</th>
+                			<th><s:property value="tr.getText('car.CarRepair.moneyNoGuaranteed')" />(元)</th>
                 			<th><s:property value="tr.getText('car.CarRepair.memo')" /></th>
                 			<th><s:property value="tr.getText('car.CarRepair.payDate')" /></th>
                 			<th><s:property value="tr.getText('car.CarRepair.appointment')" /></th>
@@ -80,6 +81,7 @@
 							<td>${repairLocation}</td>
 							<td>${reason}</td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
+							<td style="text-align:right"><fmt:formatNumber value="${moneyNoGuaranteed}" pattern="#0"/></td>
 							<td>${memo}</td>
 							<td style="text-align:right"><s:date name="payDate" format="yyyy-MM-dd"/></td>
 							<td>

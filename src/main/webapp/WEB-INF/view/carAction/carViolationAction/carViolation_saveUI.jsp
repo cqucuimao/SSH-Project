@@ -1,6 +1,9 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -44,7 +47,8 @@
 					<tr>
 						<th>时间<span class="required">*</span></th>
 						<td>
-								<s:textfield class="Wdate half" name="date" id="date" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"  />
+							<s:textfield cssClass="inputText" type="text" class="Wdate half" name="date" id="date"  onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"  />
+						
 						</td>
 					</tr>
 					<tr>
@@ -80,7 +84,7 @@
 					<tr>
 						<th>处理日期</th>
 						<td>
-								<s:textfield class="Wdate half" name="dealtDate" id="dealtDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"  />
+								<s:textfield class="Wdate half" name="dealtDate" id="dealtDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"  />
 						</td>
 					</tr>
 					
@@ -96,9 +100,9 @@
 		</div>
 		
 	</div>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	<script type="text/javascript" src="js/common.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>js/jquery-1.7.1.min.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>	
 	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
@@ -131,18 +135,25 @@
 					},
 				}
 			});
+			   formatDateField3($("#date"));
+			   formatDateField1($("#dealtDate"));
 			  if($("#penaltyPoint").val()==0)
 				   {
 				   $("#penaltyPoint").val("");
 				   }
-			   formatDateField1($("#date"));
-			   formatDateField1($("#dealtDate"));
 			   $("#submit").click(function (){
+				   if(!($("#dealt").is(':checked'))&& $("#dealtDate").val().length!=0)
+				   {  
+					  alert("请先填写已经处理");
+					  return false;
+				   }
+				   
 				   if($("#dealt").is(':checked') && $("#dealtDate").val().length==0)
 				   {  
 					  alert("提交前请填写处理日期");
 					  return false;
 				   }
+				   
 				});
 			   
 			   });

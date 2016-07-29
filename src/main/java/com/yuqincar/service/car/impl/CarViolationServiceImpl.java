@@ -115,11 +115,12 @@ public class CarViolationServiceImpl implements CarViolationService {
 			         String moneystring=info.getString("price");
 			         BigDecimal money=new BigDecimal(moneystring);
 			         //time=time.substring(0, 9);
-			         SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd");
+			         SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			         Date date=format.parse(time);
-			         System.out.println(data);
+			         //System.out.println(data);
 			         //添加违章信息到carViolation数据库里去。 
 			          CarViolation carValation=new CarViolation();
+			          System.out.println(c.getDriver().getId()+"***************");
 			          User driver=userService.getById(c.getDriver().getId());
 			          carValation.setCar(c);
 			          carValation.setDriver(driver);

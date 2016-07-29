@@ -21,6 +21,7 @@ import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.CarViolationService;
 import com.yuqincar.service.privilege.UserService;
+import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
 @Controller
@@ -42,8 +43,9 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	
 	private Date endDate;
 	
+	private String date;
 
-	//头部快速查询
+		//头部快速查询
 		public String queryForm(){
 			QueryHelper helper = new QueryHelper("CarViolation", "cv");
 			if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
@@ -91,11 +93,14 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 			}
 		   
 		   public String save(){
+			    System.out.println("********************************"+date);
+			   	System.out.println("model.getDate()="+model.getDate());
 			    Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 				model.setCar(car);
 				User driver=userService.getById(model.getDriver().getId());
 				model.setDriver(driver);
 				model.setImported(false);
+				
 				carViolationService.saveCarViolation(model);
 				ActionContext.getContext().getValueStack().push(new CarViolation());
 				return freshList();
@@ -108,7 +113,8 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 			}
 		   
 		   public String edit(){
-				  
+			   System.out.println("in edit");
+			    System.out.println("********************************"+DateUtils.getYMDHMString(model.getDate()));
 			    CarViolation carViolation = carViolationService.getCarViolationById(model.getId());				
 				User driver=userService.getById(model.getDriver().getId());
 				Car car= carService.getCarByPlateNumber(model.getCar().getPlateNumber());
@@ -155,4 +161,15 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	
+	
 }

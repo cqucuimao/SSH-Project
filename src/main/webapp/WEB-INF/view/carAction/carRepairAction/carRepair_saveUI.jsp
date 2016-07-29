@@ -77,6 +77,14 @@
                         	<s:textfield cssClass="inputText" name="money"/>
 						</td>
                     </tr>
+                    
+                    <tr>
+                        <th><s:property value="tr.getText('car.CarRepair.moneyNoGuaranteed')" />(元)</th>
+                        
+                        <td>
+                        	<s:textfield cssClass="inputText" name="moneyNoGuaranteed"/>
+						</td>
+                    </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.CarRepair.reason')" /><span class="required">*</span></th>
                         

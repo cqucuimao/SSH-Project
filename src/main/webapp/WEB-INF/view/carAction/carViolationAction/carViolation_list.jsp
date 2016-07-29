@@ -66,7 +66,7 @@
 						<tr>
 							<td>${car.plateNumber}</td>
 							<td>${driver.name}</td>
-							<td ><s:date name="date" format="yyyy-MM-dd"/></td>
+							<td ><s:date name="date" format="yyyy-MM-dd HH:mm"/></td>
 							<td>${place}</td>
 							<td >${description }</td>
 							<td >${penaltyPoint }</td>

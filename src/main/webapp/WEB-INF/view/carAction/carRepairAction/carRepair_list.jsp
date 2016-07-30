@@ -18,14 +18,22 @@
 		<!-- 标题 -->
 		<div class="title">
 			<h1>车辆维修</h1>
+		</div>		
+		<div class="tab_next style2">
+			<table>
+				<tr>
+				    <td><s:a action="carRepair_appointList"><span>预约车辆维修</span></s:a></td>
+					<td class="on"><a href="#"><span>车辆维修</span></a></td>
+				</tr>
+			</table>
 		</div>
+		<br/>
 		<div class="editBlock search">
 			<s:form id="pageForm" action="carRepair_queryForm">
 			<table>
 				<tr>
 					<td>
 						<s:a action="carRepair_addUI"><input id="register" class="inputButton" type="button" value="维修登记" name="button" /></s:a>
-						<s:a action="carRepair_appoint"><input id="appoint" class="inputButton" type="button" value="维修预约" name="button" /></s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -68,7 +76,6 @@
                 			<th><s:property value="tr.getText('car.CarRepair.moneyNoGuaranteed')" />(元)</th>
                 			<th><s:property value="tr.getText('car.CarRepair.memo')" /></th>
                 			<th><s:property value="tr.getText('car.CarRepair.payDate')" /></th>
-                			<th><s:property value="tr.getText('car.CarRepair.appointment')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
@@ -85,20 +92,8 @@
 							<td>${memo}</td>
 							<td style="text-align:right"><s:date name="payDate" format="yyyy-MM-dd"/></td>
 							<td>
-								<s:if test="appointment==true">
-								<s:text name="是"></s:text>
-								</s:if>
-								<s:else>
-								<s:text name="否"></s:text>
-								</s:else>
-							</td>
-							<td>
-                				<s:if test="appointment">
                     			<s:a action="carRepair_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:a action="carRepair_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
-                    			</s:if>
-								<s:else>
-								</s:else>
                 			</td>
 						</tr>
 						</s:iterator> 

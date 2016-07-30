@@ -72,7 +72,7 @@
 						</td>
                     </tr>                    
 					<tr>
-						<th>是否完成保养</th>
+						<th>是否完成年审</th>
 						<td>
 							<s:checkbox class="m10" id="done" name="done"/>
 						</td>

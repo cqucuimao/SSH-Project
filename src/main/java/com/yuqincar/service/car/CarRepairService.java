@@ -20,13 +20,9 @@ public interface CarRepairService {
 	 */
 	public void saveCarRepair(CarRepair carRepair);
 	
-	/**
-	 * 预约保养。事前登记。
-	 * 生成CarRepair，设置fromDate和toDate作为调度的时间依据，并置appointment为true。其余内容使用updateCarRepair设置。
-	 * @param car
-	 * @param date
-	 */
-	public void carRepairAppointment(Car car,User driver, Date fromDate,Date toDate);
+	public void saveAppointment(CarRepair carRepair);
+	
+	public void updateAppointment(CarRepair carRepair);
 	
 	public CarRepair getCarRepairById(long id);
 	

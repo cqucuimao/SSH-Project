@@ -47,19 +47,14 @@ public class CarRepairServiceImpl implements CarRepairService {
 	}
 
 	@Transactional
-	public void carRepairAppointment(Car car, User driver, Date fromDate, Date toDate) {
-		CarRepair carRepair = new CarRepair();
-		carRepair.setCar(car);
-		carRepair.setDriver(driver);
-		carRepair.setFromDate(fromDate);
-		carRepair.setToDate(toDate);
+	public void saveAppointment(CarRepair carRepair) {
 		carRepair.setAppointment(true);
 		carRepairDao.save(carRepair);
-
-		//给司机发送短信
-		Map<String,String> params=new HashMap<String,String>();
-		params.put("carRepairDate", DateUtils.getYMDString(fromDate)+" 至 "+DateUtils.getYMDString(toDate));
-		smsService.sendTemplateSMS(driver.getPhoneNumber(), SMSService.SMS_TEMPLATE_REPAIR_APPOINTMENT, params);
+	}
+	
+	@Transactional
+	public void updateAppointment(CarRepair carRepair) {
+		carRepairDao.update(carRepair);
 	}
 
 	public CarRepair getCarRepairById(long id) {

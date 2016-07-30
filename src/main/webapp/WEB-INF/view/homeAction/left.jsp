@@ -128,9 +128,9 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carRepair_list') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carRepair_appointList') ">
 			<dd>
-				<s:a action="carRepair_list">车辆维修</s:a>
+				<s:a action="carRepair_appointList">车辆维修</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

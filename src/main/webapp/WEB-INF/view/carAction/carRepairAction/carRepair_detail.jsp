@@ -18,7 +18,16 @@
 		<!-- 标题 -->
 		<div class="title">
 			<h1>车辆维修详细信息</h1>
+		</div>	
+		<div class="tab_next style2">
+			<table>
+				<tr>
+				    <td><s:a action="carRepair_appointList"><span>预约车辆维修</span></s:a></td>
+					<td class="on"><a href="#"><span>车辆维修</span></a></td>
+				</tr>
+			</table>
 		</div>
+		<br/>
 		<div class="editBlock detail p30">
 				<table>
 					<colgroup>
@@ -51,6 +60,10 @@
                 				<td><fmt:formatNumber value="${money}" pattern="#0"/></td>
                 			</tr>
                 			<tr>
+                				<th><s:property value="tr.getText('car.CarRepair.moneyNoGuaranteed')" />(元)：</th>
+                				<td><fmt:formatNumber value="${moneyNoGuaranteed}" pattern="#0"/></td>
+                			</tr>
+                			<tr>
                 				<th><s:property value="tr.getText('car.CarRepair.reason')" />：</th>
                 				<td>${reason}</td>
                 			</tr>
@@ -59,15 +72,8 @@
                 				<td>${memo}</td>
                 			</tr>
                 			<tr>
-                				<th><s:property value="tr.getText('car.CarRepair.appointment')" />：</th>
-                				<td>
-                					<s:if test="appointment==true">
-									<s:text name="是"></s:text>
-									</s:if>
-									<s:else>
-									<s:text name="否"></s:text>
-									</s:else>
-                				</td>
+                				<th><s:property value="tr.getText('car.CarRepair.payDate')" />：</th>
+                				<td><s:date name="payDate" format="yyyy-MM-dd"/></td>
                 			</tr>
 					</tbody>
 					<tfoot>

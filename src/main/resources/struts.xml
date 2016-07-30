@@ -197,6 +197,8 @@
 		<action name="carRepair_*" class="carRepairAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carRepairAction/carRepair_list.jsp
 			</result>
+			<result name="appointList">/WEB-INF/view/carAction/carRepairAction/carRepair_appointList.jsp
+			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carRepairAction/carRepair_saveUI.jsp
 			</result>
 			<result name="excel">/WEB-INF/view/carAction/carRepairAction/carRepair_excel.jsp

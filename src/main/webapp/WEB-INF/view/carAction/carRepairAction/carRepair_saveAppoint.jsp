@@ -20,6 +20,16 @@
 		<!-- 标题 -->
         <div class="title">
             <h1>维修预约信息</h1>
+        </div>
+		<div class="tab_next style2">
+			<table>
+				<tr>
+				    <td class="on"><a href="#"><span>预约车辆维修</span></a></td>
+					<td><s:a action="carRepair_list"><span>车辆维修</span></s:a></td>
+				</tr>
+			</table>
+		</div>
+		<br/>		
             <p style="color: red">
 				<s:if test="hasFieldErrors()">
 					<s:iterator value="fieldErrors">
@@ -29,10 +39,9 @@
 					</s:iterator>
 				</s:if>
 			</p>
-        </div>
 		<!--显示表单内容-->
 		<div class="editBlock detail p30">
-    	<s:form action="carRepair_saveAppointment" id="pageForm">
+		<s:form action="carRepair_%{id == null ? 'save' : 'edit'}Appointment" id="pageForm">
         	<s:hidden name="id"></s:hidden>
             <table>
             	<colgroup>
@@ -63,6 +72,12 @@
 							<s:textfield cssClass="inputText" class="Wdate half" name="toDate" id="toDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						</td>
                     </tr>
+					<tr>
+						<th>是否完成维修</th>
+						<td>
+							<s:checkbox class="m10" id="done" name="done"/>
+						</td>
+					</tr>
 				</tbody>
 				<tfoot>
 					<tr>

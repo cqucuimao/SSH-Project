@@ -17,7 +17,16 @@
         <!-- 标题 -->
         <div class="title">
             <h1>导入维修信息</h1>
-        </div>
+        </div>	
+		<div class="tab_next style2">
+			<table>
+				<tr>
+				    <td><s:a action="carRepair_appointList"><span>预约车辆维修</span></s:a></td>
+					<td class="on"><a href="#"><span>车辆维修</span></a></td>
+				</tr>
+			</table>
+		</div>
+		<br/>
         <div class="editBlock detail p30">
         <s:form action="carRepair_importExcelFile" id="pageForm" enctype="multipart/form-data">
         	<s:hidden name="id"></s:hidden>

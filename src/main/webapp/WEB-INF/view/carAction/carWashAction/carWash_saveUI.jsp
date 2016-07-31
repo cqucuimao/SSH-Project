@@ -78,24 +78,34 @@
                         	<s:textfield id="money" cssClass="inputText" name="money"/>
                         </td>
                     </tr>
+                    
                     <tr>
-						<th>是否做内饰清洁</th>
-						<td>
-							<s:checkbox class="m10" id="doInnerClean" name="doInnerClean"/>
-						</td>
-					</tr>
-					<tr>
-						<th>是否抛光打蜡</th>
-						<td>
-							<s:checkbox class="m10" id="doPolishing" name="doPolishing"/>
-						</td>
-					</tr>
-					<tr>
-						<th>是否清洗发动机</th>
-						<td>
-							<s:checkbox class="m10" id="doEngineClean" name="doEngineClean"/>
-						</td>
-					</tr>
+                        <th>内饰清洁金额</th>
+                        <td>
+                        	<s:textfield id="innerCleanMoney" cssClass="inputText" name="innerCleanMoney"/>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th>抛光打蜡金额</th>
+                        <td>
+                        	<s:textfield id="polishingMoney" cssClass="inputText" name="polishingMoney"/>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th>清洗发动机金额</th>
+                        <td>
+                        	<s:textfield id="engineCleanMoney" cssClass="inputText" name="engineCleanMoney"/>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th>座套清洗金额</th>
+                        <td>
+                        	<s:textfield id="cushionCleanMoney" cssClass="inputText" name="cushionCleanMoney"/>
+                        </td>
+                    </tr>
                     
                 </tbody>
                 <tfoot>
@@ -136,6 +146,22 @@
 					},
 					money:{
 						required:true,
+						number:true,
+						min:0
+					},
+					innerCleanMoney:{
+						number:true,
+						min:0
+					},
+					polishingMoney:{
+						number:true,
+						min:0
+					},
+					engineCleanMoney:{
+						number:true,
+						min:0
+					},
+					cushionCleanMoney:{
 						number:true,
 						min:0
 					},

@@ -275,6 +275,12 @@
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carWashAction/CarWash_saveUI.jsp
 			</result>
+			<result name="success">/WEB-INF/view/carAction/carWashAction/success.jsp
+			</result>
+			<result name="false">/WEB-INF/view/carAction/carWashAction/false.jsp
+			</result>
+			<result name="excel">/WEB-INF/view/carAction/carWashAction/carWash_excel.jsp
+			</result>
 		</action>
 		
 		<!-- 洗车点 -->

@@ -40,15 +40,19 @@ public class CarWash extends BaseEntity {
 	@Column(nullable=false)
 	private BigDecimal money;
 	
-	@Text("是否做内饰清洁")
-	private boolean doInnerClean;
+	@Text("内饰清洁金额")
+	private BigDecimal innerCleanMoney;
 	
-	@Text("是否抛光打蜡")
-	private boolean doPolishing;
+	@Text("抛光打蜡金额")
+	private BigDecimal polishingMoney;
 	
-	@Text("是否清洗发动机")
-	private boolean doEngineClean;
-
+	@Text("清洗发动机金额")
+	private BigDecimal engineCleanMoney;
+	
+	@Text("座套清洗金额")
+	private BigDecimal cushionCleanMoney;
+	
+	
 	public Car getCar() {
 		return car;
 	}
@@ -89,27 +93,37 @@ public class CarWash extends BaseEntity {
 		this.money = money;
 	}
 
-	public boolean isDoInnerClean() {
-		return doInnerClean;
+	public BigDecimal getInnerCleanMoney() {
+		return innerCleanMoney;
 	}
 
-	public void setDoInnerClean(boolean doInnerClean) {
-		this.doInnerClean = doInnerClean;
+	public void setInnerCleanMoney(BigDecimal innerCleanMoney) {
+		this.innerCleanMoney = innerCleanMoney;
 	}
 
-	public boolean isDoPolishing() {
-		return doPolishing;
+	public BigDecimal getPolishingMoney() {
+		return polishingMoney;
 	}
 
-	public void setDoPolishing(boolean doPolishing) {
-		this.doPolishing = doPolishing;
+	public void setPolishingMoney(BigDecimal polishingMoney) {
+		this.polishingMoney = polishingMoney;
 	}
 
-	public boolean isDoEngineClean() {
-		return doEngineClean;
+	public BigDecimal getEngineCleanMoney() {
+		return engineCleanMoney;
 	}
 
-	public void setDoEngineClean(boolean doEngineClean) {
-		this.doEngineClean = doEngineClean;
+	public void setEngineCleanMoney(BigDecimal engineCleanMoney) {
+		this.engineCleanMoney = engineCleanMoney;
 	}
+
+	public BigDecimal getCushionCleanMoney() {
+		return cushionCleanMoney;
+	}
+
+	public void setCushionCleanMoney(BigDecimal cushionCleanMoney) {
+		this.cushionCleanMoney = cushionCleanMoney;
+	}
+
+	
 }

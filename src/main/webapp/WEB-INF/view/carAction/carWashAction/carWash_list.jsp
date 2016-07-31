@@ -42,6 +42,8 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<input id="washShop" class="inputButton" type="button" value="洗车点管理"/>
+						<s:a action="carWash_excel"><input id="execl" class="inputButton" type="button" value="洗车点导入"/></s:a> 
+						<!-- <input id="execl" class="inputButton" type="button" value="洗车点导入"/> -->
 					</td>
 				</tr>
 			</table>
@@ -57,9 +59,10 @@
                 			<th>洗车日期</th>
                 			<th>洗车点</th>
                 			<th>金额</th>
-                			<th>是否做内饰清洁</th>
-                			<th>是否抛光打蜡</th>
-                			<th>是否清洗发动机</th>
+                			<th>内饰清洁金额</th>
+                			<th>抛光打蜡金额</th>
+                			<th>清洗发动机金额</th>
+                			<th>座套清洗金额</th>
                 			<th>操作</th>
 						</tr>
 					</thead>
@@ -72,30 +75,12 @@
 							<td ><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>${shop.name}</td>
 							<td >${money }</td>
-							<td >
-							<s:if test="doInnerClean==true">
-								<s:text name="是"></s:text>
-								</s:if>
-								<s:else>
-								<s:text name="否"></s:text>
-								</s:else>
-							</td>
-							<td >
-							<s:if test="doPolishing==true">
-								<s:text name="是"></s:text>
-								</s:if>
-								<s:else>
-								<s:text name="否"></s:text>
-								</s:else>
-							</td>
-							<td >
-							<s:if test="doEngineClean==true">
-								<s:text name="是"></s:text>
-								</s:if>
-								<s:else>
-								<s:text name="否"></s:text>
-								</s:else>
-							</td>
+							<td >${innerCleanMoney }</td>
+							<td >${polishingMoney }</td>
+							<td >${engineCleanMoney }</td>
+							<td >${cushionCleanMoney }</td>
+							
+							
 							<td>
                     			<s:a action="carWash_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:a action="carWash_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
@@ -120,6 +105,9 @@
 		$(function(){
 	        $("#washShop").click(function(){
 	            self.location.href='carWashShop_list.action';
+	        });
+	        $("#execl").click(function(){
+	            self.location.href='carWash_execl.action';
 	        });
 			formatDateField2($("#beginDate"));
 			formatDateField2($("#endDate"));

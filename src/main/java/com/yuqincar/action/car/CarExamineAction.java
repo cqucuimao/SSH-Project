@@ -1,5 +1,6 @@
 package com.yuqincar.action.car;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.dao.car.CarExamineDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
@@ -40,6 +42,9 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	private CarService carService;
 	
 	@Autowired
+	CarExamineDao carExaminedao;
+	
+	@Autowired
 	private OrderService orderService;
 	
 	@Autowired
@@ -52,6 +57,8 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	private Date date1;
 	
 	private Date date2;
+	
+	private String outId;
 	
 	public String queryForm() throws Exception {
 		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
@@ -104,11 +111,22 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	public String list() {
 		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
 		helper.addWhereCondition("ce.appointment=?", false);
+		if (!(outId==null)) 
+		{
+			helper.addWhereCondition("ce.car.plateNumber like ?", "%"+outId+"%");
+		}
 		helper.addOrderByProperty("ce.id", false);
 		PageBean<CarExamine> pageBean = carExamineService.queryCarExamine(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carExamineHelper", helper);
 		return "list";
+	}
+	
+	public boolean isTure(){
+		if (!(outId==null)) {
+			return true;
+		}
+         return	false;
 	}
 	
 	public String appointList() {
@@ -386,6 +404,7 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		ActionContext.getContext().getValueStack().push(getModel());
 		return freshAppointList();
 	}
+	
 
 	public String getPlateNumber() {
 		return plateNumber;
@@ -429,6 +448,14 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		public void setNextExamineDate(Date nextExamineDate) {
 			this.nextExamineDate = nextExamineDate;
 		}		
+	}
+
+	public String getOutId() {
+		return outId;
+	}
+
+	public void setOutId(String outId) {
+		this.outId = outId;
 	}
 	
 

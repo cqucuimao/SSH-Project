@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -63,6 +64,8 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
 	private String uploadContentType;
 	
+	private String failReason;
+	
 	private int result;
 	
 	private Date date;
@@ -71,7 +74,8 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
 	private Date date2;
 	
-	private String failReason;
+	private String outId;
+	
 	
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper(CarCare.class, "cc");
@@ -126,11 +130,21 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	public String list() {
 		QueryHelper helper = new QueryHelper(CarCare.class, "cc");
 		helper.addWhereCondition("cc.appointment=?", false);
+		if (!(outId==null)) {
+			helper.addWhereCondition("cc.car.plateNumber like ?", "%"+outId+"%");
+			}
 		helper.addOrderByProperty("cc.id", false);
 		PageBean<CarCare> pageBean = carCareService.queryCarCare(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carCareHelper", helper);
 		return "list";
+	}
+	
+	public boolean isTure(){
+		if (!(outId==null)) {
+			return true;
+		}
+         return	false;
 	}
 	
 	public String appointList() {
@@ -469,7 +483,8 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		ActionContext.getContext().getValueStack().push(getModel());
 		return freshAppointList();
 	}
-
+	
+	
 	public Date getDate() {
 		return date;
 	}
@@ -531,6 +546,14 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 
 	public void setFailReason(String failReason) {
 		this.failReason = failReason;
+	}
+
+	public String getOutId() {
+		return outId;
+	}
+
+	public void setOutId(String outId) {
+		this.outId = outId;
 	}
 	
 }

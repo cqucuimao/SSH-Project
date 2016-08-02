@@ -44,6 +44,8 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	private Date endDate;
 	
 	private String date;
+	
+	private String outId;
 
 		//头部快速查询
 		public String queryForm(){
@@ -68,11 +70,21 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	
 		 public String list() {
 			 	QueryHelper helper = new QueryHelper("CarViolation", "cv");
+			 	if (!(outId==null)) {
+			 		helper.addWhereCondition("cv.car.plateNumber like ?", "%"+outId+"%");
+				}
 				helper.addOrderByProperty("cv.id", false);
 				PageBean pageBean = carViolationService.queryCarViolation(pageNum, helper);
 				ActionContext.getContext().getValueStack().push(pageBean);
 				ActionContext.getContext().getSession().put("carViolationHelper", helper);
 				return "list";
+			}
+		 
+		 public boolean isTure(){
+				if (!(outId==null)) {
+					return true;
+				}
+		         return	false;
 			}
 		 
 		//翻页的时候保留条件并显示数据
@@ -168,6 +180,14 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public String getOutId() {
+		return outId;
+	}
+
+	public void setOutId(String outId) {
+		this.outId = outId;
 	}
 
 	

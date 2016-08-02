@@ -41,6 +41,8 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	private int inputRows;
 	
+	private String outId;
+	
 	private List<Long> commercialInsuranceType =new ArrayList<Long>();	
 	
 	private List<Date> commercialInsuranceBeginDate = new ArrayList<Date>();
@@ -76,11 +78,21 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	/** 列表 */
 	public String list(){
 		QueryHelper helper = new QueryHelper(CarInsurance.class, "ci");
+		if (!(outId==null)) {
+		helper.addWhereCondition("ci.car.plateNumber like ?", "%"+outId+"%");
+		}
 		helper.addOrderByProperty("ci.id", false);
 		PageBean pageBean = carInsuranceService.queryCarInsurance(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carInsuranceHelper", helper);
 		return "list";
+	}
+	
+	public boolean isTure(){
+		if (!(outId==null)) {
+			return true;
+		}
+         return	false;
 	}
 
 	public String freshList(){
@@ -218,6 +230,14 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 
 	public Date getDate2() {
 		return date2;
+	}
+
+	public String getOutId() {
+		return outId;
+	}
+
+	public void setOutId(String outId) {
+		this.outId = outId;
 	}
 
 	public void setDate2(Date date2) {

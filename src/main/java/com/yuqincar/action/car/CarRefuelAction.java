@@ -85,6 +85,8 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	private int result;
 	
 	private String gDate;
+	
+	private String outId;
 	/** 查询 */
 	public String queryList(){
 		QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
@@ -112,11 +114,21 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	/** 列表 */
 	public String list(){
 		QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
+		if (!(outId==null)) {
+		helper.addWhereCondition("cr.car.plateNumber like ?", "%"+outId+"%");
+		}
 		helper.addOrderByProperty("cr.id", false);
 		PageBean pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carRefuelHelper", helper);
 		return "list";
+	}
+	
+	public boolean isTure(){
+		if (!(outId==null)) {
+			return true;
+		}
+         return	false;
 	}
 
 	public String freshList(){
@@ -439,7 +451,7 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
  		 String report_name="重庆渝勤公司油料表"+" "+gDate.substring(0,4)+"年"+gDate.substring(5,7)+"月";
  		 System.out.println("report_name="+report_name);
  		 exportservice.exportExcel(report_name, title, listAll, response);
-         System.out.println("this is coming here******************");
+         //System.out.println("this is coming here******************");
  }
 	
      /** 添加 */
@@ -531,6 +543,14 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 
 	public void setgDate(String gDate) {
 		this.gDate = gDate;
+	}
+
+	public String getOutId() {
+		return outId;
+	}
+
+	public void setOutId(String outId) {
+		this.outId = outId;
 	}
 
 	

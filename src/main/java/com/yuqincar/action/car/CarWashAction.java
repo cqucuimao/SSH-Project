@@ -63,6 +63,8 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	private String carShop;
 	
 	private CarWashShop carWashShop;
+	
+	private String outId;
 
 	//头部快速查询
 	public String queryForm(){
@@ -87,11 +89,21 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	//页面初加载数据填充
    public String list() {
 	    QueryHelper helper = new QueryHelper("CarWash", "cw");
+	    if (!(outId==null)) {
+			helper.addWhereCondition("cw.car.plateNumber like ?", "%"+outId+"%");
+			}
 		helper.addOrderByProperty("cw.id", false);
 		PageBean<CarWash> pageBean = carWashService.queryCarWash(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carWashHelper", helper);
 		return "list";
+	}
+   
+   public boolean isTure(){
+		if (!(outId==null)) {
+			return true;
+		}
+        return	false;
 	}
    //翻页的时候保留条件并显示数据
    public String freshList(){
@@ -304,6 +316,12 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	}
 	public void setResult(int result) {
 		this.result = result;
+	}
+	public String getOutId() {
+		return outId;
+	}
+	public void setOutId(String outId) {
+		this.outId = outId;
 	}
 
 }	

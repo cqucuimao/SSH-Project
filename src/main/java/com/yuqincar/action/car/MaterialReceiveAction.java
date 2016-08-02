@@ -41,6 +41,8 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
 	private Date beginDate;
 	
 	private Date endDate;
+	
+	private String outId;
 
 	//头部快速查询
 	public String queryForm(){
@@ -65,12 +67,22 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
 	//页面初加载数据填充
    public String list() {
 		QueryHelper helper = new QueryHelper("Material", "mr");
+		if (!(outId==null)) {
+			helper.addWhereCondition("mr.car.plateNumber like ?", "%"+outId+"%");
+			}
 		helper.addOrderByProperty("mr.id", false);
 		PageBean<Material> pageBean = materialService.queryMaterial(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("materialHelper", helper);
 		return "list";
 	}
+   public boolean isTure(){
+		if (!(outId==null)) {
+			return true;
+		}
+        return	false;
+	}
+   
    //翻页的时候保留条件并显示数据
    public String freshList(){
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("materialHelper");
@@ -135,6 +147,12 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-
+	public String getOutId() {
+		return outId;
+	}
+	public void setOutId(String outId) {
+		this.outId = outId;
+	}
+   
 }	
 

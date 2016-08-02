@@ -36,6 +36,7 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	
 	private Date endDate;
 
+	private String outId;
 	
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper("TollCharge", "tc");
@@ -61,11 +62,21 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 
 	public String list() {
 		QueryHelper helper = new QueryHelper("TollCharge", "tc");
+		if (!(outId==null)) {
+			helper.addWhereCondition("tc.car.plateNumber like ?", "%"+outId+"%");
+			}
 		helper.addOrderByProperty("tc.id", false);
 		PageBean<TollCharge> pageBean = tollChargeService.queryTollCharge(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("tollChargeHelper", helper);
 		return "list";
+	}
+	
+	public boolean isTure(){
+		if (!(outId==null)) {
+			return true;
+		}
+         return	false;
 	}
 	
 	public String freshList(){
@@ -115,6 +126,7 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	public String remind(){
 		QueryHelper helper = new QueryHelper("Car", "c");
 		helper.addWhereCondition("c.nextTollChargeDate is not null");
+		helper.addWhereCondition("c.car.plateNumber like ?", "%"+outId+"%");
 		helper.addOrderByProperty("nextTollChargeDate", true);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);
 		
@@ -185,4 +197,13 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 			this.nextPayDate = nextPayDate;
 		}
 	}
+
+	public String getOutId() {
+		return outId;
+	}
+
+	public void setOutId(String outId) {
+		this.outId = outId;
+	}
+	
 }

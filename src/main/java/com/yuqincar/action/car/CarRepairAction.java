@@ -66,6 +66,8 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	
 	private Date date2;
 	
+	private String outId;
+	
 	public String queryForm() throws Exception {
 		QueryHelper helper = new QueryHelper(CarRepair.class, "cr");
 		
@@ -119,11 +121,21 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	public String list() {
 		QueryHelper helper = new QueryHelper(CarRepair.class, "cr");
 		helper.addWhereCondition("appointment=?", false);
+		if (!(outId==null)) {
+			helper.addWhereCondition("cr.car.plateNumber like ?", "%"+outId+"%");
+			}
 		helper.addOrderByProperty("cr.id", false);
 		PageBean<CarRepair> pageBean = carRepairService.queryCarRepair(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carRepairHelper", helper);
 		return "list";
+	}
+	
+	public boolean isTure(){
+		if (!(outId==null)) {
+			return true;
+		}
+         return	false;
 	}
 	
 	public String appointList() {
@@ -548,6 +560,14 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 
 	public void setFailReason(String failReason) {
 		this.failReason = failReason;
+	}
+
+	public String getOutId() {
+		return outId;
+	}
+
+	public void setOutId(String outId) {
+		this.outId = outId;
 	}
 
 }

@@ -106,6 +106,8 @@
 			</result>
 			<result name="device">/WEB-INF/view/carAction/carInformationAction/car_device.jsp
 			</result>
+			<result name="detail">/WEB-INF/view/carAction/carInformationAction/car_detail.jsp
+			</result>
 			<result name="toList" type="redirectAction">car_list</result>
 		</action>
 

@@ -2,6 +2,7 @@ package com.yuqincar.service.car;
 
 import java.util.List;
 
+import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarWash;
 import com.yuqincar.domain.car.CarWashShop;
 import com.yuqincar.domain.car.Material;
@@ -28,4 +29,6 @@ public interface CarWashService {
 	public PageBean<CarWash> queryCarWash(int pageNum , QueryHelper helper);
 	
 	public CarWash getCarWashById(Long id);
+	
+	public void importExcelFile(List<CarWash> carWashs);
 }

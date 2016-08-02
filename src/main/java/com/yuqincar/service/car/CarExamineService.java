@@ -6,6 +6,7 @@ import java.util.List;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
+import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
@@ -64,4 +65,5 @@ public interface CarExamineService {
 	public void saveAppointment(CarExamine carExamine);
 	
 	public void updateAppointment(CarExamine carExamine);
+	
 }

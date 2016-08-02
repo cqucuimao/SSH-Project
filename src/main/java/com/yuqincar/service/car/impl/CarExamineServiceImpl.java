@@ -158,4 +158,5 @@ public class CarExamineServiceImpl implements CarExamineService {
 		carExamineDao.update(carExamine);
 	}
 
+	
 }

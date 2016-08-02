@@ -52,6 +52,9 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<input id="remind" class="inputButton" type="button" value="年审提醒" name="button" />
+						<s:if test="Ture">
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
+						</s:if>
 					</td>
 				</tr>
 			</table>

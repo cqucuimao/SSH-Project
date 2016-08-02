@@ -64,7 +64,7 @@
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td>${plateNumber }</td>
+							<td><s:a action="car_carDetail?id=%{id}" >${plateNumber }</s:a></td>
 							<td>${serviceType.title }</td>
 							<td>${model }</td>
 							<td>${transmissionType.label }</td>

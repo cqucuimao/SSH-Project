@@ -41,6 +41,9 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
+						<s:if test="Ture">
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
+						</s:if>
 					</td>
 				</tr>
 			</table>
@@ -64,7 +67,7 @@
 				        
 						<tr>
 							<td>${car.plateNumber}</td>
-							<td>${driver.id}</td>
+							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>${content}</td>
 							<td style="text-align:right">

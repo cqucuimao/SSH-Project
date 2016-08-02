@@ -42,6 +42,9 @@
 						<input class="inputButton" type="submit" value="查询"/>
 						<input id="remind" class="inputButton" type="button" value="保险到期提醒" name="button" />
 						<s:a action="commercialInsuranceType_list"><input id="carInsuranceType" class="inputButton" type="button" value="商业保险类型管理" name="button" /></s:a>
+					   <s:if test="Ture">
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
+						</s:if>
 					</td>
 				</tr>
 			</table>

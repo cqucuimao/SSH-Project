@@ -47,6 +47,9 @@
 					<a href="#" class="modify" onclick="modify()">
 					    <input class="inputButton" id="outPutOil" type="button" value="导出加油信息月报表"/>
 					</a>
+					<s:if test="Ture">
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
+					</s:if>
 					</td>
 				</tr>
 			</table>

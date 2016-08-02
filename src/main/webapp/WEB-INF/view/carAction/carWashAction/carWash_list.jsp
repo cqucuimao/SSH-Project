@@ -44,6 +44,9 @@
 						<input id="washShop" class="inputButton" type="button" value="洗车点管理"/>
 						<s:a action="carWash_excel"><input id="execl" class="inputButton" type="button" value="洗车点导入"/></s:a> 
 						<!-- <input id="execl" class="inputButton" type="button" value="洗车点导入"/> -->
+					<s:if test="Ture">
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
+						</s:if>
 					</td>
 				</tr>
 			</table>

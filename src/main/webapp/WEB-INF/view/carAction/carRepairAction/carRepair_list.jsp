@@ -56,6 +56,9 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<s:a action="carRepair_excel"><input id="repairInput" class="inputButton" type="button" value="维修信息导入"  /></s:a>
+					 <s:if test="Ture">
+						<a class="p15" href="javascript:history.go(-1);">返回</a>
+						</s:if>
 					</td>
 				</tr>
 			</table>

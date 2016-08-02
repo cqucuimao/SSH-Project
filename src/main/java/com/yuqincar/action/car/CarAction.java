@@ -1,12 +1,17 @@
 package com.yuqincar.action.car;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.jce.provider.JDKDSASigner.stdDSA;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -14,8 +19,13 @@ import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.dao.car.CarCareDao;
+import com.yuqincar.dao.car.CarViolationDao;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarCare;
+import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarStatusEnum;
+import com.yuqincar.domain.car.CarViolation;
 import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.car.TollCharge;
@@ -23,6 +33,7 @@ import com.yuqincar.domain.car.TransmissionTypeEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.monitor.Device;
+import com.yuqincar.service.car.CarCareService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.device.DeviceService;
 import com.yuqincar.service.privilege.UserService;
@@ -42,6 +53,15 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	@Autowired
 	private DeviceService deviceService;
+	
+	@Autowired 
+	private CarCareService carCareService;
+	
+	@Autowired
+	private CarCareDao carCareDao;
+	
+	@Autowired
+	private CarViolationDao carViolationDao;
 	
 
 	private Long carServiceTypeId;
@@ -301,6 +321,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		ActionContext.getContext().put("synchDriverId", synchDriverId);
 		return "popup";
 	}
+	
+	
 	//判断车辆能否删除
 	public boolean isCanDeleteCar(){
 		Car car = (Car) ActionContext.getContext().getValueStack().peek();
@@ -309,7 +331,86 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		else 
 			return false;
 	}
+     
+	public String carDetail() throws Exception{
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+		Date nowDate=new Date();
+		
+		//car对象，获取前半部分值
+		Car car1 = carService.getCarById(model.getId());
+		ActionContext.getContext().getValueStack().push(car1);
+		
+		//判断是否年审过期
+		if (car1.getNextExaminateDate()!=null) {
+			if (nowDate.after(car1.getNextExaminateDate())) {
+	        	ActionContext.getContext().getSession().put("isOUtExamine", "true");
+			}
+			else {
+				ActionContext.getContext().getSession().put("isOUtExamine", " ");
+			}
+		}
+        
+        if (car1.getNextTollChargeDate()!=null) {
+        	if (nowDate.after(car1.getNextTollChargeDate())) {
+            	ActionContext.getContext().getSession().put("isOUtTollDate", "true");
+    		}
+        	else {
+        		ActionContext.getContext().getSession().put("isOUtTollDate", " ");
 
+			}
+		}
+        
+		
+		//获得保养日期
+		QueryHelper helper = new QueryHelper("CarCare", "cc");
+		helper.addWhereCondition("cc.car.plateNumber like ?", "%"+car1.getPlateNumber()+"%");
+		List<CarCare> lists=new ArrayList<CarCare>();
+		lists=carCareDao.getAllQuerry(helper);
+		if (lists.size()>0) {
+			CarCare carCare=lists.get(0);
+			if (nowDate.after(carCare.getDate())) {
+				ActionContext.getContext().getSession().put("isOutCare", "true");
+			}else {
+				ActionContext.getContext().getSession().put("carCaredate", format.format(carCare.getDate()));
+				System.out.println("carCareDAte=: "+carCare.getDate());
+			}
+			
+		}else {
+			ActionContext.getContext().getSession().put("carCaredate", " ");
+		}
+		
+		//获得违章信息
+		QueryHelper helper_cv = new QueryHelper("CarViolation", "cv");
+		helper_cv.addWhereCondition("cv.car.plateNumber like ?", "%"+car1.getPlateNumber()+"%");
+		System.out.println("car1.getPlateNumber=: "+car1.getPlateNumber());
+		List<CarViolation> lists_cv=new ArrayList<CarViolation>();
+		lists_cv=carViolationDao.getAllQuerry(helper_cv);
+		if (lists_cv.size()>0) {
+			System.out.println("lists= "+lists_cv.size());
+			ActionContext.getContext().getSession().put("isTrue", "true");
+		}else {
+			ActionContext.getContext().getSession().put("isTrue", "false");
+		}
+		
+		
+		if (car1.getPlateType().toString().equals("BLUE")) {
+			ActionContext.getContext().getSession().put("plate","blue");
+		}else {
+			ActionContext.getContext().getSession().put("plate","yellow");
+		}
+		if (car1.getTransmissionType()!=null) {
+			if (car1.getTransmissionType().toString().equals("AUTO")) {
+				ActionContext.getContext().getSession().put("tt","AUTO");
+			}else if(car1.getTransmissionType().toString().equals("MANNUAL")){
+				ActionContext.getContext().getSession().put("tt","MANNUAL");
+			}else if(car1.getTransmissionType().toString().equals("UNKNOWN")){
+				ActionContext.getContext().getSession().put("tt","unsure");
+			}
+		}
+		
+		
+		return "detail";
+	}
 
 	
 	public Long getCarServiceTypeId() {

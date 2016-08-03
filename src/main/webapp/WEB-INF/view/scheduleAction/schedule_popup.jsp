@@ -11,12 +11,19 @@
 <script src="js/jquery-1.7.2.js"></script>
 <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 <script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
+<style >
+ tr td:first-child 
+   {
+        border: 1px solid #eaeaea !important;
+    }
+
+</style>
 </head>
 <body>
  <div class="space">
     <div class="dataGrid">
 			<div class="tableWrap">
-				<table>
+				<table >
 					<thead>
 						<tr>
 							<th style="text-align:center">车类</th>
@@ -35,7 +42,7 @@
 								<s:iterator value="#column.value" status="s" id="list1">
 								<tr> 
 									<s:if test="#s.first">
-									<td rowspan="${total}">
+									<td class="td" rowspan="${total}">
 										<s:property value="#column.key"/>
 									</td>
 									</s:if> 
@@ -46,7 +53,7 @@
 								 		<s:property value="#list1[1]"/>
 								 	</td>
 									<td>
-										<s:text name="format.number"><s:property value="#list1[2]"/></s:text>
+										<s:property value="#list1[2]"/>
 									</td> 
 									<td><s:property value="#list1[3]"/></td> 
 									<td><s:property value="#list1[4]"/></td> 

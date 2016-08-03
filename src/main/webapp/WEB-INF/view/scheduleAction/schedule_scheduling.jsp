@@ -114,7 +114,7 @@
 										</td> --%>
 										<td>
 						 					<s:textfield id="serviceType" name="serviceType" cssClass="inputText" type="text" />
-						 					<input id="serviceType_id" type="hidden">
+						 					<s:textfield id="serviceType_id" name="serviceType_id"  type="hidden"/>
 										</td>
 									</tr>
 									<tr>

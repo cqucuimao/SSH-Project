@@ -8,9 +8,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -718,7 +720,7 @@ public class ScheduleAction extends BaseAction {
     	int keyId=0;
     	List<CarServiceSuperType> listSuper=new ArrayList<CarServiceSuperType>();
     	Map<CarServiceType, Price> priceMap=new HashMap<CarServiceType, Price>();
-    	Map<String, List<List<String>>> mapList=new HashMap<String, List<List<String>>>();
+    	Map<String, List<List<String>>> mapList=new LinkedHashMap<String, List<List<String>>>();
     	 List<List<String>> listsda=new ArrayList<List<String>>();
     	 List<List<String>> listskst=new ArrayList<List<String>>();
     	 List<List<String>> listsswc=new ArrayList<List<String>>();
@@ -766,7 +768,6 @@ public class ScheduleAction extends BaseAction {
     	 //存入表格对应的值
     	  listSuper=carServiceSuperTypeDao.getAll();
      	 for (int i = 0; i < listSuper.size(); i++) {
-     		 
  			switch (i) {
 			case 0:
 				 mapList.put(listSuper.get(i).getTitle(), listsda);
@@ -788,7 +789,7 @@ public class ScheduleAction extends BaseAction {
 				break;
 			}
  		}
-    	
+    	     	 
      	ActionContext.getContext().getSession().put("mapList", mapList);
      	return "popup";
 	}

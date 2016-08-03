@@ -735,7 +735,7 @@ public class ScheduleAction extends BaseAction {
     	        List<String> list=new ArrayList<String>();
 	    		list.add(key.getId().toString());
     	        list.add(key.getTitle());
-	      		list.add(priceMap.get(key).getPerDay().toString());
+	      		list.add(priceMap.get(key).getPerDay().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
 	      		list.add(priceMap.get(key).getPerHalfDay().toString());
 	      		list.add(priceMap.get(key).getPerMileAfterLimit().toString());
 	      		list.add(priceMap.get(key).getPerHourAfterLimit().toString());

@@ -5,6 +5,7 @@
 package com.yuqincar.action.schedule;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -105,6 +106,7 @@ public class ScheduleAction extends BaseAction {
 	private String salerName;
 	private String salerId;
 	private BigDecimal protocolMoney;
+	private String serviceType_id;
 	
 	
 	public void getCar() {
@@ -265,6 +267,8 @@ public class ScheduleAction extends BaseAction {
 
 	public String inQueue() {
 		System.out.println("in inQueue");
+		//System.out.println("**********"+serviceType_id);
+		System.out.println("i am coming here");
 		Order order = new Order();
 		CustomerOrganization customerOrganization = null;
 		Customer customer = null;
@@ -306,7 +310,8 @@ public class ScheduleAction extends BaseAction {
 			order.setOrderMoney(protocolMoney);
 		else
 			order.setOrderMoney(new BigDecimal(0));
-		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceType)));
+		//order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceType)));
+		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceType_id)));
 		order.setPhone(phone);
 		order.setStatus(OrderStatusEnum.INQUEUE);
 		order.setMemo(memo);
@@ -717,6 +722,9 @@ public class ScheduleAction extends BaseAction {
 	}
 	
 	public String popup() {
+		DecimalFormat df = new DecimalFormat ("#.0");
+		String tmp;
+		int index=0;
     	int keyId=0;
     	List<CarServiceSuperType> listSuper=new ArrayList<CarServiceSuperType>();
     	Map<CarServiceType, Price> priceMap=new HashMap<CarServiceType, Price>();
@@ -736,10 +744,18 @@ public class ScheduleAction extends BaseAction {
 	    		list.add(key.getId().toString());
     	        list.add(key.getTitle());
 	      		list.add(priceMap.get(key).getPerDay().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
-	      		list.add(priceMap.get(key).getPerHalfDay().toString());
-	      		list.add(priceMap.get(key).getPerMileAfterLimit().toString());
-	      		list.add(priceMap.get(key).getPerHourAfterLimit().toString());
-	      		list.add(priceMap.get(key).getPerPlaneTime().toString());
+	      		list.add(priceMap.get(key).getPerHalfDay().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
+	      		tmp=df.format(priceMap.get(key).getPerMileAfterLimit());
+    	        index=tmp.indexOf('.');
+    	        if (Integer.parseInt(tmp.substring(index+1, index+2))>0) {
+    	        	BigDecimal bigDecimal=new BigDecimal(tmp);
+    	        	tmp=df.format(bigDecimal);
+    	        	list.add(tmp);
+				}else {
+					list.add(priceMap.get(key).getPerMileAfterLimit().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
+				}
+	      		list.add(priceMap.get(key).getPerHourAfterLimit().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
+	      		list.add(priceMap.get(key).getPerPlaneTime().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
     	        keyId = Integer.parseInt(String.valueOf(key.getSuperType().getId().toString()));
     	        
     	        switch (keyId) 
@@ -795,6 +811,15 @@ public class ScheduleAction extends BaseAction {
 	}
 	
 	
+	
+	public String getServiceType_id() {
+		return serviceType_id;
+	}
+
+	public void setServiceType_id(String serviceType_id) {
+		this.serviceType_id = serviceType_id;
+	}
+
 	public OrderService getOrderService() {
 		return orderService;
 	}
@@ -1134,4 +1159,5 @@ class myCar {
 	public void setCarInfo(Map<String, Integer> carInfo) {
 		this.carInfo = carInfo;
 	}
+	
 }

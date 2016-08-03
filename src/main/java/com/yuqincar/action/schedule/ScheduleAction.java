@@ -7,6 +7,7 @@ package com.yuqincar.action.schedule;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +20,12 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSONArray;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.car.CarRepair;
+import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.BaseEntity;
@@ -34,12 +37,15 @@ import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
+import com.yuqincar.domain.order.Price;
+import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.order.WatchKeeper;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.customer.CustomerService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.order.PriceSerivce;
 import com.yuqincar.service.order.WatchKeeperService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
@@ -60,6 +66,10 @@ public class ScheduleAction extends BaseAction {
 	private WatchKeeperService watchKeeperService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	CarServiceSuperTypeDao carServiceSuperTypeDao;
+	@Autowired
+	PriceSerivce priceSerivce;
 	
 	private List<CarServiceType> serviceTypes;
 	private String watchKeeperName;
@@ -93,6 +103,7 @@ public class ScheduleAction extends BaseAction {
 	private String salerName;
 	private String salerId;
 	private BigDecimal protocolMoney;
+	
 	
 	public void getCar() {
 		System.out.println("queryCarPlateNumber="+queryCarPlateNumber);
@@ -702,6 +713,86 @@ public class ScheduleAction extends BaseAction {
 		System.out.println("end configWatchKeeper");
 		return queue();
 	}
+	
+	public String popup() {
+    	int keyId=0;
+    	List<CarServiceSuperType> listSuper=new ArrayList<CarServiceSuperType>();
+    	Map<CarServiceType, Price> priceMap=new HashMap<CarServiceType, Price>();
+    	Map<String, List<List<String>>> mapList=new HashMap<String, List<List<String>>>();
+    	 List<List<String>> listsda=new ArrayList<List<String>>();
+    	 List<List<String>> listskst=new ArrayList<List<String>>();
+    	 List<List<String>> listsswc=new ArrayList<List<String>>();
+    	 List<List<String>> listsxc=new ArrayList<List<String>>();
+    	 List<List<String>> listsyy=new ArrayList<List<String>>();
+    	 
+    	PriceTable priceTable=new PriceTable();
+    	priceTable=priceSerivce.getDefaultPriceTable();
+    	priceMap=priceTable.getCarServiceType();
+    	 for (CarServiceType key : priceMap.keySet()) {
+    	        //System.out.println("key= " + key.getId() + " and value= " + priceMap.get(key).getId());
+    	        List<String> list=new ArrayList<String>();
+	    		list.add(key.getId().toString());
+    	        list.add(key.getTitle());
+	      		list.add(priceMap.get(key).getPerDay().toString());
+	      		list.add(priceMap.get(key).getPerHalfDay().toString());
+	      		list.add(priceMap.get(key).getPerMileAfterLimit().toString());
+	      		list.add(priceMap.get(key).getPerHourAfterLimit().toString());
+	      		list.add(priceMap.get(key).getPerPlaneTime().toString());
+    	        keyId = Integer.parseInt(String.valueOf(key.getSuperType().getId().toString()));
+    	        
+    	        switch (keyId) 
+    	        {
+					case 1:
+						listsda.add(list);
+						break;
+					case 2:
+						listskst.add(list);
+						break;
+					case 3:
+						listsswc.add(list);
+						break;
+					case 4:
+						listsxc.add(list);
+						break;
+					case 5:
+						listsyy.add(list);
+						break;
+					default:
+						break;
+				}
+    	       
+    	    }
+    	 
+    	 //存入表格对应的值
+    	  listSuper=carServiceSuperTypeDao.getAll();
+     	 for (int i = 0; i < listSuper.size(); i++) {
+     		 
+ 			switch (i) {
+			case 0:
+				 mapList.put(listSuper.get(i).getTitle(), listsda);
+				break;
+			case 1:
+				mapList.put(listSuper.get(i).getTitle(), listskst);
+				break;
+			case 2:
+				mapList.put(listSuper.get(i).getTitle(), listsswc);
+				break;
+			case 3:
+				mapList.put(listSuper.get(i).getTitle(), listsxc);
+				break;
+			case 4:
+				mapList.put(listSuper.get(i).getTitle(), listsyy);
+				break;
+
+			default:
+				break;
+			}
+ 		}
+    	
+     	ActionContext.getContext().getSession().put("mapList", mapList);
+     	return "popup";
+	}
+	
 	
 	public OrderService getOrderService() {
 		return orderService;

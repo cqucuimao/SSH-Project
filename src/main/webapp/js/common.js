@@ -455,6 +455,7 @@ function setMapH(){
     }
     $(".map").height(h);
 }
+
 $(function(){
 	$(".carSelector").each(function (i){
 		$(this).click(function(){
@@ -470,7 +471,8 @@ $(function(){
 				height: 530
 			});
 		});
-	});
+ });
+	
 	
 	$(".userSelector").each(function (i){
 		$(this).click(function(){
@@ -499,7 +501,18 @@ $(function(){
          art.dialog.open('customerOrganization_popup.action',{
 				title: '单位选择', 
 				width: 350, 
-				height: 580
+				height: 580,
+				
+			});
+     });
+	 
+	 $("#serviceType").click(function(){
+         art.dialog.data('serviceType', $("#serviceType").val()); // 存储数据  
+         art.dialog.open('schedule_popup.action',{
+				title: '价格表选择', 
+				width: 900, 
+				height:580,
+				
 			});
      });
 })

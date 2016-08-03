@@ -109,8 +109,12 @@
 									</tr>
 									<tr>
 										<th>用车类型<span class="required">*</span></th>
-										<td> 
+										<%-- <td> 
 											<s:select name="serviceType" id="serviceType" list="serviceTypes" listKey="id" listValue="title" headerKey="" headerValue="请选择车型" style="width:178px;"></s:select>
+										</td> --%>
+										<td>
+						 					<s:textfield id="serviceType" name="serviceType" cssClass="inputText" type="text" />
+						 					<input id="serviceType_id" type="hidden">
 										</td>
 									</tr>
 									<tr>

@@ -19,14 +19,14 @@
 				<table>
 					<thead>
 						<tr>
-							<th>车类</th>
-							<th class="alignCenter"></th>
-							<th>车型</th>
-							<th>8小时（100公里内）</th>
-							<th>4小时（50公里内</th>
-							<th>超公里（每公里）</th>
-							<th>超时（每小时</th>
-							<th>机场接送机（50公里/2小时）</th>
+							<th style="text-align:center">车类</th>
+							<th style="text-align:center">选择</th>
+							<th style="text-align:center">车型</th>
+							<th style="text-align:center">8小时<br/>（100公里内）</th>
+							<th style="text-align:center">4小时<br/>（50公里内</th>
+							<th style="text-align:center">超公里<br/>（每公里）</th>
+							<th style="text-align:center">超时<br/>（每小时）</th>
+							<th style="text-align:center">机场接送机<br/>（50公里/2小时）</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
@@ -34,29 +34,32 @@
 								<s:set name="total" value="#column.value.size"/> 
 								<s:iterator value="#column.value" status="s" id="list1">
 								<tr> 
-								<s:if test="#s.first"><td rowspan="${total}"><s:property value="#column.key"/></td></s:if> 
-								<td class="alignCenter">
-                            	<input type="radio" name="id" value="${list1[0]}" data="${list1[1]}" />
-                                </td>
-								<td>  
-								 <s:property value="#list1[1]"/>
-								 </td>
-								<td><s:text name="format.number"> 
-								<s:property value="#list1[2]"/>
-								</s:text></td> 
-								<td><s:property value="#list1[3]"/></td> 
-								<td><s:property value="#list1[4]"/></td> 
-								<td><s:property value="#list1[5]"/></td> 
-								<td><s:property value="#list1[6]"/></td> 
+									<s:if test="#s.first">
+									<td rowspan="${total}">
+										<s:property value="#column.key"/>
+									</td>
+									</s:if> 
+									<td class="alignCenter">
+                            			<input type="radio" name="id" value="${list1[0]}" data="${list1[1]}" />
+                                	</td>
+									<td>  
+								 		<s:property value="#list1[1]"/>
+								 	</td>
+									<td>
+										<s:text name="format.number"><s:property value="#list1[2]"/></s:text>
+									</td> 
+									<td><s:property value="#list1[3]"/></td> 
+									<td><s:property value="#list1[4]"/></td> 
+									<td><s:property value="#list1[5]"/></td> 
+									<td><s:property value="#list1[6]"/></td> 
 								</tr> 
 								</s:iterator> 
 						 		</s:iterator>
 					</tbody>
 				</table>
 	      </div>
-     </div>
-           
-            <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:300px;height:60px">
+     </div>           
+            <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:100%;height:60px">
             <input id="sure" class="inputButton" type="button" value="确定" />
             <input id="clear" class="inputButton" type="button" value="清空" />
             <input id="close" class="inputButton" type="button" value="关闭" />

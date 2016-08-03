@@ -329,8 +329,6 @@
 			</result>
 			<result name="managerUI">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_managerUI.jsp
 			</result>
-			<result name="test">/WEB-INF/view/customerAction/customerOrganizationAction/test.jsp
-			</result>
 			<result name="toList" type="redirectAction">customerOrganization_list</result>
 			<result name="popup">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_popup.jsp
 			</result>

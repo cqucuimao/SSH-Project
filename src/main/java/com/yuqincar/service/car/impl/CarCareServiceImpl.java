@@ -1,12 +1,8 @@
 package com.yuqincar.service.car.impl;
 
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,17 +12,13 @@ import com.yuqincar.dao.car.CarCareDao;
 import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
-import com.yuqincar.domain.car.CarExamine;
-import com.yuqincar.domain.car.CarRefuel;
+import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarCareService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.service.sms.SMSService;
-import com.yuqincar.utils.DateUtils;
-import com.yuqincar.utils.ExcelUtil;
 import com.yuqincar.utils.QueryHelper;
 
 @Service
@@ -67,7 +59,19 @@ public class CarCareServiceImpl implements CarCareService {
 
 	@Transactional
 	public void deleteCarCareById(long id) {
+		CarCare carCare=carCareDao.getById(id);
+		Car car=carCare.getCar();
 		carCareDao.delete(id);
+		
+		CarCare cc=carCareDao.getRecentCarCare(car);
+		if(cc!=null){
+			car.setNextCareMile(cc.getCareMiles()+cc.getMileInterval());
+			if(car.getNextCareMile()>=car.getMileage())
+				car.setCareExpired(true);
+			else
+				car.setCareExpired(false);
+			carDao.update(car);
+		}
 	}
 
 	public boolean canUpdateCarCare(CarCare carCare) {
@@ -109,5 +113,18 @@ public class CarCareServiceImpl implements CarCareService {
 	@Transactional
 	public void updateAppointment(CarCare carCare) {
 		carCareDao.update(carCare);
+	}
+	
+	public CarCare getUnDoneAppointCare(Car car){
+		QueryHelper helper=new QueryHelper(CarCare.class,"cc");
+		helper.addWhereCondition("cc.car=?", car);
+		helper.addWhereCondition("cc.appointment=?", true);
+		helper.addWhereCondition("cc.done=?", false);
+		helper.addOrderByProperty("cc.date", false);
+		List<CarCare> list=carCareDao.getPageBean(1, helper).getRecordList();
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}else
+			return null;
 	}
 }

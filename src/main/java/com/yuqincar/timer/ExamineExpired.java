@@ -13,22 +13,22 @@ import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.service.car.CarService;
 
 @Component
-public class InsuranceExpired {
+public class ExamineExpired {
 
 	@Autowired
 	public CarService carService;
 
-	@Scheduled(cron = "0 0 0 * * ?")
+	@Scheduled(cron = "0 5 0 * * ?")
 	@Transactional
 	public void update() {
 		List<Car> cars = carService.getAll();
 		Date now=new Date();
 		for(Car car : cars) {
 			if(car.getStatus()==CarStatusEnum.SCRAPPED)
-				continue;				
-			if(car.getInsuranceExpiredDate()==null ||
-				car.getInsuranceExpiredDate().before(now)){
-				car.setInsuranceExpired(true);
+				continue;
+			if(car.getNextExaminateDate()==null || 
+					car.getNextExaminateDate().before(now)){
+				car.setExamineExpired(true);
 				carService.updateCar(car);
 			}
 		}

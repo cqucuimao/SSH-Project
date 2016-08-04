@@ -509,7 +509,7 @@ $(function(){
 	 $("#serviceType").click(function(){
          art.dialog.data('serviceType', $("#serviceType").val()); // 存储数据  
          art.dialog.open('schedule_popup.action',{
-				title: '价格表选择', 
+				title: '价格表1选择', 
 				width: 900, 
 				height:580,
 				

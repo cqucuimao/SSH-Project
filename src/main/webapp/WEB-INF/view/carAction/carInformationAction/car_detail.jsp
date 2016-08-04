@@ -45,26 +45,13 @@
                         <th><s:property value="tr.getText('car.Car.tollChargeSN')" />：</th>
                         <td>${tollChargeSN}</td>
                         <th><s:property value="tr.getText('car.Car.plateType')" />：</th>
-                        <s:if test="#session.plate=='blue' ">
-                        	<td>蓝牌 </td>
-                        </s:if>
-                        <s:else>
-                        	<td>黄牌</td>
-                        </s:else>
+                        <td>${plateType.label}</td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.Car.seatNumber')" />：</th>
                         <td>${seatNumber}</td>
                         <th><s:property value="tr.getText('car.Car.transmissionType')" />：</th>
-                        <s:if test="#session.tt=='AUTO' ">
-                        <td>自动</td>
-                        </s:if>
-                        <s:elseif test="#session.tt=='MANNUAL' ">
-                        <td>手动</td>
-                        </s:elseif>
-                        <s:elseif test="#session.tt=='unsure'">
-                        <td>不确定</td>
-                        </s:elseif>
+                        <td>${transmissionType.label}</td>
                     </tr>
                     
                     <tr>
@@ -78,147 +65,153 @@
                         </td>
                     </tr>
                    <tr>
-                        <th><s:property value="tr.getText('privilege.User.name')" />：</th>
+                        <th><s:property value="tr.getText('car.Car.driver')" />：</th>
                         <td>${driver.name}</td>
-                        <th><s:property value="tr.getText('car.ServicePoint.name')" />：</th>
+                        <th><s:property value="tr.getText('car.Car.servicePoint')" />：</th>
                         <td>${servicePoint.name }</td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.Car.standbyCar')" />：</th>
                         <td>
-                        <s:if test="standbyCar">
-                        		 
-                        		 是
-                        </s:if>
-                        <s:else>
-                               	否
-                        </s:else>
-                       
+                        <s:if test="standbyCar">是</s:if><s:else>否</s:else>
                         </td>
                         <th><s:property value="tr.getText('car.Car.status')" />：</th>
-                        <td>${status }</td>
+                        <td>${status.label }</td>
                     </tr>
-                    
-                    <!-- 车辆链接 **********************************-->
-                    <!-- 脱保 -->
                     <tr>
-                        <th>脱保日期：</th>
-						<s:if test="insuranceExpired">
-						   <td><font color="red">脱保</font></td>
-					    </s:if>
-						<s:else>
-							 <td ><s:date name="insuranceExpiredDate" format="yyyy-MM-dd"/></td>
-						</s:else>
-						
-                        <th>保险情况：</th>
-                        <td>
-                        <s:a action="carInsurance_list?outId=%{plateNumber}" >
-                        	查看本台车的保险记录
-                        </s:a>
-                        </td>
-                    </tr>      
-                     <!-- 年审 -->            
+                        <th><s:property value="tr.getText('car.Car.mileage')" />：</th>
+                        <td>${mileage}</td>
+                    	<th>&nbsp;</th>
+                    	<td>&nbsp;</td>
+                    </tr>
                     <tr>
-                        <th><s:property value="tr.getText('car.CarExamine.date')" />：</th>
-						<s:if test="#session.isOUtExamine=='true' ">
-						   <td><font color="red">未年审</font></td>
-					    </s:if>
-						<s:else>
-							 <td ><s:date name="nextExaminateDate" format="yyyy-MM-dd"/></td>
-						</s:else>
-						
-                        <th>年审情况：</th>
-                        <td>
-                        <s:a action="carExamine_list?outId=%{plateNumber} " >
-                        	查看本台车的年审记录
-                        </s:a>
-                        </td>
-                    </tr>      
-                  <!-- 路桥费 -->
-                   <tr>
-                        <th>路桥费缴纳日期：</th>
-						<s:if test="#session.isOUtTollDate=='true' ">
-						   <td><font color="red">未缴纳</font></td>
-					    </s:if>
-						<s:else>
-							 <td ><s:date name="nextTollChargeDate" format="yyyy-MM-dd"/></td>
-						</s:else>
-						
-                        <th>路桥费情况：</th>
-                        <td>
-                        <s:a action="tollCharge_list?outId=%{plateNumber} " >
-                        	查看本台车的路桥费记录
-                        </s:a>
-                        </td>
-                    </tr>      
-                   
-                   <tr>
-                        <th><s:property value="tr.getText('car.CarCare.date')" />：</th>
-						<s:if test="#session.isOutCare=='true' ">
-						   <td><font color="red">未保养</font></td>
-					    </s:if>
-						<s:else>
-							 <td > ${carCaredate}</td>
-						</s:else>
-						
-                        <th>保养情况：</th>
-                        <td>
-                        <s:a action="carCare_list?outId=%{plateNumber} " >
-                        	查看本台车的保养记录
-                        </s:a>
-                        </td>
+                    	<th>&nbsp;</th>
+                    	<td>&nbsp;</td>
+                    	<th>&nbsp;</th>
+                    	<td>&nbsp;</td>
+                    </tr>
+                    <!-- 车辆运行情况 **********************************-->
+                    <tr>
+                        <th>保险到期：</th>
+						<td>
+							<s:if test="insuranceExpiredDate==null">< 未知日期 ></s:if>
+							<s:else><s:date name="insuranceExpiredDate" format="yyyy-MM-dd"/></s:else>
+						   	<s:if test="insuranceExpired"><font color="red">（脱保）</font></s:if>
+						   	&nbsp;
+						   	<s:a action="carInsurance_list?outId=%{plateNumber}" >
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="保险记录"/>
+						   	</s:a>
+						</td>						
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
+                    </tr>         
+                    <tr>
+                    	<th>年审到期：</th>
+						<td>
+							<s:if test="nextExaminateDate==null">< 未知日期 ></s:if>
+							<s:else><s:date name="nextExaminateDate" format="yyyy-MM-dd"/></s:else>
+						   	<s:if test="examineExpired"><font color="red">（过期）</font></s:if>
+						   	&nbsp;
+						   	<s:if test="unDoneAppointExamine!=null">
+						   		<font color="red">预约（<s:date name="unDoneAppointExamine.date" format="yyyy-MM-dd"/>）</font>
+						   		&nbsp;
+						   	</s:if>
+						   	<s:a action="carExamine_list?outId=%{plateNumber}" >
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="年审记录"/>
+						   	</s:a>
+						</td>						
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
                     </tr>   
-                    
+                    <tr>
+                    	<th>路桥费到期：</th>
+						<td>
+							<s:if test="nextTollChargeDate==null">< 未知日期 ></s:if>
+							<s:else><s:date name="nextTollChargeDate" format="yyyy-MM-dd"/></s:else>
+						   	<s:if test="tollChargeExpired"><font color="red">（过期）</font></s:if>
+						   	&nbsp;
+						   	<s:a action="tollCharge_list?outId=%{plateNumber}" >
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="路桥费记录"/>
+						   	</s:a>
+						</td>						
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                    	<th>保养到期：</th>
+						<td>
+							<s:if test="nextCareMile==0">< 未知里程 ></s:if>
+							<s:else>${nextCareMile}</s:else>
+						   	<s:if test="careExpired"><font color="red">（过期）</font></s:if>
+						   	&nbsp;
+						   	<s:if test="unDoneAppointCare!=null">
+						   		<font color="red">预约（<s:date name="unDoneAppointCare.date" format="yyyy-MM-dd"/>）</font>
+						   		&nbsp;
+						   	</s:if>
+						   	<s:a action="carCare_list?outId=%{plateNumber}" >
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="保养记录"/>
+						   	</s:a>
+						</td>						
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
+                    </tr>
+                   	<tr>                    
+                        <th>违章情况：</th>
+                        <td>
+                        	<s:if test="violationExist"><font color="red">有</font></s:if><s:else>无</s:else>
+                        	&nbsp;
+                        	<s:a action="carViolation_list?outId=%{plateNumber}">
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="违章记录"/>
+						  	</s:a>
+                        </td>			
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
+                    </tr>
                     <tr>
                         <th>维修情况：</th>
                         <td>
-                        <s:a action="carRepair_list?outId=%{plateNumber} " >
-                        	查看本台车的维修记录
-                        </s:a>
-                        </td>
-                        <th>违章情况：</th>
-						<s:if test="#session.isTrue=='true' ">
-						   <td>
-						   <s:a action="carViolation_list?outId=%{plateNumber} " >
-						       <font color="red"> 有</font>
-						  </s:a>
-						  </td>
-					    </s:if>
-						<s:else>
-							 <td >无</td>
-						</s:else>
-                    </tr>         
-                   
-                   <tr>
+						   	<s:if test="unDoneAppointRepair!=null">
+						   		<font color="red">预约（<s:date name="unDoneAppointRepair.fromDate" format="yyyy-MM-dd"/> 到 <s:date name="unDoneAppointRepair.toDate" format="yyyy-MM-dd"/>）</font>
+						   		&nbsp;
+						   	</s:if>
+						   	<s:a action="carRepair_list?outId=%{plateNumber}" >
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="维修记录"/>
+						   	</s:a>
+                        </td>			
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
                         <th>加油情况：</th>
-						 <td>
-                        <s:a action="carRefuel_list?outId=%{plateNumber} " >
-                        	查看这辆车的加油信息
-                        </s:a>
+						<td>
+                        	<s:a action="carRefuel_list?outId=%{plateNumber} " >
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="加油记录"/>
+                        	</s:a>
                         </td>
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
                         <th>洗车情况：</th>
-                        <td>
-                        <s:a action="carWash_list?outId=%{plateNumber} " >
-                        	查看这辆车的洗车情况
-                        </s:a>
+						<td>
+                        	<s:a action="carWash_list?outId=%{plateNumber} " >
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="洗车记录"/>
+                        	</s:a>
                         </td>
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
                     </tr> 
-                    
-                     <tr>
+                    <tr>
                         <th>物品领用情况：</th>
-                        <td>
-                        <s:a action="materialReceive_list?outId=%{plateNumber} " >
-                        	查看这辆车的物品领用情况
-                        </s:a>
+						<td>
+                        	<s:a action="materialReceive_list?outId=%{plateNumber} " >
+						   		 <img width=16 height=16 src="skins/images/info.jpg" title="物品领用记录"/>
+                        	</s:a>
                         </td>
-                        
-                        <th></th>
-					     <td > </td>
-						
-                    </tr>     
-                   
-                </tbody>
-                
+                        <th>&nbsp;</th>
+                        <td>&nbsp;</td>
+                    </tr>                    
+                </tbody>                
                  <tfoot> 
                     <tr>
                     <td>

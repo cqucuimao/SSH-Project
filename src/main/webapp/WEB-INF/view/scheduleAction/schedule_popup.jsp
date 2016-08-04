@@ -52,13 +52,11 @@
 									<td>  
 								 		<s:property value="#list1[1]"/>
 								 	</td>
-									<td>
-										<s:property value="#list1[2]"/>
-									</td> 
-									<td><s:property value="#list1[3]"/></td> 
-									<td><s:property value="#list1[4]"/></td> 
-									<td><s:property value="#list1[5]"/></td> 
-									<td><s:property value="#list1[6]"/></td> 
+									<td style="text-align:right"><s:property value="#list1[2]"/></td> 
+									<td style="text-align:right"><s:property value="#list1[3]"/></td> 
+									<td style="text-align:right"><s:property value="#list1[4]"/></td> 
+									<td style="text-align:right"><s:property value="#list1[5]"/></td> 
+									<td style="text-align:right"><s:property value="#list1[6]"/></td> 
 								</tr> 
 								</s:iterator> 
 						 		</s:iterator>

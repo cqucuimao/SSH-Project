@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.yuqincar.service.sms.SMSService;
 
 @Component
-public class asynchronizeSendSMS {
+public class AsynchronizeSendSMS {
 
 	@Autowired
 	public SMSService sMSService;

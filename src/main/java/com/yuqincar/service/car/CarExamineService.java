@@ -66,4 +66,5 @@ public interface CarExamineService {
 	
 	public void updateAppointment(CarExamine carExamine);
 	
+	public CarExamine getUnDoneAppointExamine(Car car);
 }

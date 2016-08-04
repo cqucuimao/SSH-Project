@@ -21,16 +21,22 @@ public class MileageUpdate {
 	@Autowired
 	public LBSDao lbsDao;
 
-	@Scheduled(cron = "0 0 1 * * ?") // 每天凌晨3点执行一次
+	@Scheduled(cron = "0 0 1 * * ?")
 	@Transactional
 	public void update() {
-		// 每天凌晨3点执行一次
 		List<Car> cars = carService.getAll();
 		for(Car car : cars) {
 			if(car.getStatus()==CarStatusEnum.SCRAPPED)
 				continue;
+			if(car.getDevice()==null || car.getDevice().getSN()==null)
+				continue;
+			
 			int mile = (int) lbsDao.getCurrentMile(car.getDevice().getSN());
 			car.setMileage(mile);
+			
+			//判断是否保养过期
+			if(car.getMileage()>car.getNextCareMile())
+				car.setCareExpired(true);
 			carService.updateCar(car);
 		}
 	}

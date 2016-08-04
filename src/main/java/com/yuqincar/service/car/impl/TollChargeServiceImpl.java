@@ -1,5 +1,7 @@
 package com.yuqincar.service.car.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,10 @@ public class TollChargeServiceImpl implements TollChargeService {
 		tollChargeDao.save(tollCharge);
 		
 		tollCharge.getCar().setNextTollChargeDate(tollCharge.getNextPayDate());
+		if(tollCharge.getCar().getNextTollChargeDate().after(new Date()))
+			tollCharge.getCar().setTollChargeExpired(false);
+		else
+			tollCharge.getCar().setTollChargeExpired(true);
 		carDao.update(tollCharge.getCar());
 	}
 
@@ -32,12 +38,28 @@ public class TollChargeServiceImpl implements TollChargeService {
 		tollChargeDao.update(tollCharge);
 		
 		tollCharge.getCar().setNextTollChargeDate(tollCharge.getNextPayDate());
+		if(tollCharge.getCar().getNextTollChargeDate().after(new Date()))
+			tollCharge.getCar().setTollChargeExpired(false);
+		else
+			tollCharge.getCar().setTollChargeExpired(true);
 		carDao.update(tollCharge.getCar());
 	}
 
 	@Transactional
 	public void deleteTollCharge(Long id) {
+		TollCharge tollCharge=tollChargeDao.getById(id);
+		Car car=tollCharge.getCar();
 		tollChargeDao.delete(id);
+		
+		TollCharge tc=tollChargeDao.getRecentTollCharge(car);
+		if(tc!=null){
+			car.setNextTollChargeDate(tc.getNextPayDate());
+			if(car.getNextTollChargeDate().after(new Date()))
+				car.setTollChargeExpired(false);
+			else
+				car.setTollChargeExpired(true);
+			carDao.update(car);
+		}
 	}
 
 	public PageBean<TollCharge> queryTollCharge(int pageNum, QueryHelper helper) {

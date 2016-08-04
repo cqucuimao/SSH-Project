@@ -70,7 +70,7 @@
 					
 					<thead>
 						<tr>
-							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+							<th><s:property value="tr.getText('car.CarCare.car')" /></th>
 							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
               				<th><s:property value="tr.getText('car.CarCare.date')" /></th>
               				<th><s:property value="tr.getText('car.CarCare.careMiles')" /></th>

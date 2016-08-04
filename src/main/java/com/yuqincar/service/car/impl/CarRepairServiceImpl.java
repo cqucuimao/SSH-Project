@@ -23,6 +23,7 @@ import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.service.sms.SMSService;
+import com.yuqincar.utils.DateRange;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.ExcelUtil;
 import com.yuqincar.utils.QueryHelper;
@@ -95,5 +96,18 @@ public class CarRepairServiceImpl implements CarRepairService {
 		for(int i=0;i<carRepairs.size();i++){
 			carRepairDao.save(carRepairs.get(i));
 		}	
+	}
+	
+	public CarRepair getUnDoneAppointRepair(Car car){
+		QueryHelper helper=new QueryHelper(CarRepair.class,"cr");
+		helper.addWhereCondition("cr.car=?", car);
+		helper.addWhereCondition("cr.appointment=?", true);
+		helper.addWhereCondition("cr.done=?", false);
+		helper.addOrderByProperty("cr.fromDate", false);
+		List<CarRepair> list=carRepairDao.getPageBean(1, helper).getRecordList();
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}else
+			return null;
 	}
 }

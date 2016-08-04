@@ -2,12 +2,15 @@ package com.yuqincar.dao.car.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import com.yuqincar.dao.car.CarCareDao;
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
+import com.yuqincar.utils.QueryHelper;
 
 @Repository
 public class CarCareDaoImpl extends BaseDaoImpl<CarCare> implements CarCareDao{
@@ -26,6 +29,18 @@ public class CarCareDaoImpl extends BaseDaoImpl<CarCare> implements CarCareDao{
 			return true;
 		}
 		return false;
+	}
+	
+
+	public CarCare getRecentCarCare(Car car){
+		QueryHelper helper=new QueryHelper(CarCare.class,"cc");
+		helper.addWhereCondition("cc.appointment=?", false);
+		helper.addOrderByProperty("cc.date", false);
+		List<CarCare> list=(List<CarCare>)getSession().createQuery(helper.getQueryListHql());
+		if(list!=null && list.size()>0)
+			return list.get(0);
+		else
+			return null;
 	}
 
 	public BigDecimal statisticCarCare(Date fromDate,Date toDate){

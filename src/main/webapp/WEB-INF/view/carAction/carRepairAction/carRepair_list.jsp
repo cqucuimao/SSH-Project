@@ -70,8 +70,8 @@
 					
 					<thead>
 						<tr>
-							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
+							<th><s:property value="tr.getText('car.CarRepair.car')" /></th>
+							<th><s:property value="tr.getText('car.CarRepair.driver')" /></th>
               				<th>维修时间</th>
               				<th><s:property value="tr.getText('car.CarRepair.repairLocation')" /></th>
               				<th><s:property value="tr.getText('car.CarRepair.reason')" /></th>

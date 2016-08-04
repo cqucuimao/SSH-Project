@@ -63,4 +63,6 @@ public interface CarCareService {
 	public void saveAppointment(CarCare carCare);
 	
 	public void updateAppointment(CarCare carCare);
+	
+	public CarCare getUnDoneAppointCare(Car car);
 }

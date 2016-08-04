@@ -73,6 +73,9 @@ public class Car extends BaseEntity {
 	
 	@Text("剩下保养里程")
 	private int mileNeedCare;	//nextCareMile-mileage
+	
+	@Text("是否保养过期")
+	private boolean careExpired;
 
 	@Text("保险过期日期")
 	private Date insuranceExpiredDate;	//保险过期日期
@@ -83,8 +86,14 @@ public class Car extends BaseEntity {
 	@Text("年检到期日期")
 	private Date nextExaminateDate;	//年检到期时间
 	
+	@Text("是否年检过期")
+	private boolean examineExpired;
+	
 	@Text("下次路桥费缴纳日期")
 	private Date nextTollChargeDate;	//下次路桥费缴纳日期
+	
+	@Text("是否路桥费过期")
+	private boolean tollChargeExpired;
 
 	@Text("车辆状态")
     private CarStatusEnum status; //车辆状态
@@ -310,5 +319,29 @@ public class Car extends BaseEntity {
 
 	public void setMileNeedCare(int mileNeedCare) {
 		this.mileNeedCare = mileNeedCare;
-	}		
+	}
+
+	public boolean isCareExpired() {
+		return careExpired;
+	}
+
+	public void setCareExpired(boolean careExpired) {
+		this.careExpired = careExpired;
+	}
+
+	public boolean isExamineExpired() {
+		return examineExpired;
+	}
+
+	public void setExamineExpired(boolean examineExpired) {
+		this.examineExpired = examineExpired;
+	}
+
+	public boolean isTollChargeExpired() {
+		return tollChargeExpired;
+	}
+
+	public void setTollChargeExpired(boolean tollChargeExpired) {
+		this.tollChargeExpired = tollChargeExpired;
+	}
 }

@@ -12,7 +12,7 @@ import com.yuqincar.domain.car.TollCharge;
 @Repository
 public class TollChargeDaoImpl extends BaseDaoImpl<TollCharge> implements TollChargeDao {
 	public TollCharge getRecentTollCharge(Car car){
-		List<TollCharge> tollCharge = getSession().createQuery("from TollCharge tc where tc.car=? order by tc.payDate desc").
+		List<TollCharge> tollCharge = getSession().createQuery("from TollCharge tc where tc.car=? order by tc.nextPayDate desc").
 				setParameter(0, car).list();
 		if(tollCharge.size()>0)
 			return tollCharge.get(0);

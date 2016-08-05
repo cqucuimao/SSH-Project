@@ -109,12 +109,9 @@
 									</tr>
 									<tr>
 										<th>用车类型<span class="required">*</span></th>
-										<%-- <td> 
-											<s:select name="serviceType" id="serviceType" list="serviceTypes" listKey="id" listValue="title" headerKey="" headerValue="请选择车型" style="width:178px;"></s:select>
-										</td> --%>
 										<td>
 						 					<s:textfield id="serviceType" name="serviceType" cssClass="inputText" type="text" />
-						 					<s:textfield id="serviceType_id" name="serviceType_id"  type="hidden"/>
+						 					<s:textfield id="serviceTypeId" name="serviceTypeId"  type="hidden"/>
 										</td>
 									</tr>
 									<tr>
@@ -269,7 +266,8 @@
 			
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
-			$("#serviceType").find("option[value='${serviceType}']").attr("selected","selected");
+			$("#serviceType").val("${serviceType}")
+			$("#serviceTypeId").val("${serviceTypeId}")
 			$("#salerName").val("${salerName}");
 			$("#salerId").val("${salerId}");
 			
@@ -308,7 +306,8 @@
 			
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
-			$("#serviceType").find("option[value='${serviceType}']").attr("selected","selected");
+			$("#serviceType").val("${serviceType}");
+			$("#serviceTypeId").val("${serviceTypeId}");
 			$("#salerName").val("${salerName}");
 			$("#salerId").val("${salerId}");
 			
@@ -645,7 +644,7 @@
 							var planEndDate = $("#planEndDate").val();
 							var selectCarPlateNumber = $("#selectCarPlateNumber").val();
 							var selectCarDriverId = $("#selectCarDriverId").val();
-							var serviceType = $("#serviceType").val();
+							var serviceTypeId = $("#serviceTypeId").val();
 							var scheduleFromUpdateOrderId = $("#scheduleFromUpdateOrderId").val();
 							$.ajax({
 								url : 'schedule_isCarAndDriverAvailable.action',// 跳转到 action  
@@ -653,7 +652,7 @@
 								chargeMode : chargeMode,
 								planBeginDate : planBeginDate,
 								planEndDate : planEndDate,
-								serviceType : serviceType,
+								serviceTypeId : serviceTypeId,
 								selectCarPlateNumber : selectCarPlateNumber,
 								selectCarDriverId : selectCarDriverId,
 								scheduleFromUpdateOrderId : scheduleFromUpdateOrderId
@@ -697,14 +696,14 @@
 						if (!checkRecommend())
 							return;
 						var chargeMode = $("#chargeMode").val();
-						var serviceType = $("#serviceType").val();
+						var serviceTypeId = $("#serviceTypeId").val();
 						var planBeginDate = $("#planBeginDate").val();
 						var planEndDate = $("#planEndDate").val();
 						$.ajax({
 							url : 'schedule_getRecommandDriver.action',// 跳转到 action  
 							data : {
 										chargeMode : chargeMode,
-										serviceType : serviceType,
+										serviceTypeId : serviceTypeId,
 										planBeginDate : planBeginDate,
 										planEndDate : planEndDate
 									},

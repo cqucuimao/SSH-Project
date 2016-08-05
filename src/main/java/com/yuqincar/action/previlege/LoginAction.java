@@ -1,12 +1,10 @@
 package com.yuqincar.action.previlege;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.inject.Inject;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.privilege.User;

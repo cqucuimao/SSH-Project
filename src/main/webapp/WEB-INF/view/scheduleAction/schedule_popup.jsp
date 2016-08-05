@@ -79,7 +79,7 @@
 
             	var origin = artDialog.open.origin;
             	var input = origin.document.getElementById('serviceType');
-            	var input_id = origin.document.getElementById('serviceType_id'); 
+            	var input_id = origin.document.getElementById('serviceTypeId'); 
             	if(newVal != null)
             	input.value = newVal;
             	input.select();
@@ -92,7 +92,7 @@
             $("#clear").click(function(){
             	var origin = artDialog.open.origin;
             	var input = origin.document.getElementById('serviceType');
-            	var input_id = origin.document.getElementById('serviceType_id'); 
+            	var input_id = origin.document.getElementById('serviceTypeId'); 
 
             	input.value = "";
             	input.select();

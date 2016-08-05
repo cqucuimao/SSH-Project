@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.CarServiceTypeDao;
 import com.yuqincar.dao.car.ServicePointDao;
@@ -24,7 +25,6 @@ import com.yuqincar.utils.QueryHelper;
 
 @Service
 public class CarServiceImpl implements CarService {
-
 	@Autowired
 	private CarDao carDao;
 	@Autowired

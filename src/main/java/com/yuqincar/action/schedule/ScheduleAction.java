@@ -74,7 +74,6 @@ public class ScheduleAction extends BaseAction {
 	@Autowired
 	PriceSerivce priceSerivce;
 	
-	private List<CarServiceType> serviceTypes;
 	private String watchKeeperName;
 	private String watchKeeperId;
 	private String queryCarPlateNumber;
@@ -86,6 +85,7 @@ public class ScheduleAction extends BaseAction {
 	private String planBeginDate;
 	private String planEndDate;
 	private String serviceType;
+	private String serviceTypeId;
 	private String fromAddress;
 	private String toAddress;
 	private String memo;
@@ -106,7 +106,6 @@ public class ScheduleAction extends BaseAction {
 	private String salerName;
 	private String salerId;
 	private BigDecimal protocolMoney;
-	private String serviceType_id;
 	
 	
 	public void getCar() {
@@ -267,7 +266,6 @@ public class ScheduleAction extends BaseAction {
 
 	public String inQueue() {
 		System.out.println("in inQueue");
-		//System.out.println("**********"+serviceType_id);
 		System.out.println("i am coming here");
 		Order order = new Order();
 		CustomerOrganization customerOrganization = null;
@@ -310,8 +308,7 @@ public class ScheduleAction extends BaseAction {
 			order.setOrderMoney(protocolMoney);
 		else
 			order.setOrderMoney(new BigDecimal(0));
-		//order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceType)));
-		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceType_id)));
+		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceTypeId)));
 		order.setPhone(phone);
 		order.setStatus(OrderStatusEnum.INQUEUE);
 		order.setMemo(memo);
@@ -360,8 +357,7 @@ public class ScheduleAction extends BaseAction {
 			order.setPlanEndDate(DateUtils.getYMD(planEndDate));
 		}else
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
-		order.setServiceType(carService.getCarServiceTypeById(Long
-					.parseLong(serviceType)));
+		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceTypeId)));
 		Car car = null;
 		User driver = null;
 		if(!StringUtils.isEmpty(selectCarPlateNumber))
@@ -394,9 +390,9 @@ public class ScheduleAction extends BaseAction {
 		}
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL)
 			protocolMoney=order.getOrderMoney();
-		serviceType=String.valueOf(order.getServiceType().getId());
+		serviceType=order.getServiceType().getTitle();
+		serviceTypeId=String.valueOf(order.getServiceType().getId());
 		memo=order.getMemo();
-		serviceTypes = orderService.getAllCarServiceType();
 	}
 	
 	public String scheduleFromQueue(){
@@ -498,7 +494,6 @@ public class ScheduleAction extends BaseAction {
 				toUpdateOrder.setCallForOther(false);
 		}
 		ChargeModeEnum chargeModeEnum = null;
-		CarServiceType carServiceType_ = null;
 		Car car = null;
 		if(!StringUtils.isEmpty(selectCarPlateNumber))
 			car=carService.getCarByPlateNumber(selectCarPlateNumber);
@@ -528,9 +523,7 @@ public class ScheduleAction extends BaseAction {
 				order.setActualMoney(new BigDecimal(0));
 		}
 		
-		carServiceType_ = carService.getCarServiceTypeById(Long
-				.parseLong(serviceType));
-		order.setServiceType(carServiceType_);
+		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceTypeId)));
 		order.setPhone(phone);
 		
 		order.setMemo(memo);
@@ -593,7 +586,6 @@ public class ScheduleAction extends BaseAction {
 				addFieldError("scheduleError", "乘车人数超过限定");
 			else if(result==9)
 				addFieldError("scheduleError", "超过调度时间，被剥夺调度权");
-			serviceTypes = orderService.getAllCarServiceType();
 			return "scheduling";
 		}
 	}
@@ -604,8 +596,8 @@ public class ScheduleAction extends BaseAction {
 			scheduleFromQueueOrderId=order.getId();
 			scheduleMode=OrderService.SCHEDULE_FROM_QUEUE;
 			initInputField(order);
-		}else
-			serviceTypes = orderService.getAllCarServiceType();
+		}
+		
 		return "scheduling";
 	}
 
@@ -623,7 +615,7 @@ public class ScheduleAction extends BaseAction {
 			endDate_ = DateUtils.getYMD(planEndDate);
 		}
 		List<Car> cars = orderService.getRecommandedCar(
-				carService.getCarServiceTypeById(Long.parseLong(serviceType)),getChargeMode(chargeMode),
+				carService.getCarServiceTypeById(Long.parseLong(serviceTypeId)),getChargeMode(chargeMode),
 				beginDate_, endDate_, pageNum).getRecordList();
 
 		List<LinkedHashMap<myCar, LinkedHashMap<String, Integer>>> carStatus = new ArrayList<LinkedHashMap<myCar, LinkedHashMap<String, Integer>>>();
@@ -811,14 +803,6 @@ public class ScheduleAction extends BaseAction {
 	}
 	
 	
-	
-	public String getServiceType_id() {
-		return serviceType_id;
-	}
-
-	public void setServiceType_id(String serviceType_id) {
-		this.serviceType_id = serviceType_id;
-	}
 
 	public OrderService getOrderService() {
 		return orderService;
@@ -842,14 +826,14 @@ public class ScheduleAction extends BaseAction {
 
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
-	}
-	
-	public List<CarServiceType> getServiceTypes() {
-		return serviceTypes;
+	}	
+
+	public String getServiceTypeId() {
+		return serviceTypeId;
 	}
 
-	public void setServiceTypes(List<CarServiceType> serviceTypes) {
-		this.serviceTypes = serviceTypes;
+	public void setServiceTypeId(String serviceTypeId) {
+		this.serviceTypeId = serviceTypeId;
 	}
 
 	public String getCustomerOrganizationName() {

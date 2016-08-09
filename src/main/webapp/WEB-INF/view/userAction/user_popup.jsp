@@ -43,6 +43,9 @@
 	            </div>
 	        </div>
         </div>
+        <!-- 填充div，防止部分数据被遮盖 -->
+        <div style="width:245px;height:60px">  
+        </div>
         <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:245px;height:60px">
             <input id="sure" class="inputButton" type="button" value="确定" />
             <input id="clear" class="inputButton" type="button" value="清空" />

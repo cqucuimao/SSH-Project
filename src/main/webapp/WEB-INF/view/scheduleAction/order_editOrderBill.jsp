@@ -15,12 +15,13 @@
 		.noprint{display:none;}
 	}
 	td{
-	height:30px;padding-left:6px;
+	height:30px;padding-left:;
 	}
 	.ttt{
 	float:left;margin-left:10px;width:100px;height:30px;
 	}
 	input{height:20px}
+	.inputStyle{width:95%;height:80%}
 </style>
 <title></title>
 <link href="<%=basePath %>skins/main.css" rel="stylesheet" type="text/css" />
@@ -79,9 +80,9 @@
 				<td align="center"><s:date name="getonDate" format="yyyy-MM-dd"/></td>
 				<td align="center"><s:textfield class="Wdate half" id="date" name="%{'dayDetails['+#track.index+'].getonDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
 				<td align="center"><s:textfield class="Wdate half" id="date" name="%{'dayDetails['+#track.index+'].getoffDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
-				<td colspan="3" align="center"><s:textfield name="%{'dayDetails['+#track.index+'].pathAbstract'}" /></td>
-				<td align="center"><s:textfield name="%{'dayDetails['+#track.index+'].actualMile'}"/></td>
-				<td align="center"><s:textfield name="%{'dayDetails['+#track.index+'].chargeMile'}" /></td>
+				<td colspan="3" align="center"><s:textfield class="inputStyle" name="%{'dayDetails['+#track.index+'].pathAbstract'}" /></td>
+				<td align="center"><s:textfield class="inputStyle" name="%{'dayDetails['+#track.index+'].actualMile'}"/></td>
+				<td align="center"><s:textfield class="inputStyle" name="%{'dayDetails['+#track.index+'].chargeMile'}" /></td>
 			</tr>
 			</s:iterator>
 			<s:iterator value="nullAbstractTrackList" >
@@ -96,37 +97,37 @@
 			</s:iterator>
 			<tr>
 				<td class="alignCenter" width="150">出库路码</td>
-				<td class="alignCenter" width="150"><s:textfield name="beginMile" /></td>
+				<td class="alignCenter" width="150"><s:textfield class="inputStyle" name="beginMile" /></td>
 				<td class="alignCenter" width="150">客户上车路码</td>
-				<td class="alignCenter" width="150"><s:textfield name="customerGetonMile" /></td>
+				<td class="alignCenter" width="150"><s:textfield class="inputStyle" name="customerGetonMile" /></td>
 				<td class="alignCenter" width="150">客户下车路码</td>
-				<td class="alignCenter" width="150"><s:textfield name="customerGetoffMile" /></td>
+				<td class="alignCenter" width="150"><s:textfield class="inputStyle" name="customerGetoffMile" /></td>
 				<td class="alignCenter" width="150">回库路码</td>
-				<td class="alignCenter" width="150"><s:textfield name="endMile" /></td>
+				<td class="alignCenter" width="150"><s:textfield class="inputStyle" name="endMile" /></td>
 			</tr>
 			<tr>
 				<td class="alignCenter">邮费</td>
-				<td class="alignCenter"><s:textfield name="refuelMoney" /></td>
+				<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" /></td>
 				<td class="alignCenter">洗车费</td>
-				<td class="alignCenter"><s:textfield name="washingFee" /></td>
+				<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" /></td>
 				<td class="alignCenter">停车费</td>
-				<td class="alignCenter"><s:textfield name="parkingFee" /></td>
+				<td class="alignCenter"><s:textfield class="inputStyle" name="parkingFee" /></td>
 				<td class="alignCenter">计费路码</td>
-				<td class="alignCenter"><s:textfield name="totalChargeMile" /></td>
+				<td class="alignCenter"><s:textfield class="inputStyle" name="totalChargeMile" /></td>
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">过路费（客户自理）</td>
-				<td class="alignCenter" colspan="2"><s:textfield name="toll" style="width:280px"/></td>
+				<td class="alignCenter" colspan="2"><s:textfield class="inputStyle" name="toll"/></td>
 				<td class="alignCenter">食宿</td>
-				<td class="alignCenter"><s:textfield name="roomAndBoardFee" /></td>
+				<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" /></td>
 				<td class="alignCenter">其他费用</td>
-				<td class="alignCenter"><s:textfield name="otherFee"/></td>
+				<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee"/></td>
 			</tr>
 			<tr>
 				<td class="alignCenter">核算金额</td>
-				<td class="alignCenter" colspan="3"><s:textfield name="orderMoney" style="width:px"/></td>
+				<td class="alignCenter" colspan="3"><s:textfield class="inputStyle" name="orderMoney" /></td>
 				<td class="alignCenter">实收金额</td>
-				<td class="alignCenter" colspan="3"><s:textfield name="actualMoney" style="width:px"/></td>
+				<td class="alignCenter" colspan="3"><s:textfield class="inputStyle" name="actualMoney" /></td>
 			</tr>
 			<tr>
 				<td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;请为本次服务评价：&nbsp;&nbsp;&nbsp;&nbsp;
@@ -148,7 +149,7 @@
 			</tr>
 			<tr>
 				<td class="alignCenter">意见及建议</td>
-				<td colspan="7" style="padding-left:15px"><s:textfield name="options" style="width:px"/></td>
+				<td class="alignCenter" colspan="7"><s:textfield class="inputStyle" name="options"/></td>
 			</tr>
 			<tr>
 				<td style="border:none;"></td>

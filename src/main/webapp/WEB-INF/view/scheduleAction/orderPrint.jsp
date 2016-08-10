@@ -19,7 +19,7 @@
 	height:30px;
 	}
 	.ttt{
-	float:left;margin-left:10px;width:100px;height:30px;
+	float:left;margin-left:10px;width:95px;height:30px;
 	}
 </style>
 <title></title>

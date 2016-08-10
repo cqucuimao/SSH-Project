@@ -12,3 +12,12 @@
 	font-weight:bold;
 	color:red;
 }
+
+.Wdate1{
+	border: 1px solid #20000f;
+    color: #555555;
+    height:80%;
+    width:140px;
+    vertical-align: middle;
+	background:#fff url(datePicker.png) no-repeat right;
+}

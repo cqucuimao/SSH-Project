@@ -15,13 +15,22 @@
 		.noprint{display:none;}
 	}
 	td{
-	height:30px;padding-left:;
+		height:30px;
+		padding-left:1px;
+		padding-right:5px;
 	}
 	.ttt{
-	float:left;margin-left:10px;width:100px;height:30px;
+		float:left;
+		width:100px;
+		height:30px;
 	}
-	input{height:20px}
-	.inputStyle{width:95%;height:80%}
+	input{
+		height:20px
+	}
+	.inputStyle{
+		width:100%;
+		height:80%;
+	}
 </style>
 <title></title>
 <link href="<%=basePath %>skins/main.css" rel="stylesheet" type="text/css" />
@@ -43,7 +52,7 @@
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">用车单位</td>
-				<td colspan="2">&nbsp;&nbsp;${customerOrganization.abbreviation }</td>
+				<td colspan="2">&nbsp;&nbsp;${customerOrganization.name }</td>
 				<td class="alignCenter" colspan="2">联系人电话</td>
 				<td colspan="2">&nbsp;&nbsp;${customer.name}：${phone }</td>
 				
@@ -106,7 +115,7 @@
 				<td class="alignCenter" width="150"><s:textfield class="inputStyle" name="endMile" /></td>
 			</tr>
 			<tr>
-				<td class="alignCenter">邮费</td>
+				<td class="alignCenter">油费</td>
 				<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" /></td>
 				<td class="alignCenter">洗车费</td>
 				<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" /></td>

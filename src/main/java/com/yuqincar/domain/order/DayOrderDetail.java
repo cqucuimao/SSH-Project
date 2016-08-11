@@ -61,7 +61,7 @@ public class DayOrderDetail extends BaseEntity {
 	}
 
 	public void setPathAbstract(String pathAbstract) {
-		if(pathAbstract.length()>1024)
+		if(pathAbstract!=null && pathAbstract.length()>1024)
 			pathAbstract=pathAbstract.substring(0, 1024);
 		this.pathAbstract = pathAbstract;
 	}

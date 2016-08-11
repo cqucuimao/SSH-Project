@@ -9,13 +9,13 @@ public enum ChargeModeEnum implements BaseEnum {
 	MILE(0,"按里程计费"),
 	
 	@Text("按天计费")
-	DAY(0,"按天计费"),
+	DAY(1,"按天计费"),
 	
 	@Text("协议计费")
-	PROTOCOL(0,"协议计费"),
+	PROTOCOL(2,"协议计费"),
 	
 	@Text("接送机")
-	PLANE(0,"接送机");
+	PLANE(3,"接送机");
 	
 	private int id;
 	private String label;

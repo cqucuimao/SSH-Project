@@ -51,6 +51,7 @@
 							<th>订单数</th>
 							<th>金额</th>
 							<th>开票金额</th>
+							<th>实收金额</th>
 							<th>生成日期</th>
 							<th>状态</th>
 							<th>操作</th>
@@ -65,6 +66,7 @@
 						<td>${orderNum}</td>
 						<td><fmt:formatNumber value="${totalMoney}" pattern="#.0"/></td>
 						<td><fmt:formatNumber value="${invoiceMoney}" pattern="#.0"/></td>
+						<td><fmt:formatNumber value="${actualTotalMoney}" pattern="#.0"/></td>
 						<td><s:date name="date" format="yyyy-MM-dd"/></td>
 						<td>${status.label}</td>
 						<td><s:a action="orderStatement_generatePDF?id=%{id}"><i class="icon-operate-print" title="导出"></i></s:a></td>

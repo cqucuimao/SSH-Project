@@ -917,73 +917,83 @@ public class OrderServiceImpl implements OrderService {
 		boolean inMiddleDay;
 		Price price;
 		
+		if(order.getCar().getDevice()!=null){
 		
-		getonDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getActualBeginDate(), order.getDayDetails().get(0).getGetonDate());
-		System.out.println("getonDistance="+getonDistance);
-		getoffDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate(), order.getActualEndDate());
-		System.out.println("getoffDistance="+getoffDistance);
-		
-		totalChargeMile=0;
-		totalChargeMoney=0;
-		price=order.getCustomerOrganization().getPriceTable().getCarServiceType().get(order.getServiceType());
-		for(int i=0;i<order.getDayDetails().size();i++){
-			DayOrderDetail dod=order.getDayDetails().get(i);
-			hours=DateUtils.elapseHours(dod.getGetonDate(), dod.getGetoffDate());
-			mile=lbsDao.getStepMile(order.getCar().getDevice().getSN(), dod.getGetonDate(), dod.getGetoffDate());
-			System.out.println("mile="+mile);
-			if(i==0 && getonDistance>10)
-				mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
-			if(i==order.getDayDetails().size()-1 && getoffDistance>10)
-				mile=mile+(getoffDistance-10);	//如果下车地点超过10公里远，超出部分列入行驶公里数
-			inMiddleDay=(i>0) && (i<order.getDayDetails().size()-1);
+			getonDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getActualBeginDate(), order.getDayDetails().get(0).getGetonDate());
+			System.out.println("getonDistance="+getonDistance);
+			getoffDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate(), order.getActualEndDate());
+			System.out.println("getoffDistance="+getoffDistance);
 			
-			chargeMile=0;
-			chargeMoney=0;
-			if(mile<=10 && inMiddleDay){
-				chargeMile=100;
-				chargeMoney=price.getPerDay().floatValue()*0.8f;
-			}else if(mile<=50 && !inMiddleDay){
-				//按半天计
-				chargeMile=50;
-				chargeMoney=price.getPerHalfDay().floatValue();
-				if(hours>4){
-					if(hours-4>3)
-						chargeMoney+=price.getPerHalfDay().floatValue();
-					else
-						chargeMoney+=(hours-4)*price.getPerHourAfterLimit().floatValue();
+			totalChargeMile=0;
+			totalChargeMoney=0;
+			price=order.getCustomerOrganization().getPriceTable().getCarServiceType().get(order.getServiceType());
+			for(int i=0;i<order.getDayDetails().size();i++){
+				DayOrderDetail dod=order.getDayDetails().get(i);
+				hours=DateUtils.elapseHours(dod.getGetonDate(), dod.getGetoffDate());
+				mile=lbsDao.getStepMile(order.getCar().getDevice().getSN(), dod.getGetonDate(), dod.getGetoffDate());
+				System.out.println("mile="+mile);
+				if(i==0 && getonDistance>10)
+					mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
+				if(i==order.getDayDetails().size()-1 && getoffDistance>10)
+					mile=mile+(getoffDistance-10);	//如果下车地点超过10公里远，超出部分列入行驶公里数
+				inMiddleDay=(i>0) && (i<order.getDayDetails().size()-1);
+				
+				chargeMile=0;
+				chargeMoney=0;
+				if(mile<=10 && inMiddleDay){
+					chargeMile=100;
+					chargeMoney=price.getPerDay().floatValue()*0.8f;
+				}else if(mile<=50 && !inMiddleDay){
+					//按半天计
+					chargeMile=50;
+					chargeMoney=price.getPerHalfDay().floatValue();
+					if(hours>4){
+						if(hours-4>3)
+							chargeMoney+=price.getPerHalfDay().floatValue();
+						else
+							chargeMoney+=(hours-4)*price.getPerHourAfterLimit().floatValue();
+					}
+				}else if(mile<=100){
+					//按全天计
+					chargeMile=100;
+					chargeMoney=price.getPerDay().floatValue();
+					if(hours>8){
+						if(hours-8>3)
+							chargeMoney+=price.getPerHalfDay().floatValue();
+						else
+							chargeMoney+=(hours-8)*price.getPerHourAfterLimit().floatValue();
+					}
+				}else{
+					chargeMile=mile;
+					chargeMoney =price.getPerDay().floatValue()+(mile-100)*price.getPerMileAfterLimit().floatValue();
 				}
-			}else if(mile<=100){
-				//按全天计
-				chargeMile=100;
-				chargeMoney=price.getPerDay().floatValue();
-				if(hours>8){
-					if(hours-8>3)
-						chargeMoney+=price.getPerHalfDay().floatValue();
-					else
-						chargeMoney+=(hours-8)*price.getPerHourAfterLimit().floatValue();
-				}
-			}else{
-				chargeMile=mile;
-				chargeMoney =price.getPerDay().floatValue()+(mile-100)*price.getPerMileAfterLimit().floatValue();
+				
+				dod.setActualMile(mile);
+				dod.setChargeMile(chargeMile);
+				dod.setChargeMoney(new BigDecimal(chargeMoney));
+				dod.setPathAbstract(getOrderTrackAbstract(order.getCar().getDevice().getSN(),dod.getGetonDate(),dod.getGetoffDate()));
+				System.out.println("path="+dod.getPathAbstract());
+				dayOrderDetailDao.update(dod);
+	
+				totalChargeMile+=chargeMile;
+				totalChargeMoney+=chargeMoney;
 			}
-			
-			dod.setActualMile(mile);
-			dod.setChargeMile(chargeMile);
-			dod.setChargeMoney(new BigDecimal(chargeMoney));
-			dod.setPathAbstract(getOrderTrackAbstract(order.getCar().getDevice().getSN(),dod.getGetonDate(),dod.getGetoffDate()));
-			System.out.println("path="+dod.getPathAbstract());
-			dayOrderDetailDao.update(dod);
-
-			totalChargeMile+=chargeMile;
-			totalChargeMoney+=chargeMoney;
+			order.setBeginMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getActualBeginDate()));
+			order.setEndMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(),order.getActualEndDate()));
+			order.setCustomerGetonMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(0).getGetonDate()));
+			order.setCustomerGetoffMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate()));
+			order.setTotalChargeMile(totalChargeMile);
+			order.setOrderMoney(new BigDecimal(totalChargeMoney));
+			order.setActualMoney(new BigDecimal(totalChargeMoney));
+		}else{
+			order.setBeginMile(0);
+			order.setEndMile(0);
+			order.setCustomerGetonMile(0);
+			order.setCustomerGetoffMile(0);
+			order.setTotalChargeMile(0);
+			order.setOrderMoney(BigDecimal.ZERO);
+			order.setActualMoney(BigDecimal.ZERO);
 		}
-		order.setBeginMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getActualBeginDate()));
-		order.setEndMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(),order.getActualEndDate()));
-		order.setCustomerGetonMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(0).getGetonDate()));
-		order.setCustomerGetoffMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate()));
-		order.setTotalChargeMile(totalChargeMile);
-		order.setOrderMoney(new BigDecimal(totalChargeMoney));
-		order.setActualMoney(new BigDecimal(totalChargeMoney));
 		orderDao.update(order);
 	}
 	

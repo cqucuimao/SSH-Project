@@ -57,6 +57,7 @@
 							<th>里程(KM)</th>
 							<th>天数(天)</th>
 							<th>金额(元)</th>
+							<th>实收金额(元)</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
@@ -64,12 +65,13 @@
 						<tr>
 							<td>${customerOrganization.name}</td>
 							<td>${customer.name}</td>
-                			<td>${status.label}</td>
+                			<td>${chargeMode.label}</td>
 							<td>${carServiceType.title}</td>
 							<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
 							<td>${fromAddress}-${fromAddress}</td>
 							<td>${actualMile}</td>
                 			<td>${actualDay}</td>
+                			<td>${actualTotalMoney}</td>
 							<td><fmt:formatNumber value="${actualMoney}" pattern="#.0"/></td>
 						</tr>
 						</s:iterator> 

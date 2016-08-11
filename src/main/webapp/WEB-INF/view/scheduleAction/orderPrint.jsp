@@ -177,7 +177,7 @@
 		<tfoot>
 			<tr >
          	<td style="border:none" colspan="2" class="noprint">
-             	<input class="inputButton" type="button" value="打印订单" onclick=javascript:window.print() >
+             	<input class="inputButton" type="button" value="打印订单" onclick=javascript:window.print()>
               	<a class="p15" href="javascript:history.go(-1);">返回</a>
          	</td>
     		</tr>

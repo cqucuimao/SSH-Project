@@ -10,3 +10,4 @@ update car set VIN=null where VIN="none";
 CREATE UNIQUE INDEX VIN ON car(VIN);
 CREATE UNIQUE INDEX tollChargeSN ON car(tollChargeSN);
 CREATE UNIQUE INDEX SN ON device(SN);
+ALTER TABLE dayorderdetail MODIFY pathAbstract VARCHAR(1024) NULL;

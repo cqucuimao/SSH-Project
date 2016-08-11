@@ -455,24 +455,48 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   table.addCell (new Paragraph (orders.get(k).getEndMile()+"",font));
 		   //表格第15行
 		   table.addCell (new Paragraph ("油费",font));
-		   table.addCell (new Paragraph (orders.get(k).getRefuelMoney()+"",font));
+		   if(orders.get(k).getRefuelMoney() != null){
+			   table.addCell (new Paragraph (orders.get(k).getRefuelMoney()+"",font));
+		   }else{
+			   table.addCell (new Paragraph (" ",font));
+		   }	   
 		   table.addCell (new Paragraph ("洗车费",font));
-		   table.addCell (new Paragraph (orders.get(k).getWashingFee()+"",font));
+		   if(orders.get(k).getWashingFee() != null){
+			   table.addCell (new Paragraph (orders.get(k).getWashingFee()+"",font));
+		   }else{
+			   table.addCell (new Paragraph (" ",font));
+		   }	   
 		   table.addCell (new Paragraph ("停车费",font));
-		   table.addCell (new Paragraph (orders.get(k).getParkingFee()+"",font));
+		   if(orders.get(k).getParkingFee() != null){
+			   table.addCell (new Paragraph (orders.get(k).getParkingFee()+"",font));
+		   }else{
+			   table.addCell (new Paragraph (" ",font));
+		   }
 		   table.addCell (new Paragraph ("计费路码",font));
 		   table.addCell (new Paragraph (orders.get(k).getTotalChargeMile()+"",font));
 		   //表格第16行
 		   cell = new PdfPCell(new Paragraph ("过路费（客户自理）",font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
-		   cell = new PdfPCell (new Paragraph (orders.get(k).getToll()+"",font));
+		   if(orders.get(k).getToll() != null){
+			   cell = new PdfPCell (new Paragraph (orders.get(k).getToll()+"",font));
+		   }else{
+			   cell = new PdfPCell (new Paragraph (" ",font));
+		   } 
 		   cell.setColspan(2);
 		   table.addCell (cell);	
 		   table.addCell (new Paragraph ("食宿",font));
-		   table.addCell (new Paragraph (orders.get(k).getRoomAndBoardFee()+"",font));
+		   if(orders.get(k).getRoomAndBoardFee() != null){
+			   table.addCell (new Paragraph (orders.get(k).getRoomAndBoardFee()+"",font));
+		   }else{
+			   table.addCell (new Paragraph (" ",font));
+		   }   
 		   table.addCell (new Paragraph ("其他费用",font));
-		   table.addCell (new Paragraph (orders.get(k).getOtherFee()+"",font));
+		   if(orders.get(k).getOtherFee() != null){
+			   table.addCell (new Paragraph (orders.get(k).getOtherFee()+"",font));
+		   }else{
+			   table.addCell (new Paragraph (" ",font));
+		   }   
 		   //表格第17行
 		   table.addCell (new Paragraph ("核算金额",font));
 		   //String actualMoney = df1.format(orders.get(k).getActualMoney());
@@ -530,7 +554,11 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   }
 		   //表格第20行
 		   table.addCell (new Paragraph ("意见及建议",font));
-		   cell = new PdfPCell (new Paragraph(orders.get(k).getOptions()+"",font));
+		   if(orders.get(k).getOptions() != null){
+			   cell = new PdfPCell (new Paragraph(orders.get(k).getOptions()+"",font));
+		   }else{
+			   cell = new PdfPCell (new Paragraph(" ",font));
+		   }	   
 		   cell.setColspan(7);
 		   table.addCell (cell);
 		   //表格第21行

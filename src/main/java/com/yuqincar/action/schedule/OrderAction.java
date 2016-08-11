@@ -531,11 +531,6 @@ public class OrderAction extends BaseAction {
 			ActionContext.getContext().put("orderList",orderService.getDriverTask(userService.getById(driverId), date,date).get(0));
 		return "info";
 	}
-
-	public String getChargeModeString() {
-		Order order=(Order)ActionContext.getContext().getValueStack().peek();
-		return order.getChargeMode().toString();
-	}
 	
 	public String getPlanDateString(){
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
@@ -577,11 +572,6 @@ public class OrderAction extends BaseAction {
 			return "0.0";
 		else
 			return order.getActualMoney().setScale(1, BigDecimal.ROUND_HALF_UP).toString();
-	}
-	
-	public String getStatusString(){
-		Order order=(Order)ActionContext.getContext().getValueStack().peek();
-		return getOrderStatusString(order.getStatus());
 	}
 	
 	private OrderStatusEnum getOrderStatus(String status){

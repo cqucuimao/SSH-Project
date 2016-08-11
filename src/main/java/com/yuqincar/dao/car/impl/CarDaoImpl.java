@@ -159,8 +159,9 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 
 	public List<Car> findByDriverName(String driverName) {
 		return getSession().createQuery(//
-				"FROM Car c WHERE c.driver.name like ?")
-				.setParameter(0, "%"+driverName+"%")//
+				"FROM Car c WHERE c.status=? and c.driver.name like ?")
+				.setParameter(0, CarStatusEnum.NORMAL)
+				.setParameter(1, "%"+driverName+"%")//
 				.list();
 	}
 

@@ -12,7 +12,7 @@ import com.yuqincar.utils.Text;
 public class DriverLicense extends BaseEntity {
 
 	@Text("驾照编号")
-	@Column(nullable = false)
+	@Column(nullable = false, unique=true)
 	private String licenseID;
 
 	@Text("过期日期")

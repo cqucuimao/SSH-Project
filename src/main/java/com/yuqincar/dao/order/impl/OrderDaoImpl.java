@@ -16,8 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
@@ -41,7 +39,6 @@ import com.yuqincar.utils.QueryHelper;
 
 @Repository
 public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
-	private static Log log = LogFactory.getLog(OrderDaoImpl.class);
 
 	@SuppressWarnings("unchecked")
 	public List<CarServiceType> getAllCarServiceType() {
@@ -313,6 +310,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					  hql = hql+" and car.driver not in (select cc.driver from CarCare as cc where cc.appointment=? and done=? and TO_DAYS(cc.date)=TO_DAYS(?))";
 					  hql = hql+" and car.driver not in (select ce.driver from CarExamine as ce where ce.appointment=? and ce.done=? and TO_DAYS(ce.date)=TO_DAYS(?))";
 					  hql = hql+" and car.driver not in (select cr.driver from CarRepair as cr where cr.appointment=? and cr.done=? and TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(cr.toDate))";
+					  
+					  hql = hql+" and car.insuranceExpired=? and car.examineExpired=? and car.tollChargeExpired=?";
 			tempCarList=getSession().createQuery(hql)
 					.setParameter(0, CarStatusEnum.SCRAPPED).setParameter(1, serviceType).setParameter(2,false)
 					.setParameter(3, ChargeModeEnum.DAY).setParameter(4, ChargeModeEnum.PROTOCOL)
@@ -329,7 +328,9 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(26, planBeginDate).setParameter(27, true).setParameter(28, false)
 					.setParameter(29, planBeginDate).setParameter(30,true).setParameter(31, false)
 					.setParameter(32, planBeginDate).setParameter(33,true).setParameter(34, false)
-					.setParameter(35,planBeginDate).setParameter(36, planBeginDate).list();					
+					.setParameter(35,planBeginDate).setParameter(36, planBeginDate)	
+			
+					.setParameter(37,false).setParameter(38,false).setParameter(39,false).list();
 		} else {
 			String hql = "from Car as car where car.status<>? and serviceType=? and car.standbyCar =?";
 					  hql = hql+" and car not in (select o.car from order_ as o where o.status<>? and o.status<>? and o.status<>? and (";
@@ -354,6 +355,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					   		hql+="(TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(cr.toDate)) or ";
 					   		hql+="(TO_DAYS(cr.fromDate)<=TO_DAYS(?) and TO_DAYS(?) <=TO_DAYS(cr.toDate)) or ";
 					   		hql+="(TO_DAYS(?)<=TO_DAYS(cr.fromDate) and TO_DAYS(cr.toDate) <=TO_DAYS(?))))";
+					   		
+					  hql = hql+" and car.insuranceExpired=? and car.examineExpired=? and car.tollChargeExpired=?";
 			tempCarList=getSession().createQuery(hql)
 					.setParameter(0, CarStatusEnum.SCRAPPED).setParameter(1, serviceType).setParameter(2, false)
 					
@@ -379,7 +382,9 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(45, true).setParameter(46, false).setParameter(47,planBeginDate)
 					.setParameter(48, planBeginDate).setParameter(49,planEndDate)
 					.setParameter(50, planEndDate).setParameter(51,planBeginDate)
-					.setParameter(52, planEndDate).list();
+					.setParameter(52, planEndDate)
+					
+					.setParameter(53, false).setParameter(54, false).setParameter(55, false).list();
 		}
 		carList.addAll(tempCarList);
 			
@@ -489,6 +494,12 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
 		if(car.isInsuranceExpired())
 			return 10;
+		
+		if(car.isExamineExpired())
+			return 11;
+		
+		if(car.isTollChargeExpired())
+			return 12;
 		
 		String hql = null;
 
@@ -837,7 +848,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		if (orders.size() == 1) {
 			return orders.get(0);
 		} else if (orders.size() > 1) {
-			log.warn("order size not 1 , actual is " + orders.size());
 			return orders.get(0);
 		} else {
 			return null;

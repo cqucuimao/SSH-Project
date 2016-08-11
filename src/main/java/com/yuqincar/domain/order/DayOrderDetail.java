@@ -3,6 +3,7 @@ package com.yuqincar.domain.order;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -20,16 +21,23 @@ public class DayOrderDetail extends BaseEntity {
 	@ManyToOne(fetch=FetchType.LAZY )
 	private Order order;
 	
+	@Text("上车时间")
 	private Date getonDate;
-	
+
+	@Text("下车时间")
 	private Date getoffDate;
 	
+	@Text("经过地点摘要")
+	@Column(length=1024)
 	private String pathAbstract;
-	
+
+	@Text("实际公里")
 	private float actualMile;
-	
+
+	@Text("收费公里")
 	private float chargeMile;
-	
+
+	@Text("收费")
 	private BigDecimal chargeMoney;
 
 	public Date getGetonDate() {
@@ -53,6 +61,8 @@ public class DayOrderDetail extends BaseEntity {
 	}
 
 	public void setPathAbstract(String pathAbstract) {
+		if(pathAbstract.length()>1024)
+			pathAbstract=pathAbstract.substring(0, 1024);
 		this.pathAbstract = pathAbstract;
 	}
 

@@ -32,27 +32,27 @@
 		<s:form action="order_orderManagerQueryForm">
 			<table>
 				<tr>
-					<th>订单号</th>
+					<th><s:property value="tr.getText('order.Order.sn')" /></th>
 					<td>
 						<s:textfield name="sn" cssClass="inputText" type="text"/>
 					</td>
-					<th>单位</th>
+					<th><s:property value="tr.getText('order.Order.customerOrganization')" /></th>
 					<td>
 						<s:textfield id="customer_organization_name" name="customerOrganizationName" cssClass="inputText" type="text"/>
 					    <input id="customer_organization_id" type="hidden">
 					</td>					
-					<th>司机</th>
+					<th><s:property value="tr.getText('order.Order.driver')" /></th>
 					<td>
 						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driverName" driverOnly="true"/>
 						<s:textfield id="driverId" name="driverId" type="hidden"/>						
 					</td>
-					<th>计划开始时间</th>
+					<th>计划起止时间</th>
 					<td>
 						<s:textfield name="planBeginDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						- 
 						<s:textfield name="planEndDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
-					<th>状态</th>
+					<th><s:property value="tr.getText('order.Order.status')" /></th>
 					<td>
 						<s:select name="status" list="{'所有状态','在队列','已调度','已接受','已开始','已上车','已下车','已结束','已付费','已取消'}"></s:select>
 					</td>
@@ -106,14 +106,14 @@
 							<td class="alignCenter">${sn }</td>
 							<td>${customerOrganization.name }</td>
 							<td>${customer.name }</td>
-							<td>${chargeModeString }</td>
+							<td>${chargeMode.label }</td>
 							<td>${planDateString}</td>
 							<td>${actualDateString}</td>
 							<td>${serviceType.title }</td>	
 							<td>${car.plateNumber }</td>	
 							<td>${driver.name }</td>
 							<td>${saler.name }</td>						
-							<td>${statusString }</td>
+							<td>${status.label }</td>
 							<td class="alignCenter">
 							<s:a action="order_view.action?orderId=%{id}"><i class="icon-operate-detail" title="查看"></i></s:a>
 							<s:a action="order_print.action?orderId=%{id}"><i class="icon-operate-print" title="打印"></i></s:a>

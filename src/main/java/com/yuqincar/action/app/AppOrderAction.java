@@ -16,13 +16,13 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.dao.lbs.LBSDao;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
-import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserAPPDeviceTypeEnum;
 import com.yuqincar.service.app.DriverAPPService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.privilege.PrivilegeService;
 import com.yuqincar.service.privilege.UserService;
 
 /**
@@ -38,6 +38,8 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	private DriverAPPService driverAPPService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PrivilegeService privilegeService;
 	@Autowired
 	private OrderService orderService;
 
@@ -57,6 +59,9 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		String username = request.getParameter("username");
 		String pwd = request.getParameter("pwd");
 		user = userService.getByLoginNameAndMD5Password(username, pwd);
+		
+		if(user!=null && !privilegeService.canUserHasPrivilege(user, "/driver_app"))
+			user=null;
 	}
 
 	/**

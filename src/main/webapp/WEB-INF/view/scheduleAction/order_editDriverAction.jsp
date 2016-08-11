@@ -22,39 +22,39 @@
             <table>
                 <tbody>
                     <tr>
-                        <th width="15%">订单号：</th>
+                        <th width="15%"><s:property value="tr.getText('order.Order.sn')" />：</th>
                         <td width="35%">${sn }</td>
-                        <th width="15%">用车单位：</th>
-                        <td width="35%">${customerOrganization.abbreviation }</td>
+                        <th width="15%"><s:property value="tr.getText('order.Order.customerOrganization')" />：</th>
+                        <td width="35%">${customerOrganization.name }</td>
                     </tr>
                     <tr>
-                        <th>联系电话：</th>
-                        <td>${customer.name}：${phone }</td>
-                        <th>定车时间：</th>
+                        <th><s:property value="tr.getText('order.Order.phone')" />：</th>
+                        <td>${customer.name}（${phone}）</td>
+                        <th>计划起止时间：</th>
                     	<td>${planDateString }</td>
                      </tr>
-                    <tr>               	
-                        <th>上车地点：</th>
-                        <td>${fromAddress }</td>
-                        <th>车型：</th>
-                        <td>${serviceType.title }</td>
-                    </tr>
-                    <tr>               	
-                    	<th>车牌号：</th>
+                    <tr>                	
+                    	<th><s:property value="tr.getText('order.Order.car')" />：</th>
                         <td>
                         	<s:if test="car!=null">
                         		${car.plateNumber }
                         	</s:if>
-						</td>
-						<th>驾驶员/电话：</th>
+						</td> 
+                        <th><s:property value="tr.getText('order.Order.serviceType')" />：</th>
+                        <td>${serviceType.title }</td>
+                    </tr>
+                    <tr>             	
+                        <th><s:property value="tr.getText('order.Order.fromAddress')" />：</th>
+                        <td>${fromAddress }</td>
+						<th><s:property value="tr.getText('order.Order.driver')" />：</th>
                         <td>
                         	<s:if test="driver!=null">
-                        		${driver.name }：${driver.phoneNumber}
+                        		${driver.name }（${driver.phoneNumber}）
                         	</s:if>
                         </td> 
 					</tr>
                     <tr>    
-                        <th>目的地：</th>
+                        <th><s:property value="tr.getText('order.Order.toAddress')" />：</th>
                         <td>
                         	<s:if test="toAddress!=null">
                         		${toAddress }

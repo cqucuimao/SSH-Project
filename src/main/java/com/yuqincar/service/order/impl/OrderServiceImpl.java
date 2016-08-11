@@ -919,7 +919,9 @@ public class OrderServiceImpl implements OrderService {
 		
 		
 		getonDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getActualBeginDate(), order.getDayDetails().get(0).getGetonDate());
+		System.out.println("getonDistance="+getonDistance);
 		getoffDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate(), order.getActualEndDate());
+		System.out.println("getoffDistance="+getoffDistance);
 		
 		totalChargeMile=0;
 		totalChargeMoney=0;
@@ -928,6 +930,7 @@ public class OrderServiceImpl implements OrderService {
 			DayOrderDetail dod=order.getDayDetails().get(i);
 			hours=DateUtils.elapseHours(dod.getGetonDate(), dod.getGetoffDate());
 			mile=lbsDao.getStepMile(order.getCar().getDevice().getSN(), dod.getGetonDate(), dod.getGetoffDate());
+			System.out.println("mile="+mile);
 			if(i==0 && getonDistance>10)
 				mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
 			if(i==order.getDayDetails().size()-1 && getoffDistance>10)
@@ -968,6 +971,7 @@ public class OrderServiceImpl implements OrderService {
 			dod.setChargeMile(chargeMile);
 			dod.setChargeMoney(new BigDecimal(chargeMoney));
 			dod.setPathAbstract(getOrderTrackAbstract(order.getCar().getDevice().getSN(),dod.getGetonDate(),dod.getGetoffDate()));
+			System.out.println("path="+dod.getPathAbstract());
 			dayOrderDetailDao.update(dod);
 
 			totalChargeMile+=chargeMile;
@@ -1325,35 +1329,53 @@ public class OrderServiceImpl implements OrderService {
 			sb.append("将客户下车路码由： ").append(oldOrder.getCustomerGetoffMile()).append(" 改为了： ").append(order.getCustomerGetoffMile()).append("；");
 		if(order.getEndMile()!=oldOrder.getEndMile())
 			sb.append("将回库路码由： ").append(oldOrder.getEndMile()).append(" 改为了： ").append(order.getEndMile()).append("；");
-		if((order.getRefuelMoney()==null && oldOrder.getRefuelMoney()!=null) || (!order.getRefuelMoney().equals(oldOrder.getRefuelMoney())))
+		if((order.getRefuelMoney()==null && oldOrder.getRefuelMoney()!=null) 
+				|| (order.getRefuelMoney()!=null && oldOrder.getRefuelMoney()!=null && !order.getRefuelMoney().equals(oldOrder.getRefuelMoney()))
+				|| (order.getRefuelMoney()!=null && oldOrder.getRefuelMoney()==null))
 			sb.append("将油费由： ").append(oldOrder.getRefuelMoney()!=null ? oldOrder.getRefuelMoney() : "<空>").append(" 改为了： ")
 				.append(order.getRefuelMoney()!=null ? order.getRefuelMoney() : "<空>").append("；");
-		if((order.getWashingFee()==null && oldOrder.getWashingFee()!=null) || (!order.getWashingFee().equals(oldOrder.getWashingFee())))
+		if((order.getWashingFee()==null && oldOrder.getWashingFee()!=null) 
+				|| (order.getWashingFee()!=null && oldOrder.getWashingFee()!=null && !order.getWashingFee().equals(oldOrder.getWashingFee()))
+				|| (order.getWashingFee()!=null && oldOrder.getWashingFee()==null))
 			sb.append("将洗车费由： ").append(oldOrder.getWashingFee()!=null ? oldOrder.getWashingFee() : "<空>").append(" 改为了： ")
 				.append(order.getWashingFee()!=null ? order.getWashingFee() : "<空>").append("；");
-		if((order.getParkingFee()==null && oldOrder.getParkingFee()!=null) || (!order.getParkingFee().equals(oldOrder.getParkingFee())))
+		if((order.getParkingFee()==null && oldOrder.getParkingFee()!=null) 
+				|| (order.getParkingFee()!=null && oldOrder.getParkingFee()!=null && !order.getParkingFee().equals(oldOrder.getParkingFee()))
+				|| (order.getParkingFee()!=null && oldOrder.getParkingFee()==null))
 			sb.append("将停车费由： ").append(oldOrder.getParkingFee()!=null ? oldOrder.getParkingFee() : "<空>").append(" 改为了： ")
 				.append(order.getParkingFee()!=null ? order.getParkingFee() : "<空>").append("；");
 		if(order.getTotalChargeMile()!=oldOrder.getTotalChargeMile())
 			sb.append("将计费路码由： ").append(oldOrder.getTotalChargeMile()).append(" 改为了： ").append(order.getTotalChargeMile()).append("；");
-		if((order.getToll()==null && oldOrder.getToll()!=null) || (!order.getToll().equals(oldOrder.getToll())))
+		if((order.getToll()==null && oldOrder.getToll()!=null) 
+				|| (order.getToll()!=null && oldOrder.getToll()!=null && !order.getToll().equals(oldOrder.getToll()))
+				|| (order.getToll()!=null && oldOrder.getToll()==null))
 			sb.append("将过路费由： ").append(oldOrder.getToll()!=null ? oldOrder.getToll() : "<空>").append(" 改为了： ")
 				.append(order.getToll()!=null ? order.getToll() : "<空>").append("；");
-		if((order.getRoomAndBoardFee()==null && oldOrder.getRoomAndBoardFee()!=null) || (!order.getRoomAndBoardFee().equals(oldOrder.getRoomAndBoardFee())))
+		if((order.getRoomAndBoardFee()==null && oldOrder.getRoomAndBoardFee()!=null) 
+				|| (order.getRoomAndBoardFee()!=null && oldOrder.getRoomAndBoardFee()!=null && !order.getRoomAndBoardFee().equals(oldOrder.getRoomAndBoardFee()))
+				|| (order.getRoomAndBoardFee()!=null && oldOrder.getRoomAndBoardFee()==null))
 			sb.append("将食宿费由： ").append(oldOrder.getRoomAndBoardFee()!=null ? oldOrder.getRoomAndBoardFee() : "<空>").append(" 改为了： ")
 				.append(order.getRoomAndBoardFee()!=null ? order.getRoomAndBoardFee() : "<空>").append("；");
-		if((order.getOtherFee()==null && oldOrder.getOtherFee()!=null) || (!order.getOtherFee().equals(oldOrder.getOtherFee())))
+		if((order.getOtherFee()==null && oldOrder.getOtherFee()!=null) 
+				|| (order.getOtherFee()!=null && oldOrder.getOtherFee()!=null && !order.getOtherFee().equals(oldOrder.getOtherFee()))
+				|| (order.getOtherFee()!=null && oldOrder.getOtherFee()==null))
 			sb.append("将其它费用由： ").append(oldOrder.getOtherFee()!=null ? oldOrder.getOtherFee() : "<空>").append(" 改为了： ")
 				.append(order.getOtherFee()!=null ? order.getOtherFee() : "<空>").append("；");
-		if((order.getOrderMoney()==null && oldOrder.getOrderMoney()!=null) || (!order.getOrderMoney().equals(oldOrder.getOrderMoney())))
+		if((order.getOrderMoney()==null && oldOrder.getOrderMoney()!=null) 
+				|| (order.getOrderMoney()!=null && oldOrder.getOrderMoney()!=null && !order.getOrderMoney().equals(oldOrder.getOrderMoney()))
+				|| (order.getOrderMoney()!=null && oldOrder.getOrderMoney()==null))
 			sb.append("将核算金额由： ").append(oldOrder.getOrderMoney()!=null ? oldOrder.getOrderMoney() : "<空>").append(" 改为了： ")
 				.append(order.getOrderMoney()!=null ? order.getOrderMoney() : "<空>").append("；");
-		if((order.getActualMoney()==null && oldOrder.getActualMoney()!=null) || (!order.getActualMoney().equals(oldOrder.getActualMoney())))
+		if((order.getActualMoney()==null && oldOrder.getActualMoney()!=null) 
+				|| (order.getActualMoney()!=null && oldOrder.getActualMoney()!=null && !order.getActualMoney().equals(oldOrder.getActualMoney()))
+				|| (order.getActualMoney()!=null && oldOrder.getActualMoney()==null))
 			sb.append("将实收金额由： ").append(oldOrder.getActualMoney()!=null ? oldOrder.getActualMoney() : "<空>").append(" 改为了： ")
 				.append(order.getActualMoney()!=null ? order.getActualMoney() : "<空>").append("；");
 		if(order.getGrade()!=oldOrder.getGrade())
 			sb.append("将服务评价由： ").append(oldOrder.getGrade()).append(" 改为了： ").append(order.getGrade()).append("；");
-		if((order.getOptions()==null && oldOrder.getOptions()!=null) || (!order.getOptions().equals(oldOrder.getOptions())))
+		if((order.getOptions()==null && oldOrder.getOptions()!=null) 
+				|| (order.getOptions()!=null && oldOrder.getOptions()!=null && !order.getOptions().equals(oldOrder.getOptions()))
+				|| (order.getOptions()!=null && oldOrder.getOptions()==null))
 			sb.append("将服务评价由： ").append(oldOrder.getOptions()!=null ? oldOrder.getOptions() : "<空>").append(" 改为了： ").append(order.getOptions()!=null ? order.getOptions() : "<空>").append("；");
 		
 		if(sb.length()>0){

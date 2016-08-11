@@ -155,8 +155,7 @@
 					<td class="col-right">
 						<!-- 右侧列表 -->
 						<div class="editBlock search Align tool">
-							<input class="inputButton floatR" type="button" value="推荐司机"
-								name="getDriver" />
+							<input class="inputButton floatR" type="button" value="推荐车辆" name="getDriver" />
 							<table>
 								<tbody>
 								<tr>
@@ -192,8 +191,6 @@
 										</tr>
 									</thead>
 									<tbody class="tableHover">
-										<tr>
-										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -682,6 +679,10 @@
 										alert("队列订单不能被当前用户调度")
 									} else if (data.result == 10) {
 										alert("车辆已经过保")
+									} else if (data.result == 11) {
+										alert("车辆没有年审")
+									} else if (data.result == 12) {
+										alert("车辆没有交路桥费")
 									}
 								},
 								error : function(msg) {  			         
@@ -711,45 +712,48 @@
 							dataType : 'json',
 							success : function(data) {
 								var header = $("#carInfoHeader");
-								//填充表头
 								$(".dataGrid").find("thead").find('th[class="alignCenter"]').remove();
-				    			jQuery.each(data[0].carInfo,function(i, val){
-									$(".dataGrid").find("thead").find("tr").append('<th class="alignCenter">'+ i+ '</th>');
-								});
-								//填充数据项
 								$(".tableHover").find("td").remove();
-								for (var i = 0; i < data.length; i++) {
-									$(".tableHover").append('<tr>');
-									$(".tableHover").append('<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
-									if (typeof (data[i].carNumber) != "undefined") {
-										$(".tableHover").append('<td>'+ data[i].carNumber+ '</td>');
-									} else {
-										$(".tableHover").append('<td></td>');
-									}
-									if (typeof (data[i].driverName) != "undefined") {
-										$(".tableHover").append("<td>"+ data[i].driverName + "<input type='hidden' value=';"+data[i].driverId+";'></input></td>");
-									}else{
-										$(".tableHover").append("<td><input type='hidden'></input></td>");
-									}
-									if (typeof (data[i].phone) != "undefined") {
-										$(".tableHover").append('<td>'+ data[i].phone+ '</td>');
-									} else {
-										$(".tableHover").append('<td></td>');
-									}
-									jQuery.each(data[i].carInfo,function(date,val) {
-										if (val == 0) {
-											$(".tableHover").append('<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
-										} else if (val == 1) {
-											$(".tableHover").append('<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
-										} else if (val == 2) {
-											$(".tableHover").append('<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
-										} else if (val == 3) {
-											$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
-										} else {
-											$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
-										}
+								
+								if(data!=null && data.length>0){
+									//填充表头
+					    			jQuery.each(data[0].carInfo,function(i, val){
+										$(".dataGrid").find("thead").find("tr").append('<th class="alignCenter">'+ i+ '</th>');
 									});
-									$(".tableHover").append('</tr>');
+									//填充数据项
+									for (var i = 0; i < data.length; i++) {
+										$(".tableHover").append('<tr>');
+										$(".tableHover").append('<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
+										if (typeof (data[i].carNumber) != "undefined") {
+											$(".tableHover").append('<td>'+ data[i].carNumber+ '</td>');
+										} else {
+											$(".tableHover").append('<td></td>');
+										}
+										if (typeof (data[i].driverName) != "undefined") {
+											$(".tableHover").append("<td>"+ data[i].driverName + "<input type='hidden' value=';"+data[i].driverId+";'></input></td>");
+										}else{
+											$(".tableHover").append("<td><input type='hidden'></input></td>");
+										}
+										if (typeof (data[i].phone) != "undefined") {
+											$(".tableHover").append('<td>'+ data[i].phone+ '</td>');
+										} else {
+											$(".tableHover").append('<td></td>');
+										}
+										jQuery.each(data[i].carInfo,function(date,val) {
+											if (val == 0) {
+												$(".tableHover").append('<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
+											} else if (val == 1) {
+												$(".tableHover").append('<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
+											} else if (val == 2) {
+												$(".tableHover").append('<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
+											} else if (val == 3) {
+												$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
+											} else {
+												$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
+											}
+										});
+										$(".tableHover").append('</tr>');
+									}
 								}
 								console.log(data);
 							},
@@ -787,45 +791,47 @@
 					dataType : 'json',
 					success : function(data) {
 						var header = $("#carInfoHeader");
-						//填充表头
 						$(".dataGrid").find("thead").find('th[class="alignCenter"]').remove();
-						jQuery.each(data[0].carInfo,function(i, val) {
-							$(".dataGrid").find("thead").find("tr").append('<th class="alignCenter">'+ i+ '</th>');
-						});
-						//填充数据项
 						$(".tableHover").find("td").remove();
-						for (var i = 0; i < data.length; i++) {
-							$(".tableHover").append('<tr>');
-							$(".tableHover").append('<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
-							if (typeof (data[i].carNumber) != "undefined") {
-								$(".tableHover").append('<td>'+ data[i].carNumber+ '</td>');
-							} else {
-								$(".tableHover").append('<td></td>');
-							}
-							if (typeof (data[i].driverName) != "undefined") {
-								$(".tableHover").append("<td>"+ data[i].driverName + "<input type='hidden' value=';"+data[i].driverId+";'></input></td>");
-							}else{
-								$(".tableHover").append("<td><input type='hidden'></input></td>");
-							}							
-							if (typeof (data[i].phone) != "undefined") {
-								$(".tableHover").append('<td>'+ data[i].phone+ '</td>');
-							} else {
-								$(".tableHover").append('<td></td>');
-							}
-							jQuery.each(data[i].carInfo,function(date,val) {
-								if (val == 0) {
-									$(".tableHover").append('<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
-								} else if (val == 1) {
-									$(".tableHover").append('<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
-								} else if (val == 2) {
-									$(".tableHover").append('<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
-								} else if (val == 3) {
-									$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
-								} else {
-									$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
-								}
+						if(data!=null && data.length>0){
+							//填充表头
+							jQuery.each(data[0].carInfo,function(i, val) {
+								$(".dataGrid").find("thead").find("tr").append('<th class="alignCenter">'+ i+ '</th>');
 							});
-							$(".tableHover").append('</tr>');
+							//填充数据项
+							for (var i = 0; i < data.length; i++) {
+								$(".tableHover").append('<tr>');
+								$(".tableHover").append('<td class="alignCenter"><input type="radio"  name="radio2" value='+data[i].id+' /></td>');
+								if (typeof (data[i].carNumber) != "undefined") {
+									$(".tableHover").append('<td>'+ data[i].carNumber+ '</td>');
+								} else {
+									$(".tableHover").append('<td></td>');
+								}
+								if (typeof (data[i].driverName) != "undefined") {
+									$(".tableHover").append("<td>"+ data[i].driverName + "<input type='hidden' value=';"+data[i].driverId+";'></input></td>");
+								}else{
+									$(".tableHover").append("<td><input type='hidden'></input></td>");
+								}							
+								if (typeof (data[i].phone) != "undefined") {
+									$(".tableHover").append('<td>'+ data[i].phone+ '</td>');
+								} else {
+									$(".tableHover").append('<td></td>');
+								}
+								jQuery.each(data[i].carInfo,function(date,val) {
+									if (val == 0) {
+										$(".tableHover").append('<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
+									} else if (val == 1) {
+										$(".tableHover").append('<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
+									} else if (val == 2) {
+										$(".tableHover").append('<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
+									} else if (val == 3) {
+										$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
+									} else {
+										$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
+									}
+								});
+								$(".tableHover").append('</tr>');
+							}
 						}
 						console.log(data);
 					},

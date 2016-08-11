@@ -108,4 +108,13 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 		}
 		return urlSet;
 	}
+	
+	public boolean canUserHasPrivilege(User user, String privelegeUrl){
+		for(Role role:user.getRoles()){
+			for(Privilege privilege:role.getPrivileges())
+				if(privilege.getUrl().equals(privelegeUrl))
+					return true;
+		}
+		return false;
+	}
 }

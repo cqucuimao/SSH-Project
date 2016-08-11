@@ -14,7 +14,7 @@ import com.yuqincar.utils.Text;
 @Entity
 public class Device extends BaseEntity {
 	@Text("SN")
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String SN;
 
 	@Text("PN")

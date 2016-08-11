@@ -16,6 +16,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.common.VerificationCode;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.common.VerificationCodeService;
+import com.yuqincar.service.privilege.PrivilegeService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.service.sms.impl.SMSServiceImpl;
@@ -26,6 +27,8 @@ public class AppUserAction extends BaseAction implements Preparable{
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PrivilegeService privilegeService;
 	@Autowired
 	private VerificationCodeService codeService;
 	@Autowired
@@ -43,6 +46,10 @@ public class AppUserAction extends BaseAction implements Preparable{
 		String username = request.getParameter("username");
 		String password = request.getParameter("pwd");
 		user = userService.getByLoginNameAndMD5Password(username, password);
+		//本Action主要用于司机APP，但是有getSMSCode方法同时被司机APP和下单APP使用。当下单APP使用getSMSCode方法时，不需要user对象。
+		//所以此处判断是否拥有司机APP功能。不会与下单APP冲突。
+		if(user!=null && !privilegeService.canUserHasPrivilege(user, "/driver_app"))
+			user=null;
 	}
 
 	

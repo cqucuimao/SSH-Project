@@ -45,14 +45,14 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<th>订单号</th>
-							<th>单位</th>
-							<th>姓名</th>
-							<th>计费方式</th>
+							<th><s:property value="tr.getText('order.Order.sn')"/></th>
+							<th><s:property value="tr.getText('order.Order.customerOrganization')"/></th>
+							<th><s:property value="tr.getText('order.Order.customer')"/></th>
+							<th><s:property value="tr.getText('order.Order.chargeMode')"/></th>
 							<th>计划起止时间</th>
-							<th>司机</th>
-							<th>电话号码</th>
-							<th>状态</th>
+							<th><s:property value="tr.getText('order.Order.driver')"/></th>
+							<th><s:property value="tr.getText('order.Order.phone')"/></th>
+							<th><s:property value="tr.getText('order.Order.status')"/></th>
 							<th>等待时间（分）</th>
 							<th class="alignCenter">操作</th>
 						</tr>
@@ -63,11 +63,11 @@
 							<td class="alignCenter">${sn }</td>
 							<td>${customerOrganization.name }</td>
 							<td>${customer.name }</td>
-							<td>${chargeModeString }</td>
+							<td>${chargeMode.label }</td>
 							<td>${planDateString}</td>
 							<td>${driver.name }</td>
 							<td>${phone }</td>							
-							<td>${statusString }</td>
+							<td>${status.label }</td>
 							<td>${waiteMinutes }</td>
 							<td class="alignCenter">
 							<s:a action="order_view.action?orderId=%{id}"><i class="icon-operate-detail" title="查看"></i></s:a>

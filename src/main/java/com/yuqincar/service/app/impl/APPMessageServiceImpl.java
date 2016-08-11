@@ -7,13 +7,9 @@ import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.baidu.yun.core.log.YunLogEvent;
-import com.baidu.yun.core.log.YunLogHandler;
 import com.baidu.yun.push.auth.PushKeyPair;
 import com.baidu.yun.push.client.BaiduPushClient;
 import com.baidu.yun.push.constants.BaiduPushConstants;
-import com.baidu.yun.push.exception.PushClientException;
-import com.baidu.yun.push.exception.PushServerException;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceRequest;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceResponse;
 import com.dbay.apns4j.IApnsService;

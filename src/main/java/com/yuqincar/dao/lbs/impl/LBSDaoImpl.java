@@ -55,6 +55,7 @@ public class LBSDaoImpl implements LBSDao{
 	public float getStepMile(String sn, Date beginTime, Date endTime) {
 		String api = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="
 				+sn+"&begin="+beginTime.getTime()+"&end="+endTime.getTime()+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN&_=1450765172310";
+		System.out.println("api="+api);
 		String json = HttpMethod.get(api);
 		JSONObject data = (JSONObject) JSON.parse(json);
 		JSONArray track = (JSONArray) data.get("track");

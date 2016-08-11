@@ -23,4 +23,6 @@ public interface PrivilegeService extends BaseService {
 	List<Privilege> getByIds(Long[] privilegeIds);
 	
 	Collection<String> getUserPrivilegeUrls(User user);
+	
+	public boolean canUserHasPrivilege(User user, String privelegeUrl);
 }

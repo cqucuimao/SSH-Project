@@ -97,6 +97,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		/*司机姓名查询*/
 		if(model.getDriver()!=null&&model.getDriver().getName()!=null && !"".equals(model.getDriver().getName()))
 			helper.addWhereCondition("c.driver.name like ?", "%"+model.getDriver().getName()+"%");
+		helper.addWhereCondition("c.status", CarStatusEnum.NORMAL);
 		helper.addOrderByProperty("c.id", false);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);		
 		ActionContext.getContext().getValueStack().push(pageBean);	
@@ -109,6 +110,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	 */
 	public String list(){
 		QueryHelper helper = new QueryHelper("Car", "c");
+		helper.addWhereCondition("c.status", CarStatusEnum.NORMAL);
 		helper.addOrderByProperty("c.id", false);
 		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);

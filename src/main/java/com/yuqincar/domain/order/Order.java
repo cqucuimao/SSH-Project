@@ -191,6 +191,9 @@ public class Order extends BaseEntity {
 	@Text("业务员")
 	@OneToOne(fetch=FetchType.LAZY)
 	private User saler;
+	
+	@Text("税费")
+	private BigDecimal tax; 
 
 	public OrderStatement getOrderStatement() {
 		return orderStatement;
@@ -583,5 +586,13 @@ public class Order extends BaseEntity {
 
 	public void setSaler(User saler) {
 		this.saler = saler;
+	}
+
+	public BigDecimal getTax() {
+		return tax;
+	}
+
+	public void setTax(BigDecimal tax) {
+		this.tax = tax;
 	}	
 }

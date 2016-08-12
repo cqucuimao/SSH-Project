@@ -24,7 +24,7 @@
                         <th width="15%"><s:property value="tr.getText('order.Order.sn')" />：</th>
                         <td width="35%">${sn }</td>
                         <th width="15%"><s:property value="tr.getText('order.Order.customerOrganization')" />：</th>
-                        <td width="35%">${customerOrganization.abbreviation }</td>
+                        <td width="35%">${customerOrganization.name }</td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('order.Order.customer')" />：</th>
@@ -47,7 +47,7 @@
                     </tr>
                     <tr>
                     	<th><s:property value="tr.getText('order.Order.chargeMode')" />：</th>
-                    	<td>${chargeModeString }</td>
+                    	<td>${chargeMode.label }</td>
                     	<th><s:property value="tr.getText('order.Order.serviceType')" />：</th>
                         <td>${serviceType.title }</td>
                     </tr>
@@ -71,7 +71,7 @@
                         	${saler.name }
                         </td>                    
                         <th><s:property value="tr.getText('order.Order.status')" />：</th>
-                        <td>${statusString }</td>
+                        <td>${status.label }</td>
                     </tr> 
                     <tr>
                         <th>计划起止时间：</th>

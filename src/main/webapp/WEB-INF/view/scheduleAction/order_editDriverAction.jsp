@@ -73,7 +73,7 @@
              		<s:iterator value="driverActionVOList" status="iteratorStatus">
              		<tr>   
              			 			   			
-             			<td width="15%">${statusLabel}</td>
+             			<td width="15%">${status.label}</td>
              			<s:if test="#iteratorStatus.last">
              				<td width="35%" class="last" id="TD${iteratorStatus.index }"><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
              			</s:if>

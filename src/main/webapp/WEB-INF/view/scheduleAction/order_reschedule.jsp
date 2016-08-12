@@ -110,13 +110,22 @@
                         <td></td>
                     </tr>                  
                     <tr>
-                        <th>新派车辆：<span class="required">*</span></th>
+                        <th>车辆：<span class="required">*</span></th>
                         <td>
-							<s:textfield id="car_platenumber" class="inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" />
+							<s:textfield id="plateNumber" name="plateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
 						</td>
                         <th></th>
                         <td></td>
-                    </tr>              
+                    </tr>                  
+                    <tr>
+                        <th>司机：<span class="required">*</span></th>
+                        <td>
+							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driverName" type="text" driverOnly="true"/>
+							<s:textfield id="driverId" name="driverId" type="hidden"/>
+						</td>
+                        <th></th>
+                        <td></td>
+                    </tr>             
                     <tr>
                         <th>延后原因：<span class="required">*</span></th>
                         <td>
@@ -156,6 +165,9 @@
 			submitout: function(element) { $(element).valid(); },
 			rules:{		
 				plateNumber:{
+					required:true
+				},
+				driverName:{
 					required:true
 				},
 				rescheduleReason:{

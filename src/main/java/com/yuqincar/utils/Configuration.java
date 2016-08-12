@@ -22,6 +22,7 @@ public class Configuration {
 	private static String BaiduDriverPushSecretKey=null;
 	private static String BaiduCustomerPushApiKey=null;
 	private static String BaiduCustomerPushSecretKey=null;
+	private static double AgentMoneyTaxRatio;
 	
 	//调度员能够调度一个队列中的订单所需的最大分钟数。超过这个时间，就会被剥夺。
 	private static int depriveScheduleMinute = 10;
@@ -48,6 +49,7 @@ public class Configuration {
 			BaiduDriverPushSecretKey=props.getProperty("BaiduDriverPushSecretKey");
 			BaiduCustomerPushApiKey=props.getProperty("BaiduCustomerPushApiKey");
 			BaiduCustomerPushSecretKey=props.getProperty("BaiduCustomerPushSecretKey");
+			AgentMoneyTaxRatio=Double.valueOf(props.getProperty("AgentMoneyTaxRatio"));
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -166,5 +168,13 @@ public class Configuration {
 	public static void setBaiduCustomerPushSecretKey(
 			String baiduCustomerPushSecretKey) {
 		BaiduCustomerPushSecretKey = baiduCustomerPushSecretKey;
+	}
+
+	public static double getAgentMoneyTaxRatio() {
+		return AgentMoneyTaxRatio;
+	}
+
+	public static void setAgentMoneyTaxRatio(double agentMoneyTaxRatio) {
+		AgentMoneyTaxRatio = agentMoneyTaxRatio;
 	}	
 }

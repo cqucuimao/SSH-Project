@@ -59,6 +59,7 @@ public class OrderAction extends BaseAction {
 	private String customerOrganizationName;
 	private long imageId;
 	private long driverId;
+	private String driverName;
 	private Date planBeginDate;
 	private Date planEndDate;
 	private String status;
@@ -309,12 +310,6 @@ public class OrderAction extends BaseAction {
 		return "operate";
 	}
 	
-	public String getStatusLabel(){
-		DriverActionVO vo=(DriverActionVO)ActionContext.getContext().getValueStack().peek();
-		
-		return vo.getStatus().getLabel();
-	}
-	
 	//添加  接收订单操作
 	public String addAcceptAction(){
 
@@ -457,29 +452,29 @@ public class OrderAction extends BaseAction {
 	public String reschedule(){
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
+			plateNumber=order.getCar().getPlateNumber();
+			driverName=order.getDriver().getName();
+			driverId=order.getDriver().getId();
 			ActionContext.getContext().getValueStack().push(order);
 		}
 		return "reschedule";
 	}
 	
 	public String rescheduleDo(){
-		System.out.println("rescheduleDo");
-		System.out.println("orderId="+orderId);
-		System.out.println("plateNumber="+plateNumber);
-		System.out.println("rescheduleReason="+rescheduleReason);
 		Order order=orderService.getOrderById(orderId);
 		Car car=carService.getCarByPlateNumber(plateNumber);
-		ActionContext.getContext().getValueStack().push(order);
+		User driver=userService.getById(driverId);
+		
 		int result=0;
-		//TODO 还应该多传一个driver对象
-		//result=orderService.orderReschedule(order, car, (User)ActionContext.getContext().getSession().get("user"), rescheduleReason);
+		result=orderService.orderReschedule(order, car, driver,(User)ActionContext.getContext().getSession().get("user"), rescheduleReason);
 		if(result==1){
-			addFieldError("rescheduleError", "车辆在此时间段不可用");
+			addFieldError("rescheduleError", "车辆或司机不可用");
 			return "reschedule";
 		}else if(result==2){
 			addFieldError("rescheduleError", "此订单当前状态不支持重新调度操作");
 			return "reschedule";
 		}
+		ActionContext.getContext().getValueStack().push(order);
 		return "view";
 	}
 	
@@ -1004,10 +999,19 @@ public class OrderAction extends BaseAction {
 
 	public void setDayDetails(List<DayOrderDetail> dayDetails) {
 		this.dayDetails = dayDetails;
+	}
+
+	public String getDriverName() {
+		return driverName;
+	}
+
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+
+	public long getDriverId() {
+		return driverId;
 	}	
-	
-	
-	
 }
 
 class AbstractTrackVO{

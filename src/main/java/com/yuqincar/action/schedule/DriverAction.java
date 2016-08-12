@@ -90,6 +90,7 @@ public class DriverAction extends BaseAction {
         ltvo.setId(driver.getId());
         ltvo.setDriverName(driver.getName());
         ltvo.setPlateNumber("");
+        ltvo.setServiceType("");
         ltvo.setPhone(driver.getPhoneNumber());
         teMap.put(ltvo, driverUseInfoNum);
         driverStatus.add(teMap);
@@ -158,6 +159,7 @@ public class DriverAction extends BaseAction {
     	        	ltvo.setPhone("");
     	        }
     	        ltvo.setPlateNumber(car.getPlateNumber());
+    	        ltvo.setServiceType(car.getServiceType().getTitle());
     	        teMap.put(ltvo, carUseInfoNum);
                 carStatus.add(teMap);
 
@@ -247,10 +249,10 @@ public class DriverAction extends BaseAction {
     	private long id;
     	private String driverName;
     	private String plateNumber;
+    	private String serviceType;
     	private String phone;
     	
 		public String getType() {
-			System.out.println("in getType");
 			return type;
 		}
 		public void setType(String type) {
@@ -279,6 +281,12 @@ public class DriverAction extends BaseAction {
 		}
 		public void setPhone(String phone) {
 			this.phone = phone;
-		}    	
+		}
+		public String getServiceType() {
+			return serviceType;
+		}
+		public void setServiceType(String serviceType) {
+			this.serviceType = serviceType;
+		}    		
     }
 }

@@ -50,6 +50,7 @@ import com.yuqincar.service.app.DriverAPPService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.order.WatchKeeperService;
 import com.yuqincar.service.sms.SMSService;
+import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.HttpMethod;
 import com.yuqincar.utils.QueryHelper;
@@ -397,7 +398,9 @@ public class OrderServiceImpl implements OrderService {
 		return order.getStatus()==OrderStatusEnum.INQUEUE || 
 				order.getStatus()==OrderStatusEnum.SCHEDULED || 
 				order.getStatus()==OrderStatusEnum.ACCEPTED ||
-				order.getStatus()==OrderStatusEnum.BEGIN ;
+				order.getStatus()==OrderStatusEnum.BEGIN ||
+				order.getStatus()==OrderStatusEnum.GETON ||
+				order.getStatus()==OrderStatusEnum.GETOFF;
 	}
 
 	@Transactional
@@ -442,7 +445,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	public boolean canUpdate(Order order) {
-		return order.getStatus()==OrderStatusEnum.SCHEDULED || order.getStatus()==OrderStatusEnum.ACCEPTED;
+		return order.getStatus()==OrderStatusEnum.SCHEDULED 
+				|| order.getStatus()==OrderStatusEnum.ACCEPTED;
 	}
 
 	public PageBean getPageBean(int pageNum, QueryHelper helper) {
@@ -450,7 +454,9 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public boolean canOrderEndPostpone(Order order) {
-		return order.getChargeMode()!=ChargeModeEnum.MILE && order.getStatus()==OrderStatusEnum.BEGIN;
+		return (order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+				&& (order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETON
+					|| order.getStatus()==OrderStatusEnum.GETOFF);
 	}
 
 	@Transactional
@@ -502,7 +508,9 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public boolean canOrderReschedule(Order order) {
-		return order.getStatus()==OrderStatusEnum.BEGIN;
+		return order.getStatus()==OrderStatusEnum.BEGIN 
+				|| order.getStatus()==OrderStatusEnum.GETON 
+				|| order.getStatus()==OrderStatusEnum.GETOFF;
 	}
 
 	@Transactional
@@ -972,7 +980,6 @@ public class OrderServiceImpl implements OrderService {
 				dod.setChargeMile(chargeMile);
 				dod.setChargeMoney(new BigDecimal(chargeMoney));
 				dod.setPathAbstract(getOrderTrackAbstract(order.getCar().getDevice().getSN(),dod.getGetonDate(),dod.getGetoffDate()));
-				System.out.println("path="+dod.getPathAbstract());
 				dayOrderDetailDao.update(dod);
 	
 				totalChargeMile+=chargeMile;
@@ -982,9 +989,8 @@ public class OrderServiceImpl implements OrderService {
 			order.setEndMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(),order.getActualEndDate()));
 			order.setCustomerGetonMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(0).getGetonDate()));
 			order.setCustomerGetoffMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate()));
-			order.setTotalChargeMile(totalChargeMile);
+			order.setTotalChargeMile(totalChargeMile);			
 			order.setOrderMoney(new BigDecimal(totalChargeMoney));
-			order.setActualMoney(new BigDecimal(totalChargeMoney));
 		}else{
 			order.setBeginMile(0);
 			order.setEndMile(0);
@@ -992,8 +998,26 @@ public class OrderServiceImpl implements OrderService {
 			order.setCustomerGetoffMile(0);
 			order.setTotalChargeMile(0);
 			order.setOrderMoney(BigDecimal.ZERO);
-			order.setActualMoney(BigDecimal.ZERO);
 		}
+		
+
+		BigDecimal agentMoney=BigDecimal.ZERO;
+		if(order.getRefuelMoney()!=null)
+			agentMoney=agentMoney.add(order.getRefuelMoney());
+		if(order.getWashingFee()!=null)
+			agentMoney=agentMoney.add(order.getWashingFee());
+		if(order.getParkingFee()!=null)
+			agentMoney=agentMoney.add(order.getParkingFee());
+		if(order.getToll()!=null)
+			agentMoney=agentMoney.add(order.getToll());
+		if(order.getRoomAndBoardFee()!=null)
+			agentMoney=agentMoney.add(order.getRoomAndBoardFee());
+		if(order.getOtherFee()!=null)
+			agentMoney=agentMoney.add(order.getOtherFee());
+		order.setTax(agentMoney.multiply(new BigDecimal(Configuration.getAgentMoneyTaxRatio())));
+		order.setOrderMoney(order.getOrderMoney().add(agentMoney).add(order.getTax()));
+		order.setActualMoney(order.getOrderMoney());
+			
 		orderDao.update(order);
 	}
 	

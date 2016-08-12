@@ -66,11 +66,13 @@
 						<col></col>
 						<col></col>
 						<col></col>
+						<col></col>
 					</colgroup>
 					<thead>
 						<tr>
 							<th>姓名</th>
 							<th>车牌</th>
+							<th>车型</th>
 							<th>联系方式</th>
 							<c:set var="flag" value="0"></c:set>
 							<c:forEach items="${recordList}" var="temp">							
@@ -91,6 +93,7 @@
   								<c:forEach items="${temp}" var="map">  
   									<td>${map.key.driverName}</td>
 									<td>${map.key.plateNumber}</td>
+									<td>${map.key.serviceType}</td>
 									<td>${map.key.phone}</td>								
   									<c:forEach items="${map.value}" var="mapValue">  										
   										<c:if test="${mapValue.value==0}">

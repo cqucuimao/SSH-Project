@@ -1,5 +1,6 @@
 package com.yuqincar.action.app;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,6 +55,18 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	private String deviceType;
 	
 	private String deviceToken;
+	
+	private BigDecimal refuelMoney;
+
+	private BigDecimal washingFee;
+	
+	private BigDecimal parkingFee;
+	
+	private BigDecimal toll;
+	
+	private BigDecimal roomAndBoardFee;
+	
+	private BigDecimal otherFee;
 
 	public void prepare() throws Exception {
 		String username = request.getParameter("username");
@@ -192,6 +205,13 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order o = orderService.getOrderById(orderId);
+		o.setRefuelMoney(refuelMoney!=null ? refuelMoney : BigDecimal.ZERO);
+		o.setWashingFee(washingFee!=null ? washingFee : BigDecimal.ZERO);
+		o.setParkingFee(parkingFee!=null ? parkingFee : BigDecimal.ZERO);
+		o.setToll(toll!=null ? toll : BigDecimal.ZERO);
+		o.setRoomAndBoardFee(roomAndBoardFee!=null ? roomAndBoardFee : BigDecimal.ZERO);
+		o.setOtherFee(otherFee!=null ? otherFee : BigDecimal.ZERO);
+		
 		if (driverAPPService.orderEnd(o,null,null) == 0)
 			this.writeJson("{\"status\":true}");
 		else
@@ -464,6 +484,53 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		this.deviceType = deviceType;
 	}
 
+	public BigDecimal getRefuelMoney() {
+		return refuelMoney;
+	}
+
+	public void setRefuelMoney(BigDecimal refuelMoney) {
+		this.refuelMoney = refuelMoney;
+	}
+
+	public BigDecimal getWashingFee() {
+		return washingFee;
+	}
+
+	public void setWashingFee(BigDecimal washingFee) {
+		this.washingFee = washingFee;
+	}
+
+	public BigDecimal getParkingFee() {
+		return parkingFee;
+	}
+
+	public void setParkingFee(BigDecimal parkingFee) {
+		this.parkingFee = parkingFee;
+	}
+
+	public BigDecimal getToll() {
+		return toll;
+	}
+
+	public void setToll(BigDecimal toll) {
+		this.toll = toll;
+	}
+
+	public BigDecimal getRoomAndBoardFee() {
+		return roomAndBoardFee;
+	}
+
+	public void setRoomAndBoardFee(BigDecimal roomAndBoardFee) {
+		this.roomAndBoardFee = roomAndBoardFee;
+	}
+
+	public BigDecimal getOtherFee() {
+		return otherFee;
+	}
+
+	public void setOtherFee(BigDecimal otherFee) {
+		this.otherFee = otherFee;
+	}
 }
 
 class LocationVO{

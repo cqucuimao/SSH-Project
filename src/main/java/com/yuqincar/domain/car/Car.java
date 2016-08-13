@@ -41,6 +41,7 @@ public class Car extends BaseEntity {
 
 	@Text("车型")
 	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(nullable=false)
 	private CarServiceType serviceType;	//车型。代表收费标准
 
 	@Text("司机")

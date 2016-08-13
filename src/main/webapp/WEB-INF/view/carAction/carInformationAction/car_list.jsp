@@ -41,6 +41,9 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="submit" />
 					</td>
+					<td>
+						<input class="inputButton" id="btn" type="button" value="详细查询" name="submit" />
+					</td>
 				</tr>
 			</table>
 			</s:form>
@@ -94,6 +97,10 @@
 	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>	
-	
+	<script>
+	$("#btn").click(function(){
+		self.location.href='car_queryUI.action';
+	});
+	</script>
 </body>
 </html>

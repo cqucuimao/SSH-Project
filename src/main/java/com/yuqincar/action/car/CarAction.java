@@ -1,6 +1,7 @@
 package com.yuqincar.action.car;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,9 +80,27 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private int transmissionTypeId;
 	private int plateTypeId;
 	private String actionFlag;
+	private String statusLabel;
+	private String plateTypeLabel;
+	private String transmissionTypeLabel;
+	private String careExpiredLabel;
+	private String insuranceExpiredLabel;
+	private String examineExpiredLabel;
+	private String tollChargeExpiredLabel;
+	private String standbyCarLabel;
 	private CarRepair unDoneAppointRepair;
 	private CarCare unDoneAppointCare;
 	private CarExamine unDoneAppointExamine;
+	
+	private Date registDate1;
+	private Date registDate2;
+	private Date enrollDate1;
+	private Date enrollDate2;
+	private int mileage1;
+	private int mileage2;
+	private int seatNumber1;
+	private int seatNumber2;
+	
 	/** 查询 */
 	public String queryList() {
 		
@@ -124,6 +143,159 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
+		return "list";
+	}
+	
+	/*详细查询页面*/
+	public String queryUI(){
+		// 准备数据：carServiceTypeList
+		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
+		// 准备数据：servicePointList
+	    ActionContext.getContext().put("servicePointList", carService.getAllServicePoint());	
+		return "queryUI";
+	}
+	
+	/*详细查询*/
+	public String moreQuery(){
+		QueryHelper helper = new QueryHelper(Car.class, "c");
+		/*车牌号查询*/
+		if(model.getPlateNumber()!=null && !"".equals(model.getPlateNumber()))
+			helper.addWhereCondition("c.plateNumber like ?", "%"+model.getPlateNumber()+"%");
+		/*服务类型查询*/
+		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
+		
+		if(model.getServiceType()!=null&&model.getServiceType().getTitle()!=null && !"".equals(model.getServiceType().getTitle()))
+			helper.addWhereCondition("c.serviceType.title like ?", "%"+model.getServiceType().getTitle()+"%");
+		/*司机姓名查询*/
+		if(model.getDriver()!=null&&model.getDriver().getName()!=null && !"".equals(model.getDriver().getName()))
+			helper.addWhereCondition("c.driver.name like ?", "%"+model.getDriver().getName()+"%");
+		/*业务点查询*/
+		if(model.getServicePoint() != null && model.getServicePoint().getName() != null && !"".equals(model.getServicePoint().getName()))
+			helper.addWhereCondition("c.servicePoint.name like ?", "%"+model.getServicePoint().getName()+"%");
+		//车辆状态
+		if(statusLabel == "正常" || statusLabel.equals("正常")){
+			helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
+		}
+		if(statusLabel == "报废" || statusLabel.equals("报废")){
+			helper.addWhereCondition("c.status=?", CarStatusEnum.SCRAPPED);
+		}
+		//车牌类型
+		if(plateTypeLabel == "蓝牌" || plateTypeLabel.equals("蓝牌")){
+			helper.addWhereCondition("c.plateType=?", PlateTypeEnum.BLUE);
+		}
+		if(plateTypeLabel == "黄牌" || plateTypeLabel.equals("黄牌")){
+			helper.addWhereCondition("c.plateType=?", PlateTypeEnum.YELLOW);
+		}
+		//变速箱类型
+		if(transmissionTypeLabel == "自动" || transmissionTypeLabel.equals("自动")){
+			helper.addWhereCondition("c.transmissionType=?", TransmissionTypeEnum.AUTO);
+		}
+		if(transmissionTypeLabel == "手动" || transmissionTypeLabel.equals("手动")){
+			helper.addWhereCondition("c.transmissionType=?", TransmissionTypeEnum.MANNUAL);
+		}
+		if(transmissionTypeLabel == "不确定" || transmissionTypeLabel.equals("不确定")){
+			helper.addWhereCondition("c.transmissionType=?", TransmissionTypeEnum.UNKNOWN);
+		}
+		//品牌
+		if(model.getBrand() != null && !"".equals(model.getBrand())){
+			helper.addWhereCondition("c.brand like ?","%"+model.getBrand()+"%" );
+		}
+		//型号
+		if(model.getModel() != null && !"".equals(model.getModel())){
+			helper.addWhereCondition("c.model like ?", "%"+model.getModel()+"%");
+		}
+		//车架号
+		if(model.getVIN() != null && !"".equals(model.getVIN())){
+			helper.addWhereCondition("c.VIN like ?", "%"+model.getVIN()+"%");
+		}
+		//发动机号
+		if(model.getEngineSN() != null && !"".equals(model.getEngineSN())){
+			helper.addWhereCondition("c.EngineSN like ?", "%"+model.getEngineSN()+"%");
+		}
+		//SN号
+		if(model.getDevice() != null && model.getDevice().getSN() != null && !"".equals(model.getDevice().getSN())){
+			helper.addWhereCondition("c.device.SN like ?", "%"+model.getDevice().getSN()+"%");
+		}
+		//路桥卡卡号
+		if(model.getTollChargeSN() != null && !"".equals(model.getTollChargeSN())){
+			System.out.println("路桥卡="+model.getTollChargeSN());
+			helper.addWhereCondition("c.tollChargeSN like ?", "%"+model.getTollChargeSN()+"%");
+		}
+		//备注
+		if(model.getMemo() != null && !"".equals(model.getMemo())){
+			helper.addWhereCondition("c.memo like ?", "%"+model.getMemo()+"%");
+		}
+		//注册时间
+		if(registDate1!=null && registDate2!=null)
+			helper.addWhereCondition("(TO_DAYS(c.registDate)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(c.registDate))>=0", 
+					registDate1 ,registDate2);
+		else if(registDate1==null && registDate2!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(c.registDate))>=0", registDate2);
+		else if(registDate1!=null && registDate2==null)
+			helper.addWhereCondition("(TO_DAYS(c.registDate)-TO_DAYS(?))>=0", registDate1);
+		//登记时间
+		if(enrollDate1!=null && enrollDate2!=null)
+			helper.addWhereCondition("(TO_DAYS(c.enrollDate)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(c.enrollDate))>=0", 
+					enrollDate1 ,enrollDate2);
+		else if(enrollDate1==null && enrollDate2!=null)
+			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(c.enrollDate))>=0", enrollDate2);
+		else if(enrollDate1!=null && enrollDate2==null)
+			helper.addWhereCondition("(TO_DAYS(c.enrollDate)-TO_DAYS(?))>=0", enrollDate1);
+		//里程数
+		if(mileage1!=0 && mileage2!=0)
+			helper.addWhereCondition("(c.mileage-?)>=0 and (?-c.mileage)>=0", 
+					mileage1 ,mileage2);
+		else if(mileage1==0 && mileage2!=0)
+			helper.addWhereCondition("(?-c.mileage)>=0", mileage2);
+		else if(mileage1!=0 && mileage2==0)
+			helper.addWhereCondition("(c.mileage-?)>=0", mileage1);
+		//座位数
+		if(seatNumber1!=0 && seatNumber2!=0)
+			helper.addWhereCondition("(c.seatNumber-?)>=0 and (?-c.seatNumber)>=0", 
+					seatNumber1 ,seatNumber2);
+		else if(seatNumber1==0 && seatNumber2!=0)
+			helper.addWhereCondition("(?-c.seatNumber)>=0", seatNumber2);
+		else if(seatNumber1!=0 && seatNumber2==0)
+			helper.addWhereCondition("(c.seatNumber-?)>=0", seatNumber1);
+		//是否备用车
+		if(standbyCarLabel == "是" || "是".equals(standbyCarLabel)){
+			helper.addWhereCondition("c.standbyCar =?", true);
+		}
+		if(standbyCarLabel == "否" || "否".equals(standbyCarLabel)){
+			helper.addWhereCondition("c.standbyCar =?", false);
+		}
+		//是否年检过期
+		if(examineExpiredLabel == "是" || "是".equals(examineExpiredLabel)){
+			helper.addWhereCondition("c.examineExpired =?", true);
+		}
+		if(examineExpiredLabel == "否" || "否".equals(examineExpiredLabel)){
+			helper.addWhereCondition("c.examineExpired =?", false);
+		}
+		//是否保养过期
+		if(careExpiredLabel == "是" || "是".equals(careExpiredLabel)){
+			helper.addWhereCondition("c.careExpired =?", true);
+		}
+		if(careExpiredLabel == "否" || "否".equals(careExpiredLabel)){
+			helper.addWhereCondition("c.careExpired =?", false);
+		}
+		//是否路桥费过期
+		if(tollChargeExpiredLabel == "是" || "是".equals(tollChargeExpiredLabel)){
+			helper.addWhereCondition("c.tollChargeExpired =?", true);
+		}
+		if(tollChargeExpiredLabel == "否" || "否".equals(tollChargeExpiredLabel)){
+			helper.addWhereCondition("c.tollChargeExpired =?", false);
+		}
+		//是否保险过期
+		if(insuranceExpiredLabel == "是" || "是".equals(insuranceExpiredLabel)){
+			helper.addWhereCondition("c.insuranceExpired =?", true);
+		}
+		if(insuranceExpiredLabel == "否" || "否".equals(insuranceExpiredLabel)){
+			helper.addWhereCondition("c.insuranceExpired =?", false);
+		}
+		helper.addOrderByProperty("c.id", false);
+		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);		
+		ActionContext.getContext().getValueStack().push(pageBean);	
+		ActionContext.getContext().getSession().put("carHelper", helper);
 		return "list";
 	}
 	
@@ -437,6 +609,58 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setActionFlag(String actionFlag) {
 		this.actionFlag = actionFlag;
 	}
+	
+	public String getStatusLabel() {
+		return statusLabel;
+	}
+	public void setStatusLabel(String statusLabel) {
+		this.statusLabel = statusLabel;
+	}
+	
+	public String getPlateTypeLabel() {
+		return plateTypeLabel;
+	}
+	public void setPlateTypeLabel(String plateTypeLabel) {
+		this.plateTypeLabel = plateTypeLabel;
+	}
+	
+	public String getTransmissionTypeLabel() {
+		return transmissionTypeLabel;
+	}
+	public void setTransmissionTypeLabel(String transmissionTypeLabel) {
+		this.transmissionTypeLabel = transmissionTypeLabel;
+	}
+	
+	public String getCareExpiredLabel() {
+		return careExpiredLabel;
+	}
+	public void setCareExpiredLabel(String careExpiredLabel) {
+		this.careExpiredLabel = careExpiredLabel;
+	}
+	public String getInsuranceExpiredLabel() {
+		return insuranceExpiredLabel;
+	}
+	public void setInsuranceExpiredLabel(String insuranceExpiredLabel) {
+		this.insuranceExpiredLabel = insuranceExpiredLabel;
+	}
+	public String getExamineExpiredLabel() {
+		return examineExpiredLabel;
+	}
+	public void setExamineExpiredLabel(String examineExpiredLabel) {
+		this.examineExpiredLabel = examineExpiredLabel;
+	}
+	public String getTollChargeExpiredLabel() {
+		return tollChargeExpiredLabel;
+	}
+	public void setTollChargeExpiredLabel(String tollChargeExpiredLabel) {
+		this.tollChargeExpiredLabel = tollChargeExpiredLabel;
+	}
+	public String getStandbyCarLabel() {
+		return standbyCarLabel;
+	}
+	public void setStandbyCarLabel(String standbyCarLabel) {
+		this.standbyCarLabel = standbyCarLabel;
+	}
 	public CarRepair getUnDoneAppointRepair() {
 		return unDoneAppointRepair;
 	}
@@ -454,6 +678,54 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 	public void setUnDoneAppointExamine(CarExamine unDoneAppointExamine) {
 		this.unDoneAppointExamine = unDoneAppointExamine;
+	}
+	public Date getRegistDate1() {
+		return registDate1;
+	}
+	public void setRegistDate1(Date registDate1) {
+		this.registDate1 = registDate1;
+	}
+	public Date getRegistDate2() {
+		return registDate2;
+	}
+	public void setRegistDate2(Date registDate2) {
+		this.registDate2 = registDate2;
+	}
+	public Date getEnrollDate1() {
+		return enrollDate1;
+	}
+	public void setEnrollDate1(Date enrollDate1) {
+		this.enrollDate1 = enrollDate1;
+	}
+	public Date getEnrollDate2() {
+		return enrollDate2;
+	}
+	public void setEnrollDate2(Date enrollDate2) {
+		this.enrollDate2 = enrollDate2;
+	}
+	public int getMileage1() {
+		return mileage1;
+	}
+	public void setMileage1(int mileage1) {
+		this.mileage1 = mileage1;
+	}
+	public int getMileage2() {
+		return mileage2;
+	}
+	public void setMileage2(int mileage2) {
+		this.mileage2 = mileage2;
+	}
+	public int getSeatNumber1() {
+		return seatNumber1;
+	}
+	public void setSeatNumber1(int seatNumber1) {
+		this.seatNumber1 = seatNumber1;
+	}
+	public int getSeatNumber2() {
+		return seatNumber2;
+	}
+	public void setSeatNumber2(int seatNumber2) {
+		this.seatNumber2 = seatNumber2;
 	}
 	
 }

@@ -57,11 +57,10 @@
 						<s:select name="status" list="{'所有状态','在队列','已调度','已接受','已开始','已上车','已下车','已结束','已付费','已取消'}"></s:select>
 					</td>
 					<td>
-						<input class="inputButton" type="submit" value="查询" name="button" />&nbsp;&nbsp;&nbsp;&nbsp;
-						<!-- <a href="order_toBeEndProtocal.action">
-							<input class="inputButton" type="button" value="协议订单到期提醒"/>
-						</a>
-						-->
+						<input class="inputButton" type="submit" value="查询" name="button" />
+					</td>
+					<td>
+						<input class="inputButton" id="btn" type="button" value="详细查询" name="submit" />
 					</td>
 				</tr>
 			</table>
@@ -139,5 +138,10 @@
 	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>
+	<script>
+		$("#btn").click(function(){
+			self.location.href='order_queryUI.action';
+		});
+	</script>
 </body>
 </html>

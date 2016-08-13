@@ -108,6 +108,8 @@
 			</result>
 			<result name="detail">/WEB-INF/view/carAction/carInformationAction/car_detail.jsp
 			</result>
+			<result name="queryUI">/WEB-INF/view/carAction/carInformationAction/car_queryUI.jsp
+			</result>
 			<result name="toList" type="redirectAction">car_list</result>
 		</action>
 
@@ -479,6 +481,8 @@
 			<result name="unAcceptedOrderRemind">/WEB-INF/view/scheduleAction/order_unAcceptedOrderRemind.jsp
 			</result>
 			<result name="popupModify">/WEB-INF/view/scheduleAction/popupModify.jsp
+			</result>
+			<result name="queryUI">/WEB-INF/view/scheduleAction/order_queryUI.jsp
 			</result>
 		</action>
 

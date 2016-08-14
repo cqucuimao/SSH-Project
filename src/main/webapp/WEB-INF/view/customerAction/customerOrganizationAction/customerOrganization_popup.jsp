@@ -73,27 +73,34 @@
     </div>
     <script type="text/javascript">
         $(function(){
+        	   var selectorName=art.dialog.data("selectorName");
+    	       var origin = artDialog.open.origin;
+    	       var input_id_value = origin.document.getElementById(selectorName).value;
+    	       if(input_id_value!=null)
+ 	       {
+ 				$("input[type=radio][name='id'][value='"+input_id_value+"']").attr("checked",'checked');
+ 	       } 
+        	
             $("#sure").click(function(){
-            	
             	var newVal=$('input:radio[name="id"]:checked').attr('data');
             	var id=$('input:radio[name="id"]:checked').attr('value');
-
+            	var selectorName=art.dialog.data("selectorName");
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById('customer_organization_name');
-            	var input_id = origin.document.getElementById('customer_organization_id');
+            	var input = origin.document.getElementById(selectorName+"Label");
+            	var input_id = origin.document.getElementById(selectorName);
             	if(newVal != null)
-            		input.value = newVal;
+            	input.value = newVal;
             	input.select();
             	
-            	input.id.value = id;
+            	input_id.value = id;
             	input.select();
             	art.dialog.close();
             })
             
             $("#clear").click(function(){
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById('customer_organization_name');
-            	var input_id = origin.document.getElementById('customer_organization_id');
+            	var input = origin.document.getElementById(selectorName+"Label");
+            	var input_id = origin.document.getElementById(selectorName);
 
             	input.value = "";
             	input.select();

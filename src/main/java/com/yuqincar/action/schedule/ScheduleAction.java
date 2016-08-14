@@ -48,7 +48,7 @@ import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.customer.CustomerService;
 import com.yuqincar.service.order.OrderService;
-import com.yuqincar.service.order.PriceSerivce;
+import com.yuqincar.service.order.PriceService;
 import com.yuqincar.service.order.WatchKeeperService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
@@ -72,7 +72,7 @@ public class ScheduleAction extends BaseAction {
 	@Autowired
 	CarServiceSuperTypeDao carServiceSuperTypeDao;
 	@Autowired
-	PriceSerivce priceSerivce;
+	PriceService priceSerivce;
 	
 	private String watchKeeperName;
 	private String watchKeeperId;
@@ -729,6 +729,7 @@ public class ScheduleAction extends BaseAction {
     	 
     	PriceTable priceTable=new PriceTable();
     	priceTable=priceSerivce.getDefaultPriceTable();
+    	System.out.println("priceTable=: "+priceTable.getId());
     	priceMap=priceTable.getCarServiceType();
     	 for (CarServiceType key : priceMap.keySet()) {
     	        //System.out.println("key= " + key.getId() + " and value= " + priceMap.get(key).getId());

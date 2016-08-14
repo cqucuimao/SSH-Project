@@ -477,14 +477,18 @@ $(function(){
 	$(".userSelector").each(function (i){
 		$(this).click(function(){
 			art.dialog.data('userName', this.value); 
+			alert(1);
+			alert(this.id);
+			alert(2);
 			var url;
 	        if($(this).attr("driverOnly")!=null)
-	        	url="user_popup.action?driverOnly=true&userSelectorId="+this.id;
+	        	url="user_popup.action?driverOnly=true&userSelectorId="+this.id;	
 	        else
 	        	url="user_popup.action?userSelectorId="+this.id;
 	        art.dialog.open(url,{title: '员工选择', width: 300, height: 530});
 		});
 	});
+	
 	
 	 
 	 $("#schedulerName").click(function(){
@@ -535,6 +539,54 @@ Date.prototype.Format = function(fmt) { //author: meizz
 	return fmt;   
 }
 
+
+function onServiceTypeSelectorClick(name){
+	art.dialog.data('selectorName', name); // 存储数据  
+    art.dialog.open('schedule_popup.action',{
+			title: '价格表选择', 
+			width: 900, 
+			height:580,
+			
+		});
+}
+
+function onUserSelectorClick(name){
+			 
+		   var dName=name+"Label";
+		   art.dialog.data('userName', dName);
+		   var url;
+	       if($("#"+dName).attr("driverOnly")!=null)
+	        	url="user_popup.action?driverOnly=true&userSelectorId="+$("#"+dName).attr("id");
+	        else
+	        	url="user_popup.action?userSelectorId="+$("#"+dName).attr("id");
+	        art.dialog.open(url,{title: '员工选择', width: 300, height: 530});
+}
+
+function onCustomerOrganizationSelectorClick(name){
+        art.dialog.data('selectorName', name); // 存储数据  
+        art.dialog.open('customerOrganization_popup.action',{
+				title: '单位选择', 
+				width: 350, 
+				height: 580,
+				
+			});
+}
+
+function onCarSelectorClick(name){
+	        art.dialog.data('plateNumber', name);
+			url='car_popup.action?carSelectorId='+$("#"+name).attr("id");
+			if($("#"+name).attr("synchDriverName")!=null)
+				url=url+'&synchDriverName='+$("#"+name).attr("synchDriverName");
+			
+			if($("#"+name).attr("synchDriverId")!=null)
+				url=url+'&synchDriverId='+$("#"+name).attr("synchDriverId");
+			art.dialog.open(url,{
+				title: '车辆选择', 
+				width: 300, 
+				height: 530
+			});
+		
+}
 
 function formatDateField1(obj){
 	//将16-6-21 00:00:00.000 或00:00:00转换为 2016-06-21

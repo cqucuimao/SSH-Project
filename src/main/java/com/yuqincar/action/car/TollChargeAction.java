@@ -1,9 +1,14 @@
 package com.yuqincar.action.car;
 
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -12,11 +17,21 @@ import org.springframework.stereotype.Controller;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarServiceSuperType;
+import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.order.CustomerOrganization;
+import com.yuqincar.domain.order.Price;
+import com.yuqincar.domain.order.PriceTable;
+import com.yuqincar.domain.privilege.User;
+import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.TollChargeService;
+import com.yuqincar.service.order.PriceService;
+import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
@@ -32,12 +47,53 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	@Autowired
 	private CarService carService;
 	
+	@Autowired 
+	PriceService priceSerivce;
+	@Autowired 
+	CarServiceSuperTypeDao carServiceSuperTypeDao;
+	
+	@Autowired
+	UserService userService;
+	@Autowired
+	CustomerOrganizationService organizationService;
+	
 	private Date beginDate;
 	
 	private Date endDate;
 
 	private String outId;
 	
+	private CarServiceType myServiceType;
+	
+	
+	private User myUser;
+	private CustomerOrganization myCo;
+	private Car myCar;
+
+	public Car getMyCar() {
+		return myCar;
+	}
+
+	public void setMyCar(Car myCar) {
+		this.myCar = myCar;
+	}
+
+	public CustomerOrganization getMyCo() {
+		return myCo;
+	}
+
+	public void setMyCo(CustomerOrganization myCo) {
+		this.myCo = myCo;
+	}
+
+	public User getMyUser() {
+		return myUser;
+	}
+
+	public void setMyUser(User myUser) {
+		this.myUser = myUser;
+	}
+
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper("TollCharge", "tc");
 		
@@ -61,6 +117,7 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	}
 
 	public String list() {
+		System.out.println("in list");
 		QueryHelper helper = new QueryHelper("TollCharge", "tc");
 		if (!(outId==null)) {
 			helper.addWhereCondition("tc.car.plateNumber like ?", "%"+outId+"%");
@@ -126,8 +183,8 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	public String remind(){
 		QueryHelper helper = new QueryHelper("Car", "c");
 		helper.addWhereCondition("c.nextTollChargeDate is not null");
-		helper.addWhereCondition("c.car.plateNumber like ?", "%"+outId+"%");
-		helper.addOrderByProperty("nextTollChargeDate", true);
+		//helper.addWhereCondition("c.car.plateNumber like ?", "%"+outId+"%");
+		//helper.addOrderByProperty("nextTollChargeDate", true);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);
 		
 		List<RemindVO> voList=new ArrayList<RemindVO>(pageBean.getRecordList().size());
@@ -145,6 +202,39 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 		pageBean.setRecordList(voList);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "remind";
+	}
+	
+	
+	public String test(){
+		System.out.println("myuser"+myUser);
+		System.out.println("myCo:= "+myCo);
+		System.out.println("myCar=: "+myCar);
+		System.out.println("myServiceType=: "+myServiceType);
+		if (myUser!=null) {
+			System.out.println(myUser.getName());
+		}
+		if (myCo!=null) {
+			System.out.println(myCo.getName());
+		}
+		if (myCar!=null) {
+			System.out.println(myCar.getPlateNumber());
+		}
+		if (myServiceType!=null) {
+			System.out.println(myServiceType.getTitle());
+		}
+		
+		return "test";
+	}
+	
+	public String initTest(){
+		myServiceType=carService.getCarServiceTypeById(9);
+		long a=1;
+		myCo=organizationService.getById(a);
+		long b=2;
+		myCar=carService.getCarById(b);
+		long c=2;
+		myUser=userService.getById(c);
+		return "test";
 	}
 	
 	
@@ -205,5 +295,12 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	public void setOutId(String outId) {
 		this.outId = outId;
 	}
-	
+
+	public CarServiceType getMyServiceType() {
+		return myServiceType;
+	}
+
+	public void setMyServiceType(CarServiceType myServiceType) {
+		this.myServiceType = myServiceType;
+	}	
 }

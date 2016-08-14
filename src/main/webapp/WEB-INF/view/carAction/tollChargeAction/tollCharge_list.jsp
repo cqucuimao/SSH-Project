@@ -1,20 +1,6 @@
-<%@page import="com.itextpdf.text.log.SysoLogger"%>
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%
-	String path = request.getContextPath();//显示根目录
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="skins/main.css">
-</head>
-<body class="minW">
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%> 
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border exceptJMin="jquery">
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -40,7 +26,9 @@
 						<s:textfield name="endDate" id="endDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<td>
-						<input class="inputButton" type="submit" value="查询"/>
+						<input class="inputButton" type="submit" onClick="registerClick()" value="查询"/>
+						<s:a action="tollCharge_test" type="button">請求</s:a>
+						<s:a action="tollCharge_initTest" type="button">回值</s:a>
 						<input id="remind" class="inputButton" type="button" value="缴纳提醒"/>
 						<s:if test="Ture">
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
@@ -53,7 +41,7 @@
 		<div class="dataGrid">
 			<div class="tableWrap">
 				<table>
-					<thead>
+					<thead> 
 						<tr>
 							<th><s:property value="tr.getText('car.TollCharge.car')" /></th>
               				<th><s:property value="tr.getText('car.TollCharge.payDate')" /></th>
@@ -102,5 +90,4 @@
 			formatDateField2($("#endDate"));
 	    })
 	</script>
-</body>
-</html>
+</cqu:border>

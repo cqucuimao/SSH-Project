@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>cqu</short-name>       
+    <uri>cqu.tld</uri>   
+  
+<tag>  
+ <name>border</name>                            
+ <tag-class>com.yuqincar.tags.BorderTags</tag-class> 
+     <attribute>    
+                <name>exceptJMin</name>    
+                <required>false</required>    
+                <rtexprvalue>true</rtexprvalue>    
+     </attribute>
+     <attribute>    
+                <name>exceptJquery</name>    
+                <required>false</required>    
+                <rtexprvalue>true</rtexprvalue>    
+     </attribute>            
+</tag>  
+<tag>  
+ <name>serviceType</name>                            
+ <tag-class>com.yuqincar.tags.ServiceTypeSelectorTags</tag-class>          
+ <body-content>empty</body-content>      
+            <attribute>    
+                <name>name</name>    
+                <required>true</required>    
+                <rtexprvalue>true</rtexprvalue>    
+            </attribute>
+</tag>  
+ <tag>  
+	 <name>userSelector</name>                             
+	 <tag-class>com.yuqincar.tags.UserSelectorTags</tag-class> 
+	 <attribute>    
+                <name>name</name>    
+                <required>true</required>    
+                <rtexprvalue>true</rtexprvalue>    
+      </attribute>
+</tag> 
+<tag>  
+	 <name>carSelector</name>                             
+	 <tag-class>com.yuqincar.tags.CarSelectorTags</tag-class>
+	 <attribute>    
+                <name>name</name>    
+                <required>true</required>    
+                <rtexprvalue>true</rtexprvalue>    
+      </attribute> 
+</tag>
+<tag>  
+	 <name>customerOrganizationSelector</name>                              
+	 <tag-class>com.yuqincar.tags.CustomerOrganizationSelectorTags</tag-class>
+	  <attribute>    
+                <name>name</name>    
+                <required>true</required>    
+                <rtexprvalue>true</rtexprvalue>    
+      </attribute> 
+</tag>   
+</taglib>  

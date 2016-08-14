@@ -1,7 +1,10 @@
 <%@page import="com.itextpdf.text.log.SysoLogger"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -11,6 +14,7 @@
 <script src="js/jquery-1.7.2.js"></script>
 <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 <script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
+<script type="text/javascript" src="<%=basePath%>js/common.js"></script>
 <style >
  tr td:first-child 
    {
@@ -52,22 +56,21 @@
 									<td>  
 								 		<s:property value="#list1[1]"/>
 								 	</td>
-									<td style="text-align:right"><s:property value="#list1[2]"/></td> 
-									<td style="text-align:right"><s:property value="#list1[3]"/></td> 
-									<td style="text-align:right"><s:property value="#list1[4]"/></td> 
-									<td style="text-align:right"><s:property value="#list1[5]"/></td> 
-									<td style="text-align:right"><s:property value="#list1[6]"/></td> 
+									<td>
+										<s:property value="#list1[2]"/>
+									</td> 
+									<td><s:property value="#list1[3]"/></td> 
+									<td><s:property value="#list1[4]"/></td> 
+									<td><s:property value="#list1[5]"/></td> 
+									<td><s:property value="#list1[6]"/></td> 
 								</tr> 
 								</s:iterator> 
 						 		</s:iterator>
 					</tbody>
 				</table>
 	      </div>
-     <!-- 填充div，防止部分数据被遮盖 -->
-     <div style="width:100%;height:60px">  
-     </div>
-     </div>           
-            <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:100%;height:60px">
+     </div> 
+        <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:100%;height:60px">
             <input id="sure" class="inputButton" type="button" value="确定" />
             <input id="clear" class="inputButton" type="button" value="清空" />
             <input id="close" class="inputButton" type="button" value="关闭" />
@@ -75,27 +78,35 @@
     </div>
     <script type="text/javascript">
         $(function(){
+       	       var selectorName=art.dialog.data("selectorName");
+       	       var origin = artDialog.open.origin;
+       	       var input_id_value = origin.document.getElementById(selectorName).value;
+       	       if(input_id_value!=null)
+    	       {
+    				$("input[type=radio][name='id'][value='"+input_id_value+"']").attr("checked",'checked');
+    	       } 
             $("#sure").click(function(){
-            	
+            	var selectorName=art.dialog.data("selectorName");
             	var newVal=$('input:radio[name="id"]:checked').attr('data');
             	var id=$('input:radio[name="id"]:checked').attr('value');
 
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById('serviceType');
-            	var input_id = origin.document.getElementById('serviceTypeId'); 
+            	var input = origin.document.getElementById(selectorName+"Label");
+            	var input_id = origin.document.getElementById(selectorName); 
             	if(newVal != null)
             	input.value = newVal;
             	input.select();
             	
             	input_id.value = id;
-            	input.select();
+            	input.select(); 
             	art.dialog.close();
             })
             
             $("#clear").click(function(){
+            	var selectorName=art.dialog.data("selectorName");
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById('serviceType');
-            	var input_id = origin.document.getElementById('serviceTypeId'); 
+            	var input = origin.document.getElementById(selectorName+"Label");
+            	var input_id = origin.document.getElementById(selectorName); 
 
             	input.value = "";
             	input.select();

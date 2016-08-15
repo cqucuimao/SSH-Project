@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
 	String path = request.getContextPath();
@@ -27,8 +28,9 @@
 					<th>单位名称</th>
 					<!--<td><s:textfield cssClass="inputText" name="customerOrganization.name" type="text" /></td>  -->
 					<td>
-					    <s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
-					    <input id="customer_organization_id" type="hidden">
+					   
+					  <s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
+					    <input id="customer_organization_id" type="hidden"> 
 					</td>
 					<th>订单时间</th>
 					<td>

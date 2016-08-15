@@ -2,6 +2,7 @@ package com.yuqincar.domain.car;
 
 import java.util.Date;
 
+import javax.management.loading.PrivateClassLoader;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,14 +26,13 @@ public class Car extends BaseEntity {
 	private String plateNumber;	//车牌号
 
 	@Text("品牌")
-	@Column(nullable = false)
 	private String brand;	//品牌
 
 	@Text("型号")
 	private String model;	//型号
 
 	@Text("车架号")
-	@Column(nullable = false, unique=true)
+	@Column(unique=true)
 	private String VIN;	//识别码
 
 	@Text("发动机号")
@@ -104,20 +104,19 @@ public class Car extends BaseEntity {
 	private boolean standbyCar;
 	
 	@Text("注册时间")
-	@Column(nullable = false)
 	private Date registDate;	//新车在车管所上户的时间
 	
 	@Text("牌照种类")
-	@Column(nullable = false)
 	private PlateTypeEnum plateType;
 	
 	@Text("座位数")
-	@Column(nullable = false)
 	private int seatNumber;
 	
 	@Text("变速箱类型")
 	private TransmissionTypeEnum transmissionType;
 	
+	@Text("是否为外调车")
+	private boolean borrowed;
 
 	public String getPlateNumber() {
 		return plateNumber;
@@ -346,4 +345,13 @@ public class Car extends BaseEntity {
 	public void setTollChargeExpired(boolean tollChargeExpired) {
 		this.tollChargeExpired = tollChargeExpired;
 	}
+
+	public boolean isBorrowed() {
+		return borrowed;
+	}
+
+	public void setBorrowed(boolean borrowed) {
+		this.borrowed = borrowed;
+	}
+	
 }

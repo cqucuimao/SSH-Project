@@ -110,6 +110,8 @@
 			</result>
 			<result name="queryUI">/WEB-INF/view/carAction/carInformationAction/car_queryUI.jsp
 			</result>
+			<result name="borrowedUI">/WEB-INF/view/carAction/carInformationAction/car_borrowedUI.jsp
+			</result>
 			<result name="toList" type="redirectAction">car_list</result>
 		</action>
 

@@ -315,6 +315,15 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		return "saveUI";
 	}
 	
+	/** 添加外调车页面 */
+	public String borrowedUI() throws Exception {
+		// 准备数据：carServiceTypeList
+		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
+		// 准备数据：servicePointList
+	    ActionContext.getContext().put("servicePointList", carService.getAllServicePoint());	    
+		return "borrowedUI";
+	}
+	
 	/** 添加 */
 	public String add() throws Exception {
 		if(carService.isPlateNumberExist(0, model.getPlateNumber())){
@@ -337,6 +346,23 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		model.setStatus(CarStatusEnum.NORMAL);
 		model.setPlateType(PlateTypeEnum.getById(plateTypeId));
 		model.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
+		// 保存到数据库
+		carService.saveCar(model);
+		ActionContext.getContext().getValueStack().push(new Car());
+		return freshList();
+	}
+	
+	//外调车辆
+	public String borrowed() throws Exception {
+		if(carService.isPlateNumberExist(0, model.getPlateNumber())){
+				addFieldError("plateNumber", "车牌号已经存在！");
+				return borrowedUI();
+		}
+		// 封装对象
+		model.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
+		model.setServicePoint(carService.getServicePointById(servicePointId));
+		model.setStatus(CarStatusEnum.NORMAL);
+		model.setStandbyCar(true);
 		// 保存到数据库
 		carService.saveCar(model);
 		ActionContext.getContext().getValueStack().push(new Car());

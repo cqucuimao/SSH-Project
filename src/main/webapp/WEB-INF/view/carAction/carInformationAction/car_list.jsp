@@ -25,6 +25,9 @@
 					<td>
 					<s:a action="car_addUI.action?actionFlag=register"><input id="register" class="inputButton" type="button" value="车辆登记" name="button" /></s:a>
 					</td>
+					<td>
+						<input id="borrowed" class="inputButton" type="button" value="外调车登记"  />
+					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
 						<s:textfield id="car_platenumber" name="plateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
@@ -54,8 +57,9 @@
 					
 					<thead>
 						<tr>
+							
+							<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 							<th><s:property value="tr.getText('car.CarServiceType.title')" /></th>
-              				<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
                 			<th><s:property value="tr.getText('car.Car.model')" /></th>
                 			<th><s:property value="tr.getText('car.Car.transmissionType')" /></th>
                 			<th><s:property value="tr.getText('car.Car.registDate')" /></th>
@@ -100,6 +104,9 @@
 	<script>
 	$("#btn").click(function(){
 		self.location.href='car_queryUI.action';
+	});
+	$("#borrowed").click(function(){
+		self.location.href='car_borrowedUI.action';
 	});
 	</script>
 </body>

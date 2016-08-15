@@ -57,6 +57,7 @@
 							<td>${manager.name}</td>
 							<td>
 								<s:a action="customerOrganization_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+								<s:a action="customerOrganization_addFinancial?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
                     			<s:a action="customer_checkPeople?id=%{id}"><i class="icon-operate-print" title="查看人员"></i></s:a>
 								<s:if test="canDelete">
                     			<s:a action="customerOrganization_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>

@@ -335,6 +335,8 @@
 			</result>
 			<result name="managerUI">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_managerUI.jsp
 			</result>
+			<result name="financialDemand">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_financialDemand.jsp
+			</result>
 			<result name="toList" type="redirectAction">customerOrganization_list</result>
 			<result name="popup">/WEB-INF/view/customerAction/customerOrganizationAction/customerOrganization_popup.jsp
 			</result>

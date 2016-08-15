@@ -1,18 +1,32 @@
 package com.yuqincar.action.customer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.parser.deserializer.StringFieldDeserializer;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarServiceSuperType;
+import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.CustomerOrganization;
+import com.yuqincar.domain.order.Price;
+import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.customer.CustomerService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.order.PriceService;
 import com.yuqincar.utils.QueryHelper;
 
 @Controller
@@ -30,6 +44,7 @@ public class CustomerOrganizationAction extends BaseAction implements
 	private OrderService orderService;
 	
 	private long customerId;
+	
 	
 	/** 查询*/
 	public String queryList() throws Exception {
@@ -54,6 +69,10 @@ public class CustomerOrganizationAction extends BaseAction implements
 		ActionContext.getContext().getSession().put("customerOrganizationHelper", helper);
 		return "list";
 	}
+	
+	
+	
+	
 	
 	public String freshList(){
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("customerOrganizationHelper");
@@ -132,7 +151,22 @@ public class CustomerOrganizationAction extends BaseAction implements
 		ActionContext.getContext().getValueStack().push(new CustomerOrganization());
 		return freshList();
 	}
-
+	
+	public String addFinancial(){
+		CustomerOrganization customerOrganization=customerOrganizationService.getById(model.getId());
+		ActionContext.getContext().getValueStack().push(customerOrganization);
+		return "financialDemand";
+	}
+	
+	public String editFinancial(){
+		CustomerOrganization customerOrganization = customerOrganizationService
+				.getById(model.getId());
+		customerOrganization.setFinancialDemand(model.getFinancialDemand());
+		customerOrganizationService.updateCustomerOrganization(customerOrganization);
+		ActionContext.getContext().getValueStack().push(new CustomerOrganization());
+		return freshList();
+	}
+	
 	public CustomerOrganization getModel() {
 		return model;
 	}

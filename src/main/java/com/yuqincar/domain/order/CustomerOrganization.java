@@ -25,6 +25,10 @@ public class CustomerOrganization extends BaseEntity {
 	@Text("单位简称")
 	@Column(unique=true)
 	private String abbreviation;	//简称
+	
+	@Text("财务需求")
+	@Column(nullable=true)
+	private String financialDemand;	//财务需求
 
 	@Text("客户")
 	@OneToMany(mappedBy="customerOrganization")
@@ -78,4 +82,13 @@ public class CustomerOrganization extends BaseEntity {
 	public void setPriceTable(PriceTable priceTable) {
 		this.priceTable = priceTable;
 	}
+
+	public String getFinancialDemand() {
+		return financialDemand;
+	}
+
+	public void setFinancialDemand(String financialDemand) {
+		this.financialDemand = financialDemand;
+	}
+	
 }

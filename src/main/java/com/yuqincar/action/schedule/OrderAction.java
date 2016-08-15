@@ -79,6 +79,7 @@ public class OrderAction extends BaseAction {
 	private BigDecimal orderMoney2;
 	private BigDecimal actualMoney1;
 	private BigDecimal actualMoney2;
+	private BigDecimal tax;
 	private Date queueTime1;
 	private Date queueTime2;
 	private Date scheduleTime1;
@@ -309,6 +310,7 @@ public class OrderAction extends BaseAction {
 			order.setOrderMoney(orderMoney);
 			order.setGrade(grade);
 			order.setOptions(options);
+			order.setTax(tax);
 			
 			orderService.editOrderBill(order, user);
 		}
@@ -1231,6 +1233,14 @@ public class OrderAction extends BaseAction {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public BigDecimal getTax() {
+		return tax;
+	}
+
+	public void setTax(BigDecimal tax) {
+		this.tax = tax;
 	}
 
 	public String getChargeMode() {

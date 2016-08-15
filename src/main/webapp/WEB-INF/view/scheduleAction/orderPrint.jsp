@@ -112,12 +112,14 @@
 				<td class="alignCenter">${totalChargeMile }</td>
 			</tr>
 			<tr>
-				<td class="alignCenter" colspan="2">过路费（客户自理）</td>
-				<td class="alignCenter" colspan="2">${toll }</td>
+				<td class="alignCenter">过路费（客户自理）</td>
+				<td class="alignCenter">${toll }</td>
 				<td class="alignCenter">食宿</td>
 				<td class="alignCenter">${roomAndBoardFee }</td>
 				<td class="alignCenter">其他费用</td>
 				<td class="alignCenter" style="padding-left:8px">${otherFee }</td>
+				<td class="alignCenter">税费</td>
+				<td class="alignCenter">${tax }</td>
 			</tr>
 			<tr>
 				<td class="alignCenter">核算金额</td>

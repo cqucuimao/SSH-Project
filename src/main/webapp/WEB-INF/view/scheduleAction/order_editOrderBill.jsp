@@ -125,25 +125,27 @@
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">油费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" /></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" onblur="getTax();getOrderMoney()"/></td>
 						<td class="alignCenter">洗车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" /></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" onblur="getTax();getOrderMoney()"/></td>
 						<td class="alignCenter">停车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="parkingFee" /></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="parkingFee" onblur="getTax();getOrderMoney()"/></td>
 						<td class="alignCenter">计费路码</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="totalChargeMile" /></td>
 	        		</tr>
 	        		<tr>
-	        			<td class="alignCenter" colspan="2">过路费（客户自理）</td>
-						<td class="alignCenter" colspan="2"><s:textfield class="inputStyle" name="toll"/></td>
+	        			<td class="alignCenter">过路费（客户自理）</td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="toll" onblur="getTax();getOrderMoney()"/></td>
 						<td class="alignCenter">食宿</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" /></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" onblur="getTax();getOrderMoney()"/></td>
 						<td class="alignCenter">其他费用</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee" onblur="getTax();getOrderMoney()"/></td>
+						<td class="alignCenter">税费</td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" readonly="true"/></td>						
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">核算金额</td>
-						<td class="alignCenter" colspan="3"><s:textfield class="inputStyle" name="orderMoney" /></td>
+						<td class="alignCenter" colspan="3"><s:textfield class="inputStyle" name="orderMoney" readonly="true"/></td>
 						<td class="alignCenter">实收金额</td>
 						<td class="alignCenter" colspan="3"><s:textfield class="inputStyle" name="actualMoney" /></td>
 	        		</tr>
@@ -216,6 +218,8 @@
     <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
     <script type="text/javascript">
+    getTax();
+    getOrderMoney();
     $(function(){
     	
     	$("input[id=date]").each(function(){
@@ -253,6 +257,49 @@
 		$("#tableId tr:eq(7) td:eq(1)").text(date);
     	
     });
+    //保留两位小数
+    function toDecimal(x) {  
+        var f = parseFloat(x);  
+        if (isNaN(f)) {  
+            return;  
+        }  
+        f = Math.round(x*100)/100;  
+        return f;  
+    } 
+  	//计算税费,它的值是油费、洗车费、停车费、过路费、食宿、其它费用之和的3.6%
+	function getTax(){    		
+  		var refuelMoney = $("input[name=refuelMoney]").val();
+  		var washingFee = $("input[name=washingFee]").val();
+  		var parkingFee = $("input[name=parkingFee]").val();
+  		var toll = $("input[name=toll]").val();
+  		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
+  		var otherFee = $("input[name=otherFee]").val();
+  		var allMoney = Number(refuelMoney)+Number(washingFee)+Number(parkingFee)+Number(toll)+Number(roomAndBoardFee)+Number(otherFee);
+  		var tax = allMoney * 0.036;
+  		if(tax!=0){
+  	  		$("input[name=tax]").val(toDecimal(tax)); 		
+  		}else{
+  	  		$("input[name=tax]").val(""); 
+  		}
+	 }	
+  	//核算金额
+  	function getOrderMoney(){
+  		var refuelMoney = $("input[name=refuelMoney]").val();
+  		var washingFee = $("input[name=washingFee]").val();
+  		var parkingFee = $("input[name=parkingFee]").val();
+  		var toll = $("input[name=toll]").val();
+  		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
+  		var otherFee = $("input[name=otherFee]").val();
+  		var tax = $("input[name=tax]").val();
+  		var orderMoney = Number(refuelMoney)+Number(washingFee)+Number(parkingFee)+Number(toll)+Number(roomAndBoardFee)+Number(otherFee)+Number(tax);
+  		if(orderMoney!=0){
+  	  		$("input[name=orderMoney]").val(toDecimal(orderMoney)); 		
+  		}else{
+  	  		$("input[name=orderMoney]").val(""); 
+  		}
+  	}
+	 
+    
     </script>
 </body>
 </html>

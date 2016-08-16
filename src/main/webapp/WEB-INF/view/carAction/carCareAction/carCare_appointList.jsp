@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
 	String path = request.getContextPath();
@@ -35,14 +36,13 @@
 					<td>
 						<s:a action="carCare_appoint"><input id="appoint" class="inputButton" type="button" value="保养预约"/></s:a>
 					</td>
-					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+					<th><s:property value="tr.getText('car.CarCare.car')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+						<cqu:carSelector name="car"/>
 					</td>
 					<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
 					<td>
-						<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
-						<s:textfield id="driverId" name="driver.id" type="hidden"/>
+						<cqu:userSelector name="driver"/>
 					</td>
 					<th>从</th>
 					<td>

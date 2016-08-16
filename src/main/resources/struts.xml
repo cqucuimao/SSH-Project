@@ -260,8 +260,6 @@
 		<action name="tollCharge_*" class="tollChargeAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/tollChargeAction/tollCharge_list.jsp
 			</result>
-			<result name="test">/WEB-INF/view/carAction/tollChargeAction/test.jsp
-			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/tollChargeAction/tollCharge_saveUI.jsp
 			</result>
 			<result name="remind">/WEB-INF/view/carAction/tollChargeAction/tollCharge_remind.jsp

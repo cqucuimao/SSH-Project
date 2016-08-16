@@ -50,7 +50,7 @@ ${order }
                 </tr>
                 <tr>
                 	<th><s:property value="tr.getText('order.Order.chargeMode')" />：</th>
-                	<td>${chargeModeString}</td>
+                	<td>${chargeMode.label}</td>
                 </tr>
                 <tr>
                     <th><s:property value="tr.getText('order.Order.serviceType')" />：</th>

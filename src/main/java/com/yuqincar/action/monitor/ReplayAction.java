@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
 import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
 
 @Controller
@@ -29,6 +31,10 @@ public class ReplayAction extends BaseAction implements ModelDriven<Car>{
 	
 	@Autowired
 	private CarService carService;
+	
+	private Car car;
+	
+	private User driver;
 
 	/**
 	 * 返回主页面列表信息
@@ -45,26 +51,23 @@ public class ReplayAction extends BaseAction implements ModelDriven<Car>{
 	 */
 	public void list(){
 		
-		String driverName=model.getDriver().getName();
-		String plateNumber=model.getPlateNumber();
-		
         List<SnVO> snsVO=new ArrayList<SnVO>();
 		
-		if(!"".equals(driverName)&&!"".equals(plateNumber)){
-			Car car= carService.findByDriverNameAndPlateNumber(driverName, plateNumber);
+		if(driver!=null && car!=null){
+			Car c= carService.findByDriverNameAndPlateNumber(driver.getName(), car.getPlateNumber());
 			SnVO snVO=null;
-			if(car!=null){
-			   snVO=parseCar(car);
+			if(c!=null){
+			   snVO=parseCar(c);
 			}
 			snsVO.add(snVO);
-		}else if(!"".equals(driverName)){
-			List<Car> cars=carService.findByDriverName(driverName);
+		}else if(driver!=null){
+			List<Car> cars=carService.findByDriverName(driver.getName());
 			snsVO=parseCars(cars);
-		}else if(!"".equals(plateNumber)){
-			Car car=carService.getCarByPlateNumber(plateNumber);
+		}else if(car!=null){
+			Car c=carService.getCarByPlateNumber(car.getPlateNumber());
 			SnVO snVO=null;
-			if(car!=null){
-			   snVO=parseCar(car);
+			if(c!=null){
+			   snVO=parseCar(c);
 			}
 			snsVO.add(snVO);
 		}
@@ -73,6 +76,22 @@ public class ReplayAction extends BaseAction implements ModelDriven<Car>{
 		this.writeJson(jsonStr);
 	}
 	
+	public Car getCar() {
+		return car;
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
+	}
+
+	public User getDriver() {
+		return driver;
+	}
+
+	public void setDriver(User driver) {
+		this.driver = driver;
+	}
+
 	public Car getModel() {
 		return model;
 	}

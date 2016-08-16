@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -35,7 +36,7 @@
             <table>
                 <tr>
                     <th>车牌号</th>
-                    <td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
+                    <td><cqu:carSelector name="car"/></td>
                     <th>驻车地点</th>
                     <td>
                     <s:select style="width:135px;" name="servicePoint.name" id="servicePointId" list="#servicePointList" listKey="id" listValue="name"/>
@@ -355,7 +356,7 @@
     //查询按钮的Ajax异步请求，集成Strusts框架进行参数传递
     $("#queryBn").click(function(){
     	$.get("realtime_list.action",$("#queryForm").serializeArray(),function(carsJson){
-    	 
+
     	 carData=carsJson;
    		 length=carData.cars.length; 
    		 //定义保存id的数组

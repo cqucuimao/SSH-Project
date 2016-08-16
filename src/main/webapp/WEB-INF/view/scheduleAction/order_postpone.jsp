@@ -35,7 +35,7 @@
                         <th width="15%">订单号：</th>
                         <td width="35%">${sn }</td>
                         <th width="15%">单位：</th>
-                        <td width="35%">${customerOrganization.abbreviation }</td>
+                        <td width="35%">${customerOrganization.name }</td>
                     </tr>
                     <tr>
                         <th>姓名：</th>
@@ -45,15 +45,15 @@
                     </tr>
                     <tr>
                     	<th>计费方式</th>
-                    	<td>${chargeModeString }</td>
-                        <th>用车人数：</th>
-                        <td>${passengerNumber }人</td>
-                    </tr>
-                    <tr>
+                    	<td>${chargeMode.label }</td>
                         <th>车型：</th>
                         <td>${serviceType.title }</td>
+                    </tr>
+                    <tr>
                         <th>订单状态：</th>
-                        <td>${statusString }</td>
+                        <td>${status.label }</td>
+                        <th></th>
+                        <td></td>
                     </tr>
                     <tr>
                         <th>计划起止时间：</th>

@@ -64,14 +64,13 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	
 	private CarWashShop carWashShop;
 	
-	private String outId;
+	private Long carId;
 
 	//头部快速查询
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper("CarWash", "cw");
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-				.equals(model.getCar().getPlateNumber()))
-			helper.addWhereCondition("cw.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		if(model.getCar()!=null)
+			helper.addWhereCondition("cw.car=?", model.getCar());
 		if(beginDate!=null && endDate!=null)
 			helper.addWhereCondition("(TO_DAYS(cw.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cw.date))>=0", 
 					beginDate ,endDate);
@@ -89,9 +88,8 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	//页面初加载数据填充
    public String list() {
 	    QueryHelper helper = new QueryHelper("CarWash", "cw");
-	    if (!(outId==null)) {
-			helper.addWhereCondition("cw.car.plateNumber like ?", "%"+outId+"%");
-			}
+	    if(carId!=null)
+			helper.addWhereCondition("cw.car.id=?", carId);
 		helper.addOrderByProperty("cw.id", false);
 		PageBean<CarWash> pageBean = carWashService.queryCarWash(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -99,12 +97,6 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 		return "list";
 	}
    
-   public boolean isTure(){
-		if (!(outId==null)) {
-			return true;
-		}
-        return	false;
-	}
    //翻页的时候保留条件并显示数据
    public String freshList(){
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("carWashHelper");
@@ -232,11 +224,7 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	}
    
    public String save(){
-	    Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		model.setCar(car);
-		User driver=userService.getById(model.getDriver().getId());
-		model.setDriver(driver);
-		CarWashShop carWashShop=carWashService.getCarWashShopById(model.getShop().getId());
+	    CarWashShop carWashShop=carWashService.getCarWashShopById(model.getShop().getId());
 		model.setShop(carWashShop);
 		carWashService.saveCarWash(model);
 		ActionContext.getContext().getValueStack().push(new CarWash());
@@ -253,11 +241,9 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
    public String edit(){
 		  
 	    CarWash carWash = carWashService.getCarWashById(model.getId());
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		User driver=userService.getById(model.getDriver().getId());
 		CarWashShop carWashShop=carWashService.getCarWashShopById(model.getShop().getId());
-		carWash.setCar(car);
-		carWash.setDriver(driver);
+		carWash.setCar(model.getCar());
+		carWash.setDriver(model.getDriver());
 		carWash.setShop(carWashShop);
 		carWash.setMoney(model.getMoney());
 		carWash.setDate(model.getDate());
@@ -317,12 +303,11 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	public void setResult(int result) {
 		this.result = result;
 	}
-	public String getOutId() {
-		return outId;
+	public Long getCarId() {
+		return carId;
 	}
-	public void setOutId(String outId) {
-		this.outId = outId;
+	public void setCarId(Long carId) {
+		this.carId = carId;
 	}
-
 }	
 

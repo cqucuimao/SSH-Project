@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -51,17 +52,15 @@
 				</colgroup>
                 <tbody>
                 	<tr>
-                        <th><s:property value="tr.getText('car.Car.plateNumber')" /><span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.CarExamine.car')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" 
-								name="car.plateNumber" synchDriverName="driverName" synchDriverId="driverId"/>
+							<cqu:carSelector name="car" synchDriver="driver"/>
 						</td>
                     </tr>
                     <tr>
-						<th><s:property value="tr.getText('car.Car.driver')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarExamine.driver')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
-							<s:textfield id="driverId" name="driver.id" type="hidden"/>
+							<cqu:userSelector name="driver"/>
 						</td>
 					</tr>
                     <tr>
@@ -121,10 +120,10 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					'car.plateNumber':{
+					carLabel:{
 						required:true,
 					},
-					'driver.name':{
+					driverLabel:{
 						required:true,
 					},
 					nextExamineDate:{
@@ -148,13 +147,13 @@
 			});
 			
 			$("input[name=getNextExamineDate]").click(function(){
-				var plateNumber = $("#car_platenumber").val();
+				var carId = $("#car").val();
 				var recentExamineDate = $("#date").val();
-				if(plateNumber != "" && recentExamineDate != ""){
+				if(carId != "" && recentExamineDate != ""){
 					$.ajax({
 						url : 'carExamine_getNextExamineDate.action', 
 						data : {
-							plateNumber:plateNumber,
+							carId:carId,
 							recentExamineDate:recentExamineDate
 						},
 						type : 'post',

@@ -1,6 +1,7 @@
 <%@page import="com.itextpdf.text.log.SysoLogger"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
 	String path = request.getContextPath();//显示根目录
@@ -27,9 +28,9 @@
 					<td>
 						<s:a action="materialReceive_saveUI"><input id="register" class="inputButton" type="button" value="物品领用登记"/></s:a>
 					</td>
-					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+					<th><s:property value="tr.getText('car.Material.car')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+						<cqu:carSelector name="car"/>
 					</td>
 					<th>从</th>
 					<td>
@@ -41,7 +42,7 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<s:if test="Ture">
+						<s:if test="carId!=null">
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
 					</td>

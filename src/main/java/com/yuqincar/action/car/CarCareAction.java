@@ -74,18 +74,17 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
 	private Date date2;
 	
-	private String outId;
+	private Long carId;
 	
 	
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper(CarCare.class, "cc");
 		
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-				.equals(model.getCar().getPlateNumber()))
-			helper.addWhereCondition("cc.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		if(model.getCar()!=null)
+			helper.addWhereCondition("cc.car=?", model.getCar());
 		
-		if(model.getDriver()!=null && model.getDriver().getId()!=null)
-			helper.addWhereCondition("cc.driver.id = ?", model.getDriver().getId());
+		if(model.getDriver()!=null)
+			helper.addWhereCondition("cc.driver=?", model.getDriver());
 		
 		if(date1!=null && date2!=null)
 			helper.addWhereCondition("(TO_DAYS(cc.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cc.date))>=0", 
@@ -104,13 +103,11 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	
 	public String queryAppointForm(){
 		QueryHelper helper = new QueryHelper(CarCare.class, "cc");
+		if(model.getCar()!=null)
+			helper.addWhereCondition("cc.car=?", model.getCar());
 		
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-				.equals(model.getCar().getPlateNumber()))
-			helper.addWhereCondition("cc.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
-		
-		if(model.getDriver()!=null && model.getDriver().getId()!=null)
-			helper.addWhereCondition("cc.driver.id = ?", model.getDriver().getId());
+		if(model.getDriver()!=null)
+			helper.addWhereCondition("cc.driver=?", model.getDriver());
 		
 		if(date1!=null && date2!=null)
 			helper.addWhereCondition("(TO_DAYS(cc.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cc.date))>=0", 
@@ -130,21 +127,13 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	public String list() {
 		QueryHelper helper = new QueryHelper(CarCare.class, "cc");
 		helper.addWhereCondition("cc.appointment=?", false);
-		if (!(outId==null)) {
-			helper.addWhereCondition("cc.car.plateNumber like ?", "%"+outId+"%");
-			}
+		if(carId!=null)
+			helper.addWhereCondition("cc.car.id=?", carId);
 		helper.addOrderByProperty("cc.id", false);
 		PageBean<CarCare> pageBean = carCareService.queryCarCare(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carCareHelper", helper);
 		return "list";
-	}
-	
-	public boolean isTure(){
-		if (!(outId==null)) {
-			return true;
-		}
-         return	false;
 	}
 	
 	public String appointList() {
@@ -282,16 +271,10 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 			return "saveUI";
 		}
 		
-		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		User driver = userService.getById(model.getDriver().getId());
-		
-		model.setCar(car1);
-		model.setDriver(driver);
 		model.setAppointment(false);
 		carCareService.saveCarCare(model);
 		model=null;
 		ActionContext.getContext().getValueStack().push(getModel());
-		System.out.println("in add1, model="+model);
 		return freshList();
 	}
 	
@@ -324,11 +307,8 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		
 		CarCare carCare = carCareService.getCarCareById(model.getId());
 
-		//设置要修改的属性
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		User driver = userService.getById(model.getDriver().getId());
-		carCare.setCar(car);
-		carCare.setDriver(driver);
+		carCare.setCar(model.getCar());
+		carCare.setDriver(model.getDriver());
 		carCare.setDate(model.getDate());
 		carCare.setCareDepo(model.getCareDepo());
 		carCare.setCareMiles(model.getCareMiles());
@@ -360,19 +340,14 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 	}
 
 	public CarCare getModel() {
-		System.out.println("in getModel,model="+model);
 		if(model==null)
 			model=new CarCare();
 		return model;
 	}
 	
-	public String saveAppointment(){
-		
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		User driver = userService.getById(model.getDriver().getId());
-		
-		List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getDate(), model.getDate());
-		taskList.addAll(orderService.getDriverTask(driver,  model.getDate(), model.getDate()));
+	public String saveAppointment(){		
+		List<List<BaseEntity>> taskList = orderService.getCarTask(model.getCar(), model.getDate(), model.getDate());
+		taskList.addAll(orderService.getDriverTask(model.getDriver(),  model.getDate(), model.getDate()));
 		boolean haveTask=false;
 		int taskType=0;	//1订单  2 保养 3 年审 4 维修
 		for(List<BaseEntity> dayList: taskList){
@@ -412,8 +387,8 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 			return "saveAppoint";
 		}else{
 			CarCare carCare=new CarCare();
-			carCare.setCar(car);
-			carCare.setDriver(driver);
+			carCare.setCar(model.getCar());
+			carCare.setDriver(model.getDriver());
 			carCare.setDate(model.getDate());
 			carCare.setDone(model.isDone());
 			carCareService.saveAppointment(carCare);
@@ -424,15 +399,12 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		return freshAppointList();		
 	}
 	
-	public String editAppointment(){
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		User driver = userService.getById(model.getDriver().getId());
-		
+	public String editAppointment(){		
 		Date date1=carCareService.getCarCareById(model.getId()).getDate();
 		Date date2=model.getDate();
 		if(!DateUtils.getYMDString(date1).equals(DateUtils.getYMDString(date2))){
-			List<List<BaseEntity>> taskList = orderService.getCarTask(car, model.getDate(), model.getDate());
-			taskList.addAll(orderService.getDriverTask(driver,  model.getDate(), model.getDate()));
+			List<List<BaseEntity>> taskList = orderService.getCarTask(model.getCar(), model.getDate(), model.getDate());
+			taskList.addAll(orderService.getDriverTask(model.getDriver(),  model.getDate(), model.getDate()));
 			boolean haveTask=false;
 			int taskType=0;	//1订单  2 保养 3 年审 4 维修
 			for(List<BaseEntity> dayList: taskList){
@@ -473,8 +445,8 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		}
 			
 		CarCare carCare = carCareService.getCarCareById(model.getId());
-		carCare.setCar(car);
-		carCare.setDriver(driver);
+		carCare.setCar(model.getCar());
+		carCare.setDriver(model.getDriver());
 		carCare.setDate(model.getDate());
 		carCare.setDone(model.isDone());
 		System.out.println("here, carCare.getDate()="+DateUtils.getYMDString(carCare.getDate()));
@@ -548,12 +520,11 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		this.failReason = failReason;
 	}
 
-	public String getOutId() {
-		return outId;
+	public Long getCarId() {
+		return carId;
 	}
 
-	public void setOutId(String outId) {
-		this.outId = outId;
+	public void setCarId(Long carId) {
+		this.carId = carId;
 	}
-	
 }

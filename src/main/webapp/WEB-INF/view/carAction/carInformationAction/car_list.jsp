@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -30,7 +31,7 @@
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" name="plateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
+						<cqu:carSelector name="car"/>
 					</td>
 					<th><s:property value="tr.getText('car.CarServiceType.title')" /></th>
 					<td><s:select name="serviceType.title" cssClass="SelectStyle"
@@ -39,8 +40,8 @@
                         		/>
                     </td>
 					<th><s:property value="tr.getText('car.Car.driver')" /></th>
-					<td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
-							<s:textfield id="driverId" name="driverId" type="hidden"/></td>
+					<td>
+						<cqu:userSelector name="driver" driverOnly="true"/>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="submit" />
 					</td>

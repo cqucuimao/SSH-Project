@@ -97,7 +97,7 @@
 							<s:else><s:date name="insuranceExpiredDate" format="yyyy-MM-dd"/></s:else>
 						   	<s:if test="insuranceExpired"><font color="red">（脱保）</font></s:if>
 						   	&nbsp;
-						   	<s:a action="carInsurance_list?outId=%{plateNumber}" >
+						   	<s:a action="carInsurance_list?carId=%{id}" >
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="保险记录"/>
 						   	</s:a>
 						</td>						
@@ -115,7 +115,7 @@
 						   		<font color="red">预约（<s:date name="unDoneAppointExamine.date" format="yyyy-MM-dd"/>）</font>
 						   		&nbsp;
 						   	</s:if>
-						   	<s:a action="carExamine_list?outId=%{plateNumber}" >
+						   	<s:a action="carExamine_list?carId=%{id}" >
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="年审记录"/>
 						   	</s:a>
 						</td>						
@@ -129,7 +129,7 @@
 							<s:else><s:date name="nextTollChargeDate" format="yyyy-MM-dd"/></s:else>
 						   	<s:if test="tollChargeExpired"><font color="red">（过期）</font></s:if>
 						   	&nbsp;
-						   	<s:a action="tollCharge_list?outId=%{plateNumber}" >
+						   	<s:a action="tollCharge_list?carId=%{id}" >
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="路桥费记录"/>
 						   	</s:a>
 						</td>						
@@ -147,7 +147,7 @@
 						   		<font color="red">预约（<s:date name="unDoneAppointCare.date" format="yyyy-MM-dd"/>）</font>
 						   		&nbsp;
 						   	</s:if>
-						   	<s:a action="carCare_list?outId=%{plateNumber}" >
+						   	<s:a action="carCare_list?carId=%{id}" >
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="保养记录"/>
 						   	</s:a>
 						</td>						
@@ -159,7 +159,7 @@
                         <td>
                         	<s:if test="violationExist"><font color="red">有</font></s:if><s:else>无</s:else>
                         	&nbsp;
-                        	<s:a action="carViolation_list?outId=%{plateNumber}">
+                        	<s:a action="carViolation_list?carId=%{id}">
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="违章记录"/>
 						  	</s:a>
                         </td>			
@@ -173,7 +173,7 @@
 						   		<font color="red">预约（<s:date name="unDoneAppointRepair.fromDate" format="yyyy-MM-dd"/> 到 <s:date name="unDoneAppointRepair.toDate" format="yyyy-MM-dd"/>）</font>
 						   		&nbsp;
 						   	</s:if>
-						   	<s:a action="carRepair_list?outId=%{plateNumber}" >
+						   	<s:a action="carRepair_list?carId=%{id}" >
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="维修记录"/>
 						   	</s:a>
                         </td>			
@@ -183,7 +183,7 @@
                     <tr>
                         <th>加油情况：</th>
 						<td>
-                        	<s:a action="carRefuel_list?outId=%{plateNumber} " >
+                        	<s:a action="carRefuel_list?carId=%{id} " >
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="加油记录"/>
                         	</s:a>
                         </td>
@@ -193,7 +193,7 @@
                     <tr>
                         <th>洗车情况：</th>
 						<td>
-                        	<s:a action="carWash_list?outId=%{plateNumber} " >
+                        	<s:a action="carWash_list?carId=%{id} " >
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="洗车记录"/>
                         	</s:a>
                         </td>
@@ -203,7 +203,7 @@
                     <tr>
                         <th>物品领用情况：</th>
 						<td>
-                        	<s:a action="materialReceive_list?outId=%{plateNumber} " >
+                        	<s:a action="materialReceive_list?carId=%{id} " >
 						   		 <img width=16 height=16 src="skins/images/info.jpg" title="物品领用记录"/>
                         	</s:a>
                         </td>

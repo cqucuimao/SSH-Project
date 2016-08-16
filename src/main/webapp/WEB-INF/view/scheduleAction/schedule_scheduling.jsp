@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -110,8 +111,7 @@
 									<tr>
 										<th>用车类型<span class="required">*</span></th>
 										<td>
-						 					<s:textfield id="serviceType" name="serviceType" cssClass="inputText" type="text" />
-						 					<s:textfield id="serviceTypeId" name="serviceTypeId"  type="hidden"/>
+											<cqu:serviceTypeSelector name="serviceType" />
 										</td>
 									</tr>
 									<tr>
@@ -134,10 +134,7 @@
 									</tr>							
 									<tr>
 										<th>业务员</th>
-										<td>
-											<s:textfield class="userSelector inputText inputChoose" id="salerName" type="text"/>
-								 			<s:textfield id="salerId" name="salerId" type="hidden"/>
-										</td>
+										<td><cqu:userSelector name="saler"/></td>
 									</tr>
 									<tr>
 										<th></th>
@@ -160,8 +157,7 @@
 								<tbody>
 								<tr>
 									<th>车牌号</th>
-									<td>
-										<s:textfield id="carSelector1" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
+									<td><cqu:carSelector name="queryCar"/>
 										<input class="inputButton" type="button" value="查询" name="button" id="findCar" />
 									</td>
 								</tr>
@@ -200,14 +196,9 @@
 								<tbody>
 								<tr>
 									<th>调度的车</th>
-									<td>
-										<s:textfield id="selectCarPlateNumber" name="selectCarPlateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
-									</td>
+									<td><cqu:carSelector name="selectedCar" synchDriver="selectedDriver"/></td>
 									<th>调度的司机</th>
-									<td>
-										<s:textfield class="userSelector inputText inputChoose" id="driverName" type="text" driverOnly="true"/>
-								 		<s:textfield id="selectCarDriverId" name="selectCarDriverId" type="hidden"/>
-									</td>
+									<td><cqu:userSelector name="selectedDriver"/></td>
 								</tr>
 								</tbody>
 							</table>                             
@@ -263,10 +254,6 @@
 			
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
-			$("#serviceType").val("${serviceType}")
-			$("#serviceTypeId").val("${serviceTypeId}")
-			$("#salerName").val("${salerName}");
-			$("#salerId").val("${salerId}");
 			
 			if("filter_days"=="${chargeMode}" || "filter_protocol"=="${chargeMode}"){
 				formatDateField1($("#planBeginDate"));
@@ -303,18 +290,10 @@
 			
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
-			$("#serviceType").val("${serviceType}");
-			$("#serviceTypeId").val("${serviceTypeId}");
-			$("#salerName").val("${salerName}");
-			$("#salerId").val("${salerId}");
 			
 			$("#schedule").val("确认修改");
 			$("#inQueue").hide();
 			$("#reset").hide();
-			
-			$("#selectCarPlateNumber").val("${selectCarPlateNumber}");
-			$("#driverName").val("${selectCarDriverName}");
-			$("#selectCarDriverId").val("${selectCarDriverId}");
 			
 			if("filter_days"=="${chargeMode}" || "filter_protocol"=="${chargeMode}"){
 				formatDateField1($("#planBeginDate"));
@@ -410,16 +389,16 @@
 
 		function checkDriver() {
 			if($("#chargeMode").val() == "filter_protocol"){
-				if($("#selectCarPlateNumber").val()=="" && ($("#driverName").val()=="" || $("#selectCarDriverId").val()=="")){
+				if($("#selectedCar").val()=="" && $("#selectedDriver").val()==""){
 					alert("协议订单中也需要指定车或者司机！");
 					return false;
 				}
 			}else{
-				if($("#selectCarPlateNumber").val()==""){
+				if($("#selectedCar").val()==""){
 					alert("还没有选择调度的车辆！");
 					return false;
 				}
-				if($("#driverName").val()=="" || $("#selectCarDriverId").val()==""){
+				if($("#selectedDriver").val()==""){
 					alert("还没有选择调度的司机！");
 					return false;
 				}
@@ -444,7 +423,7 @@
 					return false;
 				}
 			}
-			if($("#carSelector1").val()==""){
+			if($("#queryCar").val()==""){
 				alert("必须输入至少一个查询条件！");
 				return false;
 			}
@@ -639,9 +618,9 @@
 							var chargeMode = $("#chargeMode").val();
 							var planBeginDate = $("#planBeginDate").val();
 							var planEndDate = $("#planEndDate").val();
-							var selectCarPlateNumber = $("#selectCarPlateNumber").val();
-							var selectCarDriverId = $("#selectCarDriverId").val();
-							var serviceTypeId = $("#serviceTypeId").val();
+							var selectedCar = $("#selectedCar").val();
+							var selectedDriver = $("#selectedDriver").val();
+							var serviceType = $("#serviceType").val();
 							var scheduleFromUpdateOrderId = $("#scheduleFromUpdateOrderId").val();
 							$.ajax({
 								url : 'schedule_isCarAndDriverAvailable.action',// 跳转到 action  
@@ -649,9 +628,9 @@
 								chargeMode : chargeMode,
 								planBeginDate : planBeginDate,
 								planEndDate : planEndDate,
-								serviceTypeId : serviceTypeId,
-								selectCarPlateNumber : selectCarPlateNumber,
-								selectCarDriverId : selectCarDriverId,
+								serviceType : serviceType,
+								selectedCar : selectedCar,
+								selectedDriver : selectedDriver,
 								scheduleFromUpdateOrderId : scheduleFromUpdateOrderId
 								},
 								type : 'post',
@@ -697,14 +676,14 @@
 						if (!checkRecommend())
 							return;
 						var chargeMode = $("#chargeMode").val();
-						var serviceTypeId = $("#serviceTypeId").val();
+						var serviceType = $("#serviceType").val();
 						var planBeginDate = $("#planBeginDate").val();
 						var planEndDate = $("#planEndDate").val();
 						$.ajax({
 							url : 'schedule_getRecommandDriver.action',// 跳转到 action  
 							data : {
 										chargeMode : chargeMode,
-										serviceTypeId : serviceTypeId,
+										serviceType : serviceType,
 										planBeginDate : planBeginDate,
 										planEndDate : planEndDate
 									},
@@ -763,13 +742,15 @@
 						});
 			});
 			$('.tableHover').find("input:radio").live('click',function(x) {
+				var carId = x.target.value;
 				var plateNumber = x.target.parentNode.nextElementSibling.innerText;
 				var driverName = x.target.parentNode.nextElementSibling.nextElementSibling.innerText;
 				var driverId = x.target.parentNode.nextElementSibling.nextElementSibling.innerHTML;
 				driverId=driverId.split(";")[1];
-				$("#selectCarPlateNumber").val(plateNumber);
-				$("#driverName").val(driverName);
-				$("#selectCarDriverId").val(driverId);
+				$("#selectedCarLabel").val(plateNumber);
+				$("#selectedCar").val(carId);
+				$("#selectedDriverLabel").val(driverName);
+				$("#selectedDriver").val(driverId);
 			});
 
 			$(".inputButton[id=findCar]").click(function() {
@@ -778,14 +759,14 @@
 				var chargeMode = $("#chargeMode").val();
 				var planBeginDate = $("#planBeginDate").val();
 				var planEndDate = $("#planEndDate").val();
-				var queryCarPlateNumber = $("#carSelector1").val();
+				var queryCar = $("#queryCar").val();
 				$.ajax({
 					url : 'schedule_getCar.action',// 跳转到 action  
 					data : {
 								chargeMode : chargeMode,
 								planBeginDate : planBeginDate,
 								planEndDate : planEndDate,
-								queryCarPlateNumber : queryCarPlateNumber
+								queryCar : queryCar
 							},
 					type : 'post',
 					dataType : 'json',

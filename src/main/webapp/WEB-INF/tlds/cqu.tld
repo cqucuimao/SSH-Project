@@ -20,13 +20,13 @@
      </attribute>            
 </tag>  
 <tag>  
- <name>serviceType</name>                            
+ <name>serviceTypeSelector</name>                            
  <tag-class>com.yuqincar.tags.ServiceTypeSelectorTags</tag-class>          
  <body-content>empty</body-content>      
             <attribute>    
                 <name>name</name>    
                 <required>true</required>    
-                <rtexprvalue>true</rtexprvalue>    
+                <rtexprvalue>false</rtexprvalue>    
             </attribute>
 </tag>  
  <tag>  
@@ -35,7 +35,12 @@
 	 <attribute>    
                 <name>name</name>    
                 <required>true</required>    
-                <rtexprvalue>true</rtexprvalue>    
+                <rtexprvalue>false</rtexprvalue>    
+      </attribute> 
+	 <attribute>    
+                <name>driverOnly</name>    
+                <required>false</required>    
+                <rtexprvalue>false</rtexprvalue>    
       </attribute>
 </tag> 
 <tag>  
@@ -44,7 +49,12 @@
 	 <attribute>    
                 <name>name</name>    
                 <required>true</required>    
-                <rtexprvalue>true</rtexprvalue>    
+                <rtexprvalue>false</rtexprvalue>    
+      </attribute> 
+	 <attribute>    
+                <name>synchDriver</name>    
+                <required>false</required>    
+                <rtexprvalue>false</rtexprvalue>    
       </attribute> 
 </tag>
 <tag>  

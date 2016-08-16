@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
 	String path = request.getContextPath();
@@ -35,15 +36,13 @@
 					<td>
 						<s:a action="carRepair_addUI"><input id="register" class="inputButton" type="button" value="维修登记" name="button" /></s:a>
 					</td>
-					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+					<th><s:property value="tr.getText('car.CarRepair.car')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" 
-							name="car.plateNumber" type="text" />
+						<cqu:carSelector name="car"/>
 					</td>
-					<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
+					<th><s:property value="tr.getText('car.CarRepair.driver')" /></th>
 					<td>
-						<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
-						<s:textfield id="driverId" name="driver.id" type="hidden"/>
+						<cqu:userSelector name="driver"/>
 					</td>
 					<th>从</th>
 					<td>
@@ -56,8 +55,8 @@
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<s:a action="carRepair_excel"><input id="repairInput" class="inputButton" type="button" value="维修信息导入"  /></s:a>
-					 <s:if test="Ture">
-						<a class="p15" href="javascript:history.go(-1);">返回</a>
+					 	<s:if test="carId!=null">
+							<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
 					</td>
 				</tr>

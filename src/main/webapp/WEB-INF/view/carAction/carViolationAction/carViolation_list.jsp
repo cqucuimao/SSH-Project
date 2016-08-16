@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -25,9 +26,10 @@
 					<td>
 						<s:a action="carViolation_saveUI"><input id="register" class="inputButton" type="button" value="违章登记" name="button" /></s:a>
 					</td>
-					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+					<th><s:property value="tr.getText('car.CarViolation.car')" /></th>
 					<td>
-					<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" /></td>
+						<cqu:carSelector name="car"/>
+					</td>
 					<th>从</th>
 					<td>
 						<s:textfield name="beginDate" id="beginDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
@@ -38,8 +40,8 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<s:if test="Ture">
-						<a class="p15" href="javascript:history.go(-1);">返回</a>
+						<s:if test="carId!=null">
+							<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
 					</td>
 				</tr>

@@ -31,7 +31,7 @@
 					</colgroup>
 					<tbody class="tableHover">
 							<tr>
-                    			<th width="120"><s:property value="tr.getText('car.Car.plateNumber')" />：</th>
+                    			<th width="120"><s:property value="tr.getText('car.CarCare.car')" />：</th>
                     			<td>${car.plateNumber}</td>
                 			</tr>
 							<tr>

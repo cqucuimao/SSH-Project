@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -125,8 +126,7 @@
 					<tr>
 						<th><s:property value="tr.getText('car.Car.driver')" /></th>
 						<td>
-							<s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
-							<s:textfield id="driverId" name="driverId" type="hidden" />						
+							<cqu:userSelector name="driver" driverOnly="true"/>				
 						</td>
 					</tr>
 					<tr>

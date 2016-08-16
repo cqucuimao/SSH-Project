@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -44,14 +45,14 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.Material.car')"/><span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber"
-									 type="text" synchDriverName="driver" synchDriverId="driverId"/>
+							<cqu:carSelector name="car" synchDriver="driver"/>
 						</td>
                     </tr>
                 	<tr>
                         <th><s:property value="tr.getText('car.Material.driver')"/><span class="required">*</span></th>
-                        <td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
-							<s:textfield id="driverId" name="driver.id" type="hidden" /></td>
+                        <td>
+                        	<cqu:userSelector name="driver"/>
+                        </td>
 					<td>
                     </tr>
                     <tr>
@@ -100,10 +101,10 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					'car.plateNumber':{
+					carLabel:{
 						required:true,
 					},
-					'driver.name':{
+					driverLabel:{
 						required:true,
 					},
 					date:{

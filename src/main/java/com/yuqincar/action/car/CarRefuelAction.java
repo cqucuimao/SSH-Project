@@ -86,15 +86,13 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	
 	private String gDate;
 	
-	private String outId;
-	/** 查询 */
+	private Long carId;
+	
 	public String queryList(){
 		QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
 		
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-				.equals(model.getCar().getPlateNumber()))
-			helper.addWhereCondition("cr.car.plateNumber like ?", 
-					"%"+model.getCar().getPlateNumber()+"%");
+		if(model.getCar()!=null)
+			helper.addWhereCondition("cr.car=?",model.getCar());
 		if(date1!=null && date2!=null)
 			helper.addWhereCondition("(TO_DAYS(cr.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cr.date))>=0", 
 					date1 ,date2);
@@ -114,21 +112,13 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	/** 列表 */
 	public String list(){
 		QueryHelper helper = new QueryHelper(CarRefuel.class, "cr");
-		if (!(outId==null)) {
-		helper.addWhereCondition("cr.car.plateNumber like ?", "%"+outId+"%");
-		}
+		if(carId!=null)
+			helper.addWhereCondition("cr.car.id=?", carId);
 		helper.addOrderByProperty("cr.id", false);
 		PageBean pageBean = carRefuelService.queryCarRefuel(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carRefuelHelper", helper);
 		return "list";
-	}
-	
-	public boolean isTure(){
-		if (!(outId==null)) {
-			return true;
-		}
-         return	false;
 	}
 
 	public String freshList(){
@@ -140,7 +130,6 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	
 	/** 添加页面 */
 	public String addUI() throws Exception {
-		System.out.println("***************");
 		return "saveUI";
 	}
 	
@@ -158,7 +147,6 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 		ExcelUtil eu = new ExcelUtil();
 		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 7, 0);
 		List<CarRefuel> carRefuels = new ArrayList<CarRefuel>();
-		System.out.println("excelLines.size()="+excelLines.size());
 		try {
 			for(int i=1;i<excelLines.size();i++){
 				result = i;
@@ -458,10 +446,6 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	public String add() throws Exception {
 		// 保存到数据库
 		
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		User driver = userService.getById(model.getDriver().getId());	
-		model.setCar(car);
-		model.setDriver(driver);
 		carRefuelService.saveCarRefuel(model);
 		ActionContext.getContext().getValueStack().push(new CarRefuel());
 		return freshList();
@@ -545,17 +529,11 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 		this.gDate = gDate;
 	}
 
-	public String getOutId() {
-		return outId;
+	public Long getCarId() {
+		return carId;
 	}
 
-	public void setOutId(String outId) {
-		this.outId = outId;
-	}
-
-	
-	
-	
-	
-	
+	public void setCarId(Long carId) {
+		this.carId = carId;
+	}	
 }

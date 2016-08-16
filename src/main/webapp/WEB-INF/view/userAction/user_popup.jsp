@@ -26,7 +26,8 @@
 					<th>用户名:</th>
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
 					<td>
-						<input type="hidden" name="userSelectorId" value="${userSelectorId}"/>
+						<input type="hidden" name="selectorName" value="${selectorName}"/>
+						<input type="hidden" name="driverOnly" value="${driverOnly}"/>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 				</tr>
@@ -82,14 +83,8 @@
                    	}
                 }
             	var origin = artDialog.open.origin;
-            	var driverName = origin.document.getElementById('${userSelectorId}');
-            	var driverId = driverName.nextSibling;
-            	while(driverId!="[object HTMLInputElement]")
-            	{
-            		driverId=driverId.nextSibling;
-            	}
-            	if(driverId.type!="hidden")
-            		return;
+            	var driverName = origin.document.getElementById('${selectorName}Label');
+            	var driverId = origin.document.getElementById('${selectorName}');
 		
             	if(newVal != null && newVal !="")
                 	driverName.value = newVal;
@@ -102,18 +97,10 @@
             
             $("#clear").click(function(){
             	var origin = artDialog.open.origin;
-            	var driverName = origin.document.getElementById('${userSelectorId}');
-            	var driverId = driverName.nextSibling;
-            	while(driverId!="[object HTMLInputElement]")
-            	{
-            		driverId=driverId.nextSibling;
-            	}
-            	if(driverId.type!="hidden")
-            		return;
-
+            	var driverName = origin.document.getElementById('${selectorName}Label');
+            	var driverId = origin.document.getElementById('${selectorName}');
             	driverId.value="";
             	driverId.select();
-
             	driverName.value = "";
             	driverName.select();
             	art.dialog.close();

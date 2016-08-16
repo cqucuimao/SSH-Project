@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -32,57 +33,57 @@
 				</colgroup> 
 				<tbody>
 					<tr>
-						<th>车牌号<span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarViolation.car')" /><span class="required">*</span></th>
 						<td>
-						  <s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber"
-									 type="text" synchDriverName="driver" synchDriverId="driverId"/>
+						 	<cqu:carSelector name="car" synchDriver="driver"/>
 						</td>
 					</tr>
 					<tr>
-                        <th>司机</th>
-                        <td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
-							<s:textfield id="driverId" name="driver.id" type="hidden" /></td>
+                        <th><s:property value="tr.getText('car.CarViolation.driver')" /></th>
+                        <td>
+                        	<cqu:userSelector name="driver"/>
+						</td>
 					<td>
                     </tr>
 					<tr>
-						<th>时间<span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarViolation.date')" /><span class="required">*</span></th>
 						<td>
 							<s:textfield cssClass="inputText" type="text" class="Wdate half" name="date" id="date"  onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"  />
 						
 						</td>
 					</tr>
 					<tr>
-						<th>地点<span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarViolation.place')" /><span class="required">*</span></th>
 						<td>
 								<s:textfield cssClass="inputText" name="place" id="place" />
 						</td>
 					</tr>
 					<tr>
-						<th>违章事实<span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarViolation.description')" /><span class="required">*</span></th>
 						<td>
 								<s:textfield cssClass="inputText" name="description" id="description" />
 						</td>
 					</tr>
 					<tr>
-						<th>罚分</th>
+						<th><s:property value="tr.getText('car.CarViolation.penaltyPoint')" /></th>
 						<td>
 								<s:textfield cssClass="inputText" name="penaltyPoint" id="penaltyPoint" />
 						</td>
 					</tr>
 					<tr>
-						<th>罚款（元）</th>
+						<th><s:property value="tr.getText('car.CarViolation.penaltyMoney')" />（元）</th>
 						<td>
 								<s:textfield cssClass="inputText"  name="penaltyMoney" id="penaltyMoney" />
 						</td>
 					</tr>
 					<tr>
-						<th>是否已经处理</th>
+						<th><s:property value="tr.getText('car.CarViolation.dealt')" /></th>
 						<td>
 							<s:checkbox class="m10" id="dealt" name="dealt"/>
 						</td>
 					</tr>
 					<tr>
-						<th>处理日期</th>
+						<th><s:property value="tr.getText('car.CarViolation.dealtDate')" /></th>
 						<td>
 								<s:textfield class="Wdate half" name="dealtDate" id="dealtDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"  />
 						</td>
@@ -113,7 +114,7 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					'car.plateNumber':{
+					carLabel:{
 						required:true,
 					},
 					date:{

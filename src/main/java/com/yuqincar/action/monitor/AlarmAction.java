@@ -11,13 +11,12 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
-import com.yuqincar.action.monitor.RealtimeAction.CarVO;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.monitor.WarningMessage;
 import com.yuqincar.domain.monitor.WarningMessageTypeEnum;
 import com.yuqincar.domain.order.OrderStatement;
-import com.yuqincar.domain.order.OrderStatementStatusEnum;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.monitor.WarningMessageService;
 import com.yuqincar.utils.DateUtils;
@@ -39,6 +38,8 @@ public class AlarmAction extends BaseAction{
 	private String carId;
 	private String warningType;
 	private String warningIds;
+	private Car car;
+	private User driver;
 	
 	//查询未处理的警告信息
 	public void getUndealedMessages(){
@@ -73,12 +74,12 @@ public class AlarmAction extends BaseAction{
 		
 		QueryHelper helper = new QueryHelper(WarningMessage.class, "w");
 		//设置司机名称
-	    if ((driverName != null) && (!"".equals(driverName))) {
-			 helper.addWhereCondition("w.car.driver.name=?", driverName);
+	    if (driver!=null) {
+			 helper.addWhereCondition("w.car.driver=?", driver);
 		}
 	    //设置车牌号
-	    if ((plateNumber != null) && (!"".equals(plateNumber))) {
-			 helper.addWhereCondition("w.car.plateNumber=?", plateNumber);
+	    if (car!=null) {
+			 helper.addWhereCondition("w.car=?", car);
 		}
 	    //设置查询的时间范围
 	    //设置开始时间
@@ -150,6 +151,22 @@ public class AlarmAction extends BaseAction{
 		this.warningType = warningType;
 	}
 	
+	public Car getCar() {
+		return car;
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
+	}
+
+	public User getDriver() {
+		return driver;
+	}
+
+	public void setDriver(User driver) {
+		this.driver = driver;
+	}
+
 	public List<MessageVO> parseMessages(List<WarningMessage> messages){
 		int size=messages.size();
 		List<MessageVO> messageList=new ArrayList<MessageVO>(size);

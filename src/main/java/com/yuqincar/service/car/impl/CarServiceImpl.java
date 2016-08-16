@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -160,7 +161,7 @@ public class CarServiceImpl implements CarService {
 		return carDao.getAll();
 	}
 	
-	public List<TreeNode> getCarTree(String plateNumber,boolean synchDriver) {
+	public List<TreeNode> getCarTree(String plateNumber,String synchDriver) {
 		System.out.println("in getCarTree, plateNumber="+plateNumber);
 		List<Car> cars ;
 		//默认展开
@@ -174,7 +175,8 @@ public class CarServiceImpl implements CarService {
 			TreeNode child = new TreeNode();
 			
 			child.setName(c.getPlateNumber());
-			if(synchDriver){
+			child.setId(c.getId());
+			if(!StringUtils.isEmpty(synchDriver)){
 				if(c.getDriver()!=null){
 					Map<String,Object> param=new HashMap<String,Object>();
 					param.put("driverName", c.getDriver().getName());

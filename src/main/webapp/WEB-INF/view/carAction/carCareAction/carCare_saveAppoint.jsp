@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -48,31 +49,31 @@
 				</colgroup>
             	<tbody>
                 	<tr>
-						<th><s:property value="tr.getText('car.Car.plateNumber')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarCare.car')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();"
-								name="car.plateNumber" type="text" synchDriverName="driverName" synchDriverId="driverId"/>
+							<cqu:carSelector name="car" synchDriver="driver"/>
 						</td>
                     </tr>
                     <tr>
-						<th><s:property value="tr.getText('car.Car.driver')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarCare.driver')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driver.name" type="text" driverOnly="true"/>
-							<s:textfield id="driverId" name="driver.id" type="hidden"/>
+							<cqu:userSelector name="driver"/>
 						</td>
 					</tr>
                     <tr>
-                    	<th>预约时间<span class="required">*</span></th>
+                    	<th><s:property value="tr.getText('car.CarCare.date')" /><span class="required">*</span></th>
 						<td>
 							<s:textfield cssClass="inputText" name="date" id="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 						</td>
                     </tr>
+                    <s:if test="id!=null">
 					<tr>
-						<th>是否完成保养</th>
+						<th><s:property value="tr.getText('car.CarCare.done')" /></th>
 						<td>
 							<s:checkbox class="m10" id="done" name="done"/>
 						</td>
 					</tr>
+					</s:if>
 				</tbody>
 				<tfoot>
 					<tr>
@@ -104,10 +105,10 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					'car.plateNumber':{
+					carLabel:{
 						required:true,
 					},
-					'driver.name':{
+					driverLabel:{
 						required:true,
 					},
 					date:{

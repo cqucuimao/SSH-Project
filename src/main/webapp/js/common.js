@@ -456,71 +456,6 @@ function setMapH(){
     $(".map").height(h);
 }
 
-$(function(){
-	$(".carSelector").each(function (i){
-		$(this).click(function(){
-			art.dialog.data('plateNumber', this.value); 
-			url='car_popup.action?carSelectorId='+this.id;
-			if($(this).attr("synchDriverName")!=null)
-				url=url+'&synchDriverName='+$(this).attr("synchDriverName");
-			if($(this).attr("synchDriverId")!=null)
-				url=url+'&synchDriverId='+$(this).attr("synchDriverId");
-			art.dialog.open(url,{
-				title: '车辆选择', 
-				width: 300, 
-				height: 530
-			});
-		});
- });
-	
-	
-	$(".userSelector").each(function (i){
-		$(this).click(function(){
-			art.dialog.data('userName', this.value); 
-			alert(1);
-			alert(this.id);
-			alert(2);
-			var url;
-	        if($(this).attr("driverOnly")!=null)
-	        	url="user_popup.action?driverOnly=true&userSelectorId="+this.id;	
-	        else
-	        	url="user_popup.action?userSelectorId="+this.id;
-	        art.dialog.open(url,{title: '员工选择', width: 300, height: 530});
-		});
-	});
-	
-	
-	 
-	 $("#schedulerName").click(function(){
-         art.dialog.data('driverName', $("#schedulerName").val()); // 存储数据  
-         art.dialog.open('user_popup.action',{
-				title: '司机选择', 
-				width: 300, 
-				height: 530
-			});
-     });
-	 
-	 $("#customer_organization_name").click(function(){
-         art.dialog.data('customer_organization_name', $("#customer_organization_name").val()); // 存储数据  
-         art.dialog.open('customerOrganization_popup.action',{
-				title: '单位选择', 
-				width: 350, 
-				height: 580,
-				
-			});
-     });
-	 
-	 $("#serviceType").click(function(){
-         art.dialog.data('serviceType', $("#serviceType").val()); // 存储数据  
-         art.dialog.open('schedule_popup.action',{
-				title: '价格表1选择', 
-				width: 900, 
-				height:580,
-				
-			});
-     });
-})
-
 Date.prototype.Format = function(fmt) { //author: meizz  
 	var o = {   
 			"M+" : this.getMonth()+1,                 //月份   
@@ -550,16 +485,20 @@ function onServiceTypeSelectorClick(name){
 		});
 }
 
-function onUserSelectorClick(name){
-			 
-		   var dName=name+"Label";
-		   art.dialog.data('userName', dName);
-		   var url;
-	       if($("#"+dName).attr("driverOnly")!=null)
-	        	url="user_popup.action?driverOnly=true&userSelectorId="+$("#"+dName).attr("id");
-	        else
-	        	url="user_popup.action?userSelectorId="+$("#"+dName).attr("id");
-	        art.dialog.open(url,{title: '员工选择', width: 300, height: 530});
+function onCarSelectorClick(name,synchDriver){
+	        art.dialog.open('car_popup.action?selectorName='+name+'&synchDriver='+synchDriver,{
+				title: '车辆选择', 
+				width: 300, 
+				height: 530				
+			});
+}
+
+function onUserSelectorClick(name,driverOnly){	
+			art.dialog.open('user_popup.action?selectorName='+name+'&driverOnly='+driverOnly,{
+				title: '员工选择', 
+				width: 300, 
+				height: 530				
+			});
 }
 
 function onCustomerOrganizationSelectorClick(name){
@@ -570,22 +509,6 @@ function onCustomerOrganizationSelectorClick(name){
 				height: 580,
 				
 			});
-}
-
-function onCarSelectorClick(name){
-	        art.dialog.data('plateNumber', name);
-			url='car_popup.action?carSelectorId='+$("#"+name).attr("id");
-			if($("#"+name).attr("synchDriverName")!=null)
-				url=url+'&synchDriverName='+$("#"+name).attr("synchDriverName");
-			
-			if($("#"+name).attr("synchDriverId")!=null)
-				url=url+'&synchDriverId='+$("#"+name).attr("synchDriverId");
-			art.dialog.open(url,{
-				title: '车辆选择', 
-				width: 300, 
-				height: 530
-			});
-		
 }
 
 function formatDateField1(obj){

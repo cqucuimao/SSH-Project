@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -23,7 +24,7 @@
 				<tbody>
 				<tr>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
-					<td><s:textfield id="car_platenumber" name="plateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" /></td>
+					<td><s:textfield id="platenumber" name="plateNumber" class="inputText inputChoose" type="text" /></td>
 					<th><s:property value="tr.getText('car.Car.brand')" /></th>
 					<td><s:textfield class="inputText" name="brand" /></td>
 				</tr>
@@ -45,8 +46,8 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('car.Car.driver')" /></th>
-					<td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
-							<s:textfield id="driverId" name="driverId" type="hidden"/>
+					<td>
+						<cqu:userSelector name="driver" driverOnly="true"/>
 					</td>
 					<th><s:property value="tr.getText('car.ServicePoint.name')" /></th>
 					<td><s:select name="servicePoint.name" cssClass="SelectStyle"

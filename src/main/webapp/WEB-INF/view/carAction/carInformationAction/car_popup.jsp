@@ -26,9 +26,8 @@
 					<th>车牌号:</th>
 					<td><s:textfield cssClass="inputText" name="plateNumber" type="text" /></td>
 					<td>						
-						<input type="hidden" name="carSelectorId" value="${carSelectorId}"/>
-						<input type="hidden" name="synchDriverName" value="${synchDriverName}"/>
-						<input type="hidden" name="synchDriverId" value="${synchDriverId}"/>
+						<input type="hidden" name="selectorName" value="${selectorName}"/>
+						<input type="hidden" name="synchDriver" value="${synchDriver}"/>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 				</tr>					
@@ -84,52 +83,46 @@
                 var treeObj=$.fn.zTree.getZTreeObj("treeDemo"),
         		nodes = treeObj.getCheckedNodes(true),
             	newVal = "";
-                /* console.info(nodes);
-                console.log(nodes.length);
-                console.log(nodes[0].name); */
                 for(var i=0;i<nodes.length;i++){
                    	if(!nodes[i].isParent) {
                    		newVal = nodes[i].name;
+                   		newId = nodes[i].id;
                    		if(nodes[i].param){
-                        	synchDriverName=nodes[i].param.driverName;
-                       		synchDriverId=nodes[i].param.driverId;
+                   			synchDriverName=nodes[i].param.driverName;
+                   			synchDriverId=nodes[i].param.driverId;
                    		}else{
                    			synchDriverName=false;
                    			synchDriverId=false;
                    		}
-                   		//console.log(newVal);
                    	}
                 }
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById("${carSelectorId}");
-            	console.info(input);
+            	var input = origin.document.getElementById("${selectorName}Label");
+            	var inputId = origin.document.getElementById("${selectorName}");
             	input.value = newVal;
+            	inputId.value = newId;
             	input.select();
 
-            	if("${synchDriverName}"!=""){
-            		driverName=origin.document.getElementById("${synchDriverName}");
+            	if("${synchDriver}"!="null"){
+            		driverName=origin.document.getElementById("${synchDriver}Label");
+            		driverId=origin.document.getElementById("${synchDriver}");
 					if(synchDriverName){       			
             			driverName.value=synchDriverName;
-					}else{
-						driverName.value="";
-					}
-            	}
-            	if("${synchDriverId}"!=""){
-            		driverId=origin.document.getElementById("${synchDriverId}");
-					if(synchDriverId){          			
             			driverId.value=synchDriverId;
 					}else{
+						driverName.value="";
 						driverId.value="";
 					}
-            	}
-            	
+            	}            	
             	art.dialog.close();
             })
             
             $("#clear").click(function(){
             	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById("${carSelectorId}");
+            	var input = origin.document.getElementById("${selectorName}Label");
+            	var inputId = origin.document.getElementById("${selectorName}");
             	input.value = "";
+            	inputId.value ="";
             	input.select();
             	art.dialog.close();
             })

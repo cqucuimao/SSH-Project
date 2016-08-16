@@ -9,11 +9,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +72,7 @@ public class ScheduleAction extends BaseAction {
 	@Autowired
 	PriceService priceSerivce;
 	
-	private String watchKeeperName;
-	private String watchKeeperId;
-	private String queryCarPlateNumber;
+	private User keeper;
 	private String keyWord;
 	private String customerOrganizationName;
 	private String customerName;
@@ -84,8 +80,7 @@ public class ScheduleAction extends BaseAction {
 	private String chargeMode;
 	private String planBeginDate;
 	private String planEndDate;
-	private String serviceType;
-	private String serviceTypeId;
+	private CarServiceType serviceType;
 	private String fromAddress;
 	private String toAddress;
 	private String memo;
@@ -95,23 +90,21 @@ public class ScheduleAction extends BaseAction {
 	private String scheduleMode;  //新建时为null，从队列调度为FROM_QUEUE,修改订单为FROM_UPDATE
 	private long scheduleFromQueueOrderId;
 	private long scheduleFromUpdateOrderId;
-	private String selectCarPlateNumber;
-	private String selectCarDriverName;
-	private String selectCarDriverId;
+	private Car queryCar;
+	private Car selectedCar;
+	private User selectedDriver;
 	private boolean onDuty;
 	private String callForOther;
 	private String otherPassengerName;
 	private String otherPhoneNumber;
 	private String callForOtherSendSMS;
-	private String salerName;
-	private String salerId;
+	private User saler;
 	private BigDecimal protocolMoney;
 	
 	
 	public void getCar() {
-		System.out.println("queryCarPlateNumber="+queryCarPlateNumber);
 		QueryHelper helper = new QueryHelper(Car.class, "c");
-		helper.addWhereCondition("c.status=? and c.plateNumber=?", CarStatusEnum.NORMAL,queryCarPlateNumber);
+		helper.addWhereCondition("c.status=? and c.plateNumber=?", CarStatusEnum.NORMAL,queryCar.getPlateNumber());
 		List<Car> cars = carService.queryCar(1, helper).getRecordList();
 		System.out.println("cars.size="+cars.size());
 		for(Car car:cars)
@@ -300,15 +293,13 @@ public class ScheduleAction extends BaseAction {
 		order.setFromAddress(fromAddress);
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			order.setToAddress(toAddress);
-		if(!StringUtils.isEmpty(salerId)){
-			User saler=userService.getById(Long.valueOf(salerId));
+		if(saler!=null)
 			order.setSaler(saler);
-		}
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL)
 			order.setOrderMoney(protocolMoney);
 		else
 			order.setOrderMoney(new BigDecimal(0));
-		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceTypeId)));
+		order.setServiceType(serviceType);
 		order.setPhone(phone);
 		order.setStatus(OrderStatusEnum.INQUEUE);
 		order.setMemo(memo);
@@ -357,14 +348,8 @@ public class ScheduleAction extends BaseAction {
 			order.setPlanEndDate(DateUtils.getYMD(planEndDate));
 		}else
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
-		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceTypeId)));
-		Car car = null;
-		User driver = null;
-		if(!StringUtils.isEmpty(selectCarPlateNumber))
-			car=carService.getCarByPlateNumber(selectCarPlateNumber);
-		if(!StringUtils.isEmpty(selectCarDriverId))
-			driver=userService.getById(Long.valueOf(selectCarDriverId));
-		int result=orderService.isCarAndDriverAvailable(order, car,driver);
+		order.setServiceType(serviceType);
+		int result=orderService.isCarAndDriverAvailable(order, selectedCar,selectedDriver);
 		System.out.println("resutl="+result);
 		writeJson("{\"result\":" + result + "}");
 	}
@@ -384,14 +369,11 @@ public class ScheduleAction extends BaseAction {
 		fromAddress=order.getFromAddress();
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			toAddress=order.getToAddress();
-		if(order.getSaler()!=null){
-			salerName=order.getSaler().getName();
-			salerId=String.valueOf(order.getSaler().getId());
-		}
+		if(order.getSaler()!=null)
+			saler=order.getSaler();
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL)
 			protocolMoney=order.getOrderMoney();
-		serviceType=order.getServiceType().getTitle();
-		serviceTypeId=String.valueOf(order.getServiceType().getId());
+		serviceType=order.getServiceType();
 		memo=order.getMemo();
 	}
 	
@@ -426,21 +408,13 @@ public class ScheduleAction extends BaseAction {
 		scheduleMode=OrderService.SCHEDULE_FROM_UPDATE;
 		initInputField(order);	
 		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getCar()==null))
-			selectCarPlateNumber=order.getCar().getPlateNumber();
-		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null)){
-			selectCarDriverName=order.getDriver().getName();
-			selectCarDriverId=String.valueOf(order.getDriver().getId());
-		}
-		System.out.println("callForOther="+callForOther);
-		System.out.println("otherPassengerName="+otherPassengerName);
-		System.out.println("otherPhoneNumber="+otherPhoneNumber);
-		System.out.println("callForOtherSendSMS="+callForOtherSendSMS);
+			selectedCar=order.getCar();
+		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null))
+			selectedDriver=order.getDriver();
 		return "scheduling";
 	}
 	
 	public void isOrderDeprived(){
-		System.out.println("in isOrderDeprived");
-		System.out.println("scheduleFromQueueOrderId="+scheduleFromQueueOrderId);
 		Order order=orderService.getOrderById(scheduleFromQueueOrderId);
 		if(order.getStatus()==OrderStatusEnum.INQUEUE && order.isScheduling() 
 				&& order.getScheduler().equals((User)ActionContext.getContext().getSession().get("user")))
@@ -458,8 +432,6 @@ public class ScheduleAction extends BaseAction {
 	}
 
 	public String startSchedule() {
-		System.out.println("startSchedule");
-		System.out.println("selectCarPlateNumber="+selectCarPlateNumber);
 		Order order=null;
 		Order toUpdateOrder=null;	//为了记录改动数据项而把修改之前的Order记录下来。
 		if(scheduleMode==null || scheduleMode.isEmpty())
@@ -494,9 +466,6 @@ public class ScheduleAction extends BaseAction {
 				toUpdateOrder.setCallForOther(false);
 		}
 		ChargeModeEnum chargeModeEnum = null;
-		Car car = null;
-		if(!StringUtils.isEmpty(selectCarPlateNumber))
-			car=carService.getCarByPlateNumber(selectCarPlateNumber);
 		chargeModeEnum = getChargeMode(chargeMode);
 		order.setChargeMode(chargeModeEnum);
 		
@@ -508,10 +477,8 @@ public class ScheduleAction extends BaseAction {
 			order.setToAddress(toAddress);
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
 		}
-		if(!StringUtils.isEmpty(salerId)){
-			User saler=userService.getById(Long.valueOf(salerId));
+		if(saler!=null)
 			order.setSaler(saler);
-		}
 		
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
@@ -523,7 +490,7 @@ public class ScheduleAction extends BaseAction {
 				order.setActualMoney(new BigDecimal(0));
 		}
 		
-		order.setServiceType(carService.getCarServiceTypeById(Long.parseLong(serviceTypeId)));
+		order.setServiceType(serviceType);
 		order.setPhone(phone);
 		
 		order.setMemo(memo);
@@ -556,10 +523,7 @@ public class ScheduleAction extends BaseAction {
 		else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE))
 			str=OrderService.SCHEDULE_FROM_UPDATE;
 		User user=(User)ActionContext.getContext().getSession().get("user");
-		User driver = null;
-		if(!StringUtils.isEmpty(selectCarDriverId))
-			driver=userService.getById(Long.valueOf(selectCarDriverId));
-		result = orderService.scheduleOrder(str, order,customerOrganizationName, customerName, car, driver, copyNumber,toUpdateOrder,user);
+		result = orderService.scheduleOrder(str, order,customerOrganizationName, customerName, selectedCar, selectedDriver, copyNumber,toUpdateOrder,user);
 		System.out.println("result="+result);
 		if (result == 0){
 			if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE)){	
@@ -614,8 +578,7 @@ public class ScheduleAction extends BaseAction {
 			beginDate_ = DateUtils.getYMD(planBeginDate);
 			endDate_ = DateUtils.getYMD(planEndDate);
 		}
-		List<Car> cars = orderService.getRecommandedCar(
-				carService.getCarServiceTypeById(Long.parseLong(serviceTypeId)),getChargeMode(chargeMode),
+		List<Car> cars = orderService.getRecommandedCar(serviceType,getChargeMode(chargeMode),
 				beginDate_, endDate_, pageNum).getRecordList();
 
 		List<LinkedHashMap<myCar, LinkedHashMap<String, Integer>>> carStatus = new ArrayList<LinkedHashMap<myCar, LinkedHashMap<String, Integer>>>();
@@ -695,21 +658,17 @@ public class ScheduleAction extends BaseAction {
 	}
 	
 	public String watchKeeper(){
-		System.out.println("in watchKeeper");
 		WatchKeeper watchKeeper=watchKeeperService.getWatchKeeper();
 		onDuty=watchKeeper.isOnDuty();
-		watchKeeperName=watchKeeper.getKeeper().getName();
-		watchKeeperId=String.valueOf(watchKeeper.getKeeper().getId());
+		keeper=watchKeeper.getKeeper();
 		return "watchKeeper";
 	}
 	
 	public String configWatchKeeper(){
-		System.out.println("in configWatchKeeper");
 		WatchKeeper watchKeeper=watchKeeperService.getWatchKeeper();
 		watchKeeper.setOnDuty(onDuty);
-		watchKeeper.setKeeper(userService.getById(Long.valueOf(watchKeeperId)));
+		watchKeeper.setKeeper(keeper);
 		watchKeeperService.updateWatchKeeper(watchKeeper);
-		System.out.println("end configWatchKeeper");
 		return queue();
 	}
 	
@@ -813,12 +772,12 @@ public class ScheduleAction extends BaseAction {
 		this.orderService = orderService;
 	}
 
-	public String getQueryCarPlateNumber() {
-		return queryCarPlateNumber;
+	public Car getQueryCar() {
+		return queryCar;
 	}
 
-	public void setQueryCarPlateNumber(String queryCarPlateNumber) {
-		this.queryCarPlateNumber = queryCarPlateNumber;
+	public void setQueryCar(Car queryCar) {
+		this.queryCar = queryCar;
 	}
 
 	public String getKeyWord() {
@@ -828,14 +787,6 @@ public class ScheduleAction extends BaseAction {
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
 	}	
-
-	public String getServiceTypeId() {
-		return serviceTypeId;
-	}
-
-	public void setServiceTypeId(String serviceTypeId) {
-		this.serviceTypeId = serviceTypeId;
-	}
 
 	public String getCustomerOrganizationName() {
 		return customerOrganizationName;
@@ -883,16 +834,16 @@ public class ScheduleAction extends BaseAction {
 
 	public void setPlanEndDate(String planEndDate) {
 		this.planEndDate = planEndDate;
-	}
-
-	public String getServiceType() {
+	}	
+	
+	public CarServiceType getServiceType() {
 		return serviceType;
 	}
 
-	public void setServiceType(String serviceType) {
+	public void setServiceType(CarServiceType serviceType) {
 		this.serviceType = serviceType;
 	}
-	
+
 	public String getMemo() {
 		return memo;
 	}
@@ -949,28 +900,28 @@ public class ScheduleAction extends BaseAction {
 		this.scheduleFromUpdateOrderId = scheduleFromUpdateOrderId;
 	}
 
-	public String getSelectCarDriverName() {
-		return selectCarDriverName;
+	public Car getSelectedCar() {
+		return selectedCar;
 	}
 
-	public void setSelectCarDriverName(String selectCarDriverName) {
-		this.selectCarDriverName = selectCarDriverName;
+	public void setSelectedCar(Car selectedCar) {
+		this.selectedCar = selectedCar;
 	}
 
-	public String getSelectCarPlateNumber() {
-		return selectCarPlateNumber;
+	public User getSelectedDriver() {
+		return selectedDriver;
 	}
 
-	public void setSelectCarPlateNumber(String selectCarPlateNumber) {
-		this.selectCarPlateNumber = selectCarPlateNumber;
-	}	
-
-	public String getSelectCarDriverId() {
-		return selectCarDriverId;
+	public void setSelectedDriver(User selectedDriver) {
+		this.selectedDriver = selectedDriver;
 	}
 
-	public void setSelectCarDriverId(String selectCarDriverId) {
-		this.selectCarDriverId = selectCarDriverId;
+	public User getSaler() {
+		return saler;
+	}
+
+	public void setSaler(User saler) {
+		this.saler = saler;
 	}
 
 	public String getFromAddress() {
@@ -989,20 +940,12 @@ public class ScheduleAction extends BaseAction {
 		this.toAddress = toAddress;
 	}
 
-	public String getWatchKeeperName() {
-		return watchKeeperName;
+	public User getKeeper() {
+		return keeper;
 	}
 
-	public void setWatchKeeperName(String watchKeeperName) {
-		this.watchKeeperName = watchKeeperName;
-	}
-
-	public String getWatchKeeperId() {
-		return watchKeeperId;
-	}
-
-	public void setWatchKeeperId(String watchKeeperId) {
-		this.watchKeeperId = watchKeeperId;
+	public void setKeeper(User keeper) {
+		this.keeper = keeper;
 	}
 
 	public boolean isOnDuty() {
@@ -1043,22 +986,6 @@ public class ScheduleAction extends BaseAction {
 
 	public void setCallForOtherSendSMS(String callForOtherSendSMS) {
 		this.callForOtherSendSMS = callForOtherSendSMS;
-	}
-
-	public String getSalerId() {
-		return salerId;
-	}
-
-	public void setSalerId(String salerId) {
-		this.salerId = salerId;
-	}	
-
-	public String getSalerName() {
-		return salerName;
-	}
-
-	public void setSalerName(String salerName) {
-		this.salerName = salerName;
 	}
 
 	public BigDecimal getProtocolMoney() {

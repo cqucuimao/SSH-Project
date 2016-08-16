@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -21,14 +22,13 @@
             <table>
                 <tbody>
                     <tr>
-                        <th width="100px;">值班模式：<span class="required">*</span></th>
+                        <th width="100px;"><s:property value="tr.getText('order.WatchKeeper.onDuty')" />：<span class="required">*</span></th>
                         <td><s:checkbox type="checkbox" class="m10" id="onDuty" name="onDuty"/>开启值班模式</td>
                     </tr>
                     <tr>
-                        <th>值班人员：<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('order.WatchKeeper.keeper')" />：<span class="required">*</span></th>
                         <td>
-                        	<s:textfield class="userSelector inputText inputChoose" id="watchKeeperName" name="watchKeeperName" type="text"/>
-							<s:textfield id="watchKeeperId" name="watchKeeperId" type="hidden"/>
+                        	<cqu:userSelector name="keeper"/>
 						</td>
                     </tr>
                 </tbody>

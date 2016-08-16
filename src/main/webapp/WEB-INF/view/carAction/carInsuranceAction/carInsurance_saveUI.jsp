@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -50,10 +51,9 @@
 				</colgroup>
                 <tbody id="tab">
                 	<tr>
-                        <th><s:property value="tr.getText('car.Car.plateNumber')" /><span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.CarInsurance.car')" /><span class="required">*</span></th>
 						<td>
-						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
-						
+							<cqu:carSelector name="car"/>						
 						</td>
                     </tr>
                 	<tr>

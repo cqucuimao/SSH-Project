@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -43,8 +44,7 @@
 					</td>					
 					<th><s:property value="tr.getText('order.Order.driver')" /></th>
 					<td>
-						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driverName" driverOnly="true"/>
-						<s:textfield id="driverId" name="driverId" type="hidden"/>						
+						<cqu:userSelector name="driver"/>						
 					</td>
 					<th>计划起止时间</th>
 					<td>

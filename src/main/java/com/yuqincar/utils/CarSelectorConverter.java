@@ -17,16 +17,16 @@ public class CarSelectorConverter extends StrutsTypeConverter {
 	
 	public Object convertFromString(Map context, String[] values, Class toClass) {  
 		if(toClass==Car.class){
-			String plateNumber=(String)values[0];
-			return carService.getCarByPlateNumber(plateNumber);
+			Long id=Long.valueOf(values[0]);
+			return carService.getCarById(id);
 		}
 		return null;
     }  
   
     public String convertToString(Map context, Object o) {
-    	CarServiceType serviceType=(CarServiceType)o;
-    	if(serviceType!=null)
-    		return String.valueOf(serviceType.getId());
+    	Car car=(Car)o;
+    	if(car!=null)
+    		return String.valueOf(car.getId());
     	else
     		return "";  
     }  

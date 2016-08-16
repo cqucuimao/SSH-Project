@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -25,9 +26,9 @@
 					<td>
 						<s:a action="carRefuel_addUI"><input id="register" class="inputButton" type="button" value="加油登记" name="button" /></s:a>
 					</td>
-					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+					<th><s:property value="tr.getText('car.CarRefuel.car')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+						<cqu:carSelector name="car"/>
 					</td>
 					<th>从</th>
 					<td>
@@ -47,7 +48,7 @@
 					<a href="#" class="modify" onclick="modify()">
 					    <input class="inputButton" id="outPutOil" type="button" value="导出加油信息月报表"/>
 					</a>
-					<s:if test="Ture">
+					<s:if test="carId!=null">
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</s:if>
 					</td>

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.service.car.CarService;
 
-public class CarServiceTypeConverter extends StrutsTypeConverter {
+public class CarServiceTypeSelectorConverter extends StrutsTypeConverter {
 	@Autowired
 	private CarService carService;
 	

@@ -5,7 +5,7 @@ import java.util.List;
 import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.order.PriceTable;
 
-public interface PriceSerivce {
+public interface PriceService {
 	public List<PriceTable> getAllPriceTable();
 	
 	public PriceTable copyPriceTable(String title, PriceTable originPriceTable);

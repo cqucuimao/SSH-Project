@@ -31,7 +31,7 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.TollCharge.car')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text"/>
+							<cqu:carSelector name="car"/>
 						</td>
                     </tr>
                 	<tr>
@@ -84,7 +84,7 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					'car.plateNumber':{
+					carLabel:{
 						required:true,
 					},
 					payDate:{

@@ -29,13 +29,13 @@ import com.yuqincar.domain.car.TransmissionTypeEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.monitor.Device;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarCareService;
 import com.yuqincar.service.car.CarExamineService;
 import com.yuqincar.service.car.CarRepairService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.device.DeviceService;
 import com.yuqincar.service.privilege.UserService;
-import com.yuqincar.utils.DateRange;
 import com.yuqincar.utils.QueryHelper;
 
 @Controller
@@ -71,12 +71,10 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 
 	private Long carServiceTypeId;
 	private Long servicePointId;
-	private Long driverId;
-	private Long deviceId;	
+	private Long deviceId;
 	private String driverName;
-	private String carSelectorId;
-	private String synchDriverName;
-	private String synchDriverId;
+	private String selectorName;
+	private String synchDriver;
 	private int transmissionTypeId;
 	private int plateTypeId;
 	private String actionFlag;
@@ -101,21 +99,17 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private int seatNumber1;
 	private int seatNumber2;
 	
-	/** 查询 */
+	private Car car;
+	
 	public String queryList() {
-		
 		QueryHelper helper = new QueryHelper(Car.class, "c");
-		/*车牌号查询*/
-		if(model.getPlateNumber()!=null && !"".equals(model.getPlateNumber()))
-			helper.addWhereCondition("c.plateNumber like ?", "%"+model.getPlateNumber()+"%");
-		/*服务类型查询*/
+		if(car!=null)
+			helper.addWhereCondition("c.plateNumber=?", car.getPlateNumber());
 		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
-
 		if(model.getServiceType()!=null&&model.getServiceType().getTitle()!=null && !"".equals(model.getServiceType().getTitle()))
 			helper.addWhereCondition("c.serviceType.title like ?", "%"+model.getServiceType().getTitle()+"%");
-		/*司机姓名查询*/
-		if(model.getDriver()!=null&&model.getDriver().getName()!=null && !"".equals(model.getDriver().getName()))
-			helper.addWhereCondition("c.driver.name like ?", "%"+model.getDriver().getName()+"%");
+		if(model.getDriver()!=null)
+			helper.addWhereCondition("c.driver=?", model.getDriver());		
 		helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
 		helper.addOrderByProperty("c.id", false);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);		
@@ -124,9 +118,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		
 		return "list";
 	}
-	/*
-	 * 列表
-	 */
+	
 	public String list(){
 		QueryHelper helper = new QueryHelper("Car", "c");
 		helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
@@ -146,12 +138,9 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		return "list";
 	}
 	
-	/*详细查询页面*/
 	public String queryUI(){
-		// 准备数据：carServiceTypeList
 		ActionContext.getContext().put("carServiceTypeList", carService.getAllCarServiceType());
-		// 准备数据：servicePointList
-	    ActionContext.getContext().put("servicePointList", carService.getAllServicePoint());	
+		ActionContext.getContext().put("servicePointList", carService.getAllServicePoint());	
 		return "queryUI";
 	}
 	
@@ -339,13 +328,13 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 				return addUI();
 		}
 		// 封装对象
-		//System.out.println(carService);
 		model.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
 		model.setServicePoint(carService.getServicePointById(servicePointId));
-		model.setDriver(userService.getById(driverId));
 		model.setStatus(CarStatusEnum.NORMAL);
 		model.setPlateType(PlateTypeEnum.getById(plateTypeId));
 		model.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
+		if(StringUtils.isEmpty(model.getTollChargeSN()))
+			model.setTollChargeSN(null);
 		// 保存到数据库
 		carService.saveCar(model);
 		ActionContext.getContext().getValueStack().push(new Car());
@@ -382,11 +371,6 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		//处理驻车点
 		if (car.getServicePoint() != null) {
 			servicePointId = car.getServicePoint().getId();
-		}
-		
-		//处理默认司机
-		if (car.getDriver() != null) {
-			driverId = car.getDriver().getId();
 		}
 
 		// 准备数据：carServiceTypeList
@@ -431,13 +415,13 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		car.setModel(model.getModel());
 		car.setVIN(model.getVIN());
 		car.setEngineSN(model.getEngineSN());
-		car.setTollChargeSN(model.getTollChargeSN());
+		car.setTollChargeSN(StringUtils.isEmpty(model.getTollChargeSN()) ? null : model.getTollChargeSN());
 		car.setEnrollDate(model.getEnrollDate());
 		car.setSeatNumber(model.getSeatNumber());
 		car.setPlateType(PlateTypeEnum.getById(plateTypeId));
 		car.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
 		car.setRegistDate(model.getRegistDate());
-		car.setDriver(userService.getById(driverId));
+		car.setDriver(model.getDriver());
 		car.setServicePoint(carService.getServicePointById(servicePointId));
 
 		//更新到数据库
@@ -479,9 +463,6 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	public String popup() {
 		List<TreeNode> nodes = new ArrayList() ;
-		boolean synchDriver=false;
-		if(!StringUtils.isEmpty(synchDriverName) && !StringUtils.isEmpty(synchDriverId))
-			synchDriver=true;
 		
 		if(!StringUtils.isEmpty(model.getPlateNumber()))
 			nodes= carService.getCarTree(model.getPlateNumber(),synchDriver);
@@ -501,7 +482,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 				for(Car c : carMap.get(sp)){
 					TreeNode child = new TreeNode();
 					child.setName(c.getPlateNumber());
-					if(synchDriver){
+					child.setId(c.getId());
+					if(!StringUtils.isEmpty(synchDriver)){
 						if(c.getDriver()!=null){
 							Map<String,Object> param=new HashMap<String,Object>();
 							param.put("driverName", c.getDriver().getName());
@@ -520,10 +502,6 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			nodes= carService.getCarTree(model.getPlateNumber(),synchDriver);
 		Gson gson = new Gson();
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));
-		System.out.println("nodes="+gson.toJson(nodes));
-		ActionContext.getContext().put("carSelectorId", carSelectorId);
-		ActionContext.getContext().put("synchDriverName", synchDriverName);
-		ActionContext.getContext().put("synchDriverId", synchDriverId);
 		return "popup";
 	}
 	
@@ -578,14 +556,6 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setServicePointId(Long servicePointId) {
 		this.servicePointId = servicePointId;
 	}
-
-	public Long getDriverId() {
-		return driverId;
-	}
-
-	public void setDriverId(Long driverId) {
-		this.driverId = driverId;
-	}
 	public Long getDeviceId() {
 		return deviceId;
 	}
@@ -598,25 +568,19 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setDriverName(String driverName) {
 		this.driverName = driverName;
 	}
-	public String getCarSelectorId() {
-		return carSelectorId;
-	}
-	public void setCarSelectorId(String carSelectorId) {
-		this.carSelectorId = carSelectorId;
-	}
-	public String getSynchDriverName() {
-		return synchDriverName;
-	}
-	public void setSynchDriverName(String synchDriverName) {
-		this.synchDriverName = synchDriverName;
-	}
-	public String getSynchDriverId() {
-		return synchDriverId;
-	}
-	public void setSynchDriverId(String synchDriverId) {
-		this.synchDriverId = synchDriverId;
-	}
 	
+	public String getSelectorName() {
+		return selectorName;
+	}
+	public void setSelectorName(String selectorName) {
+		this.selectorName = selectorName;
+	}
+	public String getSynchDriver() {
+		return synchDriver;
+	}
+	public void setSynchDriver(String synchDriver) {
+		this.synchDriver = synchDriver;
+	}
 	public int getTransmissionTypeId() {
 		return transmissionTypeId;
 	}
@@ -753,5 +717,12 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setSeatNumber2(int seatNumber2) {
 		this.seatNumber2 = seatNumber2;
 	}
-	
+
+	public Car getCar() {
+		return car;
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
+	}	
 }

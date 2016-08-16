@@ -1,12 +1,9 @@
 package com.yuqincar.service.privilege.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +13,7 @@ import com.yuqincar.dao.privilege.UserDao;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
-import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
-import com.yuqincar.domain.privilege.UserGenderEnum;
-import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.privilege.DepartmentService;
 import com.yuqincar.service.privilege.RoleService;
@@ -129,12 +123,9 @@ public class UserServiceImpl implements UserService{
 
 	
 	public List<TreeNode> getUserTree(String name,boolean driverOnly) {
-		System.out.println("in getUserTree, driverOnly="+driverOnly);
 		List<User> users ;
 		boolean flag = false;
 		users=userDao.getByName(name, driverOnly);
-		for(User user:users)
-			System.out.println("userName="+user.getName());
 		
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
 		

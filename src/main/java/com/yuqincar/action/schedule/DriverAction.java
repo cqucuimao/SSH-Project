@@ -53,8 +53,10 @@ public class DriverAction extends BaseAction {
     
     private String customerOrganizationName;
     
+    private Car car;
+    private User driver;
+    
     private void prepareDriverData(){
-    	User driver=userService.getById(driverId);    	
     	if(beginDate==null)
     		beginDate = new Date();
     	if(endDate==null)
@@ -101,13 +103,12 @@ public class DriverAction extends BaseAction {
     }
     
     private void prepareCarData(){
-    	System.out.println("in prepareCarData");
     	QueryHelper helper = new QueryHelper(Car.class, "c");
 		helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
-		if(plateNumber!=null && !plateNumber.isEmpty())
-			helper.addWhereCondition("c.plateNumber=?", plateNumber);
-		if(driverId>0)
-			helper.addWhereCondition("c.driver.id=?", driverId);
+		if(car!=null)
+			helper.addWhereCondition("c.id=?", car.getId());
+		if(driver!=null)
+			helper.addWhereCondition("c.driver=?", driver);
 		if(servicePointId==0)
 			servicePointId=1;
 		helper.addWhereCondition("c.servicePoint.id=?", servicePointId);
@@ -174,14 +175,12 @@ public class DriverAction extends BaseAction {
     }
 
     public String taskList() {
-    	if(driverId>0)
+    	if(driver!=null)
     		prepareDriverData();
     	else
     		prepareCarData();
     		
      	ActionContext.getContext().put("servicePointList", carService.getAllServicePoint());
-    	driverId=0;
-    	plateNumber=null;
     	servicePointId=0;
     	beginDate=null;	//为了不在界面上回显日期
     	endDate=null;
@@ -244,7 +243,23 @@ public class DriverAction extends BaseAction {
 		this.customerOrganizationName = customerOrganizationName;
 	}
     
-    public class LineTitleVO{
+    public Car getCar() {
+		return car;
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
+	}
+
+	public User getDriver() {
+		return driver;
+	}
+
+	public void setDriver(User driver) {
+		this.driver = driver;
+	}
+
+	public class LineTitleVO{
     	private String type;//如果是查车，type="car";如果是查人，type="driver"
     	private long id;
     	private String driverName;

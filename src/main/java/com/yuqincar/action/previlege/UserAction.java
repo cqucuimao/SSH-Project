@@ -49,8 +49,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private String oldPassword = "";
 	private String newPassword = "";
 	
-	private String driverOnly;
-	private String userSelectorId;
+	private String selectorName;
+	private boolean driverOnly;
 	
 	private String licenseID;
 	private Date expireDate;
@@ -92,10 +92,9 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	
 	public String popup() {
 		List<TreeNode> nodes ;
-		nodes= userService.getUserTree(model.getName(), (driverOnly!=null && driverOnly.equals("true")) ? true : false);
+		nodes= userService.getUserTree(model.getName(), driverOnly);
 		Gson gson = new Gson();
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));
-		ActionContext.getContext().put("userSelectorId", userSelectorId);
 		return "popup";
 	}
 
@@ -282,26 +281,21 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		this.newPassword = newPassword;
 	}
 
+	public String getSelectorName() {
+		return selectorName;
+	}
 
-	public String getDriverOnly() {
+	public void setSelectorName(String selectorName) {
+		this.selectorName = selectorName;
+	}
+
+	public boolean isDriverOnly() {
 		return driverOnly;
 	}
 
-
-	public void setDriverOnly(String driverOnly) {
+	public void setDriverOnly(boolean driverOnly) {
 		this.driverOnly = driverOnly;
 	}
-
-
-	public String getUserSelectorId() {
-		return userSelectorId;
-	}
-
-
-	public void setUserSelectorId(String userSelectorId) {
-		this.userSelectorId = userSelectorId;
-	}
-
 
 	public String getLicenseID() {
 		return licenseID;

@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -45,26 +46,26 @@
 				</colgroup>
                 <tbody>
                 	<tr>
-                        <th>车辆<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.CarWash.car')" /><span class="required">*</span></th>
 						<td>
-							<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber"
-									 type="text" synchDriverName="driver" synchDriverId="driverId"/>
+							<cqu:carSelector name="car" synchDriver="driver"/>
 						</td>
                     </tr>
                 	<tr>
-                        <th>司机<span class="required">*</span></th>
-                        <td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
-							<s:textfield id="driverId" name="driver.id" type="hidden" /></td>
+                        <th><s:property value="tr.getText('car.CarWash.driver')" /><span class="required">*</span></th>
+                        <td>
+                        	<cqu:userSelector name="driver"/>
+                        </td>
 					<td>
                     </tr>
                     <tr>
-                        <th>洗车日期<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.CarWash.date')" /><span class="required">*</span></th>
                         <td>
 						<s:textfield name="date" id="date" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
                     </tr>
                     <tr>
-                    <th>洗车点<span class="required">*</span></th>
+                    <th><s:property value="tr.getText('car.CarWash.shop')" /><span class="required">*</span></th>
 						<td>
 						    <s:select name="shop.id" cssClass="SelectStyle"
                         		list="carWashShopList" listKey="id" listValue="name"
@@ -73,35 +74,35 @@
 						</td>
                     </tr>
                     <tr>
-                        <th>金额<span class="required">*</span></th>
+                        <th><s:property value="tr.getText('car.CarWash.money')" /><span class="required">*</span></th>
                         <td>
                         	<s:textfield id="money" cssClass="inputText" name="money"/>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th>内饰清洁金额</th>
+                        <th><s:property value="tr.getText('car.CarWash.innerCleanMoney')" /></th>
                         <td>
                         	<s:textfield id="innerCleanMoney" cssClass="inputText" name="innerCleanMoney"/>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th>抛光打蜡金额</th>
+                        <th><s:property value="tr.getText('car.CarWash.polishingMoney')" /></th>
                         <td>
                         	<s:textfield id="polishingMoney" cssClass="inputText" name="polishingMoney"/>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th>清洗发动机金额</th>
+                        <th><s:property value="tr.getText('car.CarWash.engineCleanMoney')" /></th>
                         <td>
                         	<s:textfield id="engineCleanMoney" cssClass="inputText" name="engineCleanMoney"/>
                         </td>
                     </tr>
                     
                     <tr>
-                        <th>座套清洗金额</th>
+                        <th><s:property value="tr.getText('car.CarWash.cushionCleanMoney')" /></th>
                         <td>
                         	<s:textfield id="cushionCleanMoney" cssClass="inputText" name="cushionCleanMoney"/>
                         </td>
@@ -135,10 +136,10 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					'car.plateNumber':{
+					carLabel:{
 						required:true,
 					},
-					'driver.name':{
+					driverLabel:{
 						required:true,
 					},
 					date:{

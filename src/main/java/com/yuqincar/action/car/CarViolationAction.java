@@ -45,14 +45,13 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	
 	private String date;
 	
-	private String outId;
+	private Long carId;
 
 		//头部快速查询
 		public String queryForm(){
 			QueryHelper helper = new QueryHelper("CarViolation", "cv");
-			if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-					.equals(model.getCar().getPlateNumber()))
-				helper.addWhereCondition("cv.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+			if(model.getCar()!=null)
+				helper.addWhereCondition("cv.car=?", model.getCar());
 			if(beginDate!=null && endDate!=null)
 				helper.addWhereCondition("(TO_DAYS(cv.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cv.date))>=0", 
 						beginDate ,endDate);
@@ -70,21 +69,13 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	
 		 public String list() {
 			 	QueryHelper helper = new QueryHelper("CarViolation", "cv");
-			 	if (!(outId==null)) {
-			 		helper.addWhereCondition("cv.car.plateNumber like ?", "%"+outId+"%");
-				}
+			 	if(carId!=null)
+			 		helper.addWhereCondition("cv.car.id=?", carId);
 				helper.addOrderByProperty("cv.id", false);
 				PageBean pageBean = carViolationService.queryCarViolation(pageNum, helper);
 				ActionContext.getContext().getValueStack().push(pageBean);
 				ActionContext.getContext().getSession().put("carViolationHelper", helper);
 				return "list";
-			}
-		 
-		 public boolean isTure(){
-				if (!(outId==null)) {
-					return true;
-				}
-		         return	false;
 			}
 		 
 		//翻页的时候保留条件并显示数据
@@ -105,8 +96,6 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 			}
 		   
 		   public String save(){
-			    System.out.println("********************************"+date);
-			   	System.out.println("model.getDate()="+model.getDate());
 			    Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 				model.setCar(car);
 				User driver=userService.getById(model.getDriver().getId());
@@ -182,14 +171,11 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 		this.date = date;
 	}
 
-	public String getOutId() {
-		return outId;
+	public Long getCarId() {
+		return carId;
 	}
 
-	public void setOutId(String outId) {
-		this.outId = outId;
-	}
-
-	
-	
+	public void setCarId(Long carId) {
+		this.carId = carId;
+	}	
 }

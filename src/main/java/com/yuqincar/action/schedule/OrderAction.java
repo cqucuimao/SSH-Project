@@ -145,6 +145,10 @@ public class OrderAction extends BaseAction {
 	private int grade;
 	private String options;
 	private IteratorStatus iteratorStatus;
+	private Car car;
+	private User driver;
+	private User scheduler;
+	private User saler;
 	
 	private List<DayOrderDetail> dayDetails = new ArrayList<DayOrderDetail>();
 	
@@ -513,16 +517,15 @@ public class OrderAction extends BaseAction {
 	
 	public String rescheduleDo(){
 		Order order=orderService.getOrderById(orderId);
-		Car car=carService.getCarByPlateNumber(plateNumber);
-		User driver=userService.getById(driverId);
-		
 		int result=0;
 		result=orderService.orderReschedule(order, car, driver,(User)ActionContext.getContext().getSession().get("user"), rescheduleReason);
 		if(result==1){
 			addFieldError("rescheduleError", "车辆或司机不可用");
+			ActionContext.getContext().getValueStack().push(order);
 			return "reschedule";
 		}else if(result==2){
 			addFieldError("rescheduleError", "此订单当前状态不支持重新调度操作");
+			ActionContext.getContext().getValueStack().push(order);
 			return "reschedule";
 		}
 		ActionContext.getContext().getValueStack().push(order);
@@ -684,8 +687,8 @@ public class OrderAction extends BaseAction {
 		QueryHelper helper = new QueryHelper("order_", "o");
 		if(sn!=null && !sn.isEmpty())
 			helper.addWhereCondition("o.sn like ?", "%"+sn+"%");
-		if(driverId>0)
-			helper.addWhereCondition("o.driver.id=?", driverId);
+		if(driver!=null)
+			helper.addWhereCondition("o.driver=?", driver);
 		if(customerOrganizationName!=null && !customerOrganizationName.isEmpty())
 			helper.addWhereCondition("o.customerOrganization.name=?", customerOrganizationName);
 		if(planBeginDate!=null)
@@ -699,7 +702,6 @@ public class OrderAction extends BaseAction {
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("orderManagerHelper", helper);
-		driverId=0;
 		customerOrganizationName=null;
 		planBeginDate=null;
 		planEndDate=null;
@@ -761,8 +763,8 @@ public class OrderAction extends BaseAction {
 		QueryHelper helper = new QueryHelper("order_", "o");
 		if(sn!=null && !sn.isEmpty())
 			helper.addWhereCondition("o.sn like ?", "%"+sn+"%");
-		if(driverId>0)
-			helper.addWhereCondition("o.driver.id=?", driverId);
+		if(driver!=null)
+			helper.addWhereCondition("o.driver=?", driver);
 		if(customerOrganizationName!=null && !customerOrganizationName.isEmpty())
 			helper.addWhereCondition("o.customerOrganization.name=?", customerOrganizationName);
 		if(planBeginDate!=null)
@@ -817,10 +819,10 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("TO_DAYS(?)<=TO_DAYS(o.scheduleTime)", scheduleTime1);
 		if(scheduleTime2!=null)
 			helper.addWhereCondition("TO_DAYS(o.scheduleTime)<=TO_DAYS(?)", scheduleTime2);
-		if(plateNumber != null && !plateNumber.isEmpty())
-			helper.addWhereCondition("o.car.plateNumber like ?", "%"+plateNumber+"%");
-		if(schedulerId>0)
-			helper.addWhereCondition("o.scheduler.id=?", schedulerId);
+		if(car!=null)
+			helper.addWhereCondition("o.car=?", car);
+		if(scheduler!=null)
+			helper.addWhereCondition("o.scheduler=?", scheduler);
 		OrderSourceEnum orderSourceEnum = getOrderSource(orderSource);
 		if(orderSourceEnum != null)
 			helper.addWhereCondition("o.orderSource=?", orderSourceEnum);
@@ -864,18 +866,13 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("?<=o.otherFee", otherFee1);
 		if(otherFee2 != null)
 			helper.addWhereCondition("o.otherFee<=?", otherFee2);
-		if(salerId>0)
-			helper.addWhereCondition("o.saler.id=?", salerId);
+		if(saler!=null)
+			helper.addWhereCondition("o.saler=?", saler);
 		
 		helper.addOrderByProperty("o.id", false);
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("orderManagerHelper", helper);
-		/*driverId=0;
-		customerOrganizationName=null;
-		planBeginDate=null;
-		planEndDate=null;
-		status=null;*/
 		return "list";
 	}
 	
@@ -1561,6 +1558,38 @@ public class OrderAction extends BaseAction {
 
 	public void setOtherFee2(BigDecimal otherFee2) {
 		this.otherFee2 = otherFee2;
+	}
+
+	public Car getCar() {
+		return car;
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
+	}
+
+	public User getDriver() {
+		return driver;
+	}
+
+	public void setDriver(User driver) {
+		this.driver = driver;
+	}
+
+	public User getScheduler() {
+		return scheduler;
+	}
+
+	public void setScheduler(User scheduler) {
+		this.scheduler = scheduler;
+	}
+
+	public User getSaler() {
+		return saler;
+	}
+
+	public void setSaler(User saler) {
+		this.saler = saler;
 	}
 }
 

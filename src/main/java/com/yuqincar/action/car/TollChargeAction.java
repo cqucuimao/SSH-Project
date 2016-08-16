@@ -61,45 +61,13 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	
 	private Date endDate;
 
-	private String outId;
-	
-	private CarServiceType myServiceType;
-	
-	
-	private User myUser;
-	private CustomerOrganization myCo;
-	private Car myCar;
-
-	public Car getMyCar() {
-		return myCar;
-	}
-
-	public void setMyCar(Car myCar) {
-		this.myCar = myCar;
-	}
-
-	public CustomerOrganization getMyCo() {
-		return myCo;
-	}
-
-	public void setMyCo(CustomerOrganization myCo) {
-		this.myCo = myCo;
-	}
-
-	public User getMyUser() {
-		return myUser;
-	}
-
-	public void setMyUser(User myUser) {
-		this.myUser = myUser;
-	}
+	private Long carId;
 
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper("TollCharge", "tc");
 		
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-				.equals(model.getCar().getPlateNumber()))
-			helper.addWhereCondition("tc.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		if(model.getCar()!=null)
+			helper.addWhereCondition("tc.car=?", model.getCar());
 		
 		if(beginDate!=null && endDate!=null)
 			helper.addWhereCondition("(TO_DAYS(tc.payDate)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(tc.payDate))>=0", 
@@ -119,21 +87,13 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	public String list() {
 		System.out.println("in list");
 		QueryHelper helper = new QueryHelper("TollCharge", "tc");
-		if (!(outId==null)) {
-			helper.addWhereCondition("tc.car.plateNumber like ?", "%"+outId+"%");
-			}
+		if(carId!=null)
+			helper.addWhereCondition("tc.car.id=?", carId);
 		helper.addOrderByProperty("tc.id", false);
 		PageBean<TollCharge> pageBean = tollChargeService.queryTollCharge(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("tollChargeHelper", helper);
 		return "list";
-	}
-	
-	public boolean isTure(){
-		if (!(outId==null)) {
-			return true;
-		}
-         return	false;
 	}
 	
 	public String freshList(){
@@ -153,8 +113,6 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	}
 	
 	public String save(){
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		model.setCar(car);
 		tollChargeService.saveTollCharge(model);
 		ActionContext.getContext().getValueStack().push(new TollCharge());
 		return freshList();
@@ -168,8 +126,7 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	
 	public String edit(){
 		TollCharge tollCharge = tollChargeService.getTollChargeById(model.getId());
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		tollCharge.setCar(car);
+		tollCharge.setCar(model.getCar());
 		tollCharge.setPayDate(model.getPayDate());
 		tollCharge.setMoney(model.getMoney());
 		tollCharge.setOverdueFine(model.getOverdueFine());
@@ -183,10 +140,7 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	public String remind(){
 		QueryHelper helper = new QueryHelper("Car", "c");
 		helper.addWhereCondition("c.nextTollChargeDate is not null");
-		//helper.addWhereCondition("c.car.plateNumber like ?", "%"+outId+"%");
-		//helper.addOrderByProperty("nextTollChargeDate", true);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);
-		
 		List<RemindVO> voList=new ArrayList<RemindVO>(pageBean.getRecordList().size());
 		for(Car car:pageBean.getRecordList()){
 			RemindVO vo=new RemindVO();
@@ -203,40 +157,6 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "remind";
 	}
-	
-	
-	public String test(){
-		System.out.println("myuser"+myUser);
-		System.out.println("myCo:= "+myCo);
-		System.out.println("myCar=: "+myCar);
-		System.out.println("myServiceType=: "+myServiceType);
-		if (myUser!=null) {
-			System.out.println(myUser.getName());
-		}
-		if (myCo!=null) {
-			System.out.println(myCo.getName());
-		}
-		if (myCar!=null) {
-			System.out.println(myCar.getPlateNumber());
-		}
-		if (myServiceType!=null) {
-			System.out.println(myServiceType.getTitle());
-		}
-		
-		return "test";
-	}
-	
-	public String initTest(){
-		myServiceType=carService.getCarServiceTypeById(9);
-		long a=1;
-		myCo=organizationService.getById(a);
-		long b=2;
-		myCar=carService.getCarById(b);
-		long c=2;
-		myUser=userService.getById(c);
-		return "test";
-	}
-	
 	
 	public TollCharge getModel() {
 		if(model==null)
@@ -288,19 +208,12 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 		}
 	}
 
-	public String getOutId() {
-		return outId;
+	public Long getCarId() {
+		return carId;
 	}
 
-	public void setOutId(String outId) {
-		this.outId = outId;
+	public void setCarId(Long carId) {
+		this.carId = carId;
 	}
 
-	public CarServiceType getMyServiceType() {
-		return myServiceType;
-	}
-
-	public void setMyServiceType(CarServiceType myServiceType) {
-		this.myServiceType = myServiceType;
-	}	
 }

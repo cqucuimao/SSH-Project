@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.yuqincar.dao.car.CarExamineDao;
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
@@ -32,10 +33,10 @@ public class CarExamineDaoImpl extends BaseDaoImpl<CarExamine> implements CarExa
 	}
 	
 	public CarExamine getRecentCarExamine(Car car){
-		QueryHelper helper = new QueryHelper(CarExamine.class, "ce");
-		helper.addWhereCondition("ce.appointment=?", false);
-		helper.addOrderByProperty("ce.nextExamineDate", false);
-		List<CarExamine> list=(List<CarExamine>) getSession().createQuery(helper.getQueryListHql());
+		List<CarExamine> list =(List<CarExamine>) getSession().createQuery("from CarExamine ce where ce.car=? and ce.appointment=? order by ce.nextExamineDate desc")
+				.setParameter(0, car).setParameter(1, false)
+				.list();
+		
 		if(list!=null && list.size()>0)
 			return list.get(0);
 		else

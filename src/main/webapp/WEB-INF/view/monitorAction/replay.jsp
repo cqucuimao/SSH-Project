@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -28,10 +29,9 @@
             <table id="queryInfoTB">
                 <tr>
                     <th>司机名称</th>
-                    <td><s:textfield class="inputText" name="driver.name"/></td>
+                    <td><cqu:userSelector name="driver"/></td>
                     <th>车牌号</th>
-                    <!-- <td><s:textfield id="plateNumberInput" class="inputText" style="width:103px;" name="plateNumber"/></td> -->
-                    <td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
+                    <td><cqu:carSelector name="car"/></td>
                     <th>起始时间</th>
 					<td>
 						<input class="Wdate half" style="width:165px;" type="text" id="beginTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
@@ -111,7 +111,7 @@
     
         //从实时监控页面跳转过来后，需要填充时间
         //获取查询条件中车牌号的值
-        var plateNumberValue=$("#queryInfoTB").find("tr").find("td").find("#car_platenumber").val();
+        var plateNumberValue=$("#queryInfoTB").find("tr").find("td").find("#carLabel").val();
         //如果车牌号不为空，说明是跳转过来的，为车牌号，开始时间，结束时间设置预定值
         if(plateNumberValue!=""){
         	//将当前值转化为xxxx-xx-xx xx:xx:xx日期格式

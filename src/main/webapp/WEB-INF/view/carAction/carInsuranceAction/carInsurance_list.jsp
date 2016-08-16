@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
 	String path = request.getContextPath();
@@ -26,9 +27,9 @@
 					<td>
 						<s:a action="carInsurance_addUI"><input id="register" class="inputButton" type="button" value="保险登记" name="button" /></s:a>
 					</td>
-					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+					<th><s:property value="tr.getText('car.CarInsurance.car')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+						<cqu:carSelector name="car"/>
 					</td>
 					<th>从</th>
 					<td>
@@ -42,8 +43,8 @@
 						<input class="inputButton" type="submit" value="查询"/>
 						<input id="remind" class="inputButton" type="button" value="保险到期提醒" name="button" />
 						<s:a action="commercialInsuranceType_list"><input id="carInsuranceType" class="inputButton" type="button" value="商业保险类型管理" name="button" /></s:a>
-					   <s:if test="Ture">
-						<a class="p15" href="javascript:history.go(-1);">返回</a>
+					   	<s:if test="carId!=null">
+							<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
 					</td>
 				</tr>

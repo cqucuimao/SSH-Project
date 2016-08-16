@@ -10,6 +10,7 @@ import com.yuqincar.dao.car.CarCareDao;
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
 
 @Repository
@@ -33,10 +34,9 @@ public class CarCareDaoImpl extends BaseDaoImpl<CarCare> implements CarCareDao{
 	
 
 	public CarCare getRecentCarCare(Car car){
-		QueryHelper helper=new QueryHelper(CarCare.class,"cc");
-		helper.addWhereCondition("cc.appointment=?", false);
-		helper.addOrderByProperty("cc.date", false);
-		List<CarCare> list=(List<CarCare>)getSession().createQuery(helper.getQueryListHql());
+		List<CarCare> list =(List<CarCare>) getSession().createQuery("from CarCare cc where cc.car=? and cc.appointment=? order by cc.id desc")
+				.setParameter(0, car).setParameter(1, false).list();
+		
 		if(list!=null && list.size()>0)
 			return list.get(0);
 		else

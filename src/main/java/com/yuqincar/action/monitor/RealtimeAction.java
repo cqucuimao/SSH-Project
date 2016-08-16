@@ -30,6 +30,8 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	@Autowired
 	private OrderService orderService;
 	
+	private Car car;
+	
 	public String mapWindow(){
 		return "mapWindow";
 	}
@@ -104,7 +106,9 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	 */
 	public void list(){
 		
-		String plateNumber=model.getPlateNumber();
+		String plateNumber=null;
+		if(car!=null)
+			plateNumber=car.getPlateNumber();
 		String servicePointName=null;
 		if(!"".equals(model.getServicePoint().getName())){
 			//业务点id
@@ -118,6 +122,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 			carsVO=parseCars(cars);
 		}
 		String jsonStr="{\"cars\":"+JSON.toJSONString(carsVO)+"}"; 
+		System.out.println("jsonStr="+jsonStr);
 		this.writeJson(jsonStr);
 	}
 

@@ -42,14 +42,13 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
 	
 	private Date endDate;
 	
-	private String outId;
+	private Long carId;
 
 	//头部快速查询
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper("Material", "mr");
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !""
-				.equals(model.getCar().getPlateNumber()))
-			helper.addWhereCondition("mr.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		if(model.getCar()!=null)
+			helper.addWhereCondition("mr.car=?", model.getCar());
 		if(beginDate!=null && endDate!=null)
 			helper.addWhereCondition("(TO_DAYS(mr.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(mr.date))>=0", 
 					beginDate ,endDate);
@@ -67,20 +66,13 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
 	//页面初加载数据填充
    public String list() {
 		QueryHelper helper = new QueryHelper("Material", "mr");
-		if (!(outId==null)) {
-			helper.addWhereCondition("mr.car.plateNumber like ?", "%"+outId+"%");
-			}
+		if(carId!=null)
+			helper.addWhereCondition("mr.car.id=?", carId);
 		helper.addOrderByProperty("mr.id", false);
 		PageBean<Material> pageBean = materialService.queryMaterial(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("materialHelper", helper);
 		return "list";
-	}
-   public boolean isTure(){
-		if (!(outId==null)) {
-			return true;
-		}
-        return	false;
 	}
    
    //翻页的时候保留条件并显示数据
@@ -100,10 +92,6 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
 	}
    
    public String save(){
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		model.setCar(car);
-		User driver=userService.getById(model.getDriver().getId());
-		model.setDriver(driver);
 		materialService.saveMaterial(model);
 		ActionContext.getContext().getValueStack().push(new Material());
 		return freshList();
@@ -118,10 +106,8 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
    public String edit(){
 	  
 	    Material material = materialService.getMaterialById(model.getId());
-		Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		User driver=userService.getById(model.getDriver().getId());
-		material.setCar(car);
-	    material.setDriver(driver);
+		material.setCar(model.getCar());
+	    material.setDriver(model.getDriver());
 		material.setContent(model.getContent());
 		material.setDate(model.getDate());
 		material.setValue(model.getValue());
@@ -147,12 +133,11 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	public String getOutId() {
-		return outId;
+	public Long getCarId() {
+		return carId;
 	}
-	public void setOutId(String outId) {
-		this.outId = outId;
-	}
-   
+	public void setCarId(Long carId) {
+		this.carId = carId;
+	}	
 }	
 

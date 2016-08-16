@@ -14,10 +14,10 @@ import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.order.PriceTable;
-import com.yuqincar.service.order.PriceSerivce;
+import com.yuqincar.service.order.PriceService;
 
 @Service
-public class PriceServiceImpl implements PriceSerivce {
+public class PriceServiceImpl implements PriceService {
 	@Autowired
 	private PriceDao priceDao;
 	@Autowired

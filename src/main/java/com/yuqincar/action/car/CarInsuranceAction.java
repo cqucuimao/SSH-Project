@@ -41,7 +41,7 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	private int inputRows;
 	
-	private String outId;
+	private Long carId;
 	
 	private List<Long> commercialInsuranceType =new ArrayList<Long>();	
 	
@@ -57,8 +57,8 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	public String queryList(){
 		QueryHelper helper = new QueryHelper(CarInsurance.class, "ci");
 		
-		if(model.getCar()!=null && model.getCar().getPlateNumber()!=null && !"".equals(model.getCar().getPlateNumber()))
-		helper.addWhereCondition("ci.car.plateNumber like ?", "%"+model.getCar().getPlateNumber()+"%");
+		if(model.getCar()!=null)
+			helper.addWhereCondition("ci.car=?", model.getCar());
 		
 		if(date1!=null && date2!=null)
 			helper.addWhereCondition("(TO_DAYS(ci.payDate)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(ci.payDate))>=0", 
@@ -78,21 +78,13 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	/** 列表 */
 	public String list(){
 		QueryHelper helper = new QueryHelper(CarInsurance.class, "ci");
-		if (!(outId==null)) {
-		helper.addWhereCondition("ci.car.plateNumber like ?", "%"+outId+"%");
-		}
+		if(carId!=null)
+			helper.addWhereCondition("ci.car.id=?", carId);
 		helper.addOrderByProperty("ci.id", false);
 		PageBean pageBean = carInsuranceService.queryCarInsurance(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("carInsuranceHelper", helper);
 		return "list";
-	}
-	
-	public boolean isTure(){
-		if (!(outId==null)) {
-			return true;
-		}
-         return	false;
 	}
 
 	public String freshList(){
@@ -110,10 +102,6 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	/** 添加 */
 	public String add() throws Exception {
-		// 保存到数据库
-		Car car1 = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
-		model.setCar(car1);	
-		//CarInsurance cia = carInsuranceService.getCarInsuranceById(model.getId());
 		List<CommercialInsuranceType> cit =new ArrayList<CommercialInsuranceType>();
 		for(int i=0;i<inputRows;i++){
 			if(commercialInsuranceBeginDate.get(i).after(commercialInsuranceEndDate.get(i))){
@@ -159,19 +147,6 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 		return model;
 	}
 	
-	/** 验证截止时间不能早于起始时间*/
-	/*public void validateAdd(){
-		boolean before = model.getToDate().before(model.getFromDate());
-		System.out.println("in validateAdd!");
-		if(before){
-		
-			//addActionError("预约时间必须晚于今天！");
-			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
-			//ActionContext.getContext().put("date", "预约时间必须晚于今天！");
-		}
-	}*/
-	
-
 	public List<Long> getCommercialInsuranceType() {
 		return commercialInsuranceType;
 	}
@@ -232,12 +207,12 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 		return date2;
 	}
 
-	public String getOutId() {
-		return outId;
+	public Long getCarId() {
+		return carId;
 	}
 
-	public void setOutId(String outId) {
-		this.outId = outId;
+	public void setCarId(Long carId) {
+		this.carId = carId;
 	}
 
 	public void setDate2(Date date2) {

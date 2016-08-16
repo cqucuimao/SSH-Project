@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -35,7 +36,7 @@
                         <th width="15%">订单号：</th>
                         <td width="35%">${sn }</td>
                         <th width="15%">单位：</th>
-                        <td width="35%">${customerOrganization.abbreviation }</td>
+                        <td width="35%">${customerOrganization.name }</td>
                     </tr>
                     <tr>
                         <th>姓名：</th>
@@ -45,15 +46,15 @@
                     </tr>
                     <tr>
                     	<th>计费方式</th>
-                    	<td>${chargeModeString }</td>
-                        <th>用车人数：</th>
-                        <td>${passengerNumber }人</td>
-                    </tr>
-                    <tr>
+                    	<td>${chargeMode.label }</td>
                         <th>车型：</th>
                         <td>${serviceType.title }</td>
+                    </tr>
+                    <tr>
                         <th>订单状态：</th>
-                        <td>${statusString }</td>
+                        <td>${status.label }</td>
+                        <th></th>
+                        <td></td>
                     </tr>
                     <tr>
                         <th>计划起止时间：</th>
@@ -111,23 +112,18 @@
                     </tr>                  
                     <tr>
                         <th>车辆：<span class="required">*</span></th>
-                        <td>
-							<s:textfield id="plateNumber" name="plateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" />
-						</td>
+                        <td><cqu:carSelector name="car" synchDriver="driver"/></td>
                         <th></th>
                         <td></td>
                     </tr>                  
                     <tr>
                         <th>司机：<span class="required">*</span></th>
-                        <td>
-							<s:textfield class="userSelector inputText inputChoose" id="driverName" name="driverName" type="text" driverOnly="true"/>
-							<s:textfield id="driverId" name="driverId" type="hidden"/>
-						</td>
+                        <td><cqu:userSelector name="driver"/></td>
                         <th></th>
                         <td></td>
                     </tr>             
                     <tr>
-                        <th>延后原因：<span class="required">*</span></th>
+                        <th>重新调度原因：<span class="required">*</span></th>
                         <td>
 							<s:textarea style="height:100px;" class="w" name="rescheduleReason" placeholder="请输入重新调度原因"/>
 						</td>
@@ -164,10 +160,10 @@
 		$("#myForm").validate({
 			submitout: function(element) { $(element).valid(); },
 			rules:{		
-				plateNumber:{
+				carLabel:{
 					required:true
 				},
-				driverName:{
+				driverLabel:{
 					required:true
 				},
 				rescheduleReason:{

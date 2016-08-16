@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -25,10 +26,9 @@
             <table id="queryInfoTB">
                 <tr>
                     <th>司机名称</th>
-                    <td><s:textfield class="inputText" name="driverName"/></td>
+                    <td><cqu:userSelector name="driver"/></td>
                     <th>车牌号</th>
-                    <!-- <td><s:textfield id="plateNumberInput" class="inputText" style="width:103px;" name="plateNumber"/></td> -->
-                    <td><s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text" /></td>
+                    <td><cqu:carSelector name="car"/></td>
                     <th>起始时间</th>
                     <td>
 						<s:textfield class="Wdate half" style="width:120px;" type="text" name="beginDate" id="startTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" >

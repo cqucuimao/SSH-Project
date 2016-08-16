@@ -15,7 +15,7 @@
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+						<cqu:carSelector name="car"/>
 					</td>
 					<th>从</th>
 					<td>
@@ -30,7 +30,7 @@
 						<s:a action="tollCharge_test" type="button">請求</s:a>
 						<s:a action="tollCharge_initTest" type="button">回值</s:a>
 						<input id="remind" class="inputButton" type="button" value="缴纳提醒"/>
-						<s:if test="Ture">
+						<s:if test="carId!=null">
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
 					</td>

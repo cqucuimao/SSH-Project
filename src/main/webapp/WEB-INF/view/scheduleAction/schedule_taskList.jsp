@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 	String path = request.getContextPath();
@@ -29,12 +30,11 @@
 					</td>
 					<th>司机</th>
 					<td>
-						<s:textfield class="userSelector inputChoose inputText" id="driverName" type="text" name="driverName"/>
-						<s:textfield id="driverId" name="driverId" type="hidden"/>
+						<cqu:userSelector name="driver"/>
 					</td>
 					<th>车牌号</th>
 					<td>
-						<s:textfield id="car_platenumber" class="carSelector inputText inputChoose" onfocus="this.blur();" name="plateNumber" type="text"/>
+						<cqu:carSelector name="car"/>
 					</td>
 					<th>时间</th>
 					<td>

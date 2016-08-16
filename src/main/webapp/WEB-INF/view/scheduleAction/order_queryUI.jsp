@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -95,11 +96,9 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.car')" /></th>
-					<td><s:textfield id="car_platenumber" name="plateNumber" class="carSelector inputText inputChoose" onfocus="this.blur();" type="text" /></td>
+					<td><cqu:carSelector name="car"/></td>
 					<th><s:property value="tr.getText('order.Order.driver')" /></th>
-					<td><s:textfield class="userSelector inputText" id="driver" type="text" name="driver.name" driverOnly="true"/>
-							<s:textfield id="driverId" name="driverId" type="hidden"/>
-					</td>
+					<td><cqu:userSelector name="driver"/></td>
 				</tr>
 				<tr>	
 					<th><s:property value="tr.getText('order.Order.status')" /></th>
@@ -109,10 +108,7 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.scheduler')" /></th>
-					<td>
-							<s:textfield class="userSelector inputText inputChoose" id="schedulerName" type="text"/>
-				 			<s:textfield id="schedulerId" name="schedulerId" type="hidden"/>
-					</td>
+					<td><cqu:userSelector name="scheduler"/></td>
 					<th><s:property value="tr.getText('order.Order.orderSource')" /></th>
 					<td><s:select name="orderSource" list="{'所有来源','调度员','客户端','网站'}"  /></td>
 				</tr>
@@ -154,10 +150,7 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.saler')" /></th>
-					<td>
-							<s:textfield class="userSelector inputText inputChoose" id="salerName" type="text"/>
-				 			<s:textfield id="salerId" name="salerId" type="hidden"/>
-					</td>
+					<td><cqu:userSelector name="saler"/></td>
 				</tr>
 				</tbody>
 				<tfoot>

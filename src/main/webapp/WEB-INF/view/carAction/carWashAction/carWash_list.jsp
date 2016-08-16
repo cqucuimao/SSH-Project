@@ -1,6 +1,7 @@
 <%@page import="com.itextpdf.text.log.SysoLogger"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
 	String path = request.getContextPath();//显示根目录
@@ -27,9 +28,9 @@
 					<td>
 						<s:a action="carWash_saveUI"><input id="register" class="inputButton" type="button" value="洗车登记"/></s:a>
 					</td>
-					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
+					<th><s:property value="tr.getText('car.CarWash.car')" /></th>
 					<td>
-						<s:textfield id="car_platenumber" cssClass="carSelector inputText inputChoose" onfocus="this.blur();" name="car.plateNumber" type="text" />
+						<cqu:carSelector name="car"/>
 					</td>
 					<th>从</th>
 					<td>
@@ -44,7 +45,7 @@
 						<input id="washShop" class="inputButton" type="button" value="洗车点管理"/>
 						<s:a action="carWash_excel"><input id="execl" class="inputButton" type="button" value="洗车信息导入"/></s:a> 
 						<!-- <input id="execl" class="inputButton" type="button" value="洗车点导入"/> -->
-					<s:if test="Ture">
+					<s:if test="carId!=null">
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
 					</td>
@@ -57,15 +58,15 @@
 				<table>
 					<thead>
 						<tr>
-							<th>车辆</th>
-              				<th>司机</th>
-                			<th>洗车日期</th>
-                			<th>洗车点</th>
-                			<th>金额</th>
-                			<th>内饰清洁金额</th>
-                			<th>抛光打蜡金额</th>
-                			<th>清洗发动机金额</th>
-                			<th>座套清洗金额</th>
+							<th><s:property value="tr.getText('car.CarWash.car')" /></th>
+              				<th><s:property value="tr.getText('car.CarWash.driver')" /></th>
+                			<th><s:property value="tr.getText('car.CarWash.date')" /></th>
+                			<th><s:property value="tr.getText('car.CarWash.shop')" /></th>
+                			<th><s:property value="tr.getText('car.CarWash.money')" /></th>
+                			<th><s:property value="tr.getText('car.CarWash.innerCleanMoney')" /></th>
+                			<th><s:property value="tr.getText('car.CarWash.polishingMoney')" /></th>
+                			<th><s:property value="tr.getText('car.CarWash.engineCleanMoney')" /></th>
+                			<th><s:property value="tr.getText('car.CarWash.cushionCleanMoney')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>

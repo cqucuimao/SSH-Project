@@ -211,12 +211,13 @@ input.onFocus, textarea.onFocus,.inputText.onFocus {
     color:#ACA899;
 }
 .buttonA{
-	font-weight:bold;
-	font-family: MicrosoftYaHei;
+	font-family:Arial, Helvetica, sans-serif, 微软雅黑;
 	display:block;
 	padding:0px 10px;
 	background-color:#58cf90;
-	color:#fff;font-size:14px;
+	color:#fff;
+	font-size:14px;
+	font-weight:bold;
 	text-decoration:none;
 }
 .buttonA:hover{

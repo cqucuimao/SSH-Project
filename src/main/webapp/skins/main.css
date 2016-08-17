@@ -210,6 +210,19 @@ input.onFocus, textarea.onFocus,.inputText.onFocus {
     border-color: #ddd;
     color:#ACA899;
 }
+.buttonA{
+	font-weight:bold;
+	font-family: MicrosoftYaHei;
+	display:block;
+	padding:0px 10px;
+	background-color:#58cf90;
+	color:#fff;font-size:14px;
+	text-decoration:none;
+}
+.buttonA:hover{
+	background-color:#009044;
+	text-decoration:none;
+}
 .inputButton:hover,.btn:hover{
 	background-color: #286090;
 	border-color: #204d74;

@@ -34,7 +34,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carCare_addUI"><input id="register" class="inputButton" type="button" value="保养登记"/></s:a>
+						<s:a action="carCare_addUI" style="display:block;width:80px;height:35px;background-color:#58cf90;color:#fff;font-size:18;text-decoration:none;text-align:center">保养登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarCare.car')" /></th>
 					<td>

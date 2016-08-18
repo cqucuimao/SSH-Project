@@ -211,10 +211,11 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 							
 							//送修人
 							System.out.println("司机="+excelLines.get(i).get(3));
-							User driver = userService.getByLoginName(excelLines.get(i).get(3));
+							String name = excelLines.get(i).get(3).replaceAll( "\\s", "" );
+							User driver = userService.getByLoginName(name);
 							if(driver == null){
-								userService.saveDispatchUser(excelLines.get(i).get(3));
-								User dispatchDriver = userService.getByLoginName(excelLines.get(i).get(3));
+								userService.saveDispatchUser(name);
+								User dispatchDriver = userService.getByLoginName(name);
 								cc.setDriver(dispatchDriver);
 							}else{
 								cc.setDriver(driver);				

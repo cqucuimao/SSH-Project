@@ -141,12 +141,11 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 							}
 							
 							//司机
-							//System.out.println("司机="+excelLines.get(i).get(1));
-							User driver = userService.getByLoginName(excelLines.get(i).get(1));
-							System.out.println("driver= :"+driver);
+							String name = excelLines.get(i).get(1).replaceAll( "\\s", "" );
+							User driver = userService.getByLoginName(name);
 							if(driver == null){
-								userService.saveDispatchUser(excelLines.get(i).get(1));
-								User dispatchDriver = userService.getByLoginName(excelLines.get(i).get(1));
+								userService.saveDispatchUser(name);
+								User dispatchDriver = userService.getByLoginName(name);
 								cw.setDriver(dispatchDriver);
 							}else{
 								cw.setDriver(driver);				

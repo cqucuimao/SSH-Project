@@ -207,10 +207,11 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 							
 							//送修人
 							System.out.println("司机="+excelLines.get(i).get(4));
-							User driver = userService.getByLoginName(excelLines.get(i).get(4));
+							String name = excelLines.get(i).get(4).replaceAll( "\\s", "" );
+							User driver = userService.getByLoginName(name);
 							if(driver == null){
-								userService.saveDispatchUser(excelLines.get(i).get(4));
-								User dispatchDriver = userService.getByLoginName(excelLines.get(i).get(4));
+								userService.saveDispatchUser(name);
+								User dispatchDriver = userService.getByLoginName(name);
 								cr.setDriver(dispatchDriver);
 							}else{
 								cr.setDriver(driver);				

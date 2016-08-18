@@ -13,6 +13,7 @@ import com.yuqincar.dao.privilege.UserDao;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
+import com.yuqincar.domain.privilege.Department;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.privilege.DepartmentService;
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService{
 
 	@Transactional
 	public void save(User user) {
-		// 默认密码是1234
+		// 默认密码是123456
 		String md5 = DigestUtils.md5Hex("123456"); // 密码要使用MD5摘要
 		user.setPassword(md5);
 		if(user.getUserType()==UserTypeEnum.DRIVER){
@@ -102,6 +103,23 @@ public class UserServiceImpl implements UserService{
 		// 保存到数据库
 		userDao.save(user);
 		
+	}
+	
+	@Transactional
+	public void saveDispatchUser(String name) {
+		
+		// 默认密码是123456
+		User user =new User();
+		Department department = departmentService.getById((long)6);
+		String md5 = DigestUtils.md5Hex("123456"); // 密码要使用MD5摘要
+		user.setPassword(md5);
+		user.setDepartment(department);
+		user.setUserType(UserTypeEnum.DRIVER);
+		user.setLoginName(name);
+		user.setName(name);
+		user.setPhoneNumber("13800000001");
+		
+		userDao.save(user);
 	}
 	
 	public User getByLoginNameAndPassword(String loginName, String password) {
@@ -176,6 +194,5 @@ public class UserServiceImpl implements UserService{
 	public void updateDriverLicense(DriverLicense driverLicense) {
 		driverLicenseDao.update(driverLicense);
 	}
-	
 
 }

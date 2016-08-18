@@ -59,7 +59,7 @@ public class User extends BaseEntity implements Serializable {
 	@Text("性别")
 	private UserGenderEnum gender; 
 	
-	@Column(nullable=false, unique=true)
+	@Column(nullable=false)
 	@Text("手机")
 	private String phoneNumber; 
 	

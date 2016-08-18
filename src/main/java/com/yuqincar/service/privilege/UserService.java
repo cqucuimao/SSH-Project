@@ -63,4 +63,5 @@ public interface UserService extends BaseService{
 	
 	void updateDriverLicense(DriverLicense driverLicense);
 	
+	void saveDispatchUser(String name);
 }

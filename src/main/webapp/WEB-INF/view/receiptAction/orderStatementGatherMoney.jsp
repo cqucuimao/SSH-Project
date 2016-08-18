@@ -125,7 +125,9 @@
                 <tfoot>
                     <tr>
                         <td colspan="2">
-		   					 <input type="button" class="inputButton" id="gatherComplete" value="收款完成" />
+                        	 <s:a action="orderStatement_gatherComplete" href="#">
+		   					 	<input type="button" class="inputButton" id="gatherComplete" value="收款完成" />
+		   					 </s:a>
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
                     </tr>

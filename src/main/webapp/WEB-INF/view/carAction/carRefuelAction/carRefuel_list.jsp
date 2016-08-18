@@ -45,9 +45,9 @@
 						<s:a cssClass="buttonA" action="carRefuel_excel">导入加油信息</s:a>
 					</td>
 					<td>
-					<a href="#" class="modify" onclick="modify()">
+					<s:a action="carRefuel_outPutOil_time" href="#" class="modify" onclick="modify()">
 					    <input class="inputButton" id="outPutOil" type="button" value="导出加油信息月报表"/>
-					</a>
+					</s:a>
 					<s:if test="carId!=null">
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</s:if>

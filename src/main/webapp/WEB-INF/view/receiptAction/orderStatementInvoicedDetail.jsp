@@ -21,7 +21,9 @@
 			<p>&nbsp;&nbsp;</p>
 		</div>
 		<div>
+		<s:a action="orderStatement_gatherMoney" href="#">
 		    <input type="button" class="inputButton" id="gatherMoney" value="收款" />
+		</s:a>
             <a class="p15" href="javascript:history.go(-1);">返回</a>
 		</div>
 		<br/>

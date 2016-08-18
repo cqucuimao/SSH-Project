@@ -22,7 +22,9 @@
 		</div>
 		<div>
 		    <input type="button" class="inputButton" id="excludeOrder" value="排除订单" />
-		    <input type="button" class="inputButton" id="invoice" value="开票" />
+		    <s:a action="orderStatement_invoice" href="#">
+		    	<input type="button" class="inputButton" id="invoice" value="开票" />
+		    </s:a>
 		    <input type="button" class="inputButton" id="cancelOrderStatement" value="取消对账单" />
             <a class="p15" href="javascript:history.go(-1);">返回</a>
 		</div>

@@ -17,7 +17,7 @@
         <!--失败提示-->
         <div class="msgFalse" >
             <dl>
-                <dt>导入失败，第&nbsp;${result}&nbsp;条加油信息出错。<br>原因:&nbsp;${failReason }&nbsp;。</dt>
+                <dt>导入失败，第&nbsp;${result}&nbsp;条维修信息出错。<br>原因:&nbsp;${failReason }&nbsp;。</dt>
                 <dd>
                     <a href="#" onclick="location.href='carRepair_list.action';">返回</a>
                 </dd>

@@ -209,10 +209,9 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 							System.out.println("司机="+excelLines.get(i).get(4));
 							User driver = userService.getByLoginName(excelLines.get(i).get(4));
 							if(driver == null){
-								failReason = "未知司机";
-								ActionContext.getContext().getValueStack().push(failReason);
-								ActionContext.getContext().getValueStack().push(result);
-								return "false";
+								userService.saveDispatchUser(excelLines.get(i).get(4));
+								User dispatchDriver = userService.getByLoginName(excelLines.get(i).get(4));
+								cr.setDriver(dispatchDriver);
 							}else{
 								cr.setDriver(driver);				
 							}

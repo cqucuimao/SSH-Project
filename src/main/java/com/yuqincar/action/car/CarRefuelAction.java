@@ -177,10 +177,9 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 				//System.out.println("司机="+excelLines.get(i).get(4));
 				User driver = userService.getByLoginName(excelLines.get(i).get(4));
 				if(driver == null){
-					unknownCarOrDriver = "未知司机";
-					ActionContext.getContext().getValueStack().push(unknownCarOrDriver);
-					ActionContext.getContext().getValueStack().push(result);
-					return "false";
+					userService.saveDispatchUser(excelLines.get(i).get(4));
+					User dispatchDriver = userService.getByLoginName(excelLines.get(i).get(4));
+					cr.setDriver(dispatchDriver);		
 				}else{
 					cr.setDriver(driver);				
 				}

@@ -145,10 +145,9 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 							User driver = userService.getByLoginName(excelLines.get(i).get(1));
 							System.out.println("driver= :"+driver);
 							if(driver == null){
-								failReason = "未知司机";
-								ActionContext.getContext().getValueStack().push(failReason);
-								ActionContext.getContext().getValueStack().push(result);
-								return "false";
+								userService.saveDispatchUser(excelLines.get(i).get(1));
+								User dispatchDriver = userService.getByLoginName(excelLines.get(i).get(1));
+								cw.setDriver(dispatchDriver);
 							}else{
 								cw.setDriver(driver);				
 							}

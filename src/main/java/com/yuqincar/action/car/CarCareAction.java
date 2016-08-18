@@ -213,10 +213,9 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 							System.out.println("司机="+excelLines.get(i).get(3));
 							User driver = userService.getByLoginName(excelLines.get(i).get(3));
 							if(driver == null){
-								failReason = "未知司机";
-								ActionContext.getContext().getValueStack().push(failReason);
-								ActionContext.getContext().getValueStack().push(result);
-								return "false";
+								userService.saveDispatchUser(excelLines.get(i).get(3));
+								User dispatchDriver = userService.getByLoginName(excelLines.get(i).get(3));
+								cc.setDriver(dispatchDriver);
 							}else{
 								cc.setDriver(driver);				
 							}

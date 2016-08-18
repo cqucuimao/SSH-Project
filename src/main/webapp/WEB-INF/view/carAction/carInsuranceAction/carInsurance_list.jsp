@@ -25,7 +25,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carInsurance_addUI"><input id="register" class="inputButton" type="button" value="保险登记" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="carInsurance_addUI">保险登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarInsurance.car')" /></th>
 					<td>
@@ -41,8 +41,14 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<input id="remind" class="inputButton" type="button" value="保险到期提醒" name="button" />
-						<s:a action="commercialInsuranceType_list"><input id="carInsuranceType" class="inputButton" type="button" value="商业保险类型管理" name="button" /></s:a>
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="carInsurance_remind">保险到期提醒</s:a>
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="commercialInsuranceType_list">商业保险类型管理</s:a>
+					</td>
+					<td>
 					   	<s:if test="carId!=null">
 							<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
@@ -95,10 +101,6 @@
 	
 	<script type="text/javascript">
 		$(function(){
-	        $("#remind").click(function(){
-	            self.location.href='carInsurance_remind.action';
-	        });
-	    })
 	    formatDateField2($("#date1"));
 		formatDateField2($("#date2"));
 	</script>

@@ -22,7 +22,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="register" class="inputButton" type="button" value="驻车点登记" name="button" />
+						<s:a cssClass="buttonA" action="servicePoint_addUI">驻车点登记</s:a>
 					</td>										
 				</tr>
 			</table>
@@ -61,11 +61,6 @@
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
-		$(function(){
-			$("#register").click(function(){
-				location.href='servicePoint_addUI.action';
-			});
-		})
 	</script>
 </body>
 </html>

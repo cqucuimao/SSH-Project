@@ -24,7 +24,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carRefuel_addUI"><input id="register" class="inputButton" type="button" value="加油登记" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="carRefuel_addUI">加油登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarRefuel.car')" /></th>
 					<td>
@@ -42,7 +42,7 @@
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 					<td>
-						<s:a action="carRefuel_excel"><input class="inputButton" id="btn" type="button" value="导入加油信息"/></s:a>
+						<s:a cssClass="buttonA" action="carRefuel_excel">导入加油信息</s:a>
 					</td>
 					<td>
 					<a href="#" class="modify" onclick="modify()">

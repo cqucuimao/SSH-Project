@@ -11,7 +11,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="tollCharge_saveUI"><input id="register" class="inputButton" type="button" value="路桥费缴纳登记"/></s:a>
+						<s:a cssClass="buttonA" action="tollCharge_saveUI">路桥费缴纳登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -27,11 +27,13 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" onClick="registerClick()" value="查询"/>
-						<s:a action="tollCharge_test" type="button">請求</s:a>
-						<s:a action="tollCharge_initTest" type="button">回值</s:a>
-						<input id="remind" class="inputButton" type="button" value="缴纳提醒"/>
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="tollCharge_remind"></s:a>
+					</td>	
+					<td>
 						<s:if test="carId!=null">
-						<a class="p15" href="javascript:history.go(-1);">返回</a>
+							<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
 					</td>
 				</tr>
@@ -83,9 +85,6 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	<script type="text/javascript">
 		$(function(){
-	        $("#remind").click(function(){
-	            self.location.href='tollCharge_remind.action';
-	        });  
 			formatDateField2($("#beginDate"));
 			formatDateField2($("#endDate"));
 	    })

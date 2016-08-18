@@ -23,7 +23,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="addCustomer" class="inputButton" type="button" value="新增客户" name="button" />
+						<s:a cssClass="buttonA" action="customer_addUI">新增客户</s:a>
 					</td>
 					<th><s:property value="tr.getText('order.Customer.customerOrganization')" /></th>
 					<td>
@@ -105,9 +105,6 @@
 	
 	<script type="text/javascript">
 		$(function(){
-	        $("#addCustomer").click(function(){
-	            self.location.href='customer_addUI.action';
-	        });
 	    })
 	</script>
 </body>

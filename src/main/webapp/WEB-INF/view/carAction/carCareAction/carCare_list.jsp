@@ -54,8 +54,14 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<input id="remind" class="inputButton" type="button" value="保养提醒"/>
-						<s:a action="carCare_excel"><input id="excel" class="inputButton" type="button" value="导入保养"/></s:a>
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="carCare_remind" style="float:right">保养提醒</s:a>
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="carCare_excel" style="float:right">导入保养</s:a>
+					</td>
+					<td>
 					 <s:if test="carId!=null">
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
@@ -114,9 +120,6 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	<script type="text/javascript">
 		$(function(){
-	        $("#remind").click(function(){
-	            self.location.href='carCare_remind.action';
-	        });
 			formatDateField2($("#date1"));
 			formatDateField2($("#date2"));
 	    })

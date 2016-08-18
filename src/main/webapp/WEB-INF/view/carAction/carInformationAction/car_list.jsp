@@ -24,10 +24,10 @@
 			<table>
 				<tr>
 					<td>
-					<s:a action="car_addUI.action?actionFlag=register"><input id="register" class="inputButton" type="button" value="车辆登记" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="car_addUI.action?actionFlag=register">车辆登记</s:a>
 					</td>
 					<td>
-						<input id="borrowed" class="inputButton" type="button" value="外调车登记"  />
+						<s:a cssClass="buttonA" action="car_borrowedUI">外调车登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
@@ -46,7 +46,7 @@
 						<input class="inputButton" type="submit" value="查询" name="submit" />
 					</td>
 					<td>
-						<input class="inputButton" id="btn" type="button" value="详细查询" name="submit" />
+						<s:a cssClass="buttonA" action="car_queryUI">详细查询</s:a>
 					</td>
 				</tr>
 			</table>
@@ -103,12 +103,6 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>	
 	<script>
-	$("#btn").click(function(){
-		self.location.href='car_queryUI.action';
-	});
-	$("#borrowed").click(function(){
-		self.location.href='car_borrowedUI.action';
-	});
 	</script>
 </body>
 </html>

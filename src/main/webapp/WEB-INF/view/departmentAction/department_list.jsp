@@ -26,7 +26,9 @@
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<input id="add" class="inputButton" type="button" value="添加部门" name="button" />
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="department_addUI">添加部门</s:a>
 					</td>
 				</tr>
 			</table>
@@ -66,11 +68,6 @@
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
-		$(function(){
-	        $("#add").click(function(){
-	            self.location.href='department_addUI.action';
-	        });
-	    })
 	</script>
 </body>
 </html>

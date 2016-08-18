@@ -22,7 +22,9 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carWashShop_addUI"><input id="register" class="inputButton" type="button" value="洗车点登记" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="carWashShop_addUI">洗车点登记</s:a>
+					</td>
+					<td>
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>										
 				</tr>
@@ -41,8 +43,7 @@
 						<s:iterator value="carWashshop">
 						<tr>
 							<td class="alignCenter">${name}</td>
-							<td class="alignCenter">								
-								<%-- <s:a action="carWashShop_editUI?id=%{id}" ><i class="icon-operate-edit" title="修改"></i></s:a> --%>	
+							<td class="alignCenter">									
 							<s:if test="canDeleteCarWashShop">
 								<s:a action="carWashShop_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
 							</s:if>

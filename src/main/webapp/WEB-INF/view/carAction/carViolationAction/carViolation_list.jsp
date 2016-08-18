@@ -24,7 +24,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carViolation_saveUI"><input id="register" class="inputButton" type="button" value="违章登记" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="carViolation_saveUI">违章登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarViolation.car')" /></th>
 					<td>

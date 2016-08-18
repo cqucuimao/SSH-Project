@@ -34,7 +34,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carRepair_appoint"><input id="appoint" class="inputButton" type="button" value="维修预约" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="carRepair_appoint">维修预约</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarRepair.car')" /></th>
 					<td>

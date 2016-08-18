@@ -22,7 +22,9 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="commercialInsuranceType_addUI"><input id="register" class="inputButton" type="button" value="商业保险类型登记" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="commercialInsuranceType_addUI">商业保险类型登记</s:a>
+					</td>
+					<td>
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>										
 				</tr>

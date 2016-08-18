@@ -23,7 +23,7 @@
 			<table>
 				<tr>
 					<td>
-						<input id="addCustomerOrganization" class="inputButton" type="button" value="新增客户单位" name="button" />
+						<s:a cssClass="buttonA" action="customerOrganization_addUI">新增客户单位</s:a>
 					</td>
 					<th><s:property value="tr.getText('order.CustomerOrganization.name')" /></th>
 					<td>
@@ -77,18 +77,10 @@
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>
-	
 	<script src="js/jquery-1.7.2.js"></script>
 	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
-	
-		
+	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript">
-		$(function(){
-	        $("#addCustomerOrganization").click(function(){
-	            self.location.href='customerOrganization_addUI.action';
-	        });
-	    })
 	</script>
 </body>
 </html>

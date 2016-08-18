@@ -34,7 +34,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carRepair_addUI"><input id="register" class="inputButton" type="button" value="维修登记" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="carRepair_addUI">维修登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarRepair.car')" /></th>
 					<td>
@@ -54,7 +54,11 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<s:a action="carRepair_excel"><input id="repairInput" class="inputButton" type="button" value="维修信息导入"  /></s:a>
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="carRepair_excel">维修信息导入</s:a>
+					</td>
+					<td>
 					 	<s:if test="carId!=null">
 							<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>

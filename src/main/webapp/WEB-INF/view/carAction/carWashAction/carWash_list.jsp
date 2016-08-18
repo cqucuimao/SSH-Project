@@ -26,7 +26,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carWash_saveUI"><input id="register" class="inputButton" type="button" value="洗车登记"/></s:a>
+						<s:a cssClass="buttonA" action="carWash_saveUI">洗车登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarWash.car')" /></th>
 					<td>
@@ -42,11 +42,16 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<input id="washShop" class="inputButton" type="button" value="洗车点管理"/>
-						<s:a action="carWash_excel"><input id="execl" class="inputButton" type="button" value="洗车信息导入"/></s:a> 
-						<!-- <input id="execl" class="inputButton" type="button" value="洗车点导入"/> -->
-					<s:if test="carId!=null">
-						<a class="p15" href="javascript:history.go(-1);">返回</a>
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="carWashShop_list">洗车点管理</s:a> 
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="carWash_excel">洗车信息导入</s:a> 
+					</td>
+					<td>
+						<s:if test="carId!=null">
+							<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
 					</td>
 				</tr>
@@ -107,12 +112,6 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	<script type="text/javascript">
 		$(function(){
-	        $("#washShop").click(function(){
-	            self.location.href='carWashShop_list.action';
-	        });
-	        $("#execl").click(function(){
-	            self.location.href='carWash_execl.action';
-	        });
 			formatDateField2($("#beginDate"));
 			formatDateField2($("#endDate"));
 	    })

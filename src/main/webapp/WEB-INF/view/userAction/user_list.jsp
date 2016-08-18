@@ -26,7 +26,9 @@
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" />
-						<input id="add" class="inputButton" type="button" value="添加用户" name="button" />
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="user_addUI">添加用户</s:a>
 					</td>
 				</tr>
 			</table>
@@ -81,11 +83,6 @@
 	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	<script type="text/javascript">
-		$(function(){
-	        $("#add").click(function(){
-	            self.location.href='user_addUI.action?actionFlag=add';
-	        });
-	    })
 	</script>
 </body>
 </html>

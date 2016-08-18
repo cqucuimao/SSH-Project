@@ -50,11 +50,6 @@
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
-		$(function(){
-	        $("#add").click(function(){
-	            self.location.href='role_addUI.action';
-	        });
-	    })
 	</script>
 </body>
 </html>

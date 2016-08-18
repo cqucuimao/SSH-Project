@@ -33,7 +33,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="carExamine_addUI"><input id="register" class="inputButton" type="button" value="年审登记" name="button" /></s:a>
+						<s:a cssClass="buttonA" action="carExamine_addUI">年审登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarExamine.car')" /></th>
 					<td><cqu:carSelector name="car"/></td>
@@ -49,7 +49,11 @@
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
-						<input id="remind" class="inputButton" type="button" value="年审提醒" name="button" />
+					</td>
+					<td>
+						<s:a cssClass="buttonA" action="carExamine_remind">年审提醒</s:a>
+					</td>
+					<td>
 						<s:if test="carId!=null">
 							<a class="p15" href="javascript:history.go(-1);">返回</a>
 						</s:if>
@@ -115,9 +119,6 @@
 	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
 		$(function(){
-	        $("#remind").click(function(){
-	            self.location.href='carExamine_remind.action';
-	        });
 			formatDateField2($("#date1"));
 			formatDateField2($("#date2"));
 	    })

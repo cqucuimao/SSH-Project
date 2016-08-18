@@ -26,7 +26,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a action="materialReceive_saveUI"><input id="register" class="inputButton" type="button" value="物品领用登记"/></s:a>
+						<s:a cssClass="buttonA" action="materialReceive_saveUI">物品领用登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.Material.car')" /></th>
 					<td>

@@ -116,9 +116,14 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carCare_appointList') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carCare_appointList') || #session.user.hasPrivilegeByUrl('/carCare_list')">
 			<dd>
+				<s:if test="#session.user.hasPrivilegeByUrl('/carCare_appointList')">
 				<s:a action="carCare_appointList">车辆保养</s:a>
+				</s:if>
+				<s:else>
+				<s:a action="carCare_list">车辆保养</s:a>
+				</s:else>				
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

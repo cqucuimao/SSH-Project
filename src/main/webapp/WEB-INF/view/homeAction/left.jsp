@@ -133,9 +133,14 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carRepair_appointList') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carRepair_appointList') || #session.user.hasPrivilegeByUrl('/carRepair_list') ">
 			<dd>
+			     <s:if test="#session.user.hasPrivilegeByUrl('/carRepair_appointList')">
 				<s:a action="carRepair_appointList">车辆维修</s:a>
+				</s:if>
+				<s:else>
+				<s:a action="carRepair_list">车辆维修</s:a>
+				</s:else>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
@@ -145,9 +150,14 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carExamine_appointList') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carExamine_appointList') || #session.user.hasPrivilegeByUrl('/carExamine_list') ">
 			<dd>
+			    <s:if test="#session.user.hasPrivilegeByUrl('/carExamine_appointList')">
 				<s:a action="carExamine_appointList">车辆年审</s:a>
+				</s:if>
+				<s:else>
+				<s:a action="carExamine_list">车辆年审</s:a>
+				</s:else>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

@@ -51,6 +51,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	
 	private String selectorName;
 	private boolean driverOnly;
+	private String departments;
 	
 	private String licenseID;
 	private Date expireDate;
@@ -91,8 +92,10 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 	
 	public String popup() {
-		List<TreeNode> nodes ;
-		nodes= userService.getUserTree(model.getName(), driverOnly);
+		TreeNode nodes ;
+		System.out.println("departments="+departments);
+		System.out.println("driverOnly="+driverOnly);
+		nodes= userService.getUserTree(model.getName(), driverOnly,departments);
 		Gson gson = new Gson();
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));
 		return "popup";
@@ -143,6 +146,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		// 准备回显的数据
 		User user = userService.getById(model.getId());
 		if(user.getUserType() == UserTypeEnum.DRIVER){
+			System.out.println("licenseID="+licenseID);
 			licenseID = user.getDriverLicense().getLicenseID();
 			expireDate = user.getDriverLicense().getExpireDate();
 		}
@@ -295,6 +299,16 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	public void setDriverOnly(boolean driverOnly) {
 		this.driverOnly = driverOnly;
+	}
+	
+	
+
+	public String getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(String departments) {
+		this.departments = departments;
 	}
 
 	public String getLicenseID() {

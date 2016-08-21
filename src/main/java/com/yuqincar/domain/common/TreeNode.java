@@ -6,6 +6,7 @@ import java.util.Map;
 public class TreeNode {
 	private Long id;
 	private String name;
+	private String nocheck;
 	private List<TreeNode> children;
 	private Boolean open;
 	private Map<String,Object> param;
@@ -39,5 +40,12 @@ public class TreeNode {
 	}
 	public void setParam(Map<String, Object> param) {
 		this.param = param;
+	}
+	public String getNocheck() {
+		return nocheck;
+	}
+	public void setNocheck(String nocheck) {
+		this.nocheck = nocheck;
 	}	
+	
 }

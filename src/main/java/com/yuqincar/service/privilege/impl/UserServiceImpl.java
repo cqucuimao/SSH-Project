@@ -140,41 +140,56 @@ public class UserServiceImpl implements UserService{
 	}
 
 	
-	public List<TreeNode> getUserTree(String name,boolean driverOnly) {
-		List<User> users ;
+	public TreeNode getUserTree(String name,boolean driverOnly,String departments) {
+		List<User> users = new ArrayList<User>();
+		List<User> listUser;
 		boolean flag = false;
-		users=userDao.getByName(name, driverOnly);
-		
+		String[] ary = departments.split(";");//调用API方法按照分号分隔字符串
+		for(int i=0;i<ary.length;i++){
+			listUser=userDao.getByName(name, driverOnly,ary[i]);
+			users.addAll(listUser);
+		}
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
-		
+		TreeNode rootNode = new TreeNode();
+		rootNode.setName("公司");
+		rootNode.setNocheck("true");
 		for(User u:users) {
 			
-			TreeNode child = new TreeNode();
-			child.setName(u.getName());
-			child.setId(u.getId());
-			
-			String departmentName = "";
-			if(u.getDepartment()!=null) {
-				departmentName = u.getDepartment().getName();
+				TreeNode child = new TreeNode();
+				child.setName(u.getName());
+				child.setId(u.getId());
+				
+				String departmentName = "";
+				if(u.getDepartment()!=null && u.getDepartment().getParent() == null){
+					nodes.add(child);			
+					rootNode.setId(u.getId());
+					rootNode.setOpen(flag);
+				}
+				if(u.getDepartment()!=null && u.getDepartment().getParent() != null) {
+					departmentName = u.getDepartment().getName();
+				
+	
+					TreeNode parent = getParentTreeNode(nodes,departmentName);
+	
+					
+					if(parent!=null) {
+						if(parent.getChildren()!=null){
+							parent.getChildren().add(child);
+						}
+					} else {
+						TreeNode p = new TreeNode();
+						p.setId(u.getId());
+						p.setName(departmentName);
+						p.setNocheck("true");
+						p.setChildren(new ArrayList());
+						p.getChildren().add(child);
+						p.setOpen(flag);
+						nodes.add(p);
+					}
+				}
 			}
-
-			TreeNode parent = getParentTreeNode(nodes,departmentName);
-			
-			if(parent!=null) {
-				if(parent.getChildren()!=null)
-					parent.getChildren().add(child);
-			} else {
-				TreeNode p = new TreeNode();
-				p.setId(u.getId());
-				p.setName(departmentName);
-				p.setChildren(new ArrayList());
-				p.getChildren().add(child);
-				p.setOpen(flag);
-				nodes.add(p);
-			}
-		}
-		
-		return nodes;
+		rootNode.setChildren(nodes);
+		return rootNode;
 	}
 	
 	private TreeNode getParentTreeNode(List<TreeNode> nodes,String departmentName) {
@@ -187,6 +202,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	public void saveDriverLicense(DriverLicense driverLicense) {
+		
 		driverLicenseDao.save(driverLicense);
 		
 	}

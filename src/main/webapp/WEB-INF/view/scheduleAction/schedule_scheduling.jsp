@@ -134,7 +134,7 @@
 									</tr>							
 									<tr>
 										<th>业务员</th>
-										<td><cqu:userSelector name="saler"/></td>
+										<td><cqu:userSelector name="saler" departments="运营科;办公室"/></td>
 									</tr>
 									<tr>
 										<th></th>
@@ -198,7 +198,7 @@
 									<th>调度的车</th>
 									<td><cqu:carSelector name="selectedCar" synchDriver="selectedDriver"/></td>
 									<th>调度的司机</th>
-									<td><cqu:userSelector name="selectedDriver"/></td>
+									<td><cqu:userSelector name="selectedDriver" departments="运营科;办公室"/></td>
 								</tr>
 								</tbody>
 							</table>                             

@@ -493,8 +493,9 @@ function onCarSelectorClick(name,synchDriver){
 			});
 }
 
-function onUserSelectorClick(name,driverOnly){	
-			art.dialog.open('user_popup.action?selectorName='+name+'&driverOnly='+driverOnly,{
+function onUserSelectorClick(name,driverOnly,departments){	
+			art.dialog.data('selectorName', name); // 存储数据  
+			art.dialog.open('user_popup.action?selectorName='+name+'&driverOnly='+driverOnly+'&departments='+departments,{
 				title: '员工选择', 
 				width: 300, 
 				height: 530				

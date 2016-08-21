@@ -57,7 +57,7 @@ public interface UserService extends BaseService{
 
 	PageBean getPageBean( int pageNum , QueryHelper helper);
 	
-	List<TreeNode> getUserTree(String name,boolean driverOnly);
+	TreeNode getUserTree(String name,boolean driverOnly,String departments);
 	
 	void saveDriverLicense(DriverLicense driverLicense);
 	

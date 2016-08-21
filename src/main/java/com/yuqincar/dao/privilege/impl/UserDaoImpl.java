@@ -52,22 +52,44 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		return (List<User>) getSession().createQuery(helper.getQueryListHql());
 	}
 
-	public List<User> getByName(String name,boolean driverOnly) {
-		if(name!=null && !name.isEmpty())
-			if(driverOnly)
-				return getSession().createQuery("from User u where u.name like ? and u.userType=? and u.status=? order by convert_gbk(u.name) asc")
-						.setParameter(0, "%"+name+"%").setParameter(1,UserTypeEnum.DRIVER)
-						.setParameter(2, UserStatusEnum.NORMAL).list();
+	public List<User> getByName(String name,boolean driverOnly,String department) {
+		if(department != null && !department.isEmpty()){
+			if(name!=null && !name.isEmpty())
+				if(driverOnly)
+					return getSession().createQuery("from User u where u.name like ? and u.userType=? and u.status=? and u.department.name=? order by convert_gbk(u.name) asc")
+							.setParameter(0, "%"+name+"%").setParameter(1,UserTypeEnum.DRIVER)
+							.setParameter(2, UserStatusEnum.NORMAL).setParameter(3, department).list();
+				else
+					return getSession().createQuery("from User u where u.name like ? and u.status=? and u.department.name=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
+							.setParameter(0, "%"+name+"%").setParameter(1, UserStatusEnum.NORMAL)
+							.setParameter(2, department).list();
 			else
-				return getSession().createQuery("from User u where u.name like ? and u.status=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
-						.setParameter(0, "%"+name+"%").setParameter(1, UserStatusEnum.NORMAL).list();
-		else
-			if(driverOnly)
-				return getSession().createQuery("from User u where u.userType=? and u.status=? order by convert_gbk(u.name) asc")
-						.setParameter(0, UserTypeEnum.DRIVER).setParameter(1, UserStatusEnum.NORMAL).list();
+				if(driverOnly)
+					return getSession().createQuery("from User u where u.userType=? and u.status=? and u.department.name=? order by convert_gbk(u.name) asc")
+							.setParameter(0, UserTypeEnum.DRIVER).setParameter(1, UserStatusEnum.NORMAL)
+							.setParameter(2, department).list();
+				else
+					return getSession().createQuery("from User u where u.status=? and u.department.name=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
+							.setParameter(0, UserStatusEnum.NORMAL).setParameter(1, department).list();
+		}
+		else{
+			if(name!=null && !name.isEmpty())
+				if(driverOnly)
+					return getSession().createQuery("from User u where u.name like ? and u.userType=? and u.status=? order by convert_gbk(u.name) asc")
+							.setParameter(0, "%"+name+"%").setParameter(1,UserTypeEnum.DRIVER)
+							.setParameter(2, UserStatusEnum.NORMAL).list();
+				else
+					return getSession().createQuery("from User u where u.name like ? and u.status=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
+							.setParameter(0, "%"+name+"%").setParameter(1, UserStatusEnum.NORMAL).list();
 			else
-				return getSession().createQuery("from User u where u.status=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
-						.setParameter(0, UserStatusEnum.NORMAL).list();
+				if(driverOnly)
+					return getSession().createQuery("from User u where u.userType=? and u.status=? order by convert_gbk(u.name) asc")
+							.setParameter(0, UserTypeEnum.DRIVER).setParameter(1, UserStatusEnum.NORMAL).list();
+				else
+					return getSession().createQuery("from User u where u.status=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
+							.setParameter(0, UserStatusEnum.NORMAL).list();
+		}
+		
 	}
 	
 

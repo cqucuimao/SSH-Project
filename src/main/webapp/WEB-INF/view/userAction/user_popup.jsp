@@ -28,6 +28,7 @@
 					<td>
 						<input type="hidden" name="selectorName" value="${selectorName}"/>
 						<input type="hidden" name="driverOnly" value="${driverOnly}"/>
+						<input type="hidden" name="departments" value="${departments}"/>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 				</tr>
@@ -55,6 +56,8 @@
     </div>
 
     <script type="text/javascript">
+	    
+    	
         $(function(){
         	var setting = {
         			check: {
@@ -64,16 +67,28 @@
         			}
         	};
 
-        	var zNodes = <s:property value="#nodes" escape="false"/>;
-
+        	var zNodes = <s:property value="#nodes" escape="false"/>;	
         	$(document).ready(function(){
         		$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        		var treeObj=$.fn.zTree.getZTreeObj("treeDemo");	
+        		var selectorName=art.dialog.data("selectorName");
+        	    var origin = artDialog.open.origin;
+        	    var input_id_value = origin.document.getElementById(selectorName).value;
+        	    if(input_id_value !=""){
+        	    	var node = treeObj.getNodesByParam("id",input_id_value, null);
+        	    	for(var i=0;i<node.length;i++){
+        	    		treeObj.selectNode(node[i]);
+        	    		treeObj.checkNode(node[i]);
+                    }
+        	    }
         	});
+
         	
         	$("#sure").click(function(){
             	
-                var treeObj=$.fn.zTree.getZTreeObj("treeDemo"),
-        		nodes = treeObj.getCheckedNodes(true),
+        		
+                var treeObj=$.fn.zTree.getZTreeObj("treeDemo");
+        		nodes = treeObj.getCheckedNodes(true);
             	newVal = "";  
                 newId="";
                 for(var i=0;i<nodes.length;i++){

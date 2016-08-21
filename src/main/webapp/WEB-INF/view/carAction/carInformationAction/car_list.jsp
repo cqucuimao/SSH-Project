@@ -41,7 +41,7 @@
                     </td>
 					<th><s:property value="tr.getText('car.Car.driver')" /></th>
 					<td>
-						<cqu:userSelector name="driver" driverOnly="true"/>
+						<cqu:userSelector name="driver" driverOnly="true" departments="运营科"/>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="submit" />
 					</td>

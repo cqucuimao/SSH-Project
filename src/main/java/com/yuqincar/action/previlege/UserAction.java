@@ -93,8 +93,6 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	
 	public String popup() {
 		TreeNode nodes ;
-		System.out.println("departments="+departments);
-		System.out.println("driverOnly="+driverOnly);
 		nodes= userService.getUserTree(model.getName(), driverOnly,departments);
 		Gson gson = new Gson();
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));

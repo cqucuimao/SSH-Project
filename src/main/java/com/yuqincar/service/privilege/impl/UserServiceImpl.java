@@ -144,11 +144,21 @@ public class UserServiceImpl implements UserService{
 		List<User> users = new ArrayList<User>();
 		List<User> listUser;
 		boolean flag = false;
-		String[] ary = departments.split(";");//调用API方法按照分号分隔字符串
-		for(int i=0;i<ary.length;i++){
-			listUser=userDao.getByName(name, driverOnly,ary[i]);
-			users.addAll(listUser);
+		System.out.println("departments="+departments);
+		System.out.println("driverOnly="+driverOnly);
+		System.out.println("departments.length="+departments.length());
+		if(!departments.equals("null") && departments.length()>0){
+			System.out.println("11111");
+			String[] ary = departments.split(";");//按照分号分隔字符串
+			for(int i=0;i<ary.length;i++){
+				listUser=userDao.getByName(name, driverOnly,ary[i]);
+				users.addAll(listUser);
+			}
+		}else{
+			System.out.println("22222");
+			users=userDao.getByName(name, driverOnly, departments);
 		}
+		
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
 		TreeNode rootNode = new TreeNode();
 		rootNode.setName("公司");

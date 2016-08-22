@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -27,8 +28,7 @@
 					</td>
 					<th><s:property value="tr.getText('order.CustomerOrganization.name')" /></th>
 					<td>
-						 <s:textfield id="customer_organization_name" name="name" cssClass="inputText" type="text"/>
-						 <input id="customer_organization_id" type="hidden">
+						<cqu:customerOrganizationSelector name="customerOrganization"/>
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
@@ -57,8 +57,8 @@
 							<td>${manager.name}</td>
 							<td>
 								<s:a action="customerOrganization_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
-								<s:a action="customerOrganization_addFinancial?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
-                    			<s:a action="customer_checkPeople?id=%{id}"><i class="icon-operate-print" title="查看人员"></i></s:a>
+								<s:a action="customerOrganization_addFinancial?id=%{id}"><i class="icon-operate-edit" title="财务要求"></i></s:a>
+                    			<s:a action="customer_checkPeople?customerOrganizationId=%{id}"><i class="icon-operate-print" title="查看人员"></i></s:a>
 								<s:if test="canDelete">
                     			<s:a action="customerOrganization_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			</s:if>

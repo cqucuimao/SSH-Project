@@ -39,8 +39,7 @@
 					</td>
 					<th><s:property value="tr.getText('order.Order.customerOrganization')" /></th>
 					<td>
-						<s:textfield id="customer_organization_name" name="customerOrganizationName" cssClass="inputText" type="text"/>
-					    <input id="customer_organization_id" type="hidden">
+						<cqu:customerOrganizationSelector name="customerOrganization"/>
 					</td>					
 					<th><s:property value="tr.getText('order.Order.driver')" /></th>
 					<td>

@@ -11,6 +11,7 @@ public enum UserTypeEnum implements BaseEnum{
 	OFFICE(0,"办公室员工"),	
 	@Text("司机员工")
 	DRIVER(1,"司机员工");
+	
 
 	private int id;
 	private String label;

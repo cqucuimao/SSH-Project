@@ -21,6 +21,7 @@ import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.car.CarServiceType;
+import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.CustomerOrganization;
@@ -140,6 +141,8 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	public String remind(){
 		QueryHelper helper = new QueryHelper("Car", "c");
 		helper.addWhereCondition("c.nextTollChargeDate is not null");
+		helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
+		helper.addWhereCondition("c.borrowed=?", false);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);
 		List<RemindVO> voList=new ArrayList<RemindVO>(pageBean.getRecordList().size());
 		for(Car car:pageBean.getRecordList()){

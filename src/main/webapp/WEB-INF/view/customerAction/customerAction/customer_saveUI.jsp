@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -36,8 +37,7 @@
                 	<tr>
                         <th><s:property value="tr.getText('order.CustomerOrganization.name')" /><span class="required">*</span></th>
                         <td>
-						 	<s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
-						 	<input id="customer_organization_id" type="hidden">
+                        	<cqu:customerOrganizationSelector name="customerOrganization"/>
                         </td>
                     </tr>
                     <tr>
@@ -89,7 +89,7 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					'customerOrganization.name':{
+					customerOrganizationLabel:{
 						required:true,
 					},
 					name:{

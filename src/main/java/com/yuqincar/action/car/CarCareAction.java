@@ -243,6 +243,7 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 							cc.setAppointment(false);
 							carCares.add(cc);
 						} catch (Exception e) {
+							e.printStackTrace();
 							failReason = "不明原因";
 							ActionContext.getContext().getValueStack().push(failReason);
 							ActionContext.getContext().getValueStack().push(result);

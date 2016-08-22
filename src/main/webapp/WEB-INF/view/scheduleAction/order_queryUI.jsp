@@ -26,9 +26,7 @@
 					<th><s:property value="tr.getText('order.Order.sn')" /></th>
 					<td><s:textfield class="inputText" name="sn" /></td>
 					<th><s:property value="tr.getText('order.Order.customerOrganization')" /></th>
-					<td><s:textfield id="customer_organization_name" name="customerOrganizationName" cssClass="inputText" type="text"/>
-					       <input id="customer_organization_id" type="hidden">
-					</td>
+					<td><cqu:customerOrganizationSelector name="customerOrganization"/></td>
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.customer')" /></th>

@@ -45,17 +45,16 @@ public class CustomerOrganizationAction extends BaseAction implements
 	
 	private long customerId;
 	
+	private CustomerOrganization customerOrganization;
+	
 	
 	/** 查询*/
 	public String queryList() throws Exception {
 		QueryHelper helper = new QueryHelper(CustomerOrganization.class, "co");
-
-		if (model.getName() != null && !"".equals(model.getName()))
-			helper.addWhereCondition("co.name like ?", "%" + model.getName()
-					+ "%");
+		if(customerOrganization!=null)
+			helper.addWhereCondition("co.id=?", customerOrganization.getId());
 		helper.addOrderByProperty("co.id", false);
-		PageBean<CustomerOrganization> pageBean = customerOrganizationService
-				.queryCustomerOrganization(pageNum, helper);
+		PageBean<CustomerOrganization> pageBean = customerOrganizationService.queryCustomerOrganization(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("customerOrganizationHelper", helper);
 		return "list";
@@ -70,10 +69,6 @@ public class CustomerOrganizationAction extends BaseAction implements
 		return "list";
 	}
 	
-	
-	
-	
-	
 	public String freshList(){
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("customerOrganizationHelper");
 		PageBean pageBean = customerOrganizationService.queryCustomerOrganization(pageNum, helper);
@@ -82,7 +77,6 @@ public class CustomerOrganizationAction extends BaseAction implements
 	}
 	
     public String popup() {  
-    	System.out.println("in customerOrganization popup");
     	QueryHelper helper = new QueryHelper(CustomerOrganization.class, "c");		
 		PageBean<CustomerOrganization> pageBean = customerOrganizationService.getPageBean(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -102,8 +96,7 @@ public class CustomerOrganizationAction extends BaseAction implements
 	}
 
 	/** 添加 */
-	public String add() throws Exception {
-		
+	public String add() throws Exception {		
 		if (customerOrganizationService.isNameExist(0, model.getName()) == true
 				|| customerOrganizationService.isAbbreviationExist(0,
 						model.getAbbreviation()) == true) {
@@ -132,22 +125,20 @@ public class CustomerOrganizationAction extends BaseAction implements
 
 	/** 修改 */
 	public String edit() throws Exception {
-		System.out.println("in edit!");
 		if (customerOrganizationService.isNameExist(model.getId(), model.getName()) == true
 				|| customerOrganizationService.isAbbreviationExist(model.getId(),
 						model.getAbbreviation()) == true) {
 			addFieldError("name", "你输入的用户单位名或简称已经存在，请重新输入！");
 			return editUI();
 		}
-		System.out.println("in edit2222!");
 		CustomerOrganization customerOrganization = customerOrganizationService
 				.getById(model.getId());
 
-		if(customerId>0){
+		if(customerId>0)
 			customerOrganization.setManager(customerService.getById(customerId));
-		}
-		customerOrganizationService.updateCustomerOrganization(customerOrganization);
-		
+		else
+			customerOrganization.setManager(null);
+		customerOrganizationService.updateCustomerOrganization(customerOrganization);		
 		ActionContext.getContext().getValueStack().push(new CustomerOrganization());
 		return freshList();
 	}
@@ -189,6 +180,12 @@ public class CustomerOrganizationAction extends BaseAction implements
 
 	public void setCustomerId(long customerId) {
 		this.customerId = customerId;
+	}
+	public CustomerOrganization getCustomerOrganization() {
+		return customerOrganization;
+	}
+	public void setCustomerOrganization(CustomerOrganization customerOrganization) {
+		this.customerOrganization = customerOrganization;
 	}
 
 }

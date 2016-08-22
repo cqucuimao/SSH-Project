@@ -87,7 +87,7 @@ public class CarCareServiceImpl implements CarCareService {
 
 	public PageBean<Car> getNeedCareCars(int pageNum) {
 		QueryHelper helper = new QueryHelper(Car.class, "c");
-		helper.addWhereCondition("mileNeedCare<300 and c.status=?", CarStatusEnum.NORMAL);
+		helper.addWhereCondition("mileNeedCare<300 and c.status=? and c.borrowed=?", CarStatusEnum.NORMAL, false);
 		helper.addOrderByProperty("mileNeedCare", true);
 		return carDao.getPageBean(pageNum, helper);
 	}

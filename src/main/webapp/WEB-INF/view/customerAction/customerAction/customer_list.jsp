@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -27,14 +28,13 @@
 					</td>
 					<th><s:property value="tr.getText('order.Customer.customerOrganization')" /></th>
 					<td>
-						 <s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
-						 <input id="customer_organization_id" type="hidden">
+						<cqu:customerOrganizationSelector name="customerOrganization"/>
 						 
 					</td>
 					<th><s:property value="tr.getText('order.Customer.name')" /></th>
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
 					<th><s:property value="tr.getText('order.Customer.phones')" /></th>
-					<td><s:textfield cssClass="inputText" name="phonesStr" type="text" /></td>
+					<td><s:textfield cssClass="inputText" name="phone" type="text" /></td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>

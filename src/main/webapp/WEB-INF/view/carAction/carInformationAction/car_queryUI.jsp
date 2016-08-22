@@ -57,7 +57,7 @@
                     </td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('monitor.Device.SN')" /></th>
+					<th><s:property value="tr.getText('car.Car.device')" /></th>
 					<td><s:textfield class="inputText" name="device.SN" /></td>
 					<th><s:property value="tr.getText('car.Car.tollChargeSN')" /></th>
 					<td><s:textfield class="inputText" name="tollChargeSN" /></td>

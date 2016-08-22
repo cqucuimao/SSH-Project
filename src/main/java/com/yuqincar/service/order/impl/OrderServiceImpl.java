@@ -268,9 +268,19 @@ public class OrderServiceImpl implements OrderService {
 			if(order.isCallForOther())
 				saveOtherPassenger(order);
 			if(scheduleMode==OrderService.SCHEDULE_FROM_NEW || scheduleMode==OrderService.SCHEDULE_FROM_QUEUE){
-				if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null))
+				if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null)){
 					appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。上车时间："+DateUtils.getYMDHMString(order.getPlanBeginDate())
 							+ "；上车地点："+order.getFromAddress(),null);
+					
+					Map<String,String> param=new HashMap<String,String>();
+					param.put("customerOrganization", order.getCustomerOrganization().getName());
+					if(order.getChargeMode()==ChargeModeEnum.DAY)
+						param.put("time", DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
+					else
+						param.put("time", DateUtils.getYMDString(order.getPlanBeginDate()));
+										
+					smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, param);
+				}
 			}else
 				checkUpdateData(order,toUpdateOrder,user);
 		}
@@ -420,6 +430,7 @@ public class OrderServiceImpl implements OrderService {
 			String message="订单（"+order.getSn()+"）已经被取消。";
 			Map<String,String> params=new HashMap<String,String>();
 			params.put("sn", order.getSn());
+			params.put("reason", description);
 			if(order.getDriver()!=null)
 				//给司机发消息
 				appMessageService.sendMessageToDriverAPP(order.getDriver(), message,null);

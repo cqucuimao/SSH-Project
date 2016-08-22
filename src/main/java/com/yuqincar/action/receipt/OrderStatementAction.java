@@ -215,9 +215,8 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	    QueryHelper helper = new QueryHelper(OrderStatement.class, "os");
 		helper.addWhereCondition("os.status=?", OrderStatementStatusEnum.PAID);
 		//设置单位名称
-	    if(model.getCustomerOrganization()!=null&&!"".equals(model.getCustomerOrganization().getName())){
-	    	helper.addWhereCondition("os.customerOrganization.name=?", model.getCustomerOrganization().getName());
-	    }
+	    if(model.getCustomerOrganization()!=null)
+	    	helper.addWhereCondition("os.customerOrganization=?", model.getCustomerOrganization());
 	    //设置开始时间
 	    if(model.getFromDate()!=null&&!"".equals(model.getFromDate())){
 	    	//将开始时间设置成当天的00:00:00

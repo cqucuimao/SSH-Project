@@ -12,6 +12,8 @@ public interface SMSService {
 	public final static String SMS_TEMPLATE_ORDER_POSTPONE = "91550688";
 	public final static String SMS_TEMPLATE_ORDER_CANCELLED = "91550689";
 	public final static String SMS_TEMPLATE_ORDER_ENQUEUE = "91550805";
+	public final static String SMS_TEMPLATE_NEW_ORDER = "91551512";
+	
 	/**
 	 * 发送模板短信
 	 * @param templateId

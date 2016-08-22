@@ -134,7 +134,7 @@
 									</tr>							
 									<tr>
 										<th>业务员</th>
-										<td><cqu:userSelector name="saler"/></td>
+										<td><cqu:userSelector name="saler" departments="运营科;技术保障科"/></td>
 									</tr>
 									<tr>
 										<th></th>

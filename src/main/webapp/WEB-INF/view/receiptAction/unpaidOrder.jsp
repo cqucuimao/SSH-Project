@@ -26,11 +26,8 @@
 			<table>
 				<tr>
 					<th>单位名称</th>
-					<!--<td><s:textfield cssClass="inputText" name="customerOrganization.name" type="text" /></td>  -->
 					<td>
-					   
-					  <s:textfield id="customer_organization_name" name="customerOrganization.name" cssClass="inputText" type="text"/>
-					    <input id="customer_organization_id" type="hidden"> 
+					   <cqu:customerOrganizationSelector name="customerOrganization"/>
 					</td>
 					<th>订单时间</th>
 					<td>

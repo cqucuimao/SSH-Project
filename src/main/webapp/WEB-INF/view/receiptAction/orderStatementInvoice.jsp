@@ -135,8 +135,7 @@
 						submitout: function(element) { $(element).valid(); },
 						rules:{
 							// 配置具体的验证规则
-							invoiceNumber:{
-								
+							invoiceNumber:{								
 							    required:"#isInvoice::unchecked",
 							},
 							invoiceMoney:{
@@ -145,7 +144,7 @@
 								min:0
 							},
 							invoiceDate:{
-								required:true,
+								required:"#isInvoice::unchecked",
 							},
 						}
 					});

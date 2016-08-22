@@ -327,12 +327,13 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 				addFieldError("EngineSN", "发动机号已经存在！");
 				return addUI();
 		}
-		// 封装对象
+		// 封装对象 
 		model.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
 		model.setServicePoint(carService.getServicePointById(servicePointId));
 		model.setStatus(CarStatusEnum.NORMAL);
 		model.setPlateType(PlateTypeEnum.getById(plateTypeId));
 		model.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
+		model.setBorrowed(false);
 		if(StringUtils.isEmpty(model.getTollChargeSN()))
 			model.setTollChargeSN(null);
 		// 保存到数据库
@@ -352,6 +353,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		model.setServicePoint(carService.getServicePointById(servicePointId));
 		model.setStatus(CarStatusEnum.NORMAL);
 		model.setStandbyCar(true);
+		model.setBorrowed(true);
 		// 保存到数据库
 		carService.saveCar(model);
 		ActionContext.getContext().getValueStack().push(new Car());

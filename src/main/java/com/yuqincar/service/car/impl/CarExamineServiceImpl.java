@@ -97,7 +97,7 @@ public class CarExamineServiceImpl implements CarExamineService {
 		Date now=new Date();
 		Date b = new Date(now.getTime() +  24*60*60*1000 * 15L );
 		QueryHelper helper = new QueryHelper(Car.class, "c");
-		helper.addWhereCondition("c.nextExaminateDate < ? and c.status=?", b,CarStatusEnum.NORMAL);
+		helper.addWhereCondition("c.nextExaminateDate < ? and c.status=? and c.borrowed=?", b,CarStatusEnum.NORMAL,false);
 		helper.addOrderByProperty("c.nextExaminateDate", true);
 		return carDao.getPageBean(pageNum, helper);
 	}

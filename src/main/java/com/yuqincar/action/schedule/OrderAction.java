@@ -9,27 +9,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.struts2.views.jsp.IteratorStatus;
-import org.dbunit.dataset.stream.StreamingDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 
 import com.alibaba.fastjson.JSONArray;
-import com.mysql.fabric.xmlrpc.base.Struct;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
+import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.DriverActionVO;
 import com.yuqincar.domain.order.Order;
@@ -60,7 +53,7 @@ public class OrderAction extends BaseAction {
 	@Autowired
 	private DiskFileService diskFileService;
 
-	private String customerOrganizationName;
+	private CustomerOrganization customerOrganization;
 	private String customerName;
 	private String phone;
 	private String chargeMode;
@@ -689,8 +682,8 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("o.sn like ?", "%"+sn+"%");
 		if(driver!=null)
 			helper.addWhereCondition("o.driver=?", driver);
-		if(customerOrganizationName!=null && !customerOrganizationName.isEmpty())
-			helper.addWhereCondition("o.customerOrganization.name=?", customerOrganizationName);
+		if(customerOrganization!=null)
+			helper.addWhereCondition("o.customerOrganization=?", customerOrganization);
 		if(planBeginDate!=null)
 			helper.addWhereCondition("TO_DAYS(?)<=TO_DAYS(o.planBeginDate)", planBeginDate);
 		if(planEndDate!=null)
@@ -702,7 +695,7 @@ public class OrderAction extends BaseAction {
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("orderManagerHelper", helper);
-		customerOrganizationName=null;
+		customerOrganization=null;
 		planBeginDate=null;
 		planEndDate=null;
 		status=null;
@@ -765,8 +758,8 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("o.sn like ?", "%"+sn+"%");
 		if(driver!=null)
 			helper.addWhereCondition("o.driver=?", driver);
-		if(customerOrganizationName!=null && !customerOrganizationName.isEmpty())
-			helper.addWhereCondition("o.customerOrganization.name=?", customerOrganizationName);
+		if(customerOrganization!=null)
+			helper.addWhereCondition("o.customerOrganization=?", customerOrganization);
 		if(planBeginDate!=null)
 			helper.addWhereCondition("TO_DAYS(?)<=TO_DAYS(o.planBeginDate)", planBeginDate);
 		if(planEndDate!=null)
@@ -876,14 +869,14 @@ public class OrderAction extends BaseAction {
 		return "list";
 	}
 	
-	public String getCustomerOrganizationName() {
-		return customerOrganizationName;
+	public CustomerOrganization getCustomerOrganization() {
+		return customerOrganization;
 	}
 
-	public void setCustomerOrganizationName(String customerOrganizationName) {
-		this.customerOrganizationName = customerOrganizationName;
+	public void setCustomerOrganization(CustomerOrganization customerOrganization) {
+		this.customerOrganization = customerOrganization;
 	}
-	
+
 	public long getImageId() {
 		return imageId;
 	}

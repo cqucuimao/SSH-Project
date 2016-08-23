@@ -54,6 +54,9 @@
                 			<td>${phoneNumber}</td>
 							<td>
 								<s:a action="user_editDispatchUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+								<s:if test="canDeleteUser"> 
+									<s:a action="user_deleteDispatch?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+								</s:if>
 			                </td>
 						</tr>
 						</s:iterator> 

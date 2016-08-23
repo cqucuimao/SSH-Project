@@ -210,9 +210,10 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 							String name = excelLines.get(i).get(4).replaceAll( "\\s", "" );
 							User driver = userService.getByLoginName(name);
 							if(driver == null){
-								userService.saveDispatchUser(name);
-								User dispatchDriver = userService.getByLoginName(name);
-								cr.setDriver(dispatchDriver);
+								failReason = "未知司机";
+								ActionContext.getContext().getValueStack().push(failReason);
+								ActionContext.getContext().getValueStack().push(result);
+								return "false";
 							}else{
 								cr.setDriver(driver);				
 							}
@@ -223,24 +224,18 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 							
 							
 							System.out.println("维修原因="+excelLines.get(i).get(6));
-							cr.setReason(excelLines.get(i).get(6));
+							cr.setReason(excelLines.get(i).get(6));							
 							
-							//付款日期
-							System.out.println("付款日期="+excelLines.get(i).get(7));
-						    Date payDate;				
-						    payDate = sdf.parse(excelLines.get(i).get(7));
-							cr.setPayDate(payDate);
-							
-							System.out.println("未赔付金额="+excelLines.get(i).get(8));
-							if(excelLines.get(i).get(8).length()>0){
-								BigDecimal mng = new BigDecimal(excelLines.get(i).get(8));
+							System.out.println("未赔付金额="+excelLines.get(i).get(7));
+							if(excelLines.get(i).get(7).length()>0){
+								BigDecimal mng = new BigDecimal(excelLines.get(i).get(7));
 								System.out.println("mng= "+mng);
 								cr.setMoneyNoGuaranteed(mng);
 							}
 							
 							//金额
-							System.out.println("金额="+excelLines.get(i).get(9));
-							BigDecimal bd = new BigDecimal(excelLines.get(i).get(9));
+							System.out.println("金额="+excelLines.get(i).get(8));
+							BigDecimal bd = new BigDecimal(excelLines.get(i).get(8));
 							
 							cr.setMoney(bd);
 							
@@ -353,7 +348,6 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 			carRepair.setMoney(carRepair.getMoney().setScale(0, BigDecimal.ROUND_HALF_UP));
 		carRepair.setFromDate(DateUtils.getYMD(DateUtils.getYMDString(carRepair.getFromDate())));
 		carRepair.setToDate(DateUtils.getYMD(DateUtils.getYMDString(carRepair.getToDate())));
-		carRepair.setPayDate(DateUtils.getYMD(DateUtils.getYMDString(carRepair.getPayDate())));
 		ActionContext.getContext().getValueStack().push(carRepair);
 
 		return "saveUI";
@@ -383,7 +377,6 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		carRepair.setMoneyNoGuaranteed(model.getMoneyNoGuaranteed());
 		carRepair.setReason(model.getReason());
 		carRepair.setMemo(model .getMemo());
-		carRepair.setPayDate(model.getPayDate());
 		carRepair.setAppointment(false);
 
 		//更新到数据库

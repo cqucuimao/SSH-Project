@@ -71,10 +71,6 @@
                 				<th><s:property value="tr.getText('car.CarRepair.memo')" />：</th>
                 				<td>${memo}</td>
                 			</tr>
-                			<tr>
-                				<th><s:property value="tr.getText('car.CarRepair.payDate')" />：</th>
-                				<td><s:date name="payDate" format="yyyy-MM-dd"/></td>
-                			</tr>
 					</tbody>
 					<tfoot>
                 		<tr>

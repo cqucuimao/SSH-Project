@@ -70,7 +70,7 @@
                     			
 		                    	<div class="tdDiv2"><s:date name="compulsoryEndDate" format="yyyy-MM-dd"/></div>
 		                    			
-		                    	<div class="tdDiv3">${compulsoryCoverageMoney }</div>
+		                    	<div class="tdDiv3">——</div>
 		                    			
 		                    	<div class="tdDiv3"> ${compulsoryMoney }</div>
                     			</td>

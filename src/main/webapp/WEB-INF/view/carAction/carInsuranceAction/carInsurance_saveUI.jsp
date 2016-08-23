@@ -89,21 +89,19 @@
                     <tr>
                     	<th>交强险<span class="required">*</span></th>
                     	<td>
-                    		<!-- <input class="tdInput1" type="text" value="交强险" readonly style="border:0;text-align:center"/> -->
                     		<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>
-                    		<input class="Wdate half" name="compulsoryBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="Wdate half" name="compulsoryEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="tdInput" type="text" name="compulsoryCoverageMoney" />&nbsp;
+                    		<input class="Wdate half" name="compulsoryBeginDate" type="text" onblur="getBeginDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="compulsoryEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>&nbsp;
 							<input class="tdInput" type="text" name="compulsoryMoney" onblur="getAllMoney()"/>
 						</td>
                     </tr>
                      <tr>
                     	<th>车船税<span class="required">*</span></th>
                     	<td>
-                    		<!-- <input class="tdInput1" type="text" value="车船税" readonly style="border:0;text-align:center"/> -->
                     		<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>
-                    		<input class="Wdate half" name="vehicleTaxBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="Wdate half" name="vehicleTaxEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                    		<input class="Wdate half" name="vehicleTaxBeginDate" type="text" onblur="getBeginDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="vehicleTaxEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>&nbsp;
 							<input class="tdInput" type="text" name="vehicleTaxMoney" onblur="getAllMoney()"/>
 						</td>
@@ -115,8 +113,8 @@
                         		list="commercialInsuranceTypes" listKey="id" listValue="name"
                         		headerKey="" headerValue="请选择类型" style="width:142px;"
                         		/>
-                    		<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-							<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                    		<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onblur="getBeginDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+							<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput" type="text" name="commercialInsuranceCoverageMoney"/>&nbsp;
 							<input class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;
 							<input class="btn" id="btn" type="button" value="点击新增" />
@@ -138,12 +136,6 @@
                     	<td>
                         	<textarea class="inputText" style="height:100px" name="memo"></textarea>
                         </td>
-                    </tr>                  
-                    <tr>
-                    	<th><s:property value="tr.getText('car.CarInsurance.payDate')" /><span class="required">*</span></th>
-                    	<td>
-                    		<input class="Wdate half" type="text" name="payDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-                    	</td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -169,6 +161,15 @@
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
     
+    	function checkEndTime(startTime, endTime) {
+			var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+			var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+			if (end < start) {
+				return false;
+			}
+			return true;
+		}
+    
 	  	 //计算保险金额（总金额）  实现数字相加，Number(a1)+Number(a2);	
 		 function getAllMoney(){    		
 	   		var compulsoryMoney = $("input[name=compulsoryMoney]").val();
@@ -181,6 +182,91 @@
 	   		$("input[name=money]").val(money); 
 		 }	
     
+		 
+		 //计算保险开始时间
+		 function getBeginDate(){
+			 var maxBeginDate = "";
+			 var compulsoryBeginDate = $("input[name=compulsoryBeginDate]").val();
+			 var vehicleTaxBeginDate = $("input[name=vehicleTaxBeginDate]").val();
+			 if(vehicleTaxBeginDate == "" && compulsoryBeginDate != ""){
+				 maxBeginDate = compulsoryBeginDate;
+			 }
+			 if(vehicleTaxBeginDate != "" && compulsoryBeginDate == ""){
+				 maxBeginDate = vehicleTaxBeginDate;
+			 }
+			 if(vehicleTaxBeginDate != "" && compulsoryBeginDate != ""){
+				 if(checkEndTime(compulsoryBeginDate,vehicleTaxBeginDate)){
+					 maxBeginDate = vehicleTaxBeginDate;
+				 }else{
+					 maxBeginDate = compulsoryBeginDate;
+				 }
+			 } 
+			 var maxValue = "1970-01-01";
+			$("input[name=commercialInsuranceBeginDate]").each(function(){
+	   			var value = $(this).val();
+	   			
+   				if(checkEndTime(maxValue,value)){
+   					maxValue = value;
+	   			}
+	   		 }); 
+			if(maxBeginDate == ""){
+				$("input[name=fromDate]").val(maxValue);
+			}else{
+				if(checkEndTime(maxValue,maxBeginDate)){
+					$("input[name=fromDate]").val(maxBeginDate);
+				}else{
+					$("input[name=fromDate]").val(maxValue);
+				}
+			}
+		 }
+		 
+		//计算保险截止时间
+		 function getEndDate(){
+			 var minEndDate = "";
+			 var compulsoryEndDate = $("input[name=compulsoryEndDate]").val();
+			 var vehicleTaxEndDate = $("input[name=vehicleTaxEndDate]").val();
+			 if(vehicleTaxEndDate == "" && compulsoryEndDate != ""){
+				 minEndDate = compulsoryEndDate;
+			 }
+			 if(vehicleTaxEndDate != "" && compulsoryEndDate == ""){
+				 minEndDate = vehicleTaxEndDate;
+			 }
+			 if(vehicleTaxEndDate != "" && compulsoryEndDate != ""){
+				 if(checkEndTime(compulsoryEndDate,vehicleTaxEndDate)){
+					 minEndDate = compulsoryEndDate;
+				 }else{
+					 minEndDate = vehicleTaxEndDate;
+				 }
+			 } 
+			var minValue = "2050-01-01";
+			$("input[name=commercialInsuranceEndDate]").each(function(){
+	   			var value = $(this).val();
+	   			//alert("value="+value);
+	   			if(value == ""){
+	   				;
+	   			}else{
+	   				if(checkEndTime(value,minValue)){
+	   					minValue = value;
+		   			}
+	   			}
+   				
+	   		 }); 
+			if(minEndDate == ""){
+				if(minValue == "2050-01-01"){
+					$("input[name=toDate]").val("");
+				}else{
+					$("input[name=toDate]").val(minValue);
+				}
+				
+			}else{
+				if(checkEndTime(minValue,minEndDate)){
+					$("input[name=toDate]").val(minValue);
+				}else{
+					$("input[name=toDate]").val(minEndDate);
+				}
+			}
+		 }
+		 
 	    $(function(){
 	    	
 	    	 $("#pageForm").validate({
@@ -204,11 +290,6 @@
 						},
 						compulsoryEndDate:{
 							required:true,
-						},
-						compulsoryCoverageMoney:{
-							required:true,
-							number:true,
-							min:0,
 						},
 						compulsoryMoney:{
 							required:true,
@@ -243,23 +324,16 @@
 					}
 				});
 	    	
-	    	 function checkEndTime(startTime, endTime) {
-	 			var start = new Date(startTime.replace("-", "/").replace("-", "/"));
-	 			var end = new Date(endTime.replace("-", "/").replace("-", "/"));
-	 			if (end < start) {
-	 				return false;
-	 			}
-	 			return true;
-	 		}
+	    	
 	    	 
 	    	 //点击新增一条商业保险
 	    	 $("#btn").click(function(){
-	    		 	var row = $("#tab").find('tr').length-5;	//获取table行数，减去5得到增加行的位置
+	    		 	var row = $("#tab").find('tr').length-4;	//获取table行数，减去5得到增加行的位置
 	 		 		var row1 = row+1;	 
 					$($('#tab').find('tr')[row]).after('<tr class="trClass"><th>&nbsp;&nbsp;&nbsp;&nbsp;<span class="required"></span></th>'+
 						'<td><select name="commercialInsuranceType" id=select'+row1+' style="width:142px"></select>&nbsp;'+							
-               			'<input  class="Wdate half" name="commercialInsuranceBeginDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
-						'<input  class="Wdate half" name="commercialInsuranceEndDate" type="text" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
+               			'<input  class="Wdate half" name="commercialInsuranceBeginDate" type="text" onblur="getBeginDate()" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
+						'<input  class="Wdate half" name="commercialInsuranceEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
 						'<input  class="tdInput" type="text" name="commercialInsuranceCoverageMoney">&nbsp;&nbsp;'+
 						'<input  class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>'); 			
 					$(".selectClass option").each(function(){
@@ -269,12 +343,14 @@
 					$(".deleteTr").click(function(){
 		    		 	$(this).parent('td').parent('tr').empty();
 		    		 	getAllMoney();
+		    		 	getBeginDate();
+		    		 	getEndDate();
 		    		}); 
 			 })
 			
 			 
 			 $("input[name=sub]").click(function(){
-					 
+				 
 					 if(!checkEndTime($("input[name=compulsoryBeginDate]").val(),$("input[name=compulsoryEndDate]").val())){
 		    			 alert("交强险的生效时间晚于了截止时间！");
 		    			 return false;

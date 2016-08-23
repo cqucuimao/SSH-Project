@@ -214,9 +214,10 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 							String name = excelLines.get(i).get(3).replaceAll( "\\s", "" );
 							User driver = userService.getByLoginName(name);
 							if(driver == null){
-								userService.saveDispatchUser(name);
-								User dispatchDriver = userService.getByLoginName(name);
-								cc.setDriver(dispatchDriver);
+								failReason = "未知司机";
+								ActionContext.getContext().getValueStack().push(failReason);
+								ActionContext.getContext().getValueStack().push(result);
+								return "false";
 							}else{
 								cc.setDriver(driver);				
 							}

@@ -60,6 +60,14 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 			commercialInsuranceDao.save(commercialInsurance);
 		}
 	}
+	@Transactional
+	public void addCommercialInsurance(List<CommercialInsurance> commercialInsurances,CarInsurance carInsurance) {
+		
+		for(int i=0;i<commercialInsurances.size();i++){
+			commercialInsuranceDao.save(commercialInsurances.get(i));
+		}
+		carInsuranceDao.update(carInsurance);
+	}
 
 	public CarInsurance getCarInsuranceById(long id) {
 		return carInsuranceDao.getById(id);
@@ -113,5 +121,7 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	public void deleteCommercialInsurance(Long id){
 		commercialInsuranceDao.delete(id);
 	}
+
+	
 
 }

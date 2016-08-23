@@ -30,10 +30,6 @@ public class CarRepair extends BaseEntity {
 	@Text("维修原因")
 	private String reason;	//维修原因
 	
-	@Text("付款日期")
-	@Column
-	private Date payDate;  //维修付款日期
-	
 	@Text("起始时间")
 	@Column(nullable=false)
 	private Date fromDate;	//起始时间
@@ -58,14 +54,6 @@ public class CarRepair extends BaseEntity {
 	
 	@Text("是否完成维修")
 	private boolean done;	//是否完成维修，只有当appointment为true时，本字段才有意义。
-
-
-	public Date getPayDate() {
-		return payDate;
-	}
-	public void setPayDate(Date payDate) {
-		this.payDate = payDate;
-	}
 	
 	public Car getCar() {
 		return car;

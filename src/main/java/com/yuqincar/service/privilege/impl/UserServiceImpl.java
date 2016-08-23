@@ -54,6 +54,11 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Transactional
+	public void updateDispatchUser(User user) {
+		userDao.update(user);
+	}
+	
+	@Transactional
 	public void update(User user) {
 		User updatedUser = userDao.getById(user.getId());
 				
@@ -106,7 +111,7 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Transactional
-	public void saveDispatchUser(String name) {
+	public void saveDispatchUser(String name,String phoneNumber) {
 		
 		// 默认密码是123456
 		User user =new User();
@@ -117,7 +122,7 @@ public class UserServiceImpl implements UserService{
 		user.setUserType(UserTypeEnum.DRIVER);
 		user.setLoginName(name);
 		user.setName(name);
-		user.setPhoneNumber("13800000001");
+		user.setPhoneNumber(phoneNumber);
 		
 		userDao.save(user);
 	}
@@ -144,18 +149,13 @@ public class UserServiceImpl implements UserService{
 		List<User> users = new ArrayList<User>();
 		List<User> listUser;
 		boolean flag = false;
-		System.out.println("departments="+departments);
-		System.out.println("driverOnly="+driverOnly);
-		System.out.println("departments.length="+departments.length());
 		if(!departments.equals("null") && departments.length()>0){
-			System.out.println("11111");
 			String[] ary = departments.split(";");//按照分号分隔字符串
 			for(int i=0;i<ary.length;i++){
 				listUser=userDao.getByName(name, driverOnly,ary[i]);
 				users.addAll(listUser);
 			}
 		}else{
-			System.out.println("22222");
 			users=userDao.getByName(name, driverOnly, departments);
 		}
 		

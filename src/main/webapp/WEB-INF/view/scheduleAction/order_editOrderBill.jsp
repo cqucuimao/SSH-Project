@@ -125,11 +125,11 @@
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">油费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" onblur="getTax();getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">洗车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" onblur="getTax();getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">停车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="parkingFee" onblur="getTax();getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="parkingFee" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">计费路码</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="totalChargeMile" /></td>
 	        		</tr>
@@ -141,7 +141,7 @@
 						<td class="alignCenter">其他费用</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee" onblur="getTax();getOrderMoney()"/></td>
 						<td class="alignCenter">税费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" readonly="true"/></td>						
+						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" onblur="getOrderMoney()"/></td>						
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">核算金额</td>
@@ -267,14 +267,11 @@
         return f;  
     } 
   	//计算税费,它的值是油费、洗车费、停车费、过路费、食宿、其它费用之和的3.6%
-	function getTax(){    		
-  		var refuelMoney = $("input[name=refuelMoney]").val();
-  		var washingFee = $("input[name=washingFee]").val();
-  		var parkingFee = $("input[name=parkingFee]").val();
+	function getTax(){ 
   		var toll = $("input[name=toll]").val();
   		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
   		var otherFee = $("input[name=otherFee]").val();
-  		var allMoney = Number(refuelMoney)+Number(washingFee)+Number(parkingFee)+Number(toll)+Number(roomAndBoardFee)+Number(otherFee);
+  		var allMoney = Number(toll)+Number(roomAndBoardFee)+Number(otherFee);
   		var tax = allMoney * 0.036;
   		if(tax!=0){
   	  		$("input[name=tax]").val(toDecimal(tax)); 		

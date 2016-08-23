@@ -143,6 +143,44 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 		return "carInsuranceDetail";
 	}
 	
+	//添加商业保险--界面
+	public String addCommercialInsuranceUI(){
+		
+		// 准备回显的数据
+		CarInsurance carInsurance = carInsuranceService.getCarInsuranceById(model.getId());
+		List<CommercialInsurance> commercialInsurances = carInsurance.getCommercialInsuranceList();
+		ActionContext.getContext().put("commercialInsurances", commercialInsurances);
+		ActionContext.getContext().getValueStack().push(carInsurance);
+		ActionContext.getContext().put("commercialInsuranceTypes", carInsuranceService.getAllCommercialInsuranceType());	 
+		return "commercialInsuranceUI";
+	}
+	
+	//添加商业保险
+	public String addCommercialInsurance(){
+		List<CommercialInsurance> cis = new ArrayList<CommercialInsurance>();
+		CarInsurance carInsurance = carInsuranceService.getCarInsuranceById(model.getId());
+		for(int i=0;i<inputRows;i++){
+			CommercialInsurance commercialInsurance = new CommercialInsurance();
+			commercialInsurance.setInsurance(carInsurance);
+			commercialInsurance.setCommercialInsuranceType(carInsuranceService.getCommercialInsuranceTypeById(commercialInsuranceType.get(i)));
+			if(commercialInsuranceBeginDate.get(i).before(commercialInsuranceEndDate.get(i))){
+				commercialInsurance.setCommercialInsuranceBeginDate(commercialInsuranceBeginDate.get(i));
+				commercialInsurance.setCommercialInsuranceEndDate(commercialInsuranceEndDate.get(i));
+			}			
+			commercialInsurance.setCommercialInsuranceCoverageMoney(commercialInsuranceCoverageMoney.get(i));
+			commercialInsurance.setCommercialInsuranceMoney(commercialInsuranceMoney.get(i));
+			cis.add(commercialInsurance);
+		}
+		
+		carInsurance.setFromDate(model.getFromDate());
+		carInsurance.setToDate(model.getToDate());
+		carInsurance.setMoney(model.getMoney());
+		
+		carInsuranceService.addCommercialInsurance(cis, carInsurance);
+		
+		return "toList";
+	}
+	
 	public CarInsurance getModel() {
 		return model;
 	}

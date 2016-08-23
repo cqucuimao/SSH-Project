@@ -44,7 +44,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private RoleService roleService;
 	
 	private Long departmentId;
-	private Long[] roleIds;
+	private Long[] splitRoles;
+	private String roles;
 	
 	private String oldPassword = "";
 	private String newPassword = "";
@@ -67,6 +68,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		QueryHelper helper = new QueryHelper("User", "u");
 		if(model.getName()!=null && !"".equals(model.getName()))
 			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
+		helper.addWhereCondition("u.department.name <> ?", "外派");
 		helper.addOrderByProperty("u.name", true);
 		PageBean pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -77,6 +79,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	/** 列表 */
 	public String list(){
 		QueryHelper helper = new QueryHelper("User", "u");
+		helper.addWhereCondition("u.department.name <> ?", "外派");
 		helper.addOrderByProperty("u.id", false);
 		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -117,6 +120,12 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 		return "saveUI";
 	}
+	
+	public Long[] getSplitRoles(String roles){
+		
+		
+		return splitRoles;
+	}
 
 	/** 添加 */
 	public String add() throws Exception {
@@ -130,7 +139,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		model.setUserType(UserTypeEnum.getById(userTypeId));
 		model.setStatus(UserStatusEnum.NORMAL);//默认为正常状态
 		model.setDepartment(departmentService.getById(departmentId));
-		List<Role> roleList = roleService.getByIds(roleIds);
+		//splitRoles = roles.split(",");
+		List<Role> roleList = roleService.getByIds(splitRoles);
 		model.setRoles(new HashSet<Role>(roleList));
 		// 保存到数据库
 		userService.save(model);
@@ -155,10 +165,10 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			departmentId = user.getDepartment().getId();
 		}
 		// 处理岗位
-		roleIds = new Long[user.getRoles().size()];
+		splitRoles = new Long[user.getRoles().size()];
 		int index = 0;
 		for (Role role : user.getRoles()) {
-			roleIds[index++] = role.getId();
+			splitRoles[index++] = role.getId();
 		}
 
 		// 准备数据：departmentList
@@ -176,7 +186,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		model.setGender(UserGenderEnum.getById(genderId));
 		model.setStatus(UserStatusEnum.getById(statusId));
 		model.setDepartment(departmentService.getById(departmentId));
-		List<Role> roleList = roleService.getByIds(roleIds);
+		List<Role> roleList = roleService.getByIds(splitRoles);
 		model.setRoles(new HashSet<Role>(roleList));
 		model.setUserType(UserTypeEnum.getById(userTypeId));
 		if(model.getUserType()==UserTypeEnum.DRIVER){
@@ -240,6 +250,69 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		return "info";
 	}
 	
+	public String queryDispatchList(){
+		
+		QueryHelper helper = new QueryHelper("User", "u");
+		helper.addWhereCondition("u.department.name = ?", "外派");
+		if(model.getName()!=null && !"".equals(model.getName()))
+			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
+		if(model.getPhoneNumber()!=null && !"".equals(model.getPhoneNumber()))
+			helper.addWhereCondition("u.phoneNumber like ?", "%"+model.getPhoneNumber()+"%");
+		helper.addOrderByProperty("u.id", false);
+		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("dispatchUserHelper", helper);
+		
+		return "dispatchList";
+	}
+	
+	public String dispatchUserList(){
+		
+		QueryHelper helper = new QueryHelper("User", "u");
+		helper.addWhereCondition("u.department.name = ?", "外派");
+		helper.addOrderByProperty("u.id", false);
+		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
+		ActionContext.getContext().getValueStack().push(pageBean);
+		ActionContext.getContext().getSession().put("dispatchUserHelper", helper);
+		
+		return "dispatchList";
+	}
+	
+	public String freshDispatchList(){
+		QueryHelper helper = (QueryHelper)ActionContext.getContext().getSession().get("dispatchUserHelper");
+		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
+		ActionContext.getContext().getValueStack().push(pageBean);
+		
+		return "dispatchList";
+	}
+	
+	public String addDispatchUI(){
+		
+		return "dispatchUI";
+	}
+	
+	public String editDispatchUI(){
+		
+		User user = userService.getById(model.getId());
+		ActionContext.getContext().getValueStack().push(user);
+		return "dispatchUI";
+	}
+	
+	public String editDispatchUser(){
+		User user = userService.getById(model.getId());
+		user.setName(model.getName());
+		user.setPhoneNumber(model.getPhoneNumber());
+		userService.updateDispatchUser(user);
+		ActionContext.getContext().getValueStack().push(new User());
+		return freshDispatchList();
+	}
+	
+	public String addDispatchUser(){
+		
+		userService.saveDispatchUser(model.getName(),model.getPhoneNumber());
+		return freshDispatchList();
+	}
+	
 	public String detail(){
 		User user = (User) ActionContext.getContext().getSession().get("user");
 		ActionContext.getContext().getValueStack().push(user);
@@ -256,11 +329,11 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 
 	public Long[] getRoleIds() {
-		return roleIds;
+		return splitRoles;
 	}
 
-	public void setRoleIds(Long[] roleIds) {
-		this.roleIds = roleIds;
+	public void setRoleIds(Long[] splitRoles) {
+		this.splitRoles = splitRoles;
 	}
 
 	public User getModel() {
@@ -366,6 +439,14 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	public void setGenderId(int genderId) {
 		this.genderId = genderId;
+	}
+
+	public String getRoles() {
+		return roles;
+	}
+
+	public void setRoles(String roles) {
+		this.roles = roles;
 	}
 	
 	

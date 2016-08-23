@@ -25,10 +25,6 @@ public class CarInsurance extends BaseEntity {
 	@JoinColumn(nullable=false)
 	private Car car;	//车辆
 	
-	@Text("缴款日期")
-	@Column(nullable=false)
-	private Date payDate;  
-	
 	@Text("保险起始日期")
 	@Column(nullable=false)
 	private Date fromDate;	
@@ -60,10 +56,6 @@ public class CarInsurance extends BaseEntity {
 	@Text("交强险截至日期")
 	@Column(nullable=false)
 	private Date compulsoryEndDate;
-	
-	@Text("交强险承保金额")
-	@Column(nullable=false)
-	private BigDecimal compulsoryCoverageMoney;
 	
 	@Text("车船税金额")
 	@Column(nullable=false)
@@ -105,12 +97,6 @@ public class CarInsurance extends BaseEntity {
 	}
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
-	}
-	public Date getPayDate() {
-		return payDate;
-	}
-	public void setPayDate(Date payDate) {
-		this.payDate = payDate;
 	}
 	public String getInsureCompany() {
 		return insureCompany;
@@ -167,12 +153,6 @@ public class CarInsurance extends BaseEntity {
 	}
 	public void setCompulsoryEndDate(Date compulsoryEndDate) {
 		this.compulsoryEndDate = compulsoryEndDate;
-	}
-	public BigDecimal getCompulsoryCoverageMoney() {
-		return compulsoryCoverageMoney;
-	}
-	public void setCompulsoryCoverageMoney(BigDecimal compulsoryCoverageMoney) {
-		this.compulsoryCoverageMoney = compulsoryCoverageMoney;
 	}
 	public BigDecimal getVehicleTaxMoney() {
 		return vehicleTaxMoney;

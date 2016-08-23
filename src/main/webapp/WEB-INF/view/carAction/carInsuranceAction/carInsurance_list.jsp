@@ -69,7 +69,7 @@
               				<th><s:property value="tr.getText('car.CarInsurance.insureCompany')" /></th>
                 			<th>起止时间</th>
                 			<th><s:property value="tr.getText('car.CarInsurance.money')" />(元)</th>
-                			<th><s:property value="tr.getText('car.CarInsurance.payDate')" /></th>
+                			<th>操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
@@ -81,7 +81,7 @@
 							<td>${insureCompany}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
-							<td style="text-align:right"><s:date name="payDate" format="yyyy-MM-dd"/></td>
+							<td><s:a action="carInsurance_addCommercialInsuranceUI?id=%{id}"><i class="icon-operate-edit" title="添加商业保险"></i></s:a></td>
 						</tr>
 						</s:iterator> 
 					</tbody>
@@ -94,8 +94,7 @@
 	</div>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	
-<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="js/common.js"></script>	
 	

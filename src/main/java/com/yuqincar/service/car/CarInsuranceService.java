@@ -49,4 +49,9 @@ public interface CarInsuranceService {
 	public void saveCommercialInsurance(CommercialInsurance commercialInsurance);
 	
 	public void deleteCommercialInsurance(Long id);
+	/**
+	 * 添加商业保险的时候，保险起止时间和金额也要更新
+	 * @param commercialInsurances
+	 */
+	public void addCommercialInsurance(List<CommercialInsurance> commercialInsurances,CarInsurance carInsurance);
 }

@@ -73,6 +73,8 @@
 			<result name="info">/WEB-INF/view/userAction/user_info.jsp</result>
 			<result name="popup">/WEB-INF/view/userAction/user_popup.jsp</result>
 			<result name="toList" type="redirectAction">user_list</result>
+			<result name="dispatchList">/WEB-INF/view/userAction/dispatchUser_list.jsp</result>
+			<result name="dispatchUI">/WEB-INF/view/userAction/dispatchUser_saveUI.jsp</result>
 		</action>
 
 		<!-- 岗位管理 -->
@@ -188,6 +190,8 @@
 			<result name="typeList">/WEB-INF/view/carAction/carInsuranceAction/carInsuranceType_list.jsp
 			</result>
 			<result name="typeSaveUI">/WEB-INF/view/carAction/carInsuranceAction/carInsuranceType_saveUI.jsp
+			</result>
+			<result name="commercialInsuranceUI">/WEB-INF/view/carAction/carInsuranceAction/commercialInsurance_saveUI.jsp
 			</result>
 			<result name="toList" type="redirectAction">carInsurance_list</result>
 		</action>

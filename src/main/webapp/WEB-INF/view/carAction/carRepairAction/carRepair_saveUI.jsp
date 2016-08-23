@@ -103,12 +103,6 @@
                         	<s:textarea cssClass="inputText" style="height:100px" name="memo"></s:textarea>
                         </td>
                     </tr>
-                    <tr>
-                    	<th><s:property value="tr.getText('car.CarRepair.payDate')" /><span class="required">*</span></th>
-                    	<td>
-                    		<s:textfield cssClass="inputText" class="Wdate half" name="payDate" id="payDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-                    	</td>
-                    </tr>
                 </tbody>
                 <tfoot>
                     <tr>

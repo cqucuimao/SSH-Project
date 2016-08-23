@@ -18,6 +18,7 @@ public class UserSelectorTags extends TagSupport {
 	private String name;
 	private boolean driverOnly;
 	private String departments;
+	private boolean dispatchIncluded;
 
 	public int doStartTag() throws JspException {
 		ValueStack stack = TagUtils.getStack(pageContext);

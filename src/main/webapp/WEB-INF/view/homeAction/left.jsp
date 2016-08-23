@@ -47,7 +47,13 @@
 				<s:a action="role_list">角色管理</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
-			</s:if>						
+			</s:if>		
+			<s:if test=" #session.user.hasPrivilegeByUrl('/user_dispatchUserList') ">
+			<dd>
+				<s:a action="user_dispatchUserList">外派员工管理</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>				
 		</dl>
 		</s:if>
 		

@@ -10,4 +10,5 @@ public interface UserDao extends BaseDao<User>{
 	public User getByLoginNameAndPassword(String loginName, String password);
 	public User getByLoginNameAndMD5Password(String loginName, String password);		
 	public List<User> getByName(String name,boolean driverOnly,String department);
+	public boolean canDeleteUser(Long id);
 } 

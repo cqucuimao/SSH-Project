@@ -221,4 +221,8 @@ public class UserServiceImpl implements UserService{
 		driverLicenseDao.update(driverLicense);
 	}
 
+	public boolean canDeleteUser(Long id) {
+		return userDao.canDeleteUser(id);
+	}
+
 }

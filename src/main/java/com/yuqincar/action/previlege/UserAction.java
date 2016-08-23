@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
@@ -308,9 +309,26 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 	
 	public String addDispatchUser(){
-		
 		userService.saveDispatchUser(model.getName(),model.getPhoneNumber());
+		ActionContext.getContext().getValueStack().push(new User());
 		return freshDispatchList();
+	}
+	
+	//判断能否删除
+	public boolean isCanDeleteUser(){
+		User user = (User) ActionContext.getContext().getValueStack().peek();
+		if(userService.canDeleteUser(user.getId()))
+			return true;
+		else 
+			return false;
+	}
+	
+	/** 删除 */
+	public String deleteDispatch() throws Exception {
+		userService.delete(model.getId());
+		ActionContext.getContext().getValueStack().push(new User());
+		return freshDispatchList();
+		
 	}
 	
 	public String detail(){

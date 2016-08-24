@@ -4,6 +4,11 @@ import org.springframework.stereotype.Repository;
 
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
 import com.yuqincar.dao.privilege.UserDao;
+import com.yuqincar.domain.car.CarCare;
+import com.yuqincar.domain.car.CarRefuel;
+import com.yuqincar.domain.car.CarRepair;
+import com.yuqincar.domain.car.CarWash;
+import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
@@ -89,6 +94,22 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 							.setParameter(0, UserStatusEnum.NORMAL).list();
 		}
 		
+	}
+
+	public boolean canDeleteUser(Long id) {
+		List<Order> orders = getSession().createQuery("from order_ where driver_id=?").
+				setParameter(0, id).list();
+		List<CarCare> carCares =getSession().createQuery("from CarCare where driver.id=?").
+				setParameter(0, id).list();
+		List<CarRefuel> carRefuels = getSession().createQuery("from CarRefuel where driver.id=?").
+				setParameter(0,id).list();
+		List<CarRepair> carRepairs = getSession().createQuery("from CarRepair where driver.id=?").
+				setParameter(0,id).list();
+		List<CarWash> carWashs = getSession().createQuery("from CarWash where driver.id=?").
+				setParameter(0, id).list();
+		if(orders.size() != 0 || carCares.size() != 0 || carRefuels.size() != 0 || carRepairs.size() != 0 || carWashs.size() != 0)
+			return false;
+		return true;
 	}
 	
 

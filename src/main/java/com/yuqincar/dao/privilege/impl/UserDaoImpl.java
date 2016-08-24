@@ -79,18 +79,18 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		}else{
 			if(name!=null && !name.isEmpty())
 				if(driverOnly)
-					return getSession().createQuery("from User u where u.name like ? and u.userType=? and u.status=? order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.name like ? and u.userType=? and u.status=? and u.department.name<>'外派'  order by convert_gbk(u.name) asc")
 							.setParameter(0, "%"+name+"%").setParameter(1,UserTypeEnum.DRIVER)
 							.setParameter(2, UserStatusEnum.NORMAL).list();
 				else
-					return getSession().createQuery("from User u where u.name like ? and u.status=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.name like ? and u.status=? and u.loginName<>'admin' and u.department.name<>'外派'  order by convert_gbk(u.name) asc")
 							.setParameter(0, "%"+name+"%").setParameter(1, UserStatusEnum.NORMAL).list();
 			else
 				if(driverOnly)
-					return getSession().createQuery("from User u where u.userType=? and u.status=? order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.userType=? and u.status=? and u.department.name<>'外派' order by convert_gbk(u.name) asc")
 							.setParameter(0, UserTypeEnum.DRIVER).setParameter(1, UserStatusEnum.NORMAL).list();
 				else
-					return getSession().createQuery("from User u where u.status=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.status=? and u.loginName<>'admin' and u.department.name<>'外派' order by convert_gbk(u.name) asc")
 							.setParameter(0, UserStatusEnum.NORMAL).list();
 		}
 		

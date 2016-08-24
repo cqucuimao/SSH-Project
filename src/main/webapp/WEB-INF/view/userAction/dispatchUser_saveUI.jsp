@@ -16,6 +16,15 @@
         <!-- 标题 -->
         <div class="title">
             <h1>外派员工信息</h1>
+            <p style="color: red">
+				<s:if test="hasFieldErrors()">
+					<s:iterator value="fieldErrors">
+						<s:iterator value="value">
+							<s:property />
+						</s:iterator>
+					</s:iterator>
+				</s:if>
+			</p>
         </div>
         <div class="editBlock detail p30">
         <s:form action="user_%{id == null ? 'addDispatchUser' : 'editDispatchUser'}" name="pageForm" id="pageForm">

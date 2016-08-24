@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
 import com.yuqincar.dao.privilege.UserDao;
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarRepair;
@@ -111,6 +112,30 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 			return false;
 		return true;
 	}
-	
 
+	public boolean isNameExist(long selfId, String name) {
+		if(name == null || name.equals("")){
+			return false;
+		}
+		List<User> users = getSession().createQuery("from User u where u.name=? and u.id<>?")
+				.setParameter(0, name)
+				.setParameter(1, selfId)
+				.list();
+		if(users.size() != 0)
+			return true;
+		return false;
+	}
+	
+	public boolean isLoginNameExist(long selfId, String loginName) {
+		if(loginName == null || loginName.equals("")){
+			return false;
+		}
+		List<User> users = getSession().createQuery("from User u where u.loginName=? and u.id<>?")
+				.setParameter(0, loginName)
+				.setParameter(1, selfId)
+				.list();
+		if(users.size() != 0)
+			return true;
+		return false;
+	}
 }

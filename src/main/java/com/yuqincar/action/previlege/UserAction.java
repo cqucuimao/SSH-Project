@@ -130,6 +130,14 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	/** 添加 */
 	public String add() throws Exception {
+		if(userService.isLoginNameExist(0, model.getLoginName())){
+			addFieldError("loginName", "登录名已经存在！");
+			return addUI();
+		}
+		if(userService.isNameExist(0, model.getName())){
+			addFieldError("name", "姓名已经存在！");
+			return addUI();
+		}
 		if(UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
 			DriverLicense dl = new DriverLicense();
 			dl.setLicenseID(licenseID);
@@ -183,7 +191,15 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 
 	/** 修改 */
-	public String edit() throws Exception {		
+	public String edit() throws Exception {	
+		if(userService.isLoginNameExist(model.getId(), model.getLoginName())){
+			addFieldError("loginName", "登录名已经存在！");
+			return addUI();
+		}
+		if(userService.isNameExist(model.getId(), model.getName())){
+			addFieldError("name", "姓名已经存在！");
+			return addUI();
+		}
 		model.setGender(UserGenderEnum.getById(genderId));
 		model.setStatus(UserStatusEnum.getById(statusId));
 		model.setDepartment(departmentService.getById(departmentId));
@@ -300,6 +316,10 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 	
 	public String editDispatchUser(){
+		if(userService.isNameExist(model.getId(), model.getName())){
+			addFieldError("name", "姓名已经存在！");
+			return addDispatchUI();
+		}
 		User user = userService.getById(model.getId());
 		user.setName(model.getName());
 		user.setPhoneNumber(model.getPhoneNumber());
@@ -309,6 +329,10 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 	
 	public String addDispatchUser(){
+		if(userService.isNameExist(0, model.getName())){
+			addFieldError("name", "姓名已经存在！");
+			return addDispatchUI();
+		}
 		userService.saveDispatchUser(model.getName(),model.getPhoneNumber());
 		ActionContext.getContext().getValueStack().push(new User());
 		return freshDispatchList();

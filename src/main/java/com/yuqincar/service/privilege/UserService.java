@@ -72,4 +72,13 @@ public interface UserService extends BaseService{
 	 * @return
 	 */
 	boolean canDeleteUser(Long id);
+	/**
+	 * 姓名是否存在
+	 */
+	boolean isNameExist(long selfId,String name);
+	
+	/**
+	 * 登录名是否存在
+	 */
+	boolean isLoginNameExist(long selfId,String loginName);
 }

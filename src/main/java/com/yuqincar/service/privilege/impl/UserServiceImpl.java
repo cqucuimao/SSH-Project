@@ -225,4 +225,14 @@ public class UserServiceImpl implements UserService{
 		return userDao.canDeleteUser(id);
 	}
 
+	public boolean isNameExist(long selfId, String name) {
+
+		return userDao.isNameExist(selfId, name);
+	}
+	
+	public boolean isLoginNameExist(long selfId, String loginName) {
+
+		return userDao.isNameExist(selfId, loginName);
+	}
+
 }

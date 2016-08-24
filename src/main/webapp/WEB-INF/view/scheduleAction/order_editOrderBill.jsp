@@ -135,11 +135,11 @@
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">过路费（客户自理）</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="toll" onblur="getTax();getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="toll" onchange="getTax()" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">食宿</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" onblur="getTax();getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" onchange="getTax()" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">其他费用</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee" onblur="getTax();getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee" onchange="getTax()" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">税费</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" onblur="getOrderMoney()"/></td>						
 	        		</tr>

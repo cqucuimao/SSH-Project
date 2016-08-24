@@ -218,8 +218,6 @@
     <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
     <script type="text/javascript">
-    getTax();
-    getOrderMoney();
     $(function(){
     	
     	$("input[id=date]").each(function(){

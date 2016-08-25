@@ -99,6 +99,7 @@
 							<br/> 
 							<input type="button" value="全部移除" onclick="moveAllOption(document.pageForm.selectedRoleIds, document.pageForm.listRoleIds)"> 
 							<br>
+							<s:textfield type="hidden" name="roleString" />
 						</td>
           				<td>
           					<s:select name="selectedRoleIds" multiple="true" size="10" cssClass="SelectStyle"
@@ -193,7 +194,6 @@
 				}
 			});
 		});
-	    
 	    <!--操作全部-->
 	    function moveAllOption(e1, e2){ 
 	     var fromObjOptions=e1.options; 
@@ -202,7 +202,7 @@
 	       e2.appendChild(fromObjOptions[i]); 
 	       i--; 
 	      } 
-	     document.pageForm.roles.value=getvalue(document.pageForm.selectedRoleIds); 
+	     document.pageForm.roleString.value=getvalue(document.pageForm.selectedRoleIds); 
 	    }
 
 	    <!--操作单个-->
@@ -214,7 +214,7 @@
 	        i--; 
 	       } 
 	      } 
-	     document.pageForm.roles.value=getvalue(document.pageForm.selectedRoleIds); 
+	     document.pageForm.roleString.value=getvalue(document.pageForm.selectedRoleIds); 
 	    } 
 
 	    function getvalue(geto){ 

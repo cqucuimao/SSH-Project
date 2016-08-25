@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dbunit.dataset.stream.StreamingDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -47,6 +48,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	
 	private Long departmentId;
 	private Long[] selectedRoleIds;
+	private String roleString;
 	
 	private String oldPassword = "";
 	private String newPassword = "";
@@ -143,8 +145,16 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		model.setUserType(UserTypeEnum.getById(userTypeId));
 		model.setStatus(UserStatusEnum.NORMAL);//默认为正常状态
 		model.setDepartment(departmentService.getById(departmentId));
-		List<Role> roleList = roleService.getByIds(selectedRoleIds);
-		model.setRoles(new HashSet<Role>(roleList));
+		//处理角色
+		if(roleString != null && !roleString.equals("")){
+			String[] roleIds = roleString.split(",");
+			Long[] longRoleIds = new Long[roleIds.length];
+			for(int i=0;i<roleIds.length;i++){
+				longRoleIds[i] = Long.parseLong(roleIds[i]);
+			}	
+			List<Role> roleList = roleService.getByIds(longRoleIds);
+			model.setRoles(new HashSet<Role>(roleList));
+		}
 		// 保存到数据库
 		userService.save(model);
 		ActionContext.getContext().getValueStack().push(new User());
@@ -162,7 +172,6 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			expireDate = user.getDriverLicense().getExpireDate();
 		}
 		ActionContext.getContext().getValueStack().push(user);
-		
 		// 处理部门
 		if (user.getDepartment() != null) {
 			departmentId = user.getDepartment().getId();
@@ -171,18 +180,18 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		List<Role> selectedList = new ArrayList<Role>(user.getRoles());
 		List<Role> roleList = roleService.getAll();
 		selectedRoleIds = new Long[user.getRoles().size()];
+		String selectedRoleString = "";
 		int index = 0;
 		for (Role role : user.getRoles()) {
 			roleList.remove(role);
+			selectedRoleString =selectedRoleString+ role.getId() + ",";
 			selectedRoleIds[index++] = role.getId();
-			
 		}
-
+		roleString = selectedRoleString;
 		// 准备数据：departmentList
 		ActionContext.getContext().put("departmentList", departmentService.getAll());
 
 		// 准备数据：roleList
-		
 		ActionContext.getContext().put("roleList", roleList);
 		ActionContext.getContext().put("selectedList", selectedList);
 		return "saveUI";
@@ -201,8 +210,19 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		model.setGender(UserGenderEnum.getById(genderId));
 		model.setStatus(UserStatusEnum.getById(statusId));
 		model.setDepartment(departmentService.getById(departmentId));
-		List<Role> roleList = roleService.getByIds(selectedRoleIds);
-		model.setRoles(new HashSet<Role>(roleList));
+		//处理角色
+		System.out.println("roleString="+roleString);
+		if(roleString != null && !roleString.equals("")){
+			String[] roleIds = roleString.split(",");
+			Long[] longRoleIds = new Long[roleIds.length];
+			for(int i=0;i<roleIds.length;i++){
+				longRoleIds[i] = Long.parseLong(roleIds[i]);
+			}
+			List<Role> roleList = roleService.getByIds(longRoleIds);
+			model.setRoles(new HashSet<Role>(roleList));
+		}
+		
+		
 		model.setUserType(UserTypeEnum.getById(userTypeId));
 		if(model.getUserType()==UserTypeEnum.DRIVER){
 			model.setDriverLicense(new DriverLicense());
@@ -480,6 +500,13 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	public void setSelectedRoleIds(Long[] selectedRoleIds) {
 		this.selectedRoleIds = selectedRoleIds;
 	}
-	
-	
+
+	public String getRoleString() {
+		return roleString;
+	}
+
+	public void setRoleString(String roleString) {
+		this.roleString = roleString;
+	}
+
 }

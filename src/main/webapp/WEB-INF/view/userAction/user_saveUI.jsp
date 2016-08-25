@@ -33,7 +33,7 @@
                 <tbody>
                 	<tr>
                         <th><s:property value="tr.getText('privilege.User.loginName')" /><span class="required">*</span></th>
-                        <td><s:textfield cssClass="inputText" name="loginName"/> </td>
+                        <td width="370px"><s:textfield cssClass="inputText" name="loginName"/> </td>
                     </tr>
                 	<tr>
                         <th><s:property value="tr.getText('privilege.User.name')" /><span class="required">*</span></th>
@@ -86,9 +86,24 @@
                     <tr>
                         <th><s:property value="tr.getText('privilege.User.roles')" /></th>
                         <td>
-	                        <s:select name="roleIds" multiple="true" size="10" cssClass="SelectStyle" 
-	          				list="roleList" listKey="id" listValue="name"
+	                        <s:select name="listRoleIds" multiple="true" size="10" cssClass="SelectStyle" 
+	          				list="roleList" listKey="id" listValue="name" ondblclick="moveOption(document.pageForm.listRoleIds, document.pageForm.selectedRoleIds)"
 	          				/>
+          				</td>
+          				<td align="center">
+          					<input type="button" value="全部添加" onclick="moveAllOption(document.pageForm.listRoleIds, document.pageForm.selectedRoleIds)"><br/> 
+							<br/>
+							<input type="button" value="添加" onclick="moveOption(document.pageForm.listRoleIds, document.pageForm.selectedRoleIds)"><br/> 
+							<br/> 
+							<input type="button" value="移除" onclick="moveOption(document.pageForm.selectedRoleIds, document.pageForm.listRoleIds)"><br/> 
+							<br/> 
+							<input type="button" value="全部移除" onclick="moveAllOption(document.pageForm.selectedRoleIds, document.pageForm.listRoleIds)"> 
+							<br>
+						</td>
+          				<td>
+          					<s:select name="selectedRoleIds" multiple="true" size="10" cssClass="SelectStyle"
+          					 list="selectedList" listKey="id" listValue="name" ondblclick="moveOption(document.pageForm.selectedRoleIds, document.pageForm.listRoleIds)">
+	          				</s:select>
           				</td>
                     </tr>
                     <tr class="userStatus" style="display:none">
@@ -178,6 +193,53 @@
 				}
 			});
 		});
+	    
+	    <!--操作全部-->
+	    function moveAllOption(e1, e2){ 
+	     var fromObjOptions=e1.options; 
+	      for(var i=0;i<fromObjOptions.length;i++){ 
+	       fromObjOptions[0].selected=true; 
+	       e2.appendChild(fromObjOptions[i]); 
+	       i--; 
+	      } 
+	     document.pageForm.roles.value=getvalue(document.pageForm.selectedRoleIds); 
+	    }
+
+	    <!--操作单个-->
+	    function moveOption(e1, e2){ 
+	     var fromObjOptions=e1.options; 
+	      for(var i=0;i<fromObjOptions.length;i++){ 
+	       if(fromObjOptions[i].selected){ 
+	        e2.appendChild(fromObjOptions[i]); 
+	        i--; 
+	       } 
+	      } 
+	     document.pageForm.roles.value=getvalue(document.pageForm.selectedRoleIds); 
+	    } 
+
+	    function getvalue(geto){ 
+	    var allvalue = ""; 
+	    for(var i=0;i<geto.options.length;i++){ 
+	    allvalue +=geto.options[i].value + ","; 
+	    } 
+	    return allvalue; 
+	    } 
+
+	    function changepos1111(obj,index) 
+	    { 
+	    if(index==-1){ 
+	    if (obj.selectedIndex>0){ 
+	    obj.options(obj.selectedIndex).swapNode(obj.options(obj.selectedIndex-1)) 
+	    } 
+	    } 
+	    else if(index==1){ 
+	    if (obj.selectedIndex<obj.options.length-1){ 
+	    obj.options(obj.selectedIndex).swapNode(obj.options(obj.selectedIndex+1)) 
+	    } 
+	    } 
+
+
+	    } 
     </script>
 </body>
 </html>

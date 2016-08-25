@@ -1,5 +1,6 @@
 package com.yuqincar.action.previlege;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +46,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private RoleService roleService;
 	
 	private Long departmentId;
-	private Long[] splitRoles;
-	private String roles;
+	private Long[] selectedRoleIds;
 	
 	private String oldPassword = "";
 	private String newPassword = "";
@@ -118,14 +118,9 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		// 准备数据：roleList
 		List<Role> roleList = roleService.getAll();
 		ActionContext.getContext().put("roleList", roleList);
-
+		List<Role> selectedList = new ArrayList<Role>();
+		ActionContext.getContext().put("selectedList", selectedList);
 		return "saveUI";
-	}
-	
-	public Long[] getSplitRoles(String roles){
-		
-		
-		return splitRoles;
 	}
 
 	/** 添加 */
@@ -148,8 +143,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		model.setUserType(UserTypeEnum.getById(userTypeId));
 		model.setStatus(UserStatusEnum.NORMAL);//默认为正常状态
 		model.setDepartment(departmentService.getById(departmentId));
-		//splitRoles = roles.split(",");
-		List<Role> roleList = roleService.getByIds(splitRoles);
+		List<Role> roleList = roleService.getByIds(selectedRoleIds);
 		model.setRoles(new HashSet<Role>(roleList));
 		// 保存到数据库
 		userService.save(model);
@@ -174,19 +168,23 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			departmentId = user.getDepartment().getId();
 		}
 		// 处理岗位
-		splitRoles = new Long[user.getRoles().size()];
+		List<Role> selectedList = new ArrayList<Role>(user.getRoles());
+		List<Role> roleList = roleService.getAll();
+		selectedRoleIds = new Long[user.getRoles().size()];
 		int index = 0;
 		for (Role role : user.getRoles()) {
-			splitRoles[index++] = role.getId();
+			roleList.remove(role);
+			selectedRoleIds[index++] = role.getId();
+			
 		}
 
 		// 准备数据：departmentList
 		ActionContext.getContext().put("departmentList", departmentService.getAll());
 
 		// 准备数据：roleList
-		List<Role> roleList = roleService.getAll();
+		
 		ActionContext.getContext().put("roleList", roleList);
-
+		ActionContext.getContext().put("selectedList", selectedList);
 		return "saveUI";
 	}
 
@@ -203,7 +201,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		model.setGender(UserGenderEnum.getById(genderId));
 		model.setStatus(UserStatusEnum.getById(statusId));
 		model.setDepartment(departmentService.getById(departmentId));
-		List<Role> roleList = roleService.getByIds(splitRoles);
+		List<Role> roleList = roleService.getByIds(selectedRoleIds);
 		model.setRoles(new HashSet<Role>(roleList));
 		model.setUserType(UserTypeEnum.getById(userTypeId));
 		if(model.getUserType()==UserTypeEnum.DRIVER){
@@ -370,14 +368,6 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		this.departmentId = departmentId;
 	}
 
-	public Long[] getRoleIds() {
-		return splitRoles;
-	}
-
-	public void setRoleIds(Long[] splitRoles) {
-		this.splitRoles = splitRoles;
-	}
-
 	public User getModel() {
 		return model;
 	}
@@ -483,12 +473,12 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		this.genderId = genderId;
 	}
 
-	public String getRoles() {
-		return roles;
+	public Long[] getSelectedRoleIds() {
+		return selectedRoleIds;
 	}
 
-	public void setRoles(String roles) {
-		this.roles = roles;
+	public void setSelectedRoleIds(Long[] selectedRoleIds) {
+		this.selectedRoleIds = selectedRoleIds;
 	}
 	
 	

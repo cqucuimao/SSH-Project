@@ -15,6 +15,7 @@ import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.privilege.Department;
 import com.yuqincar.domain.privilege.User;
+import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.privilege.DepartmentService;
 import com.yuqincar.service.privilege.RoleService;
@@ -123,6 +124,7 @@ public class UserServiceImpl implements UserService{
 		user.setLoginName(name);
 		user.setName(name);
 		user.setPhoneNumber(phoneNumber);
+		user.setStatus(UserStatusEnum.NORMAL);
 		
 		userDao.save(user);
 	}

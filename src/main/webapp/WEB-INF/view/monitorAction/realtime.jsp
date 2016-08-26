@@ -110,7 +110,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <th>起始时间</th>
+                    <th>计划时间：</th>
                     <td></td>
                 </tr>
                 <tr>
@@ -122,19 +122,15 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <th>司机：</th>
+                    <td></td>
+                </tr>
+                <tr>
                     <th>始发地：</th>
                     <td></td>
                 </tr>
                 <tr>
                     <th>目的地：</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>订单里程：</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>估计价格：</th>
                     <td></td>
                 </tr>
             </tbody>
@@ -356,7 +352,6 @@
     //查询按钮的Ajax异步请求，集成Strusts框架进行参数传递
     $("#queryBn").click(function(){
     	$.get("realtime_list.action",$("#queryForm").serializeArray(),function(carsJson){
-
     	 carData=carsJson;
    		 length=carData.cars.length; 
    		 //定义保存id的数组
@@ -752,7 +747,7 @@
         	      		    	    	      //关闭订单信息框
         	      		    	    	      dialog.close();
         	      		    	    	      //跳转到轨迹播放页面
-        	      		    	    	      $("#trackUrlHaveOrder").attr("href","replay_home.action?carPlateNumber="+myCarPlateNumber);
+        	      		    	    	      $("#trackUrlHaveOrder").attr("href","replay_home.action?carId="+myCarId);
         	      		    	           });
          	      		    	                  	      		    	       
         	      		    	           $("#removeCarHaveOrder").bind("click",function(){

@@ -25,6 +25,9 @@ public class DateUtils {
 
 	private static final SimpleDateFormat YMDHMS = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss");
+	
+	private static final SimpleDateFormat YMDHMS_ = new SimpleDateFormat(
+			"yyyy/MM/dd HH:mm:ss");
 
 	private static final SimpleDateFormat YMDHM = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm");
@@ -167,6 +170,15 @@ public class DateUtils {
 		}
 	}
 	
+	public static Date getYMDHMS2(String s) {
+		try {
+			return YMDHMS_.parse(s);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	/**
 	 * 将形如"yyyy-MM-dd HH:mm"的字符串转换为Date
 	 * @param s
@@ -189,6 +201,13 @@ public class DateUtils {
 	public static String getYMDHMSString(Date date) {
 		if (date != null)
 			return YMDHMS.format(date);
+		else
+			return "";
+	}
+	
+	public static String getYMDHMSString2(Date date) {
+		if (date != null)
+			return YMDHMS_.format(date);
 		else
 			return "";
 	}

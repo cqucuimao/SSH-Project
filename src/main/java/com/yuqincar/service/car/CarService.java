@@ -91,14 +91,6 @@ public interface CarService {
 	public List<Car> getByServicePointName(String servicePointName);
 
 	/**
-	 * 根据驾驶员姓名和车牌号查找车辆
-	 * @param driverName
-	 * @param plateNumber
-	 * @return
-	 */
-	public Car findByDriverNameAndPlateNumber(String driverName, String plateNumber);
-
-	/**
 	 * 根据驾驶员姓名差找车辆
 	 * @param driverName
 	 * @return

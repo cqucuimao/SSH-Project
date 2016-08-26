@@ -120,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
 			param.put("customer", order.getCustomer().getName());
 			param.put("customerOrganization",order.getCustomerOrganization().getName());
 			param.put("phoneNumber", order.getPhone());
-			param.put("chargeMode", order.getChargeMode().toString());
+			param.put("chargeMode", order.getChargeMode().getLabel());
 			if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
 				param.put("time", DateUtils.getYMDHMString(order.getPlanBeginDate()));
 				param.put("address", order.getFromAddress()+" 到 "+order.getToAddress());
@@ -246,6 +246,9 @@ public class OrderServiceImpl implements OrderService {
 				addresses.add(order.getToAddress());
 		}
 		
+		for(int i=addresses.size()-1;i>=0;i--)
+			if(addresses.get(i).equals("电话联系"))
+				addresses.remove(i);
 		order.getCustomer().setAddresses(addresses);
 		customerDao.save(order.getCustomer());
 	}
@@ -930,61 +933,110 @@ public class OrderServiceImpl implements OrderService {
 	public void orderCheckout(Order order){
 		if(order.getStatus()!=OrderStatusEnum.END)
 			return;
-		float mile,chargeMile,totalChargeMile,chargeMoney,totalChargeMoney;
-		float hours;
-		float getonDistance,getoffDistance;
+		float mile=0,chargeMile=0,totalChargeMile=0,chargeMoney=0,totalChargeMoney=0;
+		float hours=0;
+		float getonDistance=0,getoffDistance=0;
 		boolean inMiddleDay;
 		Price price;
 		
 		if(order.getCar().getDevice()!=null){
 		
 			getonDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getActualBeginDate(), order.getDayDetails().get(0).getGetonDate());
-			System.out.println("getonDistance="+getonDistance);
 			getoffDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate(), order.getActualEndDate());
-			System.out.println("getoffDistance="+getoffDistance);
 			
 			totalChargeMile=0;
 			totalChargeMoney=0;
 			price=order.getCustomerOrganization().getPriceTable().getCarServiceType().get(order.getServiceType());
-			for(int i=0;i<order.getDayDetails().size();i++){
-				DayOrderDetail dod=order.getDayDetails().get(i);
+			
+			if(order.getChargeMode()==ChargeModeEnum.DAY){
+				for(int i=0;i<order.getDayDetails().size();i++){
+					DayOrderDetail dod=order.getDayDetails().get(i);
+					hours=DateUtils.elapseHours(dod.getGetonDate(), dod.getGetoffDate());
+					mile=lbsDao.getStepMile(order.getCar().getDevice().getSN(), dod.getGetonDate(), dod.getGetoffDate());
+					if(i==0 && getonDistance>10)
+						mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
+					if(i==order.getDayDetails().size()-1 && getoffDistance>10)
+						mile=mile+(getoffDistance-10);	//如果下车地点超过10公里远，超出部分列入行驶公里数
+					inMiddleDay=(i>0) && (i<order.getDayDetails().size()-1);
+					
+					chargeMile=0;
+					chargeMoney=0;
+					if(mile<=10 && inMiddleDay){
+						chargeMile=100;
+						chargeMoney=price.getPerDay().floatValue()*0.8f;
+					}else if(mile<=50 && !inMiddleDay){
+						//按半天计
+						chargeMile=50;
+						chargeMoney=price.getPerHalfDay().floatValue();
+						if(hours>4){
+							if(hours-4>3)
+								chargeMoney+=price.getPerHalfDay().floatValue();
+							else
+								chargeMoney+=(hours-4)*price.getPerHourAfterLimit().floatValue();
+						}
+					}else if(mile<=100){
+						//按全天计
+						chargeMile=100;
+						chargeMoney=price.getPerDay().floatValue();
+						if(hours>8){
+							if(hours-8>3)
+								chargeMoney+=price.getPerHalfDay().floatValue();
+							else
+								chargeMoney+=(hours-8)*price.getPerHourAfterLimit().floatValue();
+						}
+					}else{
+						chargeMile=mile;
+						chargeMoney =price.getPerDay().floatValue()+(mile-100)*price.getPerMileAfterLimit().floatValue();
+					}
+					
+					dod.setActualMile(mile);
+					dod.setChargeMile(chargeMile);
+					dod.setChargeMoney(new BigDecimal(chargeMoney));
+					dod.setPathAbstract(getOrderTrackAbstract(order.getCar().getDevice().getSN(),dod.getGetonDate(),dod.getGetoffDate()));
+					dayOrderDetailDao.update(dod);
+		
+					totalChargeMile+=chargeMile;
+					totalChargeMoney+=chargeMoney;
+				}
+			}else if(order.getChargeMode()==ChargeModeEnum.PLANE){
+				DayOrderDetail dod=order.getDayDetails().get(0);
 				hours=DateUtils.elapseHours(dod.getGetonDate(), dod.getGetoffDate());
 				mile=lbsDao.getStepMile(order.getCar().getDevice().getSN(), dod.getGetonDate(), dod.getGetoffDate());
-				System.out.println("mile="+mile);
-				if(i==0 && getonDistance>10)
+				if(getonDistance>10)
 					mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
-				if(i==order.getDayDetails().size()-1 && getoffDistance>10)
+				if(getoffDistance>10)
 					mile=mile+(getoffDistance-10);	//如果下车地点超过10公里远，超出部分列入行驶公里数
-				inMiddleDay=(i>0) && (i<order.getDayDetails().size()-1);
-				
-				chargeMile=0;
-				chargeMoney=0;
-				if(mile<=10 && inMiddleDay){
-					chargeMile=100;
-					chargeMoney=price.getPerDay().floatValue()*0.8f;
-				}else if(mile<=50 && !inMiddleDay){
-					//按半天计
+				if(mile<=50 && hours<=2){
 					chargeMile=50;
-					chargeMoney=price.getPerHalfDay().floatValue();
-					if(hours>4){
-						if(hours-4>3)
-							chargeMoney+=price.getPerHalfDay().floatValue();
-						else
-							chargeMoney+=(hours-4)*price.getPerHourAfterLimit().floatValue();
-					}
-				}else if(mile<=100){
-					//按全天计
-					chargeMile=100;
-					chargeMoney=price.getPerDay().floatValue();
-					if(hours>8){
-						if(hours-8>3)
-							chargeMoney+=price.getPerHalfDay().floatValue();
-						else
-							chargeMoney+=(hours-8)*price.getPerHourAfterLimit().floatValue();
-					}
+					chargeMoney=price.getPerPlaneTime().floatValue();
 				}else{
-					chargeMile=mile;
-					chargeMoney =price.getPerDay().floatValue()+(mile-100)*price.getPerMileAfterLimit().floatValue();
+					float exceedMileMoney=0,exceedHourMoney=0;
+					if(mile>50){
+						if(mile<100){
+							exceedMileMoney=price.getPerPlaneTime().floatValue()+(price.getPerMileAfterLimit().floatValue()*(mile-50));
+						}else{
+							exceedMileMoney=price.getPerDay().floatValue()+(price.getPerMileAfterLimit().floatValue()*(mile-100));
+						}
+					}
+					if(hours>2){
+						if(hours<4){
+							exceedHourMoney=price.getPerPlaneTime().floatValue()+(price.getPerHourAfterLimit().floatValue()*(hours-2));
+						}else if(hours<7){
+							exceedHourMoney=price.getPerHalfDay().floatValue()+(price.getPerHourAfterLimit().floatValue()*(hours-4));
+						}else if(hours<8){
+							exceedHourMoney=price.getPerDay().floatValue();
+						}else{
+							exceedHourMoney=price.getPerDay().floatValue()+(price.getPerHourAfterLimit().floatValue()*(hours-8));
+						}
+					}
+					if(exceedMileMoney>exceedHourMoney){
+						chargeMoney=exceedHourMoney;
+						chargeMile=50;
+					}else{
+						chargeMoney=exceedMileMoney;
+						chargeMile=mile;
+					}
+					
 				}
 				
 				dod.setActualMile(mile);
@@ -993,8 +1045,8 @@ public class OrderServiceImpl implements OrderService {
 				dod.setPathAbstract(getOrderTrackAbstract(order.getCar().getDevice().getSN(),dod.getGetonDate(),dod.getGetoffDate()));
 				dayOrderDetailDao.update(dod);
 	
-				totalChargeMile+=chargeMile;
-				totalChargeMoney+=chargeMoney;
+				totalChargeMile=chargeMile;
+				totalChargeMoney=chargeMoney;
 			}
 			order.setBeginMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getActualBeginDate()));
 			order.setEndMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(),order.getActualEndDate()));
@@ -1406,6 +1458,11 @@ public class OrderServiceImpl implements OrderService {
 				|| (order.getOtherFee()!=null && oldOrder.getOtherFee()==null))
 			sb.append("将其它费用由： ").append(oldOrder.getOtherFee()!=null ? oldOrder.getOtherFee() : "<空>").append(" 改为了： ")
 				.append(order.getOtherFee()!=null ? order.getOtherFee() : "<空>").append("；");
+		if((order.getTax()==null && oldOrder.getTax()!=null) 
+				|| (order.getTax()!=null && oldOrder.getTax()!=null && !order.getTax().equals(oldOrder.getTax()))
+				|| (order.getTax()!=null && oldOrder.getTax()==null))
+			sb.append("将税费由： ").append(oldOrder.getTax()!=null ? oldOrder.getTax() : "<空>").append(" 改为了： ")
+				.append(order.getTax()!=null ? order.getTax() : "<空>").append("；");
 		if((order.getOrderMoney()==null && oldOrder.getOrderMoney()!=null) 
 				|| (order.getOrderMoney()!=null && oldOrder.getOrderMoney()!=null && !order.getOrderMoney().equals(oldOrder.getOrderMoney()))
 				|| (order.getOrderMoney()!=null && oldOrder.getOrderMoney()==null))

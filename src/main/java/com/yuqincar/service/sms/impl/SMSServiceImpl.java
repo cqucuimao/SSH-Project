@@ -58,8 +58,12 @@ public class SMSServiceImpl implements SMSService {
 				+ templateId + "&template_param=" + paramString
 				+ "&timestamp=" + URLEncoder.encode(DateUtils.getYMDHMSString(new Date()), "utf-8");
 		String resJson = "";
-		resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
-		//resJson="Success";
+		if("on".equals(Configuration.getSmsSwitch()))
+			resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
+		else{
+			sendSMSToFile(phoneNumber,templateId,paramString);
+			resJson="Success";
+		}
 		return resJson;
 	}
 

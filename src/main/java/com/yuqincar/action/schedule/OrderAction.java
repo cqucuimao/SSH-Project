@@ -307,6 +307,7 @@ public class OrderAction extends BaseAction {
 			order.setOrderMoney(orderMoney);
 			order.setGrade(grade);
 			order.setOptions(options);
+			System.out.println("tax="+tax);
 			order.setTax(tax);
 			
 			orderService.editOrderBill(order, user);

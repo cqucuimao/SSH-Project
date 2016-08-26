@@ -26,7 +26,7 @@ public class MileageUpdate {
 	public void update() {
 		List<Car> cars = carService.getAll();
 		for(Car car : cars) {
-			if(car.getStatus()==CarStatusEnum.SCRAPPED)
+			if(car.getStatus()==CarStatusEnum.SCRAPPED || car.isBorrowed())
 				continue;
 			if(car.getDevice()==null || car.getDevice().getSN()==null)
 				continue;

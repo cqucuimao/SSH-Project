@@ -115,10 +115,10 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 	
 	public List<Car> findByDriverNameAndPlateNumberAndServicePointName(String driverName, String plateNumber,
 			String servicePointName) {
-		
 		QueryHelper helper = new QueryHelper(Car.class, "c");
 		//实时监控查询得到的车辆的状态必须是NORMAL的
 		helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
+		helper.addWhereCondition("c.borrowed=?", false);
 		//实时监控查询得到的车辆必须是配置了GPS设备的，所以device不能为null
 		helper.addWhereCondition("c.device is not null");
 		//设置司机名称
@@ -149,14 +149,6 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 				.list();
 	}
 
-	public Car findByDriverNameAndPlateNumber(String driverName, String plateNumber) {
-		return (Car) getSession().createQuery(//
-				"FROM Car c WHERE c.dirver.name=? AND c.plateNumber=?")
-				.setParameter(0, driverName)
-				.setParameter(1, plateNumber)
-				.uniqueResult();
-	}
-
 	public List<Car> findByDriverName(String driverName) {
 		return getSession().createQuery(//
 				"FROM Car c WHERE c.status=? and c.driver.name like ?")
@@ -167,8 +159,8 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 
 	public List<Car> getAllNormalCars() {
 		return getSession().createQuery(//
-			   "FROM Car c WHERE c.status=?")
-			   .setParameter(0, CarStatusEnum.NORMAL)//
+			   "FROM Car c WHERE c.status=? and c.borrowed=?")
+			   .setParameter(0, CarStatusEnum.NORMAL).setParameter(1, false)
 			   .list();
 	}
 

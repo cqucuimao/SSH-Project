@@ -856,9 +856,11 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
 	public Order getCurrentOrderByCarId(Long id) {
 		return (Order) getSession()
-				.createQuery("from order_ as o where o.car.id=? and o.status=?")//
+				.createQuery("from order_ as o where o.car.id=? and (o.status=? or o.status=? or o.status=?)")//
 				.setParameter(0, id)//
-				.setParameter(1, OrderStatusEnum.BEGIN)//
+				.setParameter(1, OrderStatusEnum.BEGIN)
+				.setParameter(2, OrderStatusEnum.GETON)
+				.setParameter(3, OrderStatusEnum.GETOFF)
 				.uniqueResult();
 	}
 

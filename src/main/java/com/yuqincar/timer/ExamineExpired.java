@@ -24,7 +24,7 @@ public class ExamineExpired {
 		List<Car> cars = carService.getAll();
 		Date now=new Date();
 		for(Car car : cars) {
-			if(car.getStatus()==CarStatusEnum.SCRAPPED)
+			if(car.getStatus()==CarStatusEnum.SCRAPPED || car.isBorrowed())
 				continue;
 			if(car.getNextExaminateDate()==null || 
 					car.getNextExaminateDate().before(now)){

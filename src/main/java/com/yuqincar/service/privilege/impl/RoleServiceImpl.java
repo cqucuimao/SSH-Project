@@ -1,6 +1,5 @@
 package com.yuqincar.service.privilege.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,13 @@ public class RoleServiceImpl implements RoleService {
 	
 
 	public List<Role> getAll() {
-		return roleDao.getAll();
+		List<Role> roles=roleDao.getAll();
+		for(int i=roles.size()-1;i>=0;i--)
+			if(roles.get(i).getName().equals("超级管理员")){
+				roles.remove(i);
+				break;
+			}
+		return roles;
 	}
 
 	@Transactional

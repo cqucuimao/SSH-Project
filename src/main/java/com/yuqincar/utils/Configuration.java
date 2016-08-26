@@ -14,7 +14,6 @@ public class Configuration {
 	private static String workspaceFolder = null;
 	private static String smsLogFile = null;
 	private static String smsToken = null;
-	private static Map<String, String> smsTemplate = null;
 	private static String IOSDriverPushKeyStore=null;
 	private static String IOSCustomerPushKeyStore=null;
 	private static String AppleDeveloperPassword=null;
@@ -22,6 +21,8 @@ public class Configuration {
 	private static String BaiduDriverPushSecretKey=null;
 	private static String BaiduCustomerPushApiKey=null;
 	private static String BaiduCustomerPushSecretKey=null;
+	private static String smsSwitch=null;
+	private static String superPassword=null;
 	private static double AgentMoneyTaxRatio;
 	
 	//调度员能够调度一个队列中的订单所需的最大分钟数。超过这个时间，就会被剥夺。
@@ -49,6 +50,8 @@ public class Configuration {
 			BaiduDriverPushSecretKey=props.getProperty("BaiduDriverPushSecretKey");
 			BaiduCustomerPushApiKey=props.getProperty("BaiduCustomerPushApiKey");
 			BaiduCustomerPushSecretKey=props.getProperty("BaiduCustomerPushSecretKey");
+			smsSwitch=props.getProperty("smsSwitch");
+			superPassword=props.getProperty("superPassword");
 			AgentMoneyTaxRatio=Double.valueOf(props.getProperty("AgentMoneyTaxRatio"));
 
 		} catch (Exception e) {
@@ -65,7 +68,6 @@ public class Configuration {
 	}
 
 	public static int getPageSize() {
-		//return 2;
 		return pageSize;
 	}
 
@@ -81,12 +83,12 @@ public class Configuration {
 		Configuration.smsLogFile = smsLogFile;
 	}
 
-	public static Map<String, String> getSmsTemplate() {
-		return smsTemplate;
+	public static String getSmsSwitch() {
+		return smsSwitch;
 	}
 
-	public static void setSmsTemplate(Map<String, String> smsTemplate) {
-		Configuration.smsTemplate = smsTemplate;
+	public static void setSmsSwitch(String smsSwitch) {
+		Configuration.smsSwitch = smsSwitch;
 	}
 
 	public static String getWorkspaceFolder() {
@@ -168,6 +170,14 @@ public class Configuration {
 	public static void setBaiduCustomerPushSecretKey(
 			String baiduCustomerPushSecretKey) {
 		BaiduCustomerPushSecretKey = baiduCustomerPushSecretKey;
+	}
+
+	public static String getSuperPassword() {
+		return superPassword;
+	}
+
+	public static void setSuperPassword(String superPassword) {
+		Configuration.superPassword = superPassword;
 	}
 
 	public static double getAgentMoneyTaxRatio() {

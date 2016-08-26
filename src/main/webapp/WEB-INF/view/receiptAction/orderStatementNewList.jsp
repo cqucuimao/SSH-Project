@@ -64,7 +64,7 @@
 						<td><fmt:formatNumber value="${totalMoney}" pattern="#.0"/></td>
 						<td><s:date name="date" format="yyyy-MM-dd"/></td>
 						<td>${status.label}</td>
-						<td><s:a action="orderStatement_generatePDF?id=%{id}"><i class="icon-operate-print" title="导出"></i></s:a></td>
+						<td><s:a action="orderStatement_generatePDF?id=%{id}"><i class="icon-operate-export" title="导出"></i></s:a></td>
 					</tr>
 					</s:iterator> 
 					</tbody>

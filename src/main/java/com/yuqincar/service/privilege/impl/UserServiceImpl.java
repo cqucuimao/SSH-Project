@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.struts2.StrutsConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.yuqincar.dao.car.DriverLicenseDao;
 import com.yuqincar.dao.privilege.UserDao;
 import com.yuqincar.domain.car.DriverLicense;

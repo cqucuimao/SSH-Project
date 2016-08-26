@@ -36,7 +36,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <th>起始时间</th>
+                    <th>计划时间：</th>
                     <td></td>
                 </tr>
                 <tr>
@@ -48,19 +48,15 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <th>司机：</th>
+                    <td></td>
+                </tr>
+                <tr>
                     <th>始发地：</th>
                     <td></td>
                 </tr>
                 <tr>
                     <th>目的地：</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>订单里程：</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>估计价格：</th>
                     <td></td>
                 </tr>
             </tbody>
@@ -317,7 +313,6 @@
             	      		    		    console.log("返回的订单数据");
             	      		    		    console.log(orderJson);
             	      		    		  
-            	      		    		  
             	      		    	        var data=orderJson;
             	      		    	        //如果存在正在执行的订单，则显示具体订单信息，否则进行提示 
             	      		    	        if(data.status==1){
@@ -340,7 +335,7 @@
              	      		    	    	      //关闭订单信息框
              	      		    	    	      dialog.close();
              	      		    	    	      //跳转到轨迹播放页面
-             	      		    	    	      $("#trackUrlHaveOrder").attr("href","replay_home.action?carPlateNumber="+myCarPlateNumber);
+             	      		    	    	      $("#trackUrlHaveOrder").attr("href","replay_home.action?carId="+myCarId);
              	      		    	           });
               	      		    	                  	      		    	       
              	      		    	           $("#removeCarHaveOrder").bind("click",function(){

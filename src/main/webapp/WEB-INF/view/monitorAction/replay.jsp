@@ -28,15 +28,13 @@
         <s:form id="queryForm">
             <table id="queryInfoTB">
                 <tr>
-                    <th>司机名称</th>
-                    <td><cqu:userSelector name="driver"/></td>
                     <th>车牌号</th>
                     <td><cqu:carSelector name="car"/></td>
                     <th>起始时间</th>
 					<td>
-						<input class="Wdate half" style="width:165px;" type="text" id="beginTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+						<input class="Wdate half" style="width:165px;" type="text" id="beginTime" onfocus="new WdatePicker({dateFmt:'yyyy/MM/dd HH:mm:ss'})" />
 						- 
-						<input class="Wdate half" style="width:165px;" type="text" id="endTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+						<input class="Wdate half" style="width:165px;" type="text" id="endTime" onfocus="new WdatePicker({dateFmt:'yyyy/MM/dd HH:mm:ss'})" />
                         <input class="inputButton" type="button" id="queryBn" value="查询"/>
                     </td>
                 </tr>
@@ -115,8 +113,8 @@
         //如果车牌号不为空，说明是跳转过来的，为车牌号，开始时间，结束时间设置预定值
         if(plateNumberValue!=""){
         	//将当前值转化为xxxx-xx-xx xx:xx:xx日期格式
-        	$("#beginTime").val(formatDate(new Date(),"yyyy-MM-dd hh:mm:ss").substring(0,10)+" 00:00:00");
-        	$("#endTime").val(formatDate(new Date(),"yyyy-MM-dd hh:mm:ss"));
+        	$("#beginTime").val(formatDate(new Date(),"yyyy/MM/dd HH:mm:ss").substring(0,10)+" 00:00:00");
+        	$("#endTime").val(formatDate(new Date(),"yyyy/MM/dd HH:mm:ss"));
         }    
     
         //百度地图

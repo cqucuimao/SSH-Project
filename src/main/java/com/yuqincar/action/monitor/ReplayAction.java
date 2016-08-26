@@ -1,6 +1,7 @@
 package com.yuqincar.action.monitor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,40 +9,36 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSON;
-import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
+import com.yuqincar.utils.DateUtils;
 
 @Controller
 @Scope("prototype")
-public class ReplayAction extends BaseAction implements ModelDriven<Car>{
+public class ReplayAction extends BaseAction{
 	
-	private String carPlateNumber; 
-    public String getCarPlateNumber() {
-		return carPlateNumber;
-	}
-
-	public void setCarPlateNumber(String carPlateNumber) {
-		this.carPlateNumber = carPlateNumber;
-	}
-
-	private Car model=new Car();
+	private Long carId;
 	
+	private Date beginTime;
+	
+	private Date endTime;
+		
 	@Autowired
 	private CarService carService;
 	
 	private Car car;
-	
-	private User driver;
 
 	/**
 	 * 返回主页面列表信息
 	 * @return
 	 */
 	public String home(){
-		model.setPlateNumber(carPlateNumber);
+		if(carId!=null){
+			car=carService.getCarById(carId);
+			beginTime=DateUtils.getMinDate(new Date());
+			endTime=new Date();
+		}
 		return "home";
 	}
 	
@@ -50,26 +47,10 @@ public class ReplayAction extends BaseAction implements ModelDriven<Car>{
 	 * @return
 	 */
 	public void list(){
-		
         List<SnVO> snsVO=new ArrayList<SnVO>();
 		
-		if(driver!=null && car!=null){
-			Car c= carService.findByDriverNameAndPlateNumber(driver.getName(), car.getPlateNumber());
-			SnVO snVO=null;
-			if(c!=null){
-			   snVO=parseCar(c);
-			}
-			snsVO.add(snVO);
-		}else if(driver!=null){
-			List<Car> cars=carService.findByDriverName(driver.getName());
-			snsVO=parseCars(cars);
-		}else if(car!=null){
-			Car c=carService.getCarByPlateNumber(car.getPlateNumber());
-			SnVO snVO=null;
-			if(c!=null){
-			   snVO=parseCar(c);
-			}
-			snsVO.add(snVO);
+		if(car!=null){
+			snsVO.add(parseCar(car));
 		}
 		
 		String jsonStr="{\"sns\":"+JSON.toJSONString(snsVO)+"}"; 
@@ -82,18 +63,6 @@ public class ReplayAction extends BaseAction implements ModelDriven<Car>{
 
 	public void setCar(Car car) {
 		this.car = car;
-	}
-
-	public User getDriver() {
-		return driver;
-	}
-
-	public void setDriver(User driver) {
-		this.driver = driver;
-	}
-
-	public Car getModel() {
-		return model;
 	}
 	
 	public SnVO parseCar(Car car){
@@ -113,6 +82,30 @@ public class ReplayAction extends BaseAction implements ModelDriven<Car>{
 		return snsVO;
 	}
 	
+	public Long getCarId() {
+		return carId;
+	}
+
+	public void setCarId(Long carId) {
+		this.carId = carId;
+	}
+
+	public Date getBeginTime() {
+		return beginTime;
+	}
+
+	public void setBeginTime(Date beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
 	class SnVO{
 		private String sn;     //设备sn号
 

@@ -326,25 +326,26 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		if(!DateUtils.getYMDString(date1).equals(DateUtils.getYMDString(date2))){
 			List<List<BaseEntity>> taskList = orderService.getCarTask(model.getCar(), model.getDate(), model.getDate());
 			taskList.addAll(orderService.getDriverTask(model.getDriver(),  model.getDate(), model.getDate()));
-			boolean haveTask=false;
 			int taskType=0;  //1订单  2 保养 3 年审 4 维修
 			for(List<BaseEntity> dayList:taskList){
 				if(dayList!=null && dayList.size()>0){
 					BaseEntity baseEntity = dayList.get(0);
-					haveTask=true;
 					if(baseEntity instanceof Order)
 						taskType=1;
 					else if (baseEntity instanceof CarCare)
 						taskType=2;
-					else if(baseEntity instanceof CarExamine)
+					else if(baseEntity instanceof CarExamine){
+						if(baseEntity.getId().equals(model.getId())) //将正在修改的年审预约记录排除在外
+							continue;
 						taskType=3;
+					}
 					else if(baseEntity instanceof CarRepair)
 						taskType=4;
 					break;
 				}
 			}
 			
-			if(haveTask){
+			if(taskType!=0){
 				String clazz=null;
 				switch (taskType) {
 				case 1:

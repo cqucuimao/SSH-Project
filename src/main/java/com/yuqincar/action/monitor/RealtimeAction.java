@@ -13,9 +13,11 @@ import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.ServicePoint;
+import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.utils.DateUtils;
 
 @Controller
 @Scope("prototype")
@@ -83,19 +85,18 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 			messages.add(orderVO.getSnum());
 			messages.add(orderVO.getOrg());
 			messages.add(orderVO.getCustomer());
-			//messages.add(orderVO.getPhone());
 			messages.add(orderVO.getCharge());
 			messages.add(orderVO.getTime());
 			messages.add(orderVO.getType());
 			messages.add(orderVO.getNumber());
+			messages.add(orderVO.getDriver());
 			messages.add(orderVO.getFrom());
 			messages.add(orderVO.getTo());
-			messages.add(orderVO.getMiles());
-			messages.add(orderVO.getMoney());
 		    jsonStr="{\"order\":"+JSON.toJSONString(messages)+","+"\"status\":1}"; 
 		}else{
 			jsonStr="{\"order\":null,"+"\"status\":0}";
 		}
+		System.out.println("jsonStr="+jsonStr);
 		this.writeJson(jsonStr);
 		
 	}
@@ -117,6 +118,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 			servicePointName=carService.getServicePointById(servicePointId).getName();
 		}
 		List<Car> cars= carService.findByDriverNameAndPlateNumberAndServicePointName(null,plateNumber,servicePointName);
+		System.out.println("in list, cars.size="+cars.size());
 		List<CarVO> carsVO=null;
 		if(cars.size()!=0){
 			carsVO=parseCars(cars);
@@ -149,17 +151,16 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		return carVO;
 	}
 	
-	public List<CarVO> parseCars(List<Car> cars){
-		
+	public List<CarVO> parseCars(List<Car> cars){		
 		List<CarVO> carsVO=new ArrayList<CarVO>(cars.size());
 		for(int i=0;i<cars.size();i++){
 			CarVO carVO=new CarVO();
 			carVO.setType(cars.get(i).getModel());
-			carVO.setDriver(cars.get(i).getDriver().getName());
+			carVO.setDriver(cars.get(i).getDriver()!=null ? cars.get(i).getDriver().getName() : "");
 			carVO.setId(cars.get(i).getId());
 			carVO.setLocation(cars.get(i).getServicePoint().getName());
 			carVO.setNumber(cars.get(i).getPlateNumber());
-			carVO.setPhone(cars.get(i).getDriver().getPhoneNumber());
+			carVO.setPhone(cars.get(i).getDriver()!=null ? cars.get(i).getDriver().getPhoneNumber() : "");
 			carVO.setSn(cars.get(i).getDevice().getSN());
 			carsVO.add(carVO);
 		}
@@ -170,43 +171,45 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		OrderVO orderVo=new OrderVO();
 		orderVo.setSnum(order.getSn());
 		orderVo.setOrg(order.getCustomerOrganization().getName());
-		orderVo.setCustomer(order.getCustomer().getName());
-		//orderVo.setPhone(order.getPhone());
-		String charge=null;
-		switch(order.getChargeMode()){
-		case MILE:
-			charge="按里程收费";
-			break;
-		case DAY:
-			charge="按天收费";
-			break;
-		}
-		orderVo.setCharge(charge);
-		orderVo.setTime(order.getPlanBeginDate().toString());
+		if(order.isCallForOther())
+			orderVo.setCustomer(order.getOtherPassengerName()+"（"+order.getOtherPhoneNumber()+"）");
+		else
+			orderVo.setCustomer(order.getCustomer().getName()+"（"+order.getPhone()+"）");
+		orderVo.setCharge(order.getChargeMode().getLabel());
+		if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+			orderVo.setTime(DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
+		else if(order.getChargeMode()==ChargeModeEnum.PLANE || order.getChargeMode()==ChargeModeEnum.MILE)
+			orderVo.setTime(DateUtils.getYMDHMString(order.getPlanBeginDate()));
 		orderVo.setType(order.getServiceType().getTitle());
 		orderVo.setNumber(order.getCar().getPlateNumber());
+		orderVo.setDriver(order.getDriver().getName()+"（"+order.getDriver().getPhoneNumber()+"）");
 		orderVo.setFrom(order.getFromAddress());
 		orderVo.setTo(order.getToAddress());
-		orderVo.setMiles(new Float(order.getTotalChargeMile()).toString());
-		orderVo.setMoney(order.getOrderMoney().toString());
 		
 		return orderVo;
 	}
 	
+	public Car getCar() {
+		return car;
+	}
+
+
+	public void setCar(Car car) {
+		this.car = car;
+	}
+
 	class OrderVO{
 		
 		private String snum;           //订单号
 		private String org;            //客户单位
 		private String customer;       //客户
-		//private String phone;          //联系电话
 		private String charge;         //计费方式
 		private String time;           //开始时间
 		private String type;           //车型
 		private String number;         //车牌号
+		private String driver;		   //司机
 		private String from;           //始发地
 		private String to;             //目的地
-		private String miles;          //里程数
-		private String money;          //估算费用
 		
 		public String getSnum() {
 			return snum;
@@ -226,12 +229,6 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		public void setCustomer(String customer) {
 			this.customer = customer;
 		}
-		/*public String getPhone() {
-			return phone;
-		}
-		public void setPhone(String phone) {
-			this.phone = phone;
-		}*/
 		public String getCharge() {
 			return charge;
 		}
@@ -268,17 +265,11 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		public void setTo(String to) {
 			this.to = to;
 		}
-		public String getMiles() {
-			return miles;
+		public String getDriver() {
+			return driver;
 		}
-		public void setMiles(String miles) {
-			this.miles = miles;
-		}
-		public String getMoney() {
-			return money;
-		}
-		public void setMoney(String money) {
-			this.money = money;
+		public void setDriver(String driver) {
+			this.driver = driver;
 		}
 		
 	}

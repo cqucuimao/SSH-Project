@@ -169,7 +169,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	public String importExcelFile() throws Exception{
         InputStream is = new FileInputStream(upload);
 		ExcelUtil eu = new ExcelUtil();
-		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 10, 0);
+		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 9, 0);
 		List<CarRepair> carRepairs = new ArrayList<CarRepair>();
 				for(int i=1;i<excelLines.size();i++){
 					try {
@@ -189,24 +189,20 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 							}
 							
 							//承修单位
-							System.out.println("承修单位="+excelLines.get(i).get(1));
 							cr.setRepairLocation(excelLines.get(i).get(1));
 							
 							//维修开始时间
-							System.out.println("维修开始时间="+excelLines.get(i).get(2));
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");  
 						    Date fromDate;				
 						    fromDate = sdf.parse(excelLines.get(i).get(2));
 							cr.setFromDate(fromDate);
 							
 							//维修结束时间
-							System.out.println("维修结束时间="+excelLines.get(i).get(3));
-						    Date toDate;				
+							Date toDate;				
 						    toDate = sdf.parse(excelLines.get(i).get(3));
 							cr.setToDate(toDate);
 							
 							//送修人
-							System.out.println("司机="+excelLines.get(i).get(4));
 							String name = excelLines.get(i).get(4).replaceAll( "\\s", "" );
 							User driver = userService.getByLoginName(name);
 							if(driver == null){
@@ -219,22 +215,17 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 							}
 							
 							//维修内容
-							System.out.println("维修内容="+excelLines.get(i).get(5));
 							cr.setMemo(excelLines.get(i).get(5));
 							
 							
-							System.out.println("维修原因="+excelLines.get(i).get(6));
 							cr.setReason(excelLines.get(i).get(6));							
 							
-							System.out.println("未赔付金额="+excelLines.get(i).get(7));
 							if(excelLines.get(i).get(7).length()>0){
 								BigDecimal mng = new BigDecimal(excelLines.get(i).get(7));
-								System.out.println("mng= "+mng);
 								cr.setMoneyNoGuaranteed(mng);
 							}
 							
 							//金额
-							System.out.println("金额="+excelLines.get(i).get(8));
 							BigDecimal bd = new BigDecimal(excelLines.get(i).get(8));
 							
 							cr.setMoney(bd);
@@ -410,25 +401,27 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 				!DateUtils.getYMDString(toDate1).equals(DateUtils.getYMDString(todate2))){
 			List<List<BaseEntity>> taskList = orderService.getCarTask(model.getCar(), model.getFromDate(), model.getToDate());
 			taskList.addAll(orderService.getDriverTask(model.getDriver(),  model.getFromDate(), model.getToDate()));
-			boolean haveTask = false;
 			int taskType = 0;
 			for(List<BaseEntity> dayList:taskList){
 				if(dayList!=null && dayList.size()>0){
 					BaseEntity baseEntity = dayList.get(0);
-					haveTask = true;  //1订单  2 保养 3 年审 4 维修
+					//1订单  2 保养 3 年审 4 维修
 					if(baseEntity instanceof Order)
 						taskType=1;
 					else if(baseEntity instanceof CarCare)
 						taskType=2;
 					else if(baseEntity instanceof CarExamine)
 						taskType=3;
-					else if(baseEntity instanceof CarRepair)
+					else if(baseEntity instanceof CarRepair){
+						if(baseEntity.getId().equals(model.getId()))  //将正在修改的维修预约记录排除在外
+							continue;
 						taskType=4;
+					}
 					break;
 				}
 			}
 			
-			if(haveTask){
+			if(taskType!=0){
 				String clazz=null;
 				switch (taskType) {
 				case 1:

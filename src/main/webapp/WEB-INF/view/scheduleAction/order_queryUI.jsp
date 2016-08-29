@@ -37,26 +37,26 @@
 				<tr>
 					<th><s:property value="tr.getText('order.Order.chargeMode')" /></th>
 					<td><s:select name="chargeMode" list="{'所有方式','按里程计费','按天计费','协议计费','接送机'}" /></td>
-					<th><s:property value="tr.getText('order.Order.planBeginDate')" />（时间段）</th>
+					<th><s:property value="tr.getText('order.Order.planBeginDate')" /></th>
 					<td>
 						<s:textfield name="planBeginDate1" id="planBeginDate1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						<s:textfield name="planBeginDate2" id="planBeginDate2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('order.Order.planEndDate')" />（时间段）</th>
+					<th><s:property value="tr.getText('order.Order.planEndDate')" /></th>
 					<td>
 						<s:textfield name="planEndDate1" id="planEndDate1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						<s:textfield name="planEndDate2" id="planEndDate2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
-					<th><s:property value="tr.getText('order.Order.actualBeginDate')" />（时间段）</th>
+					<th><s:property value="tr.getText('order.Order.actualBeginDate')" /></th>
 					<td>
 						<s:textfield name="actualBeginDate1" id="actualBeginDate1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						<s:textfield name="actualBeginDate2" id="actualBeginDate2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('order.Order.actualEndDate')" />（时间段）</th>
+					<th><s:property value="tr.getText('order.Order.actualEndDate')" /></th>
 					<td>
 						<s:textfield name="actualEndDate1" id="actualEndDate1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						<s:textfield name="actualEndDate2" id="actualEndDate2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
@@ -75,18 +75,18 @@
 					<td><s:textfield class="inputText" name="toAddress" /></td>
 			    </tr>
 				<tr>
-					<th><s:property value="tr.getText('order.Order.orderMoney')" />（区间）</th>
+					<th><s:property value="tr.getText('order.Order.orderMoney')" /></th>
 					<td><s:textfield id="orderMoney1" class="inputText half" name="orderMoney1" />&nbsp;<s:textfield id="orderMoney2" class="inputText half" name="orderMoney2" /></td>
-					<th><s:property value="tr.getText('order.Order.actualMoney')" />（区间）</th>
+					<th><s:property value="tr.getText('order.Order.actualMoney')" /></th>
 					<td><s:textfield id="actualMoney1" class="inputText half" name="actualMoney1" />&nbsp;<s:textfield id="actualMoney2" class="inputText half" name="actualMoney2" /></td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('order.Order.queueTime')" />（时间段）</th>
+					<th><s:property value="tr.getText('order.Order.queueTime')" /></th>
 					<td>
 						<s:textfield name="queueTime1" id="queueTime1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						<s:textfield name="queueTime2" id="queueTime2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
-					<th><s:property value="tr.getText('order.Order.scheduleTime')" />（时间段）</th>
+					<th><s:property value="tr.getText('order.Order.scheduleTime')" /></th>
 					<td>
 						<s:textfield name="scheduleTime1" id="scheduleTime1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						<s:textfield name="scheduleTime2" id="scheduleTime2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
@@ -125,23 +125,23 @@
 				<tr>
 					<th><s:property value="tr.getText('order.Order.grade')" /></th>
 					<td><s:select name="grade" list="{'','1','2','3','4','5'}"  /></td>
-					<th><s:property value="tr.getText('order.Order.refuelMoney')" />（区间）</th>
+					<th><s:property value="tr.getText('order.Order.refuelMoney')" /></th>
 					<td><s:textfield id="refuelMoney1" class="inputText half" name="refuelMoney1" />&nbsp;<s:textfield id="refuelMoney2" class="inputText half" name="refuelMoney2" /></td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('order.Order.washingFee')" />（区间）</th>
+					<th><s:property value="tr.getText('order.Order.washingFee')" /></th>
 					<td><s:textfield id="washingFee1" class="inputText half" name="washingFee1" />&nbsp;<s:textfield id="washingFee2" class="inputText half" name="washingFee2" /></td>
-					<th><s:property value="tr.getText('order.Order.parkingFee')" />（区间）</th>
+					<th><s:property value="tr.getText('order.Order.parkingFee')" /></th>
 					<td><s:textfield id="parkingFee1" class="inputText half" name="parkingFee1" />&nbsp;<s:textfield id="parkingFee2" class="inputText half" name="parkingFee2" /></td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('order.Order.toll')" />（区间）</th>
+					<th><s:property value="tr.getText('order.Order.toll')" /></th>
 					<td><s:textfield id="toll1" class="inputText half" name="toll1" />&nbsp;<s:textfield id="toll2" class="inputText half" name="toll2" /></td>
-					<th><s:property value="tr.getText('order.Order.roomAndBoardFee')" />（区间）</th>
+					<th><s:property value="tr.getText('order.Order.roomAndBoardFee')" /></th>
 					<td><s:textfield id="roomAndBoardFee1" class="inputText half" name="roomAndBoardFee1" />&nbsp;<s:textfield id="roomAndBoardFee2" class="inputText half" name="roomAndBoardFee2" /></td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('order.Order.otherFee')" />（区间）</th>
+					<th><s:property value="tr.getText('order.Order.otherFee')" /></th>
 					<td><s:textfield id="otherFee1" class="inputText half" name="otherFee1" />&nbsp;<s:textfield id="otherFee2" class="inputText half" name="otherFee2" /></td>
 					<th><s:property value="tr.getText('order.Order.options')" /></th>
 					<td><s:textfield class="inputText" name="options" /></td>

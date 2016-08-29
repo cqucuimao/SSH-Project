@@ -69,21 +69,21 @@
 					<td><s:select name="plateTypeLabel" list="#{0:'蓝牌',1:'黄牌'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="选择车牌类型" /></td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('car.Car.registDate')" />（时间段）</th>
+					<th><s:property value="tr.getText('car.Car.registDate')" /></th>
 					<td>
 						<s:textfield name="registDate1" id="registDate1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						<s:textfield name="registDate2" id="registDate2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
-					<th><s:property value="tr.getText('car.Car.enrollDate')" />（时间段）</th>
+					<th><s:property value="tr.getText('car.Car.enrollDate')" /></th>
 					<td>
 						<s:textfield name="enrollDate1" id="enrollDate1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 						<s:textfield name="enrollDate2" id="enrollDate2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 				</tr>
 				<tr>
-					<th><s:property value="tr.getText('car.Car.mileage')" />（区间）</th>
+					<th><s:property value="tr.getText('car.Car.mileage')" /></th>
 					<td><s:textfield id="mileage1" class="inputText half" name="mileage1" />&nbsp;<s:textfield id="mileage2" class="inputText half" name="mileage2" /></td>
-					<th><s:property value="tr.getText('car.Car.seatNumber')" />（区间）</th>
+					<th><s:property value="tr.getText('car.Car.seatNumber')" /></th>
 					<td><s:textfield id="seatNumber1" class="inputText half" name="seatNumber1" />&nbsp;<s:textfield id="seatNumber2" class="inputText half" name="seatNumber2" /></td>
 				</tr>
 				<tr>

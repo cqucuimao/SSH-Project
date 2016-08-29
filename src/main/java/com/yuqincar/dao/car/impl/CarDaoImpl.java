@@ -159,7 +159,7 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 
 	public List<Car> getAllNormalCars() {
 		return getSession().createQuery(//
-			   "FROM Car c WHERE c.status=? and c.borrowed=?")
+			   "FROM Car c WHERE c.status=? and c.device is not null and c.borrowed=?")
 			   .setParameter(0, CarStatusEnum.NORMAL).setParameter(1, false)
 			   .list();
 	}

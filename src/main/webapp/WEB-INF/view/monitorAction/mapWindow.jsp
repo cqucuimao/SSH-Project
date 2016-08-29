@@ -380,7 +380,7 @@
              	      		    	    	      //关闭订单信息框
              	      		    	    	      dialog.close();
              	      		    	    	      //跳转到轨迹播放页面
-             	      		    	    	      $("#trackUrlNoOrder").attr("href","replay_home.action?carPlateNumber="+myCarPlateNumber);
+             	      		    	    	      $("#trackUrlNoOrder").attr("href","replay_home.action?carId="+myCarId);
              	      		    	           });
             	      		    	           
              	      		    	          $("#removeCarNoOrder").bind("click",function(){
@@ -596,7 +596,7 @@
           	      		    	    	      //关闭订单信息框
           	      		    	    	      dialog.close();
           	      		    	    	      //跳转到轨迹播放页面
-          	      		    	    	      $("#trackUrlHaveOrder").attr("href","replay_home.action?carPlateNumber="+myCarPlateNumber);
+          	      		    	    	      $("#trackUrlHaveOrder").attr("href","replay_home.action?carId="+myCarId);
           	      		    	           });
            	      		    	                  	      		    	       
           	      		    	           $("#removeCarHaveOrder").bind("click",function(){
@@ -642,7 +642,7 @@
           	      		    	    	      //关闭订单信息框
           	      		    	    	      dialog.close();
           	      		    	    	      //跳转到轨迹播放页面
-          	      		    	    	      $("#trackUrlNoOrder").attr("href","replay_home.action?carPlateNumber="+myCarPlateNumber);
+          	      		    	    	      $("#trackUrlNoOrder").attr("href","replay_home.action?carId="+myCarId);
           	      		    	           });
          	      		    	           
           	      		    	          $("#removeCarNoOrder").bind("click",function(){
@@ -685,223 +685,7 @@
            $.ajaxSettings.async=true; 
        }
   	    
-  	} 
-   
- /* //定时刷新车辆位置
-   function flushTrack(){
-	    //查看 allRecordedCars中被选中的车辆数目
-   	    var monitoredCarNum=0;
-   	    for(var i=0;i<allRecordedCars.length;i++){
-   		    if(allRecordedCars[i]!==undefined){
-   		       if(allRecordedCars[i][1]){
-   			      monitoredCarNum++;
-   		       }
-   		    }
-   	    }
-   	    //如果被监控的车辆存在
-   	    if(monitoredCarNum>0){
-       	   var selectedCars=new Array();  //用于保存被勾选的车辆信息及相应的gps经纬度数据的 连续数组	
-       	   var index=0; 
-           //设置ajax请求为同步进行 这里改为同步后chrome浏览器会报错，但是好像不影响，如果不设置就会直接报错
-	       $.ajaxSettings.async=false; 
-       	   //根据id遍历allRecordedCars
-       	   for(var id=0;id<allRecordedCars.length;id++){
-       		   //如果当前记录存在
-       		   if(allRecordedCars[id]!==undefined){
-       		      //如果当前记录的车辆是被监控的
-       		      if(allRecordedCars[id][1]){
-                     //根据车辆的sn号 查找 相应的gps坐标点
-          		     var device_sn=allRecordedCars[id][0].sn;
-          		     $.get("api.action?/device.get.do?device_sn="+device_sn,function(gpsData){
-       			           //显示定义二维数组，记录被勾选的车辆车牌号,gps经纬度,车辆真实id,gps设备当前的状态(status:1行驶,2离线),gps设备当前的速度(speed)
-            	           selectedCars[index]=new Array(3);
-            	           selectedCars[index][0]=allRecordedCars[id][0].number;
-            	           selectedCars[index][1]=gpsData.device.position.lng+","+gpsData.device.position.lat;
-            	           selectedCars[index][2]=id;
-            	           selectedCars[index][3]=gpsData.device.position.status;
-            	           selectedCars[index][4]=gpsData.device.position.speed;
-            			   index++;
-          		     });
-       		       }
-       		    }
-       	    }
-            
-            //百度地图的API接口限制数
-            var limitLen=98;
-            //获取需要监控的车辆的总数目
-            var carsLength=selectedCars.length;
-            //由于百度API的接口每次最多解析100经纬度，所以进行分段
-            var parts=Math.floor(carsLength/limitLen)+1;
-            //最后一段的数据个数
-            var lastPartNum=carsLength%limitLen;
-            
-            //设置ajax请求为同步进行
-	      //  $.ajaxSettings.async=false;
-            for(var part=0;part<parts;part++){
-            	var gpsPositionStr="";
-            	//前几段都是按固定值计算
-            	if(part!=parts-1){
-            		for(var i=0;i<limitLen;i++){
-                		if(i!=0)
-               			   gpsPositionStr=gpsPositionStr+";";
-               		    gpsPositionStr=gpsPositionStr+selectedCars[part*limitLen+i][1];
-               	    }
-            	}else{
-            		//最后一段的经纬度个数按剩余值进行计算
-            		for(var i=0;i<lastPartNum;i++){
-                		if(i!=0)
-               			   gpsPositionStr=gpsPositionStr+";";
-               		    gpsPositionStr=gpsPositionStr+selectedCars[part*limitLen+i][1];
-               	    }
-            	}
-           	    var reqUrl=head+gpsPositionStr;
-              	//向Baidu地图gps坐标转Baidu坐标接口发送请求，返回转换后的Baidu坐标
-          	    $.getJSON(reqUrl,function(baiduData){
-      	      	     //刷新前，清除地图上的所有覆盖物
-      	  		     map.clearOverlays(); 
-      	      	     for(var j=0;j<baiduData.result.length;j++){
-      	      	         var point;      //选中的记录的经纬度坐标点
-     	  	             var marker;     //地图上的标识物
-     	  	             //车辆的车牌
-     	  	             var carPlateNumber=selectedCars[part*limitLen+j][0];
-     	  	             var carId=selectedCars[part*limitLen+j][2];
-     	  	             //自定义信息显示
-      	      		     var opts={
-    				                width : 10,     // 信息窗口宽度
-    				                height: 10,     // 信息窗口高度
-    				                title : "车辆信息" , // 信息窗口标题
-    				                enableMessage:false//设置允许信息窗发送短息
-    			         };
-      	      		     point = new BMap.Point(parseFloat(baiduData.result[j].x),parseFloat(baiduData.result[j].y));
-      	      		     //获取当前车辆的状态status和速度speed
-      	      		     var carStatus=selectedCars[part*limitLen+j][3];
-      	      		     var carSpeed=selectedCars[part*limitLen+j][4];
-      	      		     //定义车辆状态的图片路径
-      	      		     var imagePath;
-      	      		     //判断车辆具体处于什么状态：无网络(status:2) 行驶(status:1,speed!=0) 停留(status:1,speed=0)
-      	      		     if(carStatus==2){
-      	      		    	 imagePath="images/car5.png";
-      	      		     }else{
-      	      		    	 if(carSpeed==0)
-      	      		    		imagePath="images/car1.png";
-      	      		    	 else
-      	      		    		imagePath="images/car4.png"; 
-      	      		     }
-      	      		     //自定义车辆图标
-      	      		     var myIcon = new BMap.Icon(imagePath, new BMap.Size(40,30));
-      	      		     marker = new BMap.Marker(point,{icon:myIcon});// 创建标注
-      	      		     //增加车牌信息  label的offset属性能够调整基于中心点的偏移位置
-      	      		     var label = new BMap.Label(carPlateNumber,{offset:new BMap.Size(-16,-17)});
-  	      		         marker.setLabel(label);
-      	      		     map.addOverlay(marker);             // 将标注添加到地图中
-      	      		     //非常重要的一个问题
-      	      		     //这里有一个关键问题  批量事件绑定环境下   响应函数需要的参数的变化问题   使用 闭包 将局部变量carId 和 carPlateNumber 作为参数传递到 事件响应函数中去
-      	      		     marker.addEventListener('click',(function(myCarId,myCarPlateNumber){
-      	      		    	 return function(){
-          	      		    	  $.get("realtime_orderDetail.action?id="+myCarId,function(orderJson){
-          	      		    	        var data=orderJson;
-          	      		    	        //如果存在正在执行的订单，则显示具体订单信息，否则进行提示 
-          	      		    	        if(data.status==1){
-          	      		    	           var dialog = art.dialog({
-                                               height:400,
-                                               width:400,
-            		        	               title: "车辆详情信息",
-                                               lock: true,      //遮罩层效果
-                                               drag: false,     //拖动效果
-                                               content: document.getElementById("carOrderDetail")
-            			                   });
-            	      		               //获得表格正文的行对象数组，并未每行的列赋值
-            	      		    	       var tbTrs=$("#orderDetail").children("tbody").find("tr");
-            	      		    	       for(var k=0;k<tbTrs.length;k++){  
-            	      		    		       var tds=$(tbTrs[k]).find("td"); 
-            	      		    		       $(tds[0]).html(data.order[k]);
-            	      		    	       }
-            	      		    	       //获得订单信息表格的查看轨迹按钮对象
-           	      		    	           $("#viewTrackBnHaveOrder").bind("click",function(){
-           	      		    	    	      //关闭订单信息框
-           	      		    	    	      dialog.close();
-           	      		    	    	      //跳转到轨迹播放页面
-           	      		    	    	      $("#trackUrlHaveOrder").attr("href","replay_home.action?carPlateNumber="+myCarPlateNumber);
-           	      		    	           });
-            	      		    	                  	      		    	       
-           	      		    	           $("#removeCarHaveOrder").bind("click",function(){
-       	      		    	    	          //在allRecordedCars中将相应车辆的选中状态值为false
-       	      		    	    	          allRecordedCars[myCarId][1]=false;
-       	      		    	    	          //如果该车辆在当前复选框中被选中，则改变复选框状态
-       	      		    	    	          if(checkboxStatus[myCarId]==true){
-       	      		    	    	        	  checkboxes.each(function(){
-       	      		    	    	        		  if($(this).prop("id")==myCarId){
-       	      		    	    	        			 $(this).prop("checked", false);
-       	      		    	    	        		  }
-       	      		    	    	        	  });
-       	      		    	    	        	  checkboxStatus[myCarId]=false;
-       	      		    	    	          }
-       	      		    	                  //在地图上清除相应的车辆标识
-    	      		    	    	          var allOverlay = map.getOverlays();
-    	      		    			          for (var i = 0; i < allOverlay.length; i++){
-    	      		    				          //这里可能发生异常的原因是 getOverlays对象得到的覆盖物的个数不定  不知道是什么原因  对于非车辆覆盖物 抛出的异常直接忽略
-    	      		    				          try{
-       	      		    				              if(allOverlay[i].getLabel().content == myCarPlateNumber){
-        	      		    					         map.removeOverlay(allOverlay[i]);
-        	      		    			              }
-       	      		    				          }catch(error){}
-    	      		    			          }
-    	      		    			          //关闭订单信息框
-    	      		    	    	          dialog.close();
-       	      		    	               });            	      		    	
-          	      		    	        }else{
-          	      		    	           var dialog = art.dialog({
-                                               height:200,
-                                               width:300,
-            		        	               title: "车辆详情信息",
-                                               lock: true,      //遮罩层效果
-                                               drag: false,     //拖动效果
-                                               content: document.getElementById("carNoOrder")
-            			                   });
-          	      		    	           //获得订单信息表格的查看轨迹按钮对象
-           	      		    	           $("#viewTrackBnNoOrder").bind("click",function(){
-           	      		    	    	      //关闭订单信息框
-           	      		    	    	      dialog.close();
-           	      		    	    	      //跳转到轨迹播放页面
-           	      		    	    	      $("#trackUrlNoOrder").attr("href","replay_home.action?carPlateNumber="+myCarPlateNumber);
-           	      		    	           });
-          	      		    	           
-           	      		    	          $("#removeCarNoOrder").bind("click",function(){
-           	      		    	              //在allRecordedCars中将相应车辆的选中状态值为false
-       	      		    	    	          allRecordedCars[myCarId][1]=false;
-       	      		    	    	          //如果该车辆在当前复选框中被选中，则改变复选框状态
-       	      		    	    	          if(checkboxStatus[myCarId]==true){
-       	      		    	    	        	  checkboxes.each(function(){
-       	      		    	    	        		  if($(this).prop("id")==myCarId){
-       	      		    	    	        			 $(this).prop("checked", false);
-       	      		    	    	        		  }
-       	      		    	    	        	  });
-       	      		    	    	        	  checkboxStatus[myCarId]=false;
-       	      		    	    	          }
-       	      		    	                  //在地图上清除相应的车辆标识
-    	      		    	    	          var allOverlay = map.getOverlays();
-    	      		    			          for (var i = 0; i < allOverlay.length; i++){
-    	      		    				          //这里可能发生异常的原因是 getOverlays对象得到的覆盖物的个数不定  不知道是什么原因  对于非车辆覆盖物 抛出的异常直接忽略
-    	      		    				          try{
-       	      		    				              if(allOverlay[i].getLabel().content == myCarPlateNumber){
-        	      		    					         map.removeOverlay(allOverlay[i]);
-        	      		    			              }
-       	      		    				          }catch(error){}
-    	      		    			          }
-    	      		    			          //关闭订单信息框
-    	      		    	    	          dialog.close();
-          	      		    	          });          	      		    	                    	      		    	         
-          	      		    	        }     	      		    	        
-          	      		    	    }); 
-          	                  };	      		    	 
-      	      		     })(carId,carPlateNumber)); 
-      	      	        }
-                  }); 
-            }
-            //恢复同步设置
-            $.ajaxSettings.async=true; 
-        }
-   	} */
+  	}    
  
     //添加所有车辆
     function addAllCars(){

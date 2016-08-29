@@ -76,7 +76,7 @@ public class CarViolationServiceImpl implements CarViolationService {
 	public void pullViolationFromCQJG() throws UnsupportedEncodingException, ParseException {
 	        SubStringCharacter sub=new SubStringCharacter(); 
 		System.out.println("這里是service层******************************");
-		List<Car> cars=carService.getAllNormalCars();
+		List<Car> cars=carService.getCarsForPullingViolation();
 		for (Car c:cars)
 	   {         /*
 		    	 carorg="chongqing";

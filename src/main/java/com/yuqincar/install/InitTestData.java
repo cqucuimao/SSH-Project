@@ -171,7 +171,6 @@ public class InitTestData {
 		cr1.setFromDate(DateUtils.getYMD("2016-01-31"));
 		cr1.setAppointment(false);
 		cr1.setMemo(null);
-		cr1.setPayDate(DateUtils.getYMD("2016-01-21"));
 		cr1.setMoney(new BigDecimal(88));
 		carRepairDao.save(cr1);
 
@@ -181,7 +180,6 @@ public class InitTestData {
 		cr2.setFromDate(DateUtils.getYMD("2016-02-01"));
 		cr2.setAppointment(false);
 		cr2.setMemo(null);
-		cr2.setPayDate(DateUtils.getYMD("2016-02-22"));
 		cr2.setMoney(new BigDecimal(210));
 		carRepairDao.save(cr2);
 
@@ -191,7 +189,6 @@ public class InitTestData {
 		cr3.setFromDate(DateUtils.getYMD("2016-02-01"));
 		cr3.setAppointment(false);
 		cr3.setMemo(null);
-		cr3.setPayDate(DateUtils.getYMD("2016-03-23"));
 		cr3.setMoney(new BigDecimal(190));
 		carRepairDao.save(cr3);
 		
@@ -201,7 +198,6 @@ public class InitTestData {
 		cr4.setFromDate(DateUtils.getYMD("2016-02-01"));
 		cr4.setAppointment(false);
 		cr4.setMemo(null);
-		cr4.setPayDate(DateUtils.getYMD("2016-04-24"));
 		cr4.setMoney(new BigDecimal(40));
 		carRepairDao.save(cr4);
 		
@@ -211,7 +207,6 @@ public class InitTestData {
 		cr5.setFromDate(DateUtils.getYMD("2016-02-01"));
 		cr5.setAppointment(false);
 		cr5.setMemo(null);
-		cr5.setPayDate(DateUtils.getYMD("2016-05-25"));
 		cr5.setMoney(new BigDecimal(240));
 		carRepairDao.save(cr5);
 	}
@@ -374,7 +369,6 @@ public class InitTestData {
 	private void initCarInsurance(){
 		CarInsurance ci1 = new CarInsurance();
 		ci1.setCar(carDao.getById(1L));
-		ci1.setPayDate(DateUtils.getYMD("2016-01-20"));
 		ci1.setFromDate(new Date());
 		ci1.setToDate(DateUtils.getYMD("2026-01-20"));
 		ci1.setInsureCompany("平安保险");
@@ -385,7 +379,6 @@ public class InitTestData {
 		
 		CarInsurance ci2 = new CarInsurance();
 		ci2.setCar(carDao.getById(2L));
-		ci2.setPayDate(DateUtils.getYMD("2016-02-21"));
 		ci2.setFromDate(new Date());
 		ci2.setToDate(DateUtils.getYMD("2026-02-21"));
 		ci2.setInsureCompany("平安保险1");
@@ -396,7 +389,6 @@ public class InitTestData {
 		
 		CarInsurance ci3 = new CarInsurance();
 		ci3.setCar(carDao.getById(3L));
-		ci3.setPayDate(DateUtils.getYMD("2016-03-22"));
 		ci3.setFromDate(new Date());
 		ci3.setToDate(DateUtils.getYMD("2026-03-22"));
 		ci3.setInsureCompany("平安保险2");
@@ -407,7 +399,6 @@ public class InitTestData {
 		
 		CarInsurance ci4 = new CarInsurance();
 		ci4.setCar(carDao.getById(4L));
-		ci4.setPayDate(DateUtils.getYMD("2016-04-23"));
 		ci4.setFromDate(new Date());
 		ci4.setToDate(DateUtils.getYMD("2026-04-23"));
 		ci4.setInsureCompany("平安保险3");
@@ -418,7 +409,6 @@ public class InitTestData {
 		
 		CarInsurance ci5 = new CarInsurance();
 		ci5.setCar(carDao.getById(5L));
-		ci5.setPayDate(DateUtils.getYMD("2016-05-24"));
 		ci5.setFromDate(new Date());
 		ci5.setToDate(DateUtils.getYMD("2026-05-24"));
 		ci5.setInsureCompany("平安保险4");

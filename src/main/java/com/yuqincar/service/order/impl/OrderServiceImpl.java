@@ -1065,12 +1065,6 @@ public class OrderServiceImpl implements OrderService {
 		
 
 		BigDecimal agentMoney=BigDecimal.ZERO;
-		if(order.getRefuelMoney()!=null)
-			agentMoney=agentMoney.add(order.getRefuelMoney());
-		if(order.getWashingFee()!=null)
-			agentMoney=agentMoney.add(order.getWashingFee());
-		if(order.getParkingFee()!=null)
-			agentMoney=agentMoney.add(order.getParkingFee());
 		if(order.getToll()!=null)
 			agentMoney=agentMoney.add(order.getToll());
 		if(order.getRoomAndBoardFee()!=null)
@@ -1082,6 +1076,19 @@ public class OrderServiceImpl implements OrderService {
 		order.setActualMoney(order.getOrderMoney());
 			
 		orderDao.update(order);
+	}
+	
+	public Order getProtocolOrderByCar(Car car){
+		QueryHelper queryHelper=new QueryHelper(Order.class,"o");
+		queryHelper.addWhereCondition("(o.status=? or o.status=? or o.status=? or o.status=?)", 
+				OrderStatusEnum.ACCEPTED,OrderStatusEnum.BEGIN,OrderStatusEnum.GETON,OrderStatusEnum.GETOFF);
+		queryHelper.addWhereCondition("o.car=?",car);
+		queryHelper.addWhereCondition("o.chargeMode=?", ChargeModeEnum.PROTOCOL);
+		List<Order> list=orderDao.getAllQuerry(queryHelper);
+		if(list!=null && list.size()>0)
+			return list.get(0);
+		else
+			return null;
 	}
 	
 	public boolean canEditDriverAction(Order order){

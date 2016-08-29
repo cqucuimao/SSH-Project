@@ -105,7 +105,9 @@ public interface CarService {
 	 * 获取所有未报废车辆
 	 * @return
 	 */
-	public List<Car> getAllNormalCars();
+	public List<Car> getCarsForMonitoring();
+	
+	public List<Car> getCarsForPullingViolation();
 	
 	public Car getCarByDeviceSN(String SN);
 	/**

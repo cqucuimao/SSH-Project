@@ -58,8 +58,7 @@ public class WarningCheck {
 	//@Scheduled(cron = "0 0/1 * * * ?") // 每5分钟执行一次
 	@Transactional
 	public void checkUnplannedRunningWarning(){
-		System.out.println("in checkUnplannedRunningWarning");
-		List<Car> cars=carService.getAllNormalCars();
+		List<Car> cars=carService.getCarsForMonitoring();
 		for(Car car:cars){
 			if(car.getDevice()==null)
 				continue;

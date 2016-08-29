@@ -290,6 +290,8 @@ public interface OrderService extends BaseService {
 	 */
 	public void orderCheckout(Order order);
 	
+	public Order getProtocolOrderByCar(Car car);
+	
 	/********************************************
 	 * 调度人员编辑司机动作
 	 ********************************************/

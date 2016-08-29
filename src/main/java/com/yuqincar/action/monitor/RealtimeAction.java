@@ -60,7 +60,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	 * 查询所有未报废车辆的信息
 	 */
 	public void allNormalCars(){
-		List<Car> cars=carService.getAllNormalCars();
+		List<Car> cars=carService.getCarsForMonitoring();
 		List<CarVO> carsVO=parseCars(cars);
 		this.writeJson(JSON.toJSONString(carsVO));
 	}

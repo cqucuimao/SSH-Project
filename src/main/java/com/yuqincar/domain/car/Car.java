@@ -60,7 +60,7 @@ public class Car extends BaseEntity {
 	@Text("里程数")
 	private int mileage;	//里程数
 
-	@Text("登记时间")
+	@Text("公司登记时间")
 	private Date enrollDate;	//登记时间。投入公司使用的时间
 
 	@Text("备注")
@@ -103,7 +103,7 @@ public class Car extends BaseEntity {
 	@Text("是否为备用车")
 	private boolean standbyCar;
 	
-	@Text("注册时间")
+	@Text("车管所注册时间")
 	private Date registDate;	//新车在车管所上户的时间
 	
 	@Text("牌照种类")

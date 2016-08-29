@@ -17,6 +17,7 @@ import com.yuqincar.dao.car.ServicePointDao;
 import com.yuqincar.dao.monitor.DeviceDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
+import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
@@ -214,8 +215,19 @@ public class CarServiceImpl implements CarService {
 		return null;
 	}
 
-	public List<Car> getAllNormalCars() {
-		return carDao.getAllNormalCars();
+	public List<Car> getCarsForMonitoring() {
+		QueryHelper queryHelper=new QueryHelper(Car.class,"c");
+		queryHelper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
+		queryHelper.addWhereCondition("c.device is not null");
+		queryHelper.addWhereCondition("c.borrowed=?", false);
+		return carDao.getAllQuerry(queryHelper);
+	}
+	
+	public List<Car> getCarsForPullingViolation(){
+		QueryHelper queryHelper=new QueryHelper(Car.class,"c");
+		queryHelper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
+		queryHelper.addWhereCondition("c.borrowed=?", false);
+		return carDao.getAllQuerry(queryHelper);
 	}
 
 	@Transactional

@@ -40,10 +40,9 @@
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">用车单位</td>
-				<td class="alignCenter" colspan="2">&nbsp;&nbsp;${customerOrganization.abbreviation }</td>
+				<td class="alignCenter" colspan="2">&nbsp;&nbsp;${customerOrganization.name }</td>
 				<td class="alignCenter" colspan="2">联系人电话</td>
 				<td class="alignCenter" colspan="2">&nbsp;&nbsp;${customer.name}：${phone }</td>
-				
 			</tr>
 			<tr>
 				<td class="alignCenter" colspan="2">定车时间</td>

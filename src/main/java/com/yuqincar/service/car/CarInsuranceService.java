@@ -19,7 +19,7 @@ public interface CarInsuranceService {
 	 */
 	public void saveCarInsurance(CarInsurance carInsurance,List<CommercialInsuranceType> commercialInsuranceType,List<Date> commercialInsuranceBeginDate,
 			List<Date> commercialInsuranceEndDate,List<BigDecimal> commercialInsuranceCoverageMoney,
-			List<BigDecimal> commercialInsuranceMoney,int inputRows);
+			List<BigDecimal> commercialInsuranceMoney,List<String> commercialInsuranceMemo,int inputRows);
 	
 	public CarInsurance getCarInsuranceById(long id);
 	

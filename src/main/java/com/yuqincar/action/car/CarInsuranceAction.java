@@ -53,6 +53,8 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	private List<BigDecimal> commercialInsuranceMoney = new ArrayList<BigDecimal>();
 	
+	private List<String> commercialInsuranceMemo = new ArrayList<String>();
+	
 	/** 列表 */
 	public String queryList(){
 		QueryHelper helper = new QueryHelper(CarInsurance.class, "ci");
@@ -111,7 +113,7 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 			cit.add(carInsuranceService.getCommercialInsuranceTypeById(commercialInsuranceType.get(i)));
 		}
 		carInsuranceService.saveCarInsurance(model,cit,commercialInsuranceBeginDate,commercialInsuranceEndDate,
-				commercialInsuranceCoverageMoney,commercialInsuranceMoney,inputRows);
+				commercialInsuranceCoverageMoney,commercialInsuranceMoney,commercialInsuranceMemo,inputRows);
 		
 				
 		return "toList";
@@ -169,6 +171,7 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 			}			
 			commercialInsurance.setCommercialInsuranceCoverageMoney(commercialInsuranceCoverageMoney.get(i));
 			commercialInsurance.setCommercialInsuranceMoney(commercialInsuranceMoney.get(i));
+			commercialInsurance.setCommercialInsuranceMemo(commercialInsuranceMemo.get(i));
 			cis.add(commercialInsurance);
 		}
 		
@@ -231,6 +234,16 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 
 	public void setCommercialInsuranceMoney(List<BigDecimal> commercialInsuranceMoney) {
 		this.commercialInsuranceMoney = commercialInsuranceMoney;
+	}
+	
+	
+
+	public List<String> getCommercialInsuranceMemo() {
+		return commercialInsuranceMemo;
+	}
+
+	public void setCommercialInsuranceMemo(List<String> commercialInsuranceMemo) {
+		this.commercialInsuranceMemo = commercialInsuranceMemo;
 	}
 
 	public Date getDate1() {

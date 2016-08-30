@@ -36,7 +36,7 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	@Transactional
 	public void saveCarInsurance(CarInsurance carInsurance,List<CommercialInsuranceType> commercialInsuranceType,List<Date> commercialInsuranceBeginDate,
 			List<Date> commercialInsuranceEndDate,List<BigDecimal> commercialInsuranceCoverageMoney,
-			List<BigDecimal> commercialInsuranceMoney,int inputRows) {
+			List<BigDecimal> commercialInsuranceMoney,List<String> commercialInsuranceMemo,int inputRows) {
 		
 		carInsuranceDao.save(carInsurance);
 		
@@ -57,6 +57,7 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 			}			
 			commercialInsurance.setCommercialInsuranceCoverageMoney(commercialInsuranceCoverageMoney.get(i));
 			commercialInsurance.setCommercialInsuranceMoney(commercialInsuranceMoney.get(i));
+			commercialInsurance.setCommercialInsuranceMemo(commercialInsuranceMemo.get(i));
 			commercialInsuranceDao.save(commercialInsurance);
 		}
 	}

@@ -72,6 +72,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		if(model.getName()!=null && !"".equals(model.getName()))
 			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
 		helper.addWhereCondition("u.department.name <> ?", "外派");
+		helper.addOrderByProperty("u.id", false);
 		helper.addOrderByProperty("u.name", true);
 		PageBean pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);

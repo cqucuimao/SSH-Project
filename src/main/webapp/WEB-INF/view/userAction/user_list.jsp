@@ -56,7 +56,7 @@
 							<td>${loginName}</td>
 							<td>${name}</td>
 							<td>${department.name}</td>
-							<td>
+							<td width="40%">
 								<s:iterator value="roles">
                 					${name}
                 				</s:iterator>

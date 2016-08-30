@@ -33,15 +33,13 @@
 					<thead>
 						<tr>
 							<th><s:property value="tr.getText('car.ServicePoint.name')" /></th>
-							<th><s:property value="tr.getText('car.ServicePoint.pointAddress')" /></th>
 							<th class="alignCenter">操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 						<s:iterator value="servicePointList">
 						<tr>
-							<td>${name}</td>
-							<td>${pointAddress.detail}</td>						
+							<td>${name}</td>			
 							<td class="alignCenter">								
 								<s:a action="servicePoint_editUI?id=%{id}" ><i class="icon-operate-edit" title="修改"></i></s:a>	
 							<s:if test="canDeleteServicePoint">

@@ -72,8 +72,8 @@
 							<td>${car.plateNumber}</td>
 							<td>${driver.name}</td>
 							<td ><s:date name="date" format="yyyy-MM-dd HH:mm"/></td>
-							<td>${place}</td>
-							<td >${description }</td>
+							<td width="15%">${place}</td>
+							<td width="20%">${description }</td>
 							<td >${penaltyPoint }</td>
 							<td >${penaltyMoney }</td>
 							<td >

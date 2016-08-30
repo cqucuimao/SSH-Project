@@ -81,7 +81,6 @@
                 			<th><s:property value="tr.getText('car.CarRepair.money')" />(元)</th>
                 			<th><s:property value="tr.getText('car.CarRepair.moneyNoGuaranteed')" />(元)</th>
                 			<th><s:property value="tr.getText('car.CarRepair.memo')" /></th>
-                			<th><s:property value="tr.getText('car.CarRepair.payDate')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
@@ -92,11 +91,10 @@
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 							<td>${repairLocation}</td>
-							<td>${reason}</td>
+							<td width="15%">${reason}</td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
 							<td style="text-align:right"><fmt:formatNumber value="${moneyNoGuaranteed}" pattern="#0"/></td>
-							<td>${memo}</td>
-							<td style="text-align:right"><s:date name="payDate" format="yyyy-MM-dd"/></td>
+							<td width="25%">${memo}</td>
 							<td>
                     			<s:a action="carRepair_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:a action="carRepair_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>

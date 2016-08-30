@@ -49,7 +49,7 @@
 				        <s:iterator value="recordList">
 						<tr>
 							<td>${name}</td>
-							<td>${description}</td>
+							<td width="40%">${description}</td>
 							<td>
 							    <s:a action="department_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
 							    <s:if test="canDeleteDepartment">

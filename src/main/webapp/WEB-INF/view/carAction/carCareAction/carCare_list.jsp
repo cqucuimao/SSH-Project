@@ -97,7 +97,7 @@
 							<td style="text-align:right">${careMiles}</td>
 							<td style="text-align:right">${mileInterval}</td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
-							<td>${memo}</td>
+							<td width="40%">${memo}</td>
 							<td>${careDepo}</td>
 							<td>
                     			<s:a action="carCare_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>

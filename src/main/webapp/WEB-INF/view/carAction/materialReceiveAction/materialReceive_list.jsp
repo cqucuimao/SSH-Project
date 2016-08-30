@@ -70,7 +70,7 @@
 							<td>${car.plateNumber}</td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
-							<td>${content}</td>
+							<td width="30%">${content}</td>
 							<td style="text-align:right">
 								${value }
 								<!--<fmt:formatNumber value="${value}" pattern="#0"/>-->

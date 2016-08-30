@@ -88,7 +88,7 @@
 							<td style="text-align:right"><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right">${money}</td>
 							<td style="text-align:right">${carPainterMoney}</td>
-							<td>${memo}</td>
+							<td width="40%">${memo}</td>
 							<td>
 								<s:if test="appointment==true">
 								<s:text name="是"></s:text>

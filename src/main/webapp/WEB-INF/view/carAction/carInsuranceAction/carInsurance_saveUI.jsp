@@ -328,7 +328,7 @@
 	    	 
 	    	 //点击新增一条商业保险
 	    	 $("#btn").click(function(){
-	    		 	var row = $("#tab").find('tr').length-4;	//获取table行数，减去5得到增加行的位置
+	    		 	var row = $("#tab").find('tr').length-4;	//获取table行数，减去4得到增加行的位置
 	 		 		var row1 = row+1;	 
 					$($('#tab').find('tr')[row]).after('<tr class="trClass"><th>&nbsp;&nbsp;&nbsp;&nbsp;<span class="required"></span></th>'+
 						'<td><select name="commercialInsuranceType" id=select'+row1+' style="width:142px"></select>&nbsp;'+							

@@ -77,7 +77,7 @@
 							<td>${car.plateNumber}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 							<td>${repairLocation}</td>
-							<td>${memo}</td>
+							<td width="50%">${memo}</td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
 							<td style="text-align:right"><s:date name="payDate" format="yyyy-MM-dd"/></td>
 						</tr>

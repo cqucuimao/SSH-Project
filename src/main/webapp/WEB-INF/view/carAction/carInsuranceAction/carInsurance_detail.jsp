@@ -60,19 +60,18 @@
 		                    		    <div class="tdDiv2"> 截止日期</div>
 		                    		    <div class="tdDiv3"> 承保金额（元）</div>
 		                    		    <div class="tdDiv3">金额（元）</div>
+		                    		    <div class="tdDiv3">备注</div>
 		                    	</th>
 		                    </tr>  
                 			<tr>
                     			<th>交强险：</th>
                     			<td>
                     			<div class="tdDiv">——</div>
-                    			<div class="tdDiv1"><s:date name="compulsoryBeginDate" format="yyyy-MM-dd"/></div>
-                    			
-		                    	<div class="tdDiv2"><s:date name="compulsoryEndDate" format="yyyy-MM-dd"/></div>
-		                    			
+                    			<div class="tdDiv1"><s:date name="compulsoryBeginDate" format="yyyy-MM-dd"/></div>      			
+		                    	<div class="tdDiv2"><s:date name="compulsoryEndDate" format="yyyy-MM-dd"/></div>	                    			
 		                    	<div class="tdDiv3">——</div>
-		                    			
 		                    	<div class="tdDiv3"> ${compulsoryMoney }</div>
+		                    	<div class="tdDiv3">——</div>
                     			</td>
                 			</tr>
                 			<tr>
@@ -83,6 +82,7 @@
 		                    	<div class="tdDiv2"><s:date name="vehicleTaxEndDate" format="yyyy-MM-dd"/></div>
 		                    	<div class="tdDiv3">——</div>
 		                    	<div class="tdDiv3">${vehicleTaxMoney }</div>
+		                    	<div class="tdDiv3">——</div>
                     			</td>
                 			</tr>
                 			<s:iterator value="commercialInsurances">
@@ -94,6 +94,7 @@
                 				<div class="tdDiv2"><s:date name="commercialInsuranceEndDate" format="yyyy-MM-dd"/></div>
                 				<div class="tdDiv3">${commercialInsuranceCoverageMoney }</div>
                 				<div class="tdDiv3">${commercialInsuranceMoney }</div>
+                				<div class="tdDiv3">${commercialInsuranceMemo }</div>
                 				</td>
                 			</tr>
                 			</s:iterator>             			
@@ -103,7 +104,7 @@
                 			</tr>
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarInsurance.money')" />(元)：</th>
-                				<td><fmt:formatNumber value="${money}" pattern="#0"/></td>
+                				<td><fmt:formatNumber value="${money}" pattern="#0.00"/></td>
                 			</tr>
                 			<tr>
                 				<th><s:property value="tr.getText('car.CarInsurance.memo')" />：</th>

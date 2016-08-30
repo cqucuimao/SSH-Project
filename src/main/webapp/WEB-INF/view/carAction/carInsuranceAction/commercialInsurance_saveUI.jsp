@@ -64,19 +64,18 @@
 		                    		    <div class="tdDiv1"> 截止日期</div>
 		                    		    <div class="tdDiv2"> 承保金额（元）</div>
 		                    		    <div class="tdDiv2">金额（元）</div>
+		                    		    <div class="tdDiv2">备注</div>
 		                    	</th>
 		                    </tr>  
                 			<tr>
                     			<th>交强险：</th>
                     			<td>
                     			<div class="tdDiv">——</div>
-                    			<div class="tdDiv1"><s:date name="compulsoryBeginDate" format="yyyy-MM-dd"/></div>
-                    			
-		                    	<div class="tdDiv1"><s:date name="compulsoryEndDate" format="yyyy-MM-dd"/></div>
-		                    			
-		                    	<div class="tdDiv2">——</div>
-		                    			
+                    			<div class="tdDiv1"><s:date name="compulsoryBeginDate" format="yyyy-MM-dd"/></div>			
+		                    	<div class="tdDiv1"><s:date name="compulsoryEndDate" format="yyyy-MM-dd"/></div>   			
+		                    	<div class="tdDiv2">——</div>		
 		                    	<div class="tdDiv2" id="compulsoryMoney"> ${compulsoryMoney }</div>
+		                    	<div class="tdDiv2">——</div>
                     			</td>
                 			</tr>
                 			<tr>
@@ -87,6 +86,7 @@
 		                    	<div class="tdDiv1"><s:date name="vehicleTaxEndDate" format="yyyy-MM-dd"/></div>
 		                    	<div class="tdDiv2">——</div>
 		                    	<div class="tdDiv2" id="vehicleTaxMoney">${vehicleTaxMoney }</div>
+		                    	<div class="tdDiv2">——</div>
                     			</td>
                 			</tr>
                 			<s:iterator value="commercialInsurances">
@@ -98,6 +98,7 @@
                 				<div class="tdDiv1"><s:date name="commercialInsuranceEndDate" format="yyyy-MM-dd"/></div>
                 				<div class="tdDiv2">${commercialInsuranceCoverageMoney }</div>
                 				<div class="tdDiv2"><div class="commercialInsuranceMoney">${commercialInsuranceMoney }</div></div>
+                				<div class="tdDiv2">${commercialInsuranceMemo}</div>
                 				</td>
                 			</tr>
                 			</s:iterator>       
@@ -111,7 +112,8 @@
 		                    		<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onblur="getBeginDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 									<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 									<input class="tdInput" type="text" name="commercialInsuranceCoverageMoney"/>&nbsp;
-									<input class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;
+									<input class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;
+									<input class="tdInput" type="text" name="commercialInsuranceMemo"/>&nbsp;&nbsp;
 									<input class="btn" id="btn" type="button" value="点击新增" />
 								</td>
 		                    </tr>           			
@@ -176,7 +178,7 @@
   			 var value =$(this).val();
   			 money=Number(money)+Number(value);
   		 }); 
-  		$("input[name=money]").val(money); 
+  		$("input[name=money]").val(money.toFixed(2)); 
 	 }	
 	 
 	 //计算保险开始时间
@@ -214,7 +216,9 @@
       			'<input  class="Wdate half" name="commercialInsuranceBeginDate" type="text" onblur="getBeginDate()" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
 				'<input  class="Wdate half" name="commercialInsuranceEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
 				'<input  class="tdInput" type="text" name="commercialInsuranceCoverageMoney">&nbsp;&nbsp;'+
-				'<input  class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>'); 			
+				'<input  class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;'+
+				'<input class="tdInput" type="text" name="commercialInsuranceMemo"/>&nbsp;&nbsp;&nbsp;'+
+				'<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>'); 			
 			$(".selectClass option").each(function(){
 		 		$("#select"+row1).append('<option value='+$(this).val()+'>'+$(this).text()+'</option>');
 		 	});	    

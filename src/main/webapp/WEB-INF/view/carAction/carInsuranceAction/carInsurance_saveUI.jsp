@@ -84,6 +84,7 @@
                     		    <div class="tdDiv1"> 截止日期</div>
                     		    <div class="tdDiv2"> 承保金额（元）</div>
                     		    <div class="tdDiv2">金额（元）</div>
+                    		    <div class="tdDiv2">备注</div>
                     	</th>
                     </tr>      
                     <tr>
@@ -94,6 +95,7 @@
 							<input class="Wdate half" name="compulsoryEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>&nbsp;
 							<input class="tdInput" type="text" name="compulsoryMoney" onblur="getAllMoney()"/>
+							<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>
 						</td>
                     </tr>
                      <tr>
@@ -104,6 +106,7 @@
 							<input class="Wdate half" name="vehicleTaxEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>&nbsp;
 							<input class="tdInput" type="text" name="vehicleTaxMoney" onblur="getAllMoney()"/>
+							<input class="tdInput1" type="text" name="" value="——" readonly style="border:0;text-align:center;"/>
 						</td>
                     </tr>      
                     <tr class="trClass">
@@ -116,7 +119,8 @@
                     		<input class="Wdate half" name="commercialInsuranceBeginDate" type="text" onblur="getBeginDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="Wdate half" name="commercialInsuranceEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 							<input class="tdInput" type="text" name="commercialInsuranceCoverageMoney"/>&nbsp;
-							<input class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;
+							<input class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;
+							<input class="tdInput" type="text" name="commercialInsuranceMemo"/>&nbsp;&nbsp;
 							<input class="btn" id="btn" type="button" value="点击新增" />
 						</td>
                     </tr>                                    
@@ -179,7 +183,7 @@
 	   			 var value =$(this).val();
 	   			 money=Number(money)+Number(value);
 	   		 }); 
-	   		$("input[name=money]").val(money); 
+	   		$("input[name=money]").val(money.toFixed(2)); 
 		 }	
     
 		 
@@ -335,7 +339,9 @@
                			'<input  class="Wdate half" name="commercialInsuranceBeginDate" type="text" onblur="getBeginDate()" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
 						'<input  class="Wdate half" name="commercialInsuranceEndDate" type="text" onblur="getEndDate()" onfocus="new WdatePicker({dateFmt:\'yyyy-MM-dd\'})" />&nbsp;'+
 						'<input  class="tdInput" type="text" name="commercialInsuranceCoverageMoney">&nbsp;&nbsp;'+
-						'<input  class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>'); 			
+						'<input  class="tdInput" type="text" name="commercialInsuranceMoney" onblur="getAllMoney()"/>&nbsp;&nbsp;'+
+						'<input class="tdInput" type="text" name="commercialInsuranceMemo"/>&nbsp;&nbsp;&nbsp;'+
+						'<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>'); 			
 					$(".selectClass option").each(function(){
 	    		 		$("#select"+row1).append('<option value='+$(this).val()+'>'+$(this).text()+'</option>');
 	    		 	});	    

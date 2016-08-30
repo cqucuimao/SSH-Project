@@ -43,6 +43,9 @@ public class CommercialInsurance extends BaseEntity {
 	@Column(nullable=false)
 	private Date commercialInsuranceEndDate;
 	
+	@Text("备注")
+	private String commercialInsuranceMemo;
+	
 	public CarInsurance getInsurance() {
 		return insurance;
 	}
@@ -89,6 +92,14 @@ public class CommercialInsurance extends BaseEntity {
 
 	public void setCommercialInsuranceEndDate(Date commercialInsuranceEndDate) {
 		this.commercialInsuranceEndDate = commercialInsuranceEndDate;
+	}
+
+	public String getCommercialInsuranceMemo() {
+		return commercialInsuranceMemo;
+	}
+
+	public void setCommercialInsuranceMemo(String commercialInsuranceMemo) {
+		this.commercialInsuranceMemo = commercialInsuranceMemo;
 	}
 
 	

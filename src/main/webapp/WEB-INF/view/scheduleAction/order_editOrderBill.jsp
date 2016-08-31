@@ -95,6 +95,7 @@
 						<td class="alignCenter"><s:textfield class="inputStyle" name="%{'dayDetails['+#track.index+'].pathAbstract'}" /></td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="%{'dayDetails['+#track.index+'].actualMile'}"/></td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="%{'dayDetails['+#track.index+'].chargeMile'}" /></td>
+						<td style="display:none"><input class="chargeMoney" type="text" value="${chargeMoney }"></td>
 					</tr>
 					</s:iterator>
 					<s:iterator value="nullAbstractTrackList" >
@@ -125,23 +126,23 @@
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">油费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" /></td>
 						<td class="alignCenter">洗车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" /></td>
 						<td class="alignCenter">停车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="parkingFee" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="parkingFee" /></td>
 						<td class="alignCenter">计费路码</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="totalChargeMile" /></td>
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">过路费（客户自理）</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="toll" onchange="getTax()" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="toll" onchange="getTax();getMoney()" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">食宿</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" onchange="getTax()" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" onchange="getTax();getMoney()" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">其他费用</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee" onchange="getTax()" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee" onchange="getTax();getMoney()" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">税费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" onblur="getOrderMoney()"/></td>						
+						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" onchange="getMoney()" onblur="getOrderMoney()"/></td>						
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">核算金额</td>
@@ -264,7 +265,7 @@
         f = Math.round(x*100)/100;  
         return f;  
     } 
-  	//计算税费,它的值是油费、洗车费、停车费、过路费、食宿、其它费用之和的3.6%
+  	//计算税费,它的值是过路费、食宿、其它费用之和的3.6%
 	function getTax(){ 
   		var toll = $("input[name=toll]").val();
   		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
@@ -279,21 +280,38 @@
 	 }	
   	//核算金额
   	function getOrderMoney(){
-  		var refuelMoney = $("input[name=refuelMoney]").val();
-  		var washingFee = $("input[name=washingFee]").val();
-  		var parkingFee = $("input[name=parkingFee]").val();
   		var toll = $("input[name=toll]").val();
   		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
   		var otherFee = $("input[name=otherFee]").val();
   		var tax = $("input[name=tax]").val();
-  		var orderMoney = Number(refuelMoney)+Number(washingFee)+Number(parkingFee)+Number(toll)+Number(roomAndBoardFee)+Number(otherFee)+Number(tax);
+  		var orderMoney = Number(toll)+Number(roomAndBoardFee)+Number(otherFee)+Number(tax);
+  		$(".chargeMoney").each(function(){
+  			 var value =$(this).val();
+  			 orderMoney = Number(orderMoney) + Number(value);
+  		}); 
   		if(orderMoney!=0){
   	  		$("input[name=orderMoney]").val(toDecimal(orderMoney)); 		
   		}else{
   	  		$("input[name=orderMoney]").val(""); 
   		}
   	}
-	 
+	 //核算金额变化，实收金额也改变
+	 function getMoney(){
+		 var toll = $("input[name=toll]").val();
+  		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
+  		var otherFee = $("input[name=otherFee]").val();
+  		var tax = $("input[name=tax]").val();
+  		var orderMoney = Number(toll)+Number(roomAndBoardFee)+Number(otherFee)+Number(tax);
+  		$(".chargeMoney").each(function(){
+  			 var value =$(this).val();
+  			 orderMoney = Number(orderMoney) + Number(value);
+  		}); 
+  		if(orderMoney!=0){
+  	  		$("input[name=actualMoney]").val(toDecimal(orderMoney)); 		
+  		}else{
+  	  		$("input[name=actualMoney]").val(""); 
+  		}
+	 }
     
     </script>
 </body>

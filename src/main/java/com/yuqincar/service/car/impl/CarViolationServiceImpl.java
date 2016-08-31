@@ -74,36 +74,59 @@ public class CarViolationServiceImpl implements CarViolationService {
 	  */
 	@Transactional
 	public void pullViolationFromCQJG() throws UnsupportedEncodingException, ParseException {
-	        SubStringCharacter sub=new SubStringCharacter(); 
+	    SubStringCharacter sub=new SubStringCharacter(); 
 		System.out.println("這里是service层******************************");
 		List<Car> cars=carService.getCarsForPullingViolation();
 		for (Car c:cars)
-	   {         /*
+	   {         
 		    	 carorg="chongqing";
 		    	 PlateNumber=c.getPlateNumber();
 		    	 lsprefix=sub.subPre(PlateNumber,2);
-		    	 lsnum=subLsnum(lsprefix,PlateNumber);
-		    	 lsprefix=URLDecoder.decode(lsprefix,"UTF-8");//还待完善
+		    	 lsnum=sub.subLsnum(lsprefix,PlateNumber);
+		    	 lsprefix=URLEncoder.encode(lsprefix,"UTF-8");//还待完善
 		    	 //lsnum=PlateNumber.substring(1, PlateNumber.length());//还待完善
-		    	 if(c.isStandbyCar())lstype="02";
-		    	 else lstype="01";
+		    	 lstype="02";
+		    	 /*if(c.isStandbyCar())lstype="02";
+		    	 else lstype="01";*/
+		    	 
 		    	 frameno =c.getVIN();
+		    	 if (frameno==null) 
+		    	 {
+		    		 System.out.println("frameno=: "+frameno+"为空!");
+		    		 continue;
+		    	 }
 		    	 engineno=c.getEngineSN();
 		    	 iscity=0;
 		    	 System.out.println("**********"+"carorg="+carorg+"lsprefix="+lsprefix+"lsnum="+lsnum+"lstype="+lstype+"frameno="+frameno+"engineno="+engineno+"iscity="+iscity);
 		    	 GetCarviolationMsg get=new GetCarviolationMsg();
 		    	 String data= get.excute(carorg,lsprefix,lsnum,lstype,frameno,engineno,iscity);
-		    	 System.out.println(data); */
+		    	 System.out.println(data); 
 			
 			//测试数据用的
-		         String string=URLEncoder.encode("渝","UTF-8");
-		         GetCarviolationMsg get=new GetCarviolationMsg();
-		         String data= get.excute("chongqing",string,"CFU007","02","LSGPC54R0AF047043"," ",0);
+		         //String string=URLEncoder.encode("渝","UTF-8");
+		         //GetCarviolationMsg get=new GetCarviolationMsg();
+		         //String data= get.excute("chongqing",string,"CFU007","02","LSGPC54R0AF047043"," ",0);
 		     //测试结束    
 		    	 JSONObject jsonObject = JSONObject.fromObject(data);
+		    	 try {
+			        	if(Integer.parseInt(jsonObject.getString("status"))>0)
+			        	{
+			        		System.out.println("status"+jsonObject.getString("status")+"msg"+jsonObject.getString("msg"));
+			        		continue;
+			        	}
+					} catch (Exception e) {
+						continue;
+					}
 		    	 JSONObject  dataList=jsonObject.getJSONObject("result");
+		    	 
+		    	try {
+		    		 if (dataList.getJSONArray("list")==null) continue;
+				} catch (Exception e) {
+					continue;
+				}
 		    	 net.sf.json.JSONArray lists=dataList.getJSONArray("list");
-		   for(int i=0;i<lists.size();i++)
+				
+		 for(int i=0;i<lists.size();i++)
 		   {         System.out.println("****************"+i);
 		   			 System.out.println(lists.size());
 			    	 JSONObject info=lists.getJSONObject(i);
@@ -120,10 +143,16 @@ public class CarViolationServiceImpl implements CarViolationService {
 			         //System.out.println(data);
 			         //添加违章信息到carViolation数据库里去。 
 			          CarViolation carValation=new CarViolation();
-			          System.out.println(c.getDriver().getId()+"***************");
-			          User driver=userService.getById(c.getDriver().getId());
+			          System.out.println(c.getPlateNumber());
+			          
+			          if (c.getDriver()!=null) 
+			          {
+			        	  System.out.println(c.getDriver().getId()+"***************");
+				          User driver=userService.getById(c.getDriver().getId());
+				          carValation.setDriver(driver);
+					  }
+			          System.out.println("message"+"date"+date+"address"+address+"content"+content+"score"+score+"money"+money);
 			          carValation.setCar(c);
-			          carValation.setDriver(driver);
 			          carValation.setDate(date);
 			          carValation.setPlace(address);
 			          carValation.setDescription(content);
@@ -132,9 +161,7 @@ public class CarViolationServiceImpl implements CarViolationService {
 			          carValation.setDealt(false);
 			          carValation.setImported(true);
 			          carViolationDao.save(carValation);
-		       
 		    }
-		   break;
 		}
 	}
 

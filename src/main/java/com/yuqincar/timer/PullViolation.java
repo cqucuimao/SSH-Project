@@ -23,7 +23,7 @@ public class PullViolation {
 
 	//@Scheduled(cron = "0 30 02 ? * 7") // 每天凌晨3点执行一次
 	//@Scheduled(cron = "10 * * * * ?  ")
-	//@Scheduled(cron = "0 30 02 L * ? ") 
+	@Scheduled(cron = "0 30 02 1 * ? ") 
 	@Transactional
 	public void update() throws UnsupportedEncodingException, ParseException {
 		carViolationService.pullViolationFromCQJG();

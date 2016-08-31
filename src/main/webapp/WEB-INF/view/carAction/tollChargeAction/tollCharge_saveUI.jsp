@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%> 
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
+
 <cqu:border  exceptJquery="jquery">
     <div class="space">
         <!-- 标题 -->
@@ -37,7 +38,7 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.TollCharge.payDate')" /><span class="required">*</span></th>
                         <td>
-                        	<s:textfield cssClass="inputText" name="payDate" id="payDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+                        	<input  type="text" name="payDate" id="payDate" class="Wdate half"  onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" onchange="autoDate(this.id)"/>
                         </td>
                     </tr>
                     <tr>
@@ -77,10 +78,21 @@
         </s:form>
         </div>
     </div>
-    
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript">
-	    $(function(){	    	
-			$("#pageForm").validate({
+    
+      function autoDate(x)
+       {
+	    	var date=document.getElementById(x).value;
+	    	var year=date.substring(0,4);
+	    	var day=date.substring(4,date.length);
+	    	var newYear=Number(year)+1;
+	    	$("#nextPayDate").attr("value",newYear+day);
+       }  
+    
+    $(function(){
+    	
+    	$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则

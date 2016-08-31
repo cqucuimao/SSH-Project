@@ -75,7 +75,6 @@ public class CarViolationServiceImpl implements CarViolationService {
 	@Transactional
 	public void pullViolationFromCQJG() throws UnsupportedEncodingException, ParseException {
 	    SubStringCharacter sub=new SubStringCharacter(); 
-		System.out.println("這里是service层******************************");
 		List<Car> cars=carService.getCarsForPullingViolation();
 		for (Car c:cars)
 	   {         
@@ -83,9 +82,15 @@ public class CarViolationServiceImpl implements CarViolationService {
 		    	 PlateNumber=c.getPlateNumber();
 		    	 lsprefix=sub.subPre(PlateNumber,2);
 		    	 lsnum=sub.subLsnum(lsprefix,PlateNumber);
-		    	 lsprefix=URLEncoder.encode(lsprefix,"UTF-8");//还待完善
-		    	 //lsnum=PlateNumber.substring(1, PlateNumber.length());//还待完善
-		    	 lstype="02";
+		    	 lsprefix=URLEncoder.encode(lsprefix,"UTF-8");
+		    	 if (c.getSeatNumber()>7) 
+		    	 {
+		    		 lstype="01";
+				 }else
+				 {
+					 lstype="02"; 
+				 }
+		    	 //lstype="02";
 		    	 /*if(c.isStandbyCar())lstype="02";
 		    	 else lstype="01";*/
 		    	 
@@ -140,7 +145,7 @@ public class CarViolationServiceImpl implements CarViolationService {
 			         //time=time.substring(0, 9);
 			         SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			         Date date=format.parse(time);
-			         //System.out.println(data);
+			         
 			         //添加违章信息到carViolation数据库里去。 
 			          CarViolation carValation=new CarViolation();
 			          System.out.println(c.getPlateNumber());

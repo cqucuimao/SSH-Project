@@ -66,7 +66,7 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 			ActionContext.getContext().getSession().put("carViolationHelper", helper);
 			return "list";		
 		}
-	
+		
 		 public String list() {
 			 	QueryHelper helper = new QueryHelper("CarViolation", "cv");
 			 	if(carId!=null)

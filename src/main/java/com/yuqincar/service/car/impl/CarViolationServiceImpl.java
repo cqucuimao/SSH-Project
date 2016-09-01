@@ -18,6 +18,7 @@ import com.mysql.jdbc.Driver;
 import com.yuqincar.action.lbs.GetCarviolationMsg;
 import com.yuqincar.dao.car.CarViolationDao;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.CarViolation;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
@@ -72,10 +73,18 @@ public class CarViolationServiceImpl implements CarViolationService {
 		lng	string	经度 参考，有误差
 
 	  */
+	
+	@Transactional
+	public List<CarViolation> getAllCarViolation(){
+		QueryHelper queryHelper=new QueryHelper(CarViolation.class,"c");
+		return carViolationDao.getAllQuerry(queryHelper);
+	}
+	
 	@Transactional
 	public void pullViolationFromCQJG() throws UnsupportedEncodingException, ParseException {
 	    SubStringCharacter sub=new SubStringCharacter(); 
 		List<Car> cars=carService.getCarsForPullingViolation();
+		List<CarViolation> carViolations=getAllCarViolation();
 		for (Car c:cars)
 	   {         
 		    	 carorg="chongqing";
@@ -90,9 +99,6 @@ public class CarViolationServiceImpl implements CarViolationService {
 				 {
 					 lstype="02"; 
 				 }
-		    	 //lstype="02";
-		    	 /*if(c.isStandbyCar())lstype="02";
-		    	 else lstype="01";*/
 		    	 
 		    	 frameno =c.getVIN();
 		    	 if (frameno==null) 
@@ -106,12 +112,6 @@ public class CarViolationServiceImpl implements CarViolationService {
 		    	 GetCarviolationMsg get=new GetCarviolationMsg();
 		    	 String data= get.excute(carorg,lsprefix,lsnum,lstype,frameno,engineno,iscity);
 		    	 System.out.println(data); 
-			
-			//测试数据用的
-		         //String string=URLEncoder.encode("渝","UTF-8");
-		         //GetCarviolationMsg get=new GetCarviolationMsg();
-		         //String data= get.excute("chongqing",string,"CFU007","02","LSGPC54R0AF047043"," ",0);
-		     //测试结束    
 		    	 JSONObject jsonObject = JSONObject.fromObject(data);
 		    	 try {
 			        	if(Integer.parseInt(jsonObject.getString("status"))>0)
@@ -119,21 +119,25 @@ public class CarViolationServiceImpl implements CarViolationService {
 			        		System.out.println("status"+jsonObject.getString("status")+"msg"+jsonObject.getString("msg"));
 			        		continue;
 			        	}
-					} catch (Exception e) {
+					} 
+		    	 catch (Exception e) 
+		    	    {
 						continue;
 					}
 		    	 JSONObject  dataList=jsonObject.getJSONObject("result");
 		    	 
-		    	try {
+		    	try 
+		    	{
 		    		 if (dataList.getJSONArray("list")==null) continue;
-				} catch (Exception e) {
+				} 
+		    	catch (Exception e)
+		    	{
 					continue;
 				}
 		    	 net.sf.json.JSONArray lists=dataList.getJSONArray("list");
 				
-		 for(int i=0;i<lists.size();i++)
-		   {         System.out.println("****************"+i);
-		   			 System.out.println(lists.size());
+		      for(int i=0;i<lists.size();i++)
+		       {    
 			    	 JSONObject info=lists.getJSONObject(i);
 			         String address=info.getString("address");
 			         String content=info.getString("content");
@@ -142,21 +146,33 @@ public class CarViolationServiceImpl implements CarViolationService {
 			         int  score=Integer.parseInt(scorestring);
 			         String moneystring=info.getString("price");
 			         BigDecimal money=new BigDecimal(moneystring);
-			         //time=time.substring(0, 9);
 			         SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			         Date date=format.parse(time);
+			         CarViolation carValation=new CarViolation();
+			         Boolean flag=false;
+			         for(CarViolation cViolation:carViolations)
+			         {   
+			        	if(time.substring(0, 16).equals(cViolation.getDate().toString().substring(0,16)) && cViolation.getCar().getPlateNumber().equals(c.getPlateNumber())) 
+			        	 {
+							//System.out.println("date "+date+" "+"cViolation.getDate() "+cViolation.getDate()+c.getPlateNumber()+cViolation.getCar().getPlateNumber());
+			        		flag=true;
+							break;
+						 }
+			         }
 			         
-			         //添加违章信息到carViolation数据库里去。 
-			          CarViolation carValation=new CarViolation();
-			          System.out.println(c.getPlateNumber());
-			          
+			         if (flag) 
+			         {
+			        	 //System.out.println("i am coming here!");
+			        	 continue;
+						
+					 }
+			         
 			          if (c.getDriver()!=null) 
 			          {
-			        	  System.out.println(c.getDriver().getId()+"***************");
 				          User driver=userService.getById(c.getDriver().getId());
 				          carValation.setDriver(driver);
 					  }
-			          System.out.println("message"+"date"+date+"address"+address+"content"+content+"score"+score+"money"+money);
+			          //System.out.println("message"+"date"+date+"address"+address+"content"+content+"score"+score+"money"+money);
 			          carValation.setCar(c);
 			          carValation.setDate(date);
 			          carValation.setPlace(address);

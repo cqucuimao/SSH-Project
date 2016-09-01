@@ -1,4 +1,5 @@
 /**
+
  * University Of Chongqing.com Inc.
  * Copyright (c) 2004-2016 All Rights Reserved.
  */
@@ -240,12 +241,8 @@ public class OrderAction extends BaseAction {
 
 			dayDetails=order.getDayDetails();
 			List<DayOrderDetail> nullDayDetails = new ArrayList<DayOrderDetail>();
-			System.out.println("list.size="+dayDetails.size());
-			if(dayDetails.size()<8){
-				int n=8-dayDetails.size();
-				for(int i=1;i<=n;i++){				
-					nullDayDetails.add(null);
-				}
+			if(dayDetails.size()<8){	
+				nullDayDetails.add(null);
 			}
 			ActionContext.getContext().put("abstractTrackList", dayDetails);
 			ActionContext.getContext().put("nullAbstractTrackList", nullDayDetails);

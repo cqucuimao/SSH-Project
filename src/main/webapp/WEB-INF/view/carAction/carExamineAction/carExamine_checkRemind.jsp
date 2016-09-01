@@ -28,11 +28,14 @@
 		</div>
 		<br/>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carExamine_remind">
+			<s:form id="pageForm" action="carExamine_queryRemind">
 			<table>
 				<tr>
+					<td><input id="export" class="inputButton" type="button" value="导出"/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<s:textfield name="yearMonth" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM'})" />
+					</td>
 					<td>
-						<input id="export" class="inputButton" type="button" value="导出"/>
+						<input class="inputButton" type="submit" value="查询"/>
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>
 				</tr>
@@ -49,6 +52,8 @@
 							<th><s:property value="tr.getText('car.Car.driver')" /></th>
 							<th><s:property value="tr.getText('privilege.User.phoneNumber')" /></th>
 							<th><s:property value="tr.getText('car.Car.nextExaminateDate')" /></th>
+							<th>违章数量</th>
+							<th>协议用车</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
@@ -58,12 +63,14 @@
 							<td>${driver.name}</td>
 							<td>${driver.phoneNumber}</td>
 							<td style="text-align:right"><s:date name="nextExaminateDate" format="yyyy-MM-dd"/></td>
+							<td><s:a action="carViolation_list?carId=%{id}">${carViolationCount }</s:a></td>
+							<td>${protocolInfo }</td>
 						</tr>
 						</s:iterator> 
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="carExamine_remind">
+			<s:form id="pageForm" action="carExamine_freshRemind">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>

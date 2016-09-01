@@ -89,15 +89,73 @@
                         </td>
                     </tr>
                     <tr>
+                        <th><s:property value="tr.getText('car.CarExamine.otherFee')" /></th>
+                        <td>
+                        	<s:textfield cssClass="inputText" name="otherFee"/>
+                        </td>
+                    </tr>
+                    <tr>
                         <th><s:property value="tr.getText('car.CarExamine.memo')" /></th>
                         <td>
                         	<s:textarea cssClass="inputText" style="height:100px" name="memo"></s:textarea>
                         </td>
-                    </tr>
+                    </tr>             
                 </tbody>
-                <tfoot>
+            </table>
+            <div class="toll" style="display:none">
+            <div class="title">
+			<br/><br/>
+			<h2>路桥费</h2>
+			</div>
+            <table>
+            	<colgroup>
+					<col width="80"></col>
+					<col></col>
+					<col></col>
+					<col></col>
+					<col></col>
+					<col width="120"></col>
+				</colgroup>
+            		<tbody>
+                	<tr>
+                        <th><s:property value="tr.getText('car.TollCharge.payDate')" /><span class="required">*</span></th>
+                        <td>
+                        	<s:textfield cssClass="inputText" name="payDate" id="payDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><s:property value="tr.getText('car.TollCharge.money')" /><span class="required">*</span></th>
+                        <td>
+                        	<s:textfield cssClass="inputText" name="tollChargeMoney"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><s:property value="tr.getText('car.TollCharge.overdueFine')" /></th>
+                        <td>
+                        	<s:textfield cssClass="inputText" name="overdueFine"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><s:property value="tr.getText('car.TollCharge.moneyForCardReplace')" /></th>
+                        <td>
+                        	<s:textfield cssClass="inputText" name="moneyForCardReplace"/>
+                        </td>
+                    </tr>
+                	<tr>
+                        <th><s:property value="tr.getText('car.TollCharge.nextPayDate')" /><span class="required">*</span></th>
+                        <td>
+                        	<s:textfield cssClass="inputText" name="nextPayDate" id="nextPayDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+                        </td>
+                    </tr>
+            	</tbody>
+            	  
+            </table>
+            </div>
+            <table>
+            <tfoot>
                     <tr>
                         <td colspan="2">
+                        	<input name="actionFlag" type="hidden" value="${actionFlag }">       
                             <input class="inputButton" type="submit" value="确定" />
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
@@ -115,6 +173,11 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+    	var actionFlag = $("input[name=actionFlag]").val();
+    	if(actionFlag == "register"){
+    		$(".toll").show();
+    	}
+    
 	    $(function(){
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },
@@ -142,6 +205,25 @@
 					carPainterMoney:{
 						number:true,
 						min:1
+					},
+					payDate:{
+						required:true,
+					},
+					tollChargeMoney:{
+						required:true,
+						number:true,
+						min:0
+					},
+					overdueFine:{
+						number:true,
+						min:0
+					},
+					moneyForCardReplace:{
+						number:true,
+						min:0
+					},
+					nextPayDate:{
+						required:true,
 					},
 				}
 			});
@@ -186,7 +268,8 @@
 			
 			formatDateField2($("#date"));
 			formatDateField2($("#nextExamineDate"));
-			
+			formatDateField1($("#payDate"));
+			formatDateField1($("#nextPayDate"));
 		});
     </script>
 </body>

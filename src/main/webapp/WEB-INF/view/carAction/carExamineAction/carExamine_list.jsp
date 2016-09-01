@@ -33,7 +33,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a cssClass="buttonA" action="carExamine_addUI">年审登记</s:a>
+						<s:a cssClass="buttonA" action="carExamine_addUI?actionFlag=register">年审登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarExamine.car')" /></th>
 					<td><cqu:carSelector name="car"/></td>

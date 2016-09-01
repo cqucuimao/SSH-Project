@@ -3,6 +3,7 @@ package com.yuqincar.service.car;
 import java.util.List;
 
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.common.PageBean;
@@ -36,6 +37,8 @@ public interface CarService {
 	
 	public CarServiceType getCarServiceTypeById(long id);
 	
+	public void saveCarServiceSuperType(CarServiceSuperType carServiceSuperType);
+	
 	/**
 	 * 可以删除车型吗
 	 * 如果有订单与此车型关联，就不能删除，即使该订单是CANCELLED也不行。
@@ -47,6 +50,8 @@ public interface CarService {
 	public void deleteCarServiceType(long id);
 	
 	public List<CarServiceType> getAllCarServiceType();
+	
+	public List<CarServiceSuperType> getAllCarServiceSuperType();
 	
 	public void saveServicePoint(ServicePoint servicePoint);
 	

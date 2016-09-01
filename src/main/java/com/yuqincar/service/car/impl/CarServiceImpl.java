@@ -15,7 +15,10 @@ import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.CarServiceTypeDao;
 import com.yuqincar.dao.car.ServicePointDao;
 import com.yuqincar.dao.monitor.DeviceDao;
+import com.yuqincar.dao.order.CarServiceSuperTypeDao;
+import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.ServicePoint;
@@ -31,6 +34,8 @@ public class CarServiceImpl implements CarService {
 	private CarDao carDao;
 	@Autowired
 	private CarServiceTypeDao carServiceTypeDao;
+	@Autowired
+	private CarServiceSuperTypeDao carServiceSuperTypeDao;
 	@Autowired
 	private ServicePointDao servicePointDao;
 	@Autowired
@@ -108,6 +113,12 @@ public class CarServiceImpl implements CarService {
 	public List<CarServiceType> getAllCarServiceType() {
 		return carServiceTypeDao.getAll();
 	}
+	
+	public List<CarServiceSuperType> getAllCarServiceSuperType() {
+
+		return carServiceSuperTypeDao.getAll();
+	}
+	
 	/*-----------车辆服务点-----------*/
 	@Transactional
 	public void saveServicePoint(ServicePoint servicePoint) {
@@ -238,6 +249,17 @@ public class CarServiceImpl implements CarService {
 	
 	public Car getCarByDeviceSN(String SN){
 		return carDao.getCarByDeviceSN(SN);
+	}
+	@Transactional
+	public void saveCarServiceSuperType(CarServiceSuperType carServiceSuperType) {
+		
+		for(int i=0;i<carServiceSuperType.getTypes().size();i++){
+			carServiceSuperType.getTypes().get(i).setSuperType(carServiceSuperType);
+			carServiceTypeDao.save(carServiceSuperType.getTypes().get(i));
+		}
+		
+		carServiceSuperTypeDao.save(carServiceSuperType);
+		
 	}
 
 }

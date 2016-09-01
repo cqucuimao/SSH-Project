@@ -16,5 +16,6 @@ public interface CarViolationDao extends BaseDao<CarViolation> {
 	
 	public void dealCarViolation(long carViolationId, int penaltyPoint, BigDecimal penaltyMoney, Date dealtDate);
 	
+	public List<CarViolation> getCarViolationByCar(Car car);
 
 }

@@ -2,7 +2,9 @@ package com.yuqincar.service.car;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.util.List;
 
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarViolation;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.utils.QueryHelper;
@@ -22,4 +24,6 @@ public interface CarViolationService {
 	public PageBean<CarViolation> queryCarViolation(int pageNum, QueryHelper helper);
 
 	public CarViolation getCarViolationById(long id);
+	
+	public List<CarViolation> getCarViolationByCar(Car car);
 }

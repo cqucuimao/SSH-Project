@@ -13,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.CarExamineDao;
+import com.yuqincar.dao.car.TollChargeDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.PlateTypeEnum;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarExamineService;
@@ -33,9 +35,12 @@ public class CarExamineServiceImpl implements CarExamineService {
 	private CarDao carDao;
 	@Autowired
 	private SMSService smsService;
+	@Autowired
+	private TollChargeDao tollChargeDao;
 
 	@Transactional
-	public void saveCarExamine(CarExamine carExamine) {
+	public void saveCarExamine(CarExamine carExamine,TollCharge tollCharge) {
+		tollChargeDao.save(tollCharge);
 		carExamineDao.save(carExamine);
 		
 		Car car=carExamine.getCar();
@@ -93,12 +98,8 @@ public class CarExamineServiceImpl implements CarExamineService {
 		carDao.update(car);
 	}
 	
-	public PageBean<Car> getNeedExamineCars(int pageNum) {
-		Date now=new Date();
-		Date b = new Date(now.getTime() +  24*60*60*1000 * 15L );
-		QueryHelper helper = new QueryHelper(Car.class, "c");
-		helper.addWhereCondition("c.nextExaminateDate < ? and c.status=? and c.borrowed=?", b,CarStatusEnum.NORMAL,false);
-		helper.addOrderByProperty("c.nextExaminateDate", true);
+	public PageBean<Car> getNeedExamineCars(int pageNum,QueryHelper helper) {
+		
 		return carDao.getPageBean(pageNum, helper);
 	}
 
@@ -108,25 +109,25 @@ public class CarExamineServiceImpl implements CarExamineService {
 		List<Date> dates = new ArrayList<Date>();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(registDate);
-		//蓝牌车且座位数小于7(假设报废期限30年)
+		//蓝牌车且座位数小于7
 		if(car.getPlateType() == PlateTypeEnum.BLUE && car.getSeatNumber() < 7){
-			//前六年，两年一审
-			for(int i=0;i<6;i++){					
-				calendar.add(Calendar.YEAR, +2);
+			//前六年，免审
+			for(int i=0;i<1;i++){					
+				calendar.add(Calendar.YEAR, +6);
 				dates.add(calendar.getTime());
 				calendar.setTime(calendar.getTime());
-				
+				System.out.println("time="+calendar.getTime());
 			}
 			//六年以上十年以下，一年一审
-			calendar.setTime(dates.get(5));
-			for(int i=6;i<10;i++){
+			calendar.setTime(dates.get(0));
+			for(int i=1;i<5;i++){
 				calendar.add(Calendar.YEAR, +1);
 				dates.add(calendar.getTime());
 				calendar.setTime(calendar.getTime());
 			}
 			//十年以上，一年两审
-			calendar.setTime(dates.get(9));
-			for(int i=10;i<50;i++){
+			calendar.setTime(dates.get(4));
+			for(int i=5;i<20;i++){
 				calendar.add(Calendar.MONTH, +6);
 				dates.add(calendar.getTime());
 				calendar.setTime(calendar.getTime());

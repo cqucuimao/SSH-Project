@@ -7,6 +7,7 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
 import com.yuqincar.domain.car.CarRefuel;
+import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
@@ -19,7 +20,7 @@ public interface CarExamineService {
 	 * if(car.nextExaminateDate==null)将car.nextExaminateDate设置为nowdate+examineIntervalYear（年）
 	 * @param carCare
 	 */
-	public void saveCarExamine(CarExamine carExamine);
+	public void saveCarExamine(CarExamine carExamine,TollCharge tollCharge);
 	
 	public CarExamine getCarExamineById(long id);
 	
@@ -54,7 +55,7 @@ public interface CarExamineService {
 	 * 按nextExaminateDate升序排列
 	 * @return
 	 */
-	public PageBean<Car> getNeedExamineCars(int pageNum);
+	public PageBean<Car> getNeedExamineCars(int pageNum,QueryHelper helper);
 	
 	/**
 	 * 获取下一次年审的日期。

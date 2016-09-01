@@ -81,7 +81,8 @@ public class CarViolationServiceImpl implements CarViolationService {
 	}
 	
 	@Transactional
-	public void pullViolationFromCQJG() throws UnsupportedEncodingException, ParseException {
+	public void pullViolationFromCQJG() throws UnsupportedEncodingException, ParseException 
+	{
 	    SubStringCharacter sub=new SubStringCharacter(); 
 		List<Car> cars=carService.getCarsForPullingViolation();
 		List<CarViolation> carViolations=getAllCarViolation();

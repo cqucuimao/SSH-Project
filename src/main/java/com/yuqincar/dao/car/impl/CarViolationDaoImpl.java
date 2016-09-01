@@ -38,6 +38,14 @@ public class CarViolationDaoImpl extends BaseDaoImpl<CarViolation> implements Ca
 		
 	}
 
+	public List<CarViolation> getCarViolationByCar(Car car) {
+		List<CarViolation> carViolations = getSession().createQuery("from CarViolation cv where cv.car=? and cv.dealt=?")
+				.setParameter(0, car)
+				.setParameter(1, false)
+				.list();
+		return carViolations;
+	}
+
 	
 	
 }

@@ -37,6 +37,9 @@ public class CarExamine extends BaseEntity {
 	@Text("年审花费")
 	private BigDecimal money;	//年审花费
 
+	@Text("其他费用")
+	private BigDecimal otherFee;	
+	
 	@Text("备注")
 	private String memo;	//备注
 	
@@ -78,6 +81,13 @@ public class CarExamine extends BaseEntity {
 	}
 	public void setMoney(BigDecimal money) {
 		this.money = money;
+	}
+	
+	public BigDecimal getOtherFee() {
+		return otherFee;
+	}
+	public void setOtherFee(BigDecimal otherFee) {
+		this.otherFee = otherFee;
 	}
 	public String getMemo() {
 		return memo;

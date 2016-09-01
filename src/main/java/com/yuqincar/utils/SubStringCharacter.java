@@ -14,11 +14,11 @@ public class SubStringCharacter {
         else{ 
             int tempSubLength = subSLength;//截取字节数
             String subStr = str.substring(0, str.length()<subSLength ? str.length() : subSLength);//截取的子串  
-            System.out.println(subStr);
+            //System.out.println(subStr);
             
             int subStrByetsL = subStr.getBytes("GBK").length;//截取子串的字节长度 
             //int subStrByetsL = subStr.getBytes().length;//截取子串的字节长度 
-            System.out.println(subStrByetsL);
+            //System.out.println(subStrByetsL);
             // 说明截取的字符串中包含有汉字  
             while (subStrByetsL > tempSubLength){  
                 int subSLengthTemp = --subSLength;

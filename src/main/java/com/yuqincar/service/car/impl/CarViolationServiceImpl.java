@@ -197,6 +197,11 @@ public class CarViolationServiceImpl implements CarViolationService {
 	
 		return carViolationDao.getById(id);
 	}
+
+	public List<CarViolation> getCarViolationByCar(Car car) {
+		
+		return carViolationDao.getCarViolationByCar(car);
+	}
 	
 	
 

@@ -15,6 +15,8 @@ public interface CarViolationService {
 	
 	public void saveCarViolation(CarViolation carViolation);
 	
+	public List<CarViolation> getAllCarViolation();
+	
 	public boolean canUpdateCarViolation(Long id);
 	
 	public void updateCarViolation(CarViolation carViolation);

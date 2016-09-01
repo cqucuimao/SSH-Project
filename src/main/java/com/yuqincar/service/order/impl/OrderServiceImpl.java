@@ -1079,7 +1079,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	public Order getProtocolOrderByCar(Car car){
-		QueryHelper queryHelper=new QueryHelper(Order.class,"o");
+		QueryHelper queryHelper=new QueryHelper("order_","o");
 		queryHelper.addWhereCondition("(o.status=? or o.status=? or o.status=? or o.status=?)", 
 				OrderStatusEnum.ACCEPTED,OrderStatusEnum.BEGIN,OrderStatusEnum.GETON,OrderStatusEnum.GETOFF);
 		queryHelper.addWhereCondition("o.car=?",car);

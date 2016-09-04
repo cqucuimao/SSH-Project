@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import org.hibernate.classic.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -37,7 +40,6 @@ import com.yuqincar.utils.QueryHelper;
 public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	
 	private CarWash model = new CarWash();
-	
 	@Autowired
 	private CarWashService carWashService;
 	
@@ -238,25 +240,32 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	}
    
    public String edit(){
-		  
+	    User user=(User)request.getSession().getAttribute("user");
 	    CarWash carWash = carWashService.getCarWashById(model.getId());
 		CarWashShop carWashShop=carWashService.getCarWashShopById(model.getShop().getId());
-		carWash.setCar(model.getCar());
-		carWash.setDriver(model.getDriver());
-		carWash.setShop(carWashShop);
-		carWash.setMoney(model.getMoney());
-		carWash.setDate(model.getDate());
-		carWash.setInnerCleanMoney(model.getInnerCleanMoney());
-		carWash.setPolishingMoney(model.getPolishingMoney());
-		carWash.setEngineCleanMoney(model.getEngineCleanMoney());
-		carWash.setCushionCleanMoney(model.getCushionCleanMoney());
+		if (user.hasPrivilegeByUrl("/carWash_editNormalInfo")) {
+			carWash.setCar(model.getCar());
+			carWash.setDriver(model.getDriver());
+			carWash.setShop(carWashShop);
+		}
+		if (user.hasPrivilegeByUrl("/carWash_editKeyInfo")) {
+			carWash.setMoney(model.getMoney());
+			carWash.setDate(model.getDate());
+			carWash.setInnerCleanMoney(model.getInnerCleanMoney());
+			carWash.setPolishingMoney(model.getPolishingMoney());
+			carWash.setEngineCleanMoney(model.getEngineCleanMoney());
+			carWash.setCushionCleanMoney(model.getCushionCleanMoney());
+		}
+		
 		carWashService.updateCarWash(carWash);
 		ActionContext.getContext().getValueStack().push(new CarWash());
 		return freshList();
 	}
  
-   
-   
+   public String test(){
+	  return "test";
+   }
+    
    public CarWash getModel() {
 		return model;
 	}

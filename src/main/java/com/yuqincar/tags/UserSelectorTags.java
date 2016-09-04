@@ -19,6 +19,7 @@ public class UserSelectorTags extends TagSupport {
 	private boolean driverOnly;
 	private String departments;
 	private boolean dispatchIncluded;
+	private boolean readonly=false;
 
 	public int doStartTag() throws JspException {
 		ValueStack stack = TagUtils.getStack(pageContext);
@@ -28,12 +29,22 @@ public class UserSelectorTags extends TagSupport {
 		try {
 			String labelValue = (user == null ? "" : user.getName());
 			String idValue = (user == null ? "" : String.valueOf(user.getId()));
-			options.append("<input id="
-					+ name
-					+ "Label name="
-					+ name
-					+ "Label class=\"inputText\" type=\"text\" onclick=\"onUserSelectorClick(\'"
-					+ name + "\',\'"+driverOnly+"\',\'"+departments+"\');\" value=\'" + labelValue + "\' />");
+			if (readonly) {
+				options.append("<input id="
+						+ name
+						+ "Label name="
+						+ name
+						+ "Label class=\"inputText\" type=\"text\" readonly="+readonly+" value=\'" + labelValue + "\' />");
+			
+			}
+			else {
+				options.append("<input id="
+						+ name
+						+ "Label name="
+						+ name
+						+ "Label class=\"inputText\" type=\"text\" onclick=\"onUserSelectorClick(\'"
+						+ name + "\',\'"+driverOnly+"\',\'"+departments+"\');\" value=\'" + labelValue + "\' />");
+				}
 			options.append("<input id=" + name + " name=" + name
 					+ " type=\"hidden\" value=\'" + idValue + "\'/>");
 			out.println(options);
@@ -72,6 +83,14 @@ public class UserSelectorTags extends TagSupport {
 
 	public void setDepartments(String departments) {
 		this.departments = departments;
+	}
+
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(boolean readonly) {
+		this.readonly = readonly;
 	}
 
 	

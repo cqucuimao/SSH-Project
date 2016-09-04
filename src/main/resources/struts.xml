@@ -291,6 +291,8 @@
 			</result>
 			<result name="excel">/WEB-INF/view/carAction/carWashAction/carWash_excel.jsp
 			</result>
+			<result name="test">/WEB-INF/template/index.jsp
+			</result>
 		</action>
 		
 		<!-- 洗车点 -->

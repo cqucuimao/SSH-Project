@@ -15,6 +15,7 @@ public class CarSelectorTags extends TagSupport {
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String synchDriver;
+	private boolean readonly=false;
 
 	public int doStartTag() throws JspException {
 		ValueStack stack = TagUtils.getStack(pageContext);
@@ -24,12 +25,22 @@ public class CarSelectorTags extends TagSupport {
 		try {
 			String labelValue = (car == null ? "" : car.getPlateNumber());
 			String idValue = (car == null ? "" : String.valueOf(car.getId()));
-			options.append("<input id="
-					+ name
-					+ "Label name="
-					+ name
-					+ "Label class=\"inputText\" type=\"text\" onclick=\"onCarSelectorClick(\'"
-					+ name + "\',\'"+synchDriver+"\');\" value=\'" + labelValue + "\' />");
+			if (readonly) {
+				options.append("<input id="
+						+ name
+						+ "Label name="
+						+ name
+						+ "Label class=\"inputText\" type=\"text\" readonly="+readonly+" value=\'" + labelValue + "\' />");
+			}
+			else {
+				options.append("<input id="
+						+ name
+						+ "Label name="
+						+ name
+						+ "Label class=\"inputText\" type=\"text\" onclick=\"onCarSelectorClick(\'"
+						+ name + "\',\'"+synchDriver+"\');\" readonly="+readonly+" value=\'" + labelValue + "\' />");
+			}
+			
 			options.append("<input id="+name+" name="+name+" type=\"hidden\" value=\'"+idValue+"\'/>");
 			out.println(options);
 		} catch (IOException e) {
@@ -60,4 +71,15 @@ public class CarSelectorTags extends TagSupport {
 		this.synchDriver = synchDriver;
 	}
 
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(boolean readonly) {
+		this.readonly = readonly;
+	}
+
+	
+
+	
 }

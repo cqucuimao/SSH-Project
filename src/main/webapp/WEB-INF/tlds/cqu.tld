@@ -81,5 +81,14 @@
                 <required>true</required>    
                 <rtexprvalue>true</rtexprvalue>    
       </attribute> 
-</tag>   
+</tag> 
+<tag>  
+	 <name>carDetailList</name>                              
+	 <tag-class>com.yuqincar.tags.CarDetailListTag</tag-class>
+	 <attribute>    
+                <name>id</name>    
+                <required>false</required>    
+                <rtexprvalue>true</rtexprvalue>    
+      </attribute> 
+</tag>     
 </taglib>  

@@ -50,6 +50,7 @@
                         <th><s:property value="tr.getText('car.CarWash.car')" /><span class="required">*</span></th>
 						<td>
 						<input id="editNormalInfo" type="hidden" value="<%=session.getAttribute("editNormalInfo")%>" />
+						<input id="editKeyInfo" type="hidden" value="<%=session.getAttribute("editKeyInfo")%>" />
 						<input id="type" type="hidden" value="<%=session.getAttribute("type")%>" />
 							<cqu:carSelector  name="car" synchDriver="driver"/>
 						</td>
@@ -133,8 +134,11 @@
     <script type="text/javascript">
 	    
 	    $(function(){
+	    	
 	    	if($("#type").val()=="edit")
 	    	{
+	    		if(!($("#editNormalInfo").val()=="true" && $("#editKeyInfo").val()=="true"))
+	    		{
 	    		if($("#editNormalInfo").val()=="true")
 	    		{
 	    			$("#date").removeAttr("onfocus"); 
@@ -145,7 +149,8 @@
 			    	$("#engineCleanMoney").attr("readonly", true); 
 			    	$("#cushionCleanMoney").attr("readonly", true); 
 	    		}
-	    		else
+	    		
+	    		if($("#editKeyInfo").val()=="true")
 		    	{  
 	    			$("#select_list").attr("disabled", "disabled"); 
 			    	$("#submit").click(function(){
@@ -156,6 +161,7 @@
 			    	$("#driverLabel").removeAttr("onclick");
 			    	$("#driverLabel").attr("readonly", true); 
 		    	}
+	    	   }
 	    	}
 	    	
 	    	

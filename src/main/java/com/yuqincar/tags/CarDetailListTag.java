@@ -14,12 +14,14 @@ import com.yuqincar.domain.car.Car;
 public class CarDetailListTag extends TagSupport {
 	private static final long serialVersionUID = 1L;
 	private String id;
+	private String value;
 	public int doStartTag() throws JspException {
 		StringBuffer options = new StringBuffer();
 		JspWriter out = pageContext.getOut();
 		try {
 			System.out.println("id=: "+id);
-			options.append("<s:a action=\"car_carDetail?id=%{id}\">");
+			System.out.println("value=: "+value);
+			options.append("<a href=\"/Web/car_carDetail.action?id="+id+"\"> "+value+" </a>");
 			out.println(options);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -29,14 +31,14 @@ public class CarDetailListTag extends TagSupport {
 	}
 
 	public int doEndTag() throws JspException {
-		StringBuffer options = new StringBuffer();
+		/*StringBuffer options = new StringBuffer();
 		JspWriter out = pageContext.getOut();
 		try {
 			options.append("</s:a>");
 			out.println(options);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		return EVAL_PAGE;
 	}
 
@@ -46,6 +48,14 @@ public class CarDetailListTag extends TagSupport {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
 }

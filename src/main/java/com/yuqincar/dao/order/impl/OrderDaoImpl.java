@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
 import com.yuqincar.dao.order.OrderDao;

@@ -292,6 +292,8 @@ public interface OrderService extends BaseService {
 	
 	public Order getProtocolOrderByCar(Car car);
 	
+	public List<Order> getToBeDeprivedSchedulingOrder();
+	
 	/********************************************
 	 * 调度人员编辑司机动作
 	 ********************************************/

@@ -49,7 +49,7 @@ public class CarExamine extends BaseEntity {
 	@Text("是否预约记录")
 	private boolean appointment;	//是否为预约记录
 	
-	@Text("是否完成保养")
+	@Text("是否完成年审")
 	private boolean done;	//是否完成年审，只有当appointment为true时，本字段才有意义。
 	
 	public BigDecimal getCarPainterMoney() {

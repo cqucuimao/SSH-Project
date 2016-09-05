@@ -63,7 +63,7 @@
 							<td>${driver.name}</td>
 							<td>${driver.phoneNumber}</td>
 							<td style="text-align:right"><s:date name="nextExaminateDate" format="yyyy-MM-dd"/></td>
-							<td><s:a action="carViolation_list?carId=%{id}">${carViolationCount }</s:a></td>
+							<td style="text-align:right"><s:a action="carViolation_list?carId=%{id}">${carViolationCount }</s:a></td>
 							<td>${protocolInfo }</td>
 						</tr>
 						</s:iterator> 

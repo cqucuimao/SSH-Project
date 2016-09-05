@@ -142,13 +142,15 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	 * @throws Exception
 	 */
 	public String importExcelFile() throws Exception{
+		System.out.println("in importExcelFile");
 		InputStream is = new FileInputStream(upload);
 		
-		ExcelUtil eu = new ExcelUtil();
-		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 7, 0);
+		List<List<String>> excelLines = ExcelUtil.getLinesFromExcel(is, 1, 1, 7, 0);
 		List<CarRefuel> carRefuels = new ArrayList<CarRefuel>();
 		try {
+			System.out.println("size="+excelLines.size());
 			for(int i=1;i<excelLines.size();i++){
+				System.out.println("i="+i);
 				result = i;
 				CarRefuel cr = new CarRefuel();
 				//流水号
@@ -174,9 +176,7 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 					cr.setCar(car);
 				}
 				//司机
-				System.out.println("司机="+excelLines.get(i).get(4));
 				String name = excelLines.get(i).get(4).replaceAll( "\\s", "" );
-				System.out.println("司机="+name);
 				User driver = userService.getByLoginName(name);
 				if(driver == null){
 					unknownCarOrDriver = "未知司机";
@@ -187,13 +187,11 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 					cr.setDriver(driver);				
 				}
 				//交易时间
-				//System.out.println("交易时间="+excelLines.get(i).get(5));
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");  
-			    Date date;				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");  
+			    Date date;			
 				date = sdf.parse(excelLines.get(i).get(5));
 				cr.setDate(date);
 				//是否外购
-				System.out.println("是否外购="+excelLines.get(i).get(6));
 				String outSource = excelLines.get(i).get(6);
 				if(outSource == "是" || outSource.equals("是")){
 					cr.setOutSource(true);

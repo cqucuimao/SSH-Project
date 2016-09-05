@@ -1010,33 +1010,21 @@ public class OrderServiceImpl implements OrderService {
 					chargeMile=50;
 					chargeMoney=price.getPerPlaneTime().floatValue();
 				}else{
-					float exceedMileMoney=0,exceedHourMoney=0;
 					if(mile>50){
 						if(mile<100){
-							exceedMileMoney=price.getPerPlaneTime().floatValue()+(price.getPerMileAfterLimit().floatValue()*(mile-50));
+							chargeMoney=price.getPerPlaneTime().floatValue()+(price.getPerMileAfterLimit().floatValue()*(mile-50));
 						}else{
-							exceedMileMoney=price.getPerDay().floatValue()+(price.getPerMileAfterLimit().floatValue()*(mile-100));
+							chargeMoney=price.getPerDay().floatValue()+(price.getPerMileAfterLimit().floatValue()*(mile-100));
 						}
-					}
-					if(hours>2){
+					}else if(hours>2){
 						if(hours<4){
-							exceedHourMoney=price.getPerPlaneTime().floatValue()+(price.getPerHourAfterLimit().floatValue()*(hours-2));
-						}else if(hours<7){
-							exceedHourMoney=price.getPerHalfDay().floatValue()+(price.getPerHourAfterLimit().floatValue()*(hours-4));
+							chargeMoney=price.getPerHalfDay().floatValue();
 						}else if(hours<8){
-							exceedHourMoney=price.getPerDay().floatValue();
+							chargeMoney=price.getPerHalfDay().floatValue()+(price.getPerHourAfterLimit().floatValue()*(hours-4));
 						}else{
-							exceedHourMoney=price.getPerDay().floatValue()+(price.getPerHourAfterLimit().floatValue()*(hours-8));
+							chargeMoney=price.getPerDay().floatValue()+(price.getPerHourAfterLimit().floatValue()*(hours-8));
 						}
-					}
-					if(exceedMileMoney>exceedHourMoney){
-						chargeMoney=exceedHourMoney;
-						chargeMile=50;
-					}else{
-						chargeMoney=exceedMileMoney;
-						chargeMile=mile;
-					}
-					
+					}					
 				}
 				
 				dod.setActualMile(mile);
@@ -1080,8 +1068,8 @@ public class OrderServiceImpl implements OrderService {
 	
 	public Order getProtocolOrderByCar(Car car){
 		QueryHelper queryHelper=new QueryHelper("order_","o");
-		queryHelper.addWhereCondition("(o.status=? or o.status=? or o.status=? or o.status=?)", 
-				OrderStatusEnum.ACCEPTED,OrderStatusEnum.BEGIN,OrderStatusEnum.GETON,OrderStatusEnum.GETOFF);
+		queryHelper.addWhereCondition("(o.status=? or o.status=? or o.status=? or o.status=? or o.status=?)", 
+				OrderStatusEnum.SCHEDULED,OrderStatusEnum.ACCEPTED,OrderStatusEnum.BEGIN,OrderStatusEnum.GETON,OrderStatusEnum.GETOFF);
 		queryHelper.addWhereCondition("o.car=?",car);
 		queryHelper.addWhereCondition("o.chargeMode=?", ChargeModeEnum.PROTOCOL);
 		List<Order> list=orderDao.getAllQuerry(queryHelper);
@@ -1089,6 +1077,10 @@ public class OrderServiceImpl implements OrderService {
 			return list.get(0);
 		else
 			return null;
+	}
+	
+	public List<Order> getToBeDeprivedSchedulingOrder(){
+		return orderDao.getToBeDeprivedSchedulingOrder();
 	}
 	
 	public boolean canEditDriverAction(Order order){

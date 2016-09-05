@@ -1,24 +1,22 @@
 package com.yuqincar.service.car.impl;
 
-import java.awt.dnd.DragGestureEvent;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysql.jdbc.Driver;
 import com.yuqincar.action.lbs.GetCarviolationMsg;
 import com.yuqincar.dao.car.CarViolationDao;
 import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.CarViolation;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
@@ -27,8 +25,6 @@ import com.yuqincar.service.car.CarViolationService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.QueryHelper;
 import com.yuqincar.utils.SubStringCharacter;
-
-import net.sf.json.JSONObject;
 
 
 @Service
@@ -104,20 +100,16 @@ public class CarViolationServiceImpl implements CarViolationService {
 		    	 frameno =c.getVIN();
 		    	 if (frameno==null) 
 		    	 {
-		    		 System.out.println("frameno=: "+frameno+"为空!");
 		    		 continue;
 		    	 }
 		    	 engineno=c.getEngineSN();
 		    	 iscity=0;
-		    	 System.out.println("**********"+"carorg="+carorg+"lsprefix="+lsprefix+"lsnum="+lsnum+"lstype="+lstype+"frameno="+frameno+"engineno="+engineno+"iscity="+iscity);
 		    	 GetCarviolationMsg get=new GetCarviolationMsg();
 		    	 String data= get.excute(carorg,lsprefix,lsnum,lstype,frameno,engineno,iscity);
-		    	 System.out.println(data); 
 		    	 JSONObject jsonObject = JSONObject.fromObject(data);
 		    	 try {
 			        	if(Integer.parseInt(jsonObject.getString("status"))>0)
 			        	{
-			        		System.out.println("status"+jsonObject.getString("status")+"msg"+jsonObject.getString("msg"));
 			        		continue;
 			        	}
 					} 
@@ -155,25 +147,23 @@ public class CarViolationServiceImpl implements CarViolationService {
 			         {   
 			        	if(time.substring(0, 16).equals(cViolation.getDate().toString().substring(0,16)) && cViolation.getCar().getPlateNumber().equals(c.getPlateNumber())) 
 			        	 {
-							//System.out.println("date "+date+" "+"cViolation.getDate() "+cViolation.getDate()+c.getPlateNumber()+cViolation.getCar().getPlateNumber());
-			        		flag=true;
+							flag=true;
 							break;
 						 }
 			         }
 			         
 			         if (flag) 
 			         {
-			        	 //System.out.println("i am coming here!");
 			        	 continue;
 						
 					 }
 			         
-			          if (c.getDriver()!=null) 
-			          {
-				          User driver=userService.getById(c.getDriver().getId());
-				          carValation.setDriver(driver);
-					  }
-			          //System.out.println("message"+"date"+date+"address"+address+"content"+content+"score"+score+"money"+money);
+			         //不应该将车辆的默认司机设置为违章的司机。所以注释下面的代码。
+//			          if (c.getDriver()!=null) 
+//			          {
+//				          User driver=userService.getById(c.getDriver().getId());
+//				          carValation.setDriver(driver);
+//					  }
 			          carValation.setCar(c);
 			          carValation.setDate(date);
 			          carValation.setPlace(address);

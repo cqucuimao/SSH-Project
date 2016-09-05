@@ -21,7 +21,7 @@ public class PullViolation {
 	@Autowired
 	CarViolationService carViolationService;
 
-	@Scheduled(cron = "0 30 02 1 * ? ") 
+	@Scheduled(cron = "0 30 02 5 * ? ") 
 	@Transactional
 	public void update() throws UnsupportedEncodingException, ParseException {
 		carViolationService.pullViolationFromCQJG();

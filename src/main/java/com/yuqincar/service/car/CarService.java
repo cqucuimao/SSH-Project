@@ -113,7 +113,7 @@ public interface CarService {
 	public List<Car> getCarsForMonitoring();
 	
 	public List<Car> getCarsForPullingViolation();
-	
+		
 	public Car getCarByDeviceSN(String SN);
 	/**
 	 * 车牌号是否存在

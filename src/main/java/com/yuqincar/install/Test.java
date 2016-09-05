@@ -1,6 +1,7 @@
 package com.yuqincar.install;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 
@@ -17,14 +18,12 @@ import com.baidu.yun.push.exception.PushClientException;
 import com.baidu.yun.push.exception.PushServerException;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceRequest;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceResponse;
-import com.yuqincar.utils.DateUtils;
 
 public class Test {
 
 	public static void main(String[] args) {
-		Date date1=DateUtils.getYMDHMS("2016-01-29 00:00:00");
-		Date now=new Date();
-		System.out.println(date1.before(now));
+		BigDecimal bd=new BigDecimal("760.00");
+		System.out.println("db="+bd);
 //		dealFuniuPic();
 //		try{
 //			baiduPush();	

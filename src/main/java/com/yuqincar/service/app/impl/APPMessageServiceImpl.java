@@ -118,7 +118,7 @@ public class APPMessageServiceImpl implements APPMessageService {
 		if (apnsDriverAPPService == null) {
 			ApnsConfig config = new ApnsConfig();
 			config.setKeyStore(Configuration.getIOSDriverPushKeyStore());
-			config.setDevEnv(true);
+			config.setDevEnv(false);
 			config.setPassword(Configuration.getAppleDeveloperPassword());
 			config.setPoolSize(5);
 			config.setName("DriverAPP");

@@ -1,3 +1,4 @@
+<%@page import="com.yuqincar.domain.privilege.User"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
@@ -48,113 +49,64 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.CarWash.car')" /><span class="required">*</span></th>
 						<td>
-						<s:if test=" #session.user.hasPrivilegeByUrl('/carWash_editNormalInfo') ">
-							<cqu:carSelector name="car" synchDriver="driver"/>
-						</s:if>
-						<s:else>
-						<cqu:carSelector name="car" synchDriver="driver" readonly="true"/>
-						</s:else>
+						<input id="editNormalInfo" type="hidden" value="<%=session.getAttribute("editNormalInfo")%>" />
+						<input id="type" type="hidden" value="<%=session.getAttribute("type")%>" />
+							<cqu:carSelector  name="car" synchDriver="driver"/>
 						</td>
                     </tr>
                 	<tr>
                         <th><s:property value="tr.getText('car.CarWash.driver')" /><span class="required">*</span></th>
                         <td>
-                        <s:if test=" #session.user.hasPrivilegeByUrl('/carWash_editNormalInfo') ">
-                        	<cqu:userSelector name="driver" />
-                        </s:if>
-                        <s:else>
-                        <cqu:userSelector name="driver" readonly="true"/>
-                        </s:else>
-                        	
+                        	<cqu:userSelector  name="driver" />
                         </td>
 					<td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.CarWash.date')" /><span class="required">*</span></th>
                         <td>
-                        <s:if test=" #session.user.hasPrivilegeByUrl('/carWash_editKeyInfo') ">
 						<s:textfield name="date" id="date" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-					     </s:if>
-					     <s:else>
-					     <s:textfield readonly="true" name="date" id="date" class="Wdate half" type="text" />
-					     </s:else>
 					</td>
                     </tr>
                     <tr>
                     <th><s:property value="tr.getText('car.CarWash.shop')" /><span class="required">*</span></th>
 						<td>
-						<s:if test=" #session.user.hasPrivilegeByUrl('/carWash_editNormalInfo') ">
-						    <s:select name="shop.id" cssClass="SelectStyle"
+						    <s:select id="select_list" name="shop.id" cssClass="SelectStyle"
                         		list="carWashShopList" listKey="id" listValue="name"
                         		headerKey="" headerValue="选择洗车点"/>
-                        </s:if>
-                        <s:else>
-                         <s:select id="select_list" name="shop.id" cssClass="SelectStyle" 
-                        		list="carWashShopList" listKey="id" listValue="name"
-                        		headerKey="" headerValue="选择洗车点" />
-                        </s:else>		
 						</td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.CarWash.money')" /><span class="required">*</span></th>
                         <td>
-                        	<s:if test=" #session.user.hasPrivilegeByUrl('/carWash_editKeyInfo') ">
                         	<s:textfield id="money" cssClass="inputText" name="money"/>
-                        	</s:if>
-                        	<s:else>
-                        	<s:textfield id="money" readonly="true" cssClass="inputText" name="money"/>
-                        	</s:else>
-                        	
                         </td>
                     </tr>
                     
                     <tr>
                         <th><s:property value="tr.getText('car.CarWash.innerCleanMoney')" /></th>
                         <td>
-                        <s:if test=" #session.user.hasPrivilegeByUrl('/carWash_editKeyInfo') ">
                         	<s:textfield id="innerCleanMoney" cssClass="inputText" name="innerCleanMoney"/>
-                        	</s:if>
-                        	<s:else>
-                        	<s:textfield id="innerCleanMoney" readonly="true" cssClass="inputText" name="innerCleanMoney"/>
-                        	</s:else>
-                        	
                         </td>
                     </tr>
                     
                     <tr>
                         <th><s:property value="tr.getText('car.CarWash.polishingMoney')" /></th>
                         <td>
-                        <s:if test=" #session.user.hasPrivilegeByUrl('/carWash_editKeyInfo') ">
                         	<s:textfield id="polishingMoney" cssClass="inputText" name="polishingMoney"/>
-                        	</s:if>
-                        	<s:else>
-                        	<s:textfield id="polishingMoney" readonly="true" cssClass="inputText" name="polishingMoney"/>
-                        	</s:else>
                         </td>
                     </tr>
                     
                     <tr>
                         <th><s:property value="tr.getText('car.CarWash.engineCleanMoney')" /></th>
                         <td>
-                        <s:if test=" #session.user.hasPrivilegeByUrl('/carWash_editKeyInfo') ">
                         	<s:textfield id="engineCleanMoney" cssClass="inputText" name="engineCleanMoney"/>
-                        	</s:if>
-                        	<s:else>
-                        	<s:textfield id="engineCleanMoney" readonly="true" cssClass="inputText" name="engineCleanMoney"/>
-                        	</s:else>
                         </td>
                     </tr>
                     
                     <tr>
                         <th><s:property value="tr.getText('car.CarWash.cushionCleanMoney')" /></th>
                         <td>
-                        <s:if test="#session.user.hasPrivilegeByUrl('/carWash_editKeyInfo') ">
                         	<s:textfield id="cushionCleanMoney" cssClass="inputText" name="cushionCleanMoney"/>
-                        	</s:if>
-                        	<s:else>
-                        	<s:textfield id="cushionCleanMoney" readonly="true" cssClass="inputText" name="cushionCleanMoney"/>
-                        	</s:else>
-                        	
                         </td>
                     </tr>
                     
@@ -181,10 +133,31 @@
     <script type="text/javascript">
 	    
 	    $(function(){
-	    	$("#select_list").attr("disabled", "disabled"); 
-	    	$("#submit").click(function(){
-	    		$("#select_list").removeAttr("disabled"); 
-	    	});
+	    	if($("#type").val()=="edit")
+	    	{
+	    		if($("#editNormalInfo").val()=="true")
+	    		{
+	    			$("#date").removeAttr("onfocus"); 
+	    			$("#date").attr("readonly", true); 
+			    	$("#money").attr("readonly", true); 
+			    	$("#innerCleanMoney").attr("readonly", true); 
+			    	$("#polishingMoney").attr("readonly", true); 
+			    	$("#engineCleanMoney").attr("readonly", true); 
+			    	$("#cushionCleanMoney").attr("readonly", true); 
+	    		}
+	    		else
+		    	{  
+	    			$("#select_list").attr("disabled", "disabled"); 
+			    	$("#submit").click(function(){
+			    		$("#select_list").removeAttr("disabled"); 
+			    	});
+			    	$("#carLabel").removeAttr("onclick");
+			    	$("#carLabel").attr("readonly", true); 
+			    	$("#driverLabel").removeAttr("onclick");
+			    	$("#driverLabel").attr("readonly", true); 
+		    	}
+	    	}
+	    	
 	    	
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },

@@ -74,8 +74,8 @@
 				        <s:iterator value="recordList">
 						<tr>
 							<td>
-							 <s:a action="car_carDetail?id=%{id}">${plateNumber }</s:a> 
-							<%-- <cqu:carDetailList /> --%>
+							<%--  <s:a action="car_carDetail?id=%{id}">${plateNumber }</s:a>  --%> 
+							 <cqu:carDetailList id="${id}" value="${plateNumber} " /> 
 							</td>
 							<td>${serviceType.title }</td>
 							<td>${model }</td>

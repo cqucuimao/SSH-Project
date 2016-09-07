@@ -424,10 +424,8 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			return;
 		}
 		Order order = orderService.getOrderById(orderId);
-		Date beginDate=order.getDayDetails().get(0).getGetonDate();
-		Date endDate=order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate();
-		float getonMile=lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), beginDate);
-		float getoffMile=lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), endDate);
+		float getonMile=order.getCustomerGetonMile();
+		float getoffMile=order.getCustomerGetoffMile();
 		float serviceMile=getoffMile-getonMile;
 		Map<String,Float> map=new HashMap<String,Float>();
 		map.put("getonMile", getonMile);

@@ -18,12 +18,15 @@ import com.baidu.yun.push.exception.PushClientException;
 import com.baidu.yun.push.exception.PushServerException;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceRequest;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceResponse;
+import com.yuqincar.utils.DateUtils;
 
 public class Test {
 
 	public static void main(String[] args) {
-		BigDecimal bd=new BigDecimal("760.00");
-		System.out.println("db="+bd);
+		Date date1=DateUtils.getYMDHMS("2016-09-05 09:55:00");
+		System.out.println(date1.getTime());
+		Date date2=DateUtils.getYMDHMS("2016-09-07 12:00:00");
+		System.out.println(date2.getTime());
 //		dealFuniuPic();
 //		try{
 //			baiduPush();	

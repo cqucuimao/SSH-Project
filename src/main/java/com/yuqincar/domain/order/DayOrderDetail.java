@@ -23,9 +23,15 @@ public class DayOrderDetail extends BaseEntity {
 	
 	@Text("上车时间")
 	private Date getonDate;
+	
+	@Text("上车路码")
+	private float getonMile;
 
 	@Text("下车时间")
 	private Date getoffDate;
+	
+	@Text("下车路码")
+	private float getoffMile;
 	
 	@Text("经过地点摘要")
 	@Column(length=1024)
@@ -96,5 +102,21 @@ public class DayOrderDetail extends BaseEntity {
 
 	public void setChargeMoney(BigDecimal chargeMoney) {
 		this.chargeMoney = chargeMoney;
+	}
+
+	public float getGetonMile() {
+		return getonMile;
+	}
+
+	public void setGetonMile(float getonMile) {
+		this.getonMile = getonMile;
+	}
+
+	public float getGetoffMile() {
+		return getoffMile;
+	}
+
+	public void setGetoffMile(float getoffMile) {
+		this.getoffMile = getoffMile;
 	}		
 }

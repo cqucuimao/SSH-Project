@@ -155,8 +155,10 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		order.setStatus(OrderStatusEnum.BEGIN);			
 		if(user!=null && date!=null)
 			order.setActualBeginDate(date);
-		else
+		else{
 			order.setActualBeginDate(new Date());
+			order.setBeginMile(lbsDao.getCurrentMile(order.getCar()));
+		}
 		orderDao.update(order);
 		
 		if(user!=null && date!=null){
@@ -180,8 +182,10 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		order.setStatus(OrderStatusEnum.END);		
 		if(user!=null && date!=null)
 			order.setActualEndDate(date);
-		else
+		else{
 			order.setActualEndDate(new Date());
+			order.setEndMile(lbsDao.getCurrentMile(order.getCar()));
+		}
 		orderDao.update(order);
 		
 		if(user!=null && date!=null){
@@ -259,8 +263,10 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		dayOrderDetail.setOrder(order);
 		if(user!=null && date!=null)
 			dayOrderDetail.setGetonDate(date);
-		else
+		else{
 			dayOrderDetail.setGetonDate(new Date());
+			dayOrderDetail.setGetonMile(lbsDao.getCurrentMile(order.getCar()));
+		}
 		dayOrderDetailDao.save(dayOrderDetail);		
 		order.setStatus(OrderStatusEnum.GETON);
 		orderDao.update(order);
@@ -286,8 +292,10 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		DayOrderDetail dayOrderDetail=dayOrderDetailDao.getUngetoffDayOrderDetail(order);
 		if(user!=null && date!=null)
 			dayOrderDetail.setGetoffDate(date);
-		else
+		else{
 			dayOrderDetail.setGetoffDate(new Date());
+			dayOrderDetail.setGetoffMile(lbsDao.getCurrentMile(order.getCar()));
+		}
 		dayOrderDetailDao.update(dayOrderDetail);		
 		order.setStatus(OrderStatusEnum.GETOFF);
 		orderDao.update(order);

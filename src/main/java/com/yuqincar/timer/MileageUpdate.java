@@ -2,6 +2,7 @@ package com.yuqincar.timer;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,10 +29,10 @@ public class MileageUpdate {
 		for(Car car : cars) {
 			if(car.getStatus()==CarStatusEnum.SCRAPPED || car.isBorrowed())
 				continue;
-			if(car.getDevice()==null || car.getDevice().getSN()==null)
+			if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
 				continue;
 			
-			int mile = (int) lbsDao.getCurrentMile(car.getDevice().getSN());
+			int mile = (int) lbsDao.getCurrentMile(car);
 			car.setMileage(mile);
 			
 			//判断是否保养过期

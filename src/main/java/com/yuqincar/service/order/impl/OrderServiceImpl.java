@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -939,10 +940,10 @@ public class OrderServiceImpl implements OrderService {
 		boolean inMiddleDay;
 		Price price;
 		
-		if(order.getCar().getDevice()!=null){
+		if(order.getCar().getDevice()!=null && !StringUtils.isEmpty(order.getCar().getDevice().getSN())){
 		
-			getonDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getActualBeginDate(), order.getDayDetails().get(0).getGetonDate());
-			getoffDistance=lbsDao.getStepMile(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate(), order.getActualEndDate());
+			getonDistance=lbsDao.getStepMile(order.getCar(), order.getActualBeginDate(), order.getDayDetails().get(0).getGetonDate());
+			getoffDistance=lbsDao.getStepMile(order.getCar(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate(), order.getActualEndDate());
 			
 			totalChargeMile=0;
 			totalChargeMoney=0;
@@ -952,7 +953,7 @@ public class OrderServiceImpl implements OrderService {
 				for(int i=0;i<order.getDayDetails().size();i++){
 					DayOrderDetail dod=order.getDayDetails().get(i);
 					hours=DateUtils.elapseHours(dod.getGetonDate(), dod.getGetoffDate());
-					mile=lbsDao.getStepMile(order.getCar().getDevice().getSN(), dod.getGetonDate(), dod.getGetoffDate());
+					mile=lbsDao.getStepMile(order.getCar(), dod.getGetonDate(), dod.getGetoffDate());
 					if(i==0 && getonDistance>10)
 						mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
 					if(i==order.getDayDetails().size()-1 && getoffDistance>10)
@@ -1001,7 +1002,7 @@ public class OrderServiceImpl implements OrderService {
 			}else if(order.getChargeMode()==ChargeModeEnum.PLANE){
 				DayOrderDetail dod=order.getDayDetails().get(0);
 				hours=DateUtils.elapseHours(dod.getGetonDate(), dod.getGetoffDate());
-				mile=lbsDao.getStepMile(order.getCar().getDevice().getSN(), dod.getGetonDate(), dod.getGetoffDate());
+				mile=lbsDao.getStepMile(order.getCar(), dod.getGetonDate(), dod.getGetoffDate());
 				if(getonDistance>10)
 					mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
 				if(getoffDistance>10)
@@ -1036,10 +1037,8 @@ public class OrderServiceImpl implements OrderService {
 				totalChargeMile=chargeMile;
 				totalChargeMoney=chargeMoney;
 			}
-			order.setBeginMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getActualBeginDate()));
-			order.setEndMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(),order.getActualEndDate()));
-			order.setCustomerGetonMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(0).getGetonDate()));
-			order.setCustomerGetoffMile(lbsDao.getMileAtMoment(order.getCar().getDevice().getSN(), order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffDate()));
+			order.setCustomerGetonMile(order.getDayDetails().get(0).getGetonMile());
+			order.setCustomerGetoffMile(order.getDayDetails().get(order.getDayDetails().size()-1).getGetoffMile());
 			order.setTotalChargeMile(totalChargeMile);			
 			order.setOrderMoney(new BigDecimal(totalChargeMoney));
 		}else{

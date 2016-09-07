@@ -3,6 +3,7 @@ package com.yuqincar.timer;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -60,7 +61,7 @@ public class WarningCheck {
 	public void checkUnplannedRunningWarning(){
 		List<Car> cars=carService.getCarsForMonitoring();
 		for(Car car:cars){
-			if(car.getDevice()==null)
+			if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
 				continue;
 			String url=String.format(UNPLANNED_RUNNING_URL, car.getDevice().getSN());
 			String json = HttpMethod.get(url.toString());

@@ -100,17 +100,26 @@ public class MaterialReceiveAction extends BaseAction implements ModelDriven<Mat
    public String editUI(){
 	    Material material = materialService.getMaterialById(model.getId());
 		ActionContext.getContext().getValueStack().push(material);
+		ActionContext.getContext().put("type", "edit");
+		User user=(User)request.getSession().getAttribute("user");
+		ActionContext.getContext().put("editKeyInfo", user.hasPrivilegeByUrl("/materialReceive_editKeyInfo"));
+		ActionContext.getContext().put("editNormalInfo", user.hasPrivilegeByUrl("/materialReceive_editNormalInfo"));
 		return "saveUI";
 	}
 	
    public String edit(){
-	  
+	    User user=(User)request.getSession().getAttribute("user");
 	    Material material = materialService.getMaterialById(model.getId());
-		material.setCar(model.getCar());
+		
+	    if (user.hasPrivilegeByUrl("/materialReceive_editNormalInfo")) {
+	    material.setCar(model.getCar());
 	    material.setDriver(model.getDriver());
 		material.setContent(model.getContent());
+	    }
+	    if (user.hasPrivilegeByUrl("/materialReceive_editKeyInfo")) {
 		material.setDate(model.getDate());
 		material.setValue(model.getValue());
+	    }
 		materialService.updateMaterial(material);
 		ActionContext.getContext().getValueStack().push(new Material());
 		return freshList();

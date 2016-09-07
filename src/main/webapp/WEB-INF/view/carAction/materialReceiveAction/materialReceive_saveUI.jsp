@@ -45,6 +45,9 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.Material.car')"/><span class="required">*</span></th>
 						<td>
+							<input id="editNormalInfo" type="hidden" value="${editNormalInfo}" />
+							<input id="editKeyInfo" type="hidden" value="${editKeyInfo}" />
+							<s:textfield id="type" type="hidden" value="%{type}" />
 							<cqu:carSelector name="car" synchDriver="driver"/>
 						</td>
                     </tr>
@@ -94,9 +97,30 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
-
-	
-	    $(function(){	    	
+	    $(function(){
+	    	
+	    	if($("#type").val()=="edit")
+	    	{   
+	    		if(!($("#editNormalInfo").val()=="true" && $("#editKeyInfo").val()=="true"))
+	    		{
+		    		if($("#editNormalInfo").val()=="true")
+		    		{
+		    			$("#date").removeAttr("onfocus"); 
+		    			$("#date").attr("readonly", true); 
+				    	$("#vaule").attr("readonly", true); 
+		    		}
+		    		
+		    		if($("#editKeyInfo").val()=="true")
+			    	{  
+		    			$("#content").attr("readonly", true);
+				    	$("#carLabel").removeAttr("onclick");
+				    	$("#carLabel").attr("readonly", true); 
+				    	$("#driverLabel").removeAttr("onclick");
+				    	$("#driverLabel").attr("readonly", true); 
+			    	}
+	    	   }
+	    	}
+	    	
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },
 				rules:{

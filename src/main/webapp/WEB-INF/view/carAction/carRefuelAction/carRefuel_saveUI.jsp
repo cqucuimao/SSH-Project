@@ -44,7 +44,10 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.CarRefuel.sn')" /></th>
 						<td>
-							<input class="inputText" type="text" name="sn"/>
+							<input id="editNormalInfo" type="hidden" value="${editNormalInfo}" />
+							<input id="editKeyInfo" type="hidden" value="${editKeyInfo}" />
+							<s:textfield id="type" type="hidden" value="%{type}" />
+							<s:textfield class="inputText" type="text" name="sn" id="sn"/>
 						</td>
                     </tr>
                 	<tr>
@@ -62,25 +65,25 @@
                     <tr>
                         <th><s:property value="tr.getText('car.CarRefuel.date')" /><span class="required">*</span></th>
 						<td>
-							<input name="date" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+							<s:textfield name="date" id="date" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 						</td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.CarRefuel.volume')" />(L)<span class="required">*</span></th>
                         <td>
-                        	<input class="inputText" type="text" name="volume"/>
+                        	<s:textfield class="inputText" type="text" name="volume" id="volume"/>
 						</td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.CarRefuel.money')" />(元)<span class="required">*</span></th>
                         <td>
-                        	<input class="inputText" type="text" name="money"/>
+                        	<s:textfield class="inputText" type="text" name="money" id="money"/>
 						</td>
                     </tr>
                     <tr>
 						<th><s:property value="tr.getText('car.CarRefuel.outSource')" /></th>
 						<td>
-							<s:checkbox class="m10" name="outSource"/>
+							<s:checkbox class="m10" name="outSource" id="outSource"/>
 						</td>
 					</tr>
                 </tbody>
@@ -105,6 +108,34 @@
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
 	    $(function(){
+	    	formatDateField1($("#date"));
+	    	if($("#type").val()=="edit")
+	    	{   
+	    		if(!($("#editNormalInfo").val()=="true" && $("#editKeyInfo").val()=="true"))
+	    		{
+		    		if($("#editNormalInfo").val()=="true")
+		    		{
+		    			$("#date").removeAttr("onfocus"); 
+		    			$("#date").attr("readonly", true); 
+				    	$("#volume").attr("readonly", true); 
+				    	$("#money").attr("readonly", true); 
+		    		}
+		    		
+		    		if($("#editKeyInfo").val()=="true")
+			    	{  
+		    			$("#outSource").attr("disabled", "disabled"); 
+				    	$("#submit").click(function(){
+				    		$("#outSource").removeAttr("disabled"); 
+				    	});
+		    			$("#sn").attr("readonly", true);
+				    	$("#carLabel").removeAttr("onclick");
+				    	$("#carLabel").attr("readonly", true); 
+				    	$("#driverLabel").removeAttr("onclick");
+				    	$("#driverLabel").attr("readonly", true); 
+			    	}
+	    	   }
+	    	}
+	    	
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },
 				rules:{

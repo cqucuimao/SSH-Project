@@ -237,10 +237,10 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	    ActionContext.getContext().put("carWashShopList", carWashService.getAllCarWashShop());
 	    CarWash carWash = carWashService.getCarWashById(model.getId());
 		ActionContext.getContext().getValueStack().push(carWash);
-		ActionContext.getContext().getSession().put("type", "edit");
+		ActionContext.getContext().put("type", "edit");
 		User user=(User)request.getSession().getAttribute("user");
-		ActionContext.getContext().getSession().put("editKeyInfo", user.hasPrivilegeByUrl("/carWash_editKeyInfo"));
-		ActionContext.getContext().getSession().put("editNormalInfo", user.hasPrivilegeByUrl("/carWash_editNormalInfo"));
+		ActionContext.getContext().put("editKeyInfo", user.hasPrivilegeByUrl("/carWash_editKeyInfo"));
+		ActionContext.getContext().put("editNormalInfo", user.hasPrivilegeByUrl("/carWash_editNormalInfo"));
 		return "saveUI";
 	}
    

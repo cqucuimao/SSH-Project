@@ -49,9 +49,9 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.CarWash.car')" /><span class="required">*</span></th>
 						<td>
-						<input id="editNormalInfo" type="hidden" value="<%=session.getAttribute("editNormalInfo")%>" />
-						<input id="editKeyInfo" type="hidden" value="<%=session.getAttribute("editKeyInfo")%>" />
-						<input id="type" type="hidden" value="<%=session.getAttribute("type")%>" />
+						    <input id="editNormalInfo" type="hidden" value="${editNormalInfo}" />
+							<input id="editKeyInfo" type="hidden" value="${editKeyInfo}" />
+							<s:textfield id="type" type="hidden" value="%{type}" />
 							<cqu:carSelector  name="car" synchDriver="driver"/>
 						</td>
                     </tr>

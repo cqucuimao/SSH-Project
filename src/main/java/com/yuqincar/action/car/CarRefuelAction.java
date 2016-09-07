@@ -30,6 +30,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.dao.car.CarRefuelDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarRefuel;
+import com.yuqincar.domain.car.Material;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
@@ -461,7 +462,40 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 		return "carRefuelDetail";
 		
 	}
+	public String delete(){
+		   carRefuelService.deleteCarRefuel(model.getId());
+			return freshList();
+		}
+	 public String editUI()
+	   {
+		    CarRefuel carRefuel = carRefuelService.getCarRefuelById(model.getId());
+			ActionContext.getContext().getValueStack().push(carRefuel);
+			ActionContext.getContext().put("type", "edit");
+			User user=(User)request.getSession().getAttribute("user");
+			ActionContext.getContext().put("editKeyInfo", user.hasPrivilegeByUrl("/carRefuel_editKeyInfo"));
+			ActionContext.getContext().put("editNormalInfo", user.hasPrivilegeByUrl("/carRefuel_editNormalInfo"));
+			return "saveUI";
+		}
 	
+	 public String edit(){
+		    User user=(User)request.getSession().getAttribute("user");
+		    CarRefuel carRefuel = carRefuelService.getCarRefuelById(model.getId());
+			
+		    if (user.hasPrivilegeByUrl("/carRefuel_editNormalInfo")) {
+		    carRefuel.setSn(model.getSn());
+		    carRefuel.setCar(model.getCar());
+		    carRefuel.setDriver(model.getDriver());
+		    carRefuel.setOutSource(model.isOutSource());
+		    }
+		    if (user.hasPrivilegeByUrl("/carRefuel_editKeyInfo")) {
+			carRefuel.setDate(model.getDate());
+			carRefuel.setMoney(model.getMoney());
+			carRefuel.setVolume(model.getVolume());
+		    }
+			carRefuelService.updateCarRefuel(carRefuel);
+			ActionContext.getContext().getValueStack().push(new CarRefuel());
+			return freshList();
+		}
 	public CarRefuel getModel() {
 		return model;
 	}

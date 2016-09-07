@@ -47,8 +47,12 @@
 						<s:a cssClass="buttonA" action="carWashShop_list">洗车点管理</s:a> 
 					</td>
 					<td>
-						<s:a cssClass="buttonA" action="carWash_excel">洗车信息导入</s:a> 
+						<s:a cssClass="buttonA" action="carWash_excel">洗车信息导入</s:a>
+						
 					</td>
+					<%-- <td>
+					<s:a cssClass="buttonA" action="carWash_test">测试</s:a>  
+					</td> --%>
 					<td>
 						<s:if test="carId!=null">
 							<a class="p15" href="javascript:history.go(-1);">返回</a>

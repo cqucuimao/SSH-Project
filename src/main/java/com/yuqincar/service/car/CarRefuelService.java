@@ -24,4 +24,7 @@ public interface CarRefuelService {
 	
 	public List<CarRefuel> getAllCarRefuel(QueryHelper queryHelper);
 	
+	public void updateCarRefuel(CarRefuel carRefuel);
+	public void deleteCarRefuel(Long id);
+	
 }

@@ -32,31 +32,34 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.TollCharge.car')" /><span class="required">*</span></th>
 						<td>
+							<input id="editNormalInfo" type="hidden" value="${editNormalInfo}" />
+							<input id="editKeyInfo" type="hidden" value="${editKeyInfo}" />
+							<s:textfield id="type" type="hidden" value="%{type}" />
 							<cqu:carSelector name="car"/>
 						</td>
                     </tr>
                 	<tr>
                         <th><s:property value="tr.getText('car.TollCharge.payDate')" /><span class="required">*</span></th>
                         <td>
-                        	<input  type="text" name="payDate" id="payDate" class="Wdate half"  onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" onchange="autoDate(this.id)"/>
+                        	<s:textfield  type="text" name="payDate" id="payDate" class="Wdate half"  onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" onchange="autoDate(this.id)"/>
                         </td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.TollCharge.money')" /><span class="required">*</span></th>
                         <td>
-                        	<s:textfield cssClass="inputText" name="money"/>
+                        	<s:textfield cssClass="inputText" name="money" id="money"/>
                         </td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.TollCharge.overdueFine')" /></th>
                         <td>
-                        	<s:textfield cssClass="inputText" name="overdueFine"/>
+                        	<s:textfield cssClass="inputText" name="overdueFine" id="overdueFine"/>
                         </td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.TollCharge.moneyForCardReplace')" /></th>
                         <td>
-                        	<s:textfield cssClass="inputText" name="moneyForCardReplace"/>
+                        	<s:textfield cssClass="inputText" name="moneyForCardReplace" id="moneyForCardReplace"/>
                         </td>
                     </tr>
                 	<tr>
@@ -80,7 +83,9 @@
     </div>
     <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript">
-    
+
+	formatDateField1($("#nextPayDate"));
+	formatDateField1($("#payDate"));
       function autoDate(x)
        {
 	    	var date=document.getElementById(x).value;
@@ -91,6 +96,29 @@
        }  
     
     $(function(){
+    	if($("#type").val()=="edit")
+    	{
+    		if(!($("#editNormalInfo").val()=="true" && $("#editKeyInfo").val()=="true"))
+    		{
+    		if($("#editNormalInfo").val()=="true")
+    		{
+    			$("#payDate").removeAttr("onfocus"); 
+    			$("#payDate").attr("readonly", true); 
+		    	$("#overdueFine").attr("readonly", true); 
+		    	$("#moneyForCardReplace").attr("readonly", true); 
+		    	$("#money").attr("readonly", true); 
+    		}
+    		
+    		if($("#editKeyInfo").val()=="true")
+	    	{  
+    			$("#nextPayDate").removeAttr("onfocus"); 
+    			$("#nextPayDate").attr("readonly", true); 
+		    	$("#carLabel").removeAttr("onclick");
+		    	$("#carLabel").attr("readonly", true); 
+	    	}
+    	   }
+    	}
+    	
     	
     	$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },
@@ -120,8 +148,6 @@
 					},
 				}
 			});
-			formatDateField1($("#payDate"));
-			formatDateField1($("#nextPayDate"));
 		});
    </script>
 </cqu:border>

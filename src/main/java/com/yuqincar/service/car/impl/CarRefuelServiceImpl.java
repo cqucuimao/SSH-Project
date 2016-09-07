@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yuqincar.dao.car.CarRefuelDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarRefuel;
+import com.yuqincar.domain.car.Material;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarRefuelService;
@@ -53,6 +54,16 @@ public class CarRefuelServiceImpl implements CarRefuelService {
 	public BigDecimal statisticCarRefuel(Date fromDate, Date toDate){
 		return carRefuelDao.statisticCarRefuel(fromDate,toDate);
 	}
+	@Transactional
+	public void updateCarRefuel(CarRefuel carRefuel) {
+		carRefuelDao.update(carRefuel);
+	}
+
+	@Transactional
+	public void deleteCarRefuel(Long id) {
+		carRefuelDao.delete(id);
+	}
+
 
 	@Transactional
 	public void importExcelFile(List<CarRefuel> carRefuels){

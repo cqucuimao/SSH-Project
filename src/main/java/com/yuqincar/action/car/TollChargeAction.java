@@ -122,17 +122,28 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	public String editUI(){
 		TollCharge tollCharge = tollChargeService.getTollChargeById(model.getId());
 		ActionContext.getContext().getValueStack().push(tollCharge);
+		ActionContext.getContext().put("type", "edit");
+		User user=(User)request.getSession().getAttribute("user");
+		ActionContext.getContext().put("editKeyInfo", user.hasPrivilegeByUrl("/tollCharge_editKeyInfo"));
+		ActionContext.getContext().put("editNormalInfo", user.hasPrivilegeByUrl("/tollCharge_editNormalInfo"));
 		return "saveUI";
 	}
 	
 	public String edit(){
+		User user=(User)request.getSession().getAttribute("user");
 		TollCharge tollCharge = tollChargeService.getTollChargeById(model.getId());
+		if (user.hasPrivilegeByUrl("/tollCharge_editNormalInfo")) {
 		tollCharge.setCar(model.getCar());
+		tollCharge.setNextPayDate(model.getNextPayDate());
+		}
+		
+		if (user.hasPrivilegeByUrl("/tollCharge_editNormalInfo")) {
 		tollCharge.setPayDate(model.getPayDate());
 		tollCharge.setMoney(model.getMoney());
 		tollCharge.setOverdueFine(model.getOverdueFine());
 		tollCharge.setMoneyForCardReplace(model.getMoneyForCardReplace());
-		tollCharge.setNextPayDate(model.getNextPayDate());
+		}
+		
 		tollChargeService.updateTollCharge(tollCharge);
 		ActionContext.getContext().getValueStack().push(new TollCharge());
 		return freshList();

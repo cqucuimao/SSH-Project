@@ -69,6 +69,7 @@
                 			<th><s:property value="tr.getText('car.CarRefuel.volume')" />(L)</th>
                 			<th><s:property value="tr.getText('car.CarRefuel.money')" />(元)</th>
                 			<th><s:property value="tr.getText('car.CarRefuel.outSource')" /></th>
+                			<th>操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
@@ -82,6 +83,10 @@
 							<td style="text-align:right">${money}</td>
 							<s:if test="outSource"><td>是</td></s:if>
 							<s:else><td>否</td></s:else>
+							<td>
+                    			<s:a action="carRefuel_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="carRefuel_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+          					</td> 
 						</tr>
 						</s:iterator> 
 					</tbody>

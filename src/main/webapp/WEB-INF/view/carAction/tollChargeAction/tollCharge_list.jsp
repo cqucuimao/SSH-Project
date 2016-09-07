@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%> 
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>  
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
 <cqu:border exceptJMin="jquery">
 	<div class="space">

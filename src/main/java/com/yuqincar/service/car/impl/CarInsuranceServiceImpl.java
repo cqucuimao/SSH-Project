@@ -122,6 +122,13 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 	public void deleteCommercialInsurance(Long id){
 		commercialInsuranceDao.delete(id);
 	}
+	@Transactional
+	public void updateCarInsurance(CarInsurance carInsurance) {
+		for(int i=0;i<carInsurance.getCommercialInsuranceList().size();i++){
+			commercialInsuranceDao.update(carInsurance.getCommercialInsuranceList().get(i));
+		}
+		carInsuranceDao.update(carInsurance);
+	}
 
 	
 

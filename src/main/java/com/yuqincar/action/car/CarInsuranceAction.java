@@ -19,6 +19,7 @@ import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CommercialInsurance;
 import com.yuqincar.domain.car.CommercialInsuranceType;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarInsuranceService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.utils.QueryHelper;
@@ -40,6 +41,8 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	private Date date2;
 	
 	private int inputRows;
+	
+	private String actionFlag;
 	
 	private Long carId;
 	
@@ -123,8 +126,60 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	public String editUI() throws Exception {
 		// 准备回显的数据
 		CarInsurance carInsurance = carInsuranceService.getCarInsuranceById(model.getId());
+		List<CommercialInsurance> commercialInsurances = carInsurance.getCommercialInsuranceList();
+		//List<Long> longs = new ArrayList<Long>();
+		/*for(int i=0;i<commercialInsurances.size();i++){
+			commercialInsuranceType.add(commercialInsurances.get(i).getCommercialInsuranceType().getId());
+		}*/
+		//commercialInsuranceType = longs;
+		ActionContext.getContext().put("commercialInsurances", commercialInsurances);
 		ActionContext.getContext().getValueStack().push(carInsurance);
+		ActionContext.getContext().put("commercialInsuranceTypes", carInsuranceService.getAllCommercialInsuranceType());	
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		ActionContext.getContext().put("editNormalInfo", user.hasPrivilegeByUrl("/carInsurance_editNormalInfo"));
+		ActionContext.getContext().put("editKeyInfo", user.hasPrivilegeByUrl("/carInsurance_editKeyInfo"));
+		
 		return "saveUI";
+	}
+	
+	public String edit(){
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		
+		CarInsurance carInsurance = carInsuranceService.getCarInsuranceById(model.getId());
+		List<CommercialInsurance> commercialInsurances = carInsurance.getCommercialInsuranceList();
+		for(int i=0;i<commercialInsurances.size();i++){
+			if(user.hasPrivilegeByUrl("/carInsurance_editNormalInfo")){
+				commercialInsurances.get(i).setCommercialInsuranceBeginDate(commercialInsuranceBeginDate.get(i));
+				commercialInsurances.get(i).setCommercialInsuranceEndDate(commercialInsuranceEndDate.get(i));
+				commercialInsurances.get(i).setCommercialInsuranceMemo(commercialInsuranceMemo.get(i));
+				commercialInsurances.get(i).setCommercialInsuranceCoverageMoney(commercialInsuranceCoverageMoney.get(i));
+			}
+			if(user.hasPrivilegeByUrl("/carInsurance_editKeyInfo")){
+				commercialInsurances.get(i).setCommercialInsuranceMoney(commercialInsuranceMoney.get(i));
+			}
+		}
+		carInsurance.setCommercialInsuranceList(commercialInsurances);
+		if(user.hasPrivilegeByUrl("/carInsurance_editNormalInfo")){
+			carInsurance.setCar(model.getCar());
+			carInsurance.setInsureCompany(model.getInsureCompany());
+			carInsurance.setCompulsoryPolicyNumber(model.getCompulsoryPolicyNumber());
+			carInsurance.setCommercialPolicyNumber(model.getCommercialPolicyNumber());
+			carInsurance.setCompulsoryBeginDate(model.getCompulsoryBeginDate());
+			carInsurance.setCompulsoryEndDate(model.getCompulsoryEndDate());
+			carInsurance.setVehicleTaxBeginDate(model.getVehicleTaxBeginDate());
+			carInsurance.setVehicleTaxEndDate(model.getVehicleTaxEndDate());
+			carInsurance.setMemo(model.getMemo());
+			carInsurance.setFromDate(model.getFromDate());
+			carInsurance.setToDate(model.getToDate());
+		}
+		if(user.hasPrivilegeByUrl("/carInsurance_editNormalInfo")){
+			carInsurance.setCompulsoryMoney(model.getCompulsoryMoney());
+			carInsurance.setVehicleTaxMoney(model.getVehicleTaxMoney());
+			carInsurance.setMoney(model.getMoney());
+		}
+		carInsuranceService.updateCarInsurance(carInsurance);
+		
+		return "toList";
 	}
 	
 	/** 提醒*/
@@ -268,6 +323,14 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 
 	public void setDate2(Date date2) {
 		this.date2 = date2;
+	}
+
+	public String getActionFlag() {
+		return actionFlag;
+	}
+
+	public void setActionFlag(String actionFlag) {
+		this.actionFlag = actionFlag;
 	}
 	
 	

@@ -288,6 +288,10 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 		carCare.setDate(DateUtils.getYMD(DateUtils.getYMDString(carCare.getDate())));
 		ActionContext.getContext().getValueStack().push(carCare);
 		
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		ActionContext.getContext().put("editNormalInfo", user.hasPrivilegeByUrl("/carCare_editNormalInfo"));
+		ActionContext.getContext().put("editKeyInfo", user.hasPrivilegeByUrl("/carCare_editKeyInfo"));
+		
 		return "saveUI";
 	}
 	
@@ -306,17 +310,21 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 			addFieldError("date", "你输入的保养日期不能晚于今天！");
 			return "saveUI";
 		}
-		
+		User user = (User)ActionContext.getContext().getSession().get("user");
 		CarCare carCare = carCareService.getCarCareById(model.getId());
 
-		carCare.setCar(model.getCar());
-		carCare.setDriver(model.getDriver());
-		carCare.setDate(model.getDate());
-		carCare.setCareDepo(model.getCareDepo());
-		carCare.setCareMiles(model.getCareMiles());
-		carCare.setMileInterval(model.getMileInterval());
-		carCare.setMoney(model.getMoney());
-		carCare.setMemo(model.getMemo());
+		if(user.hasPrivilegeByUrl("/carCare_editNormalInfo")){
+			carCare.setCar(model.getCar());
+			carCare.setDriver(model.getDriver());
+			carCare.setCareDepo(model.getCareDepo());
+			carCare.setCareMiles(model.getCareMiles());
+			carCare.setMileInterval(model.getMileInterval());
+			carCare.setMemo(model.getMemo());
+		}
+		if(user.hasPrivilegeByUrl("/carCare_editKeyInfo")){
+			carCare.setMoney(model.getMoney());
+			carCare.setDate(model.getDate());
+		}
 
 		//更新到数据库
 		carCareService.updateCarCare(carCare);

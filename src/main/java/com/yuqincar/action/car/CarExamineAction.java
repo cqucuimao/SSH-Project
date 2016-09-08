@@ -225,6 +225,10 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		
 		ActionContext.getContext().getValueStack().push(carExamine);
 
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		ActionContext.getContext().put("editNormalInfo", user.hasPrivilegeByUrl("/carExamine_editNormalInfo"));
+		ActionContext.getContext().put("editKeyInfo", user.hasPrivilegeByUrl("/carExamine_editKeyInfo"));
+
 		return "saveUI";
 	}
 	
@@ -248,16 +252,24 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 			addFieldError("examineIntervalYear", "你输入的下次年审时间不能早于年审时间！");
 			return "saveUI";
 		}
-		
-		CarExamine carExamine = carExamineService.getCarExamineById(model.getId());
 
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		CarExamine carExamine = carExamineService.getCarExamineById(model.getId());
 		//设置要修改的属性
-		carExamine.setCar(model.getCar());
-		carExamine.setDriver(model.getDriver());
-		carExamine.setDate(model.getDate());
-		carExamine.setNextExamineDate(model.getNextExamineDate());
-		carExamine.setMoney(model .getMoney());
-		carExamine.setMemo(model .getMemo());
+		if(user.hasPrivilegeByUrl("/carExamine_editNormalInfo")){
+
+			carExamine.setCar(model.getCar());
+			carExamine.setDriver(model.getDriver());
+			carExamine.setNextExamineDate(model.getNextExamineDate());
+			carExamine.setMemo(model .getMemo());
+			carExamine.setOtherFee(model.getOtherFee());
+		}
+		if(user.hasPrivilegeByUrl("/carExamine_editKeyInfo")){
+
+			carExamine.setDate(model.getDate());
+			carExamine.setMoney(model .getMoney());
+			carExamine.setCarPainterMoney(model.getCarPainterMoney());
+		}
 
 		//更新到数据库
 		carExamineService.updateCarExamine(carExamine);

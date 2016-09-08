@@ -340,6 +340,9 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		carRepair.setFromDate(DateUtils.getYMD(DateUtils.getYMDString(carRepair.getFromDate())));
 		carRepair.setToDate(DateUtils.getYMD(DateUtils.getYMDString(carRepair.getToDate())));
 		ActionContext.getContext().getValueStack().push(carRepair);
+		User user = (User)ActionContext.getContext().getSession().get("user");
+		ActionContext.getContext().put("editNormalInfo", user.hasPrivilegeByUrl("/carRepair_editNormalInfo"));
+		ActionContext.getContext().put("editKeyInfo", user.hasPrivilegeByUrl("/carRepair_editKeyInfo"));
 
 		return "saveUI";
 	}
@@ -355,19 +358,23 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
 			return "saveUI";
 		}
-		
+		User user = (User)ActionContext.getContext().getSession().get("user");
 		CarRepair carRepair = carRepairService.getCarRepairById(model.getId());
+		if(user.hasPrivilegeByUrl("/carRepair_editNormalInfo")){
 
-		//设置要修改的属性
-		carRepair.setCar(model.getCar());
-		carRepair.setDriver(model.getDriver());
-		carRepair.setFromDate(model.getFromDate());
-		carRepair.setToDate(model.getToDate());
-		carRepair.setRepairLocation(model.getRepairLocation());
-		carRepair.setMoney(model .getMoney());
-		carRepair.setMoneyNoGuaranteed(model.getMoneyNoGuaranteed());
-		carRepair.setReason(model.getReason());
-		carRepair.setMemo(model .getMemo());
+			carRepair.setCar(model.getCar());
+			carRepair.setDriver(model.getDriver());
+			carRepair.setRepairLocation(model.getRepairLocation());
+			carRepair.setReason(model.getReason());
+			carRepair.setMemo(model .getMemo());
+		}
+		if(user.hasPrivilegeByUrl("/carRepair_editKeyInfo")){
+
+			carRepair.setFromDate(model.getFromDate());
+			carRepair.setToDate(model.getToDate());
+			carRepair.setMoney(model .getMoney());
+			carRepair.setMoneyNoGuaranteed(model.getMoneyNoGuaranteed());
+		}
 		carRepair.setAppointment(false);
 
 		//更新到数据库

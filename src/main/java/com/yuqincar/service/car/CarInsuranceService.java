@@ -21,6 +21,8 @@ public interface CarInsuranceService {
 			List<Date> commercialInsuranceEndDate,List<BigDecimal> commercialInsuranceCoverageMoney,
 			List<BigDecimal> commercialInsuranceMoney,List<String> commercialInsuranceMemo,int inputRows);
 	
+	public void updateCarInsurance(CarInsurance carInsurance);
+	
 	public CarInsurance getCarInsuranceById(long id);
 	
 	public PageBean<CarInsuranceService> queryCarInsurance(int pageNum , QueryHelper helper);

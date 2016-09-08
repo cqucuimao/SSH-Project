@@ -34,3 +34,5 @@ insert into role_privilege(roles_id,privileges_id) values(4,358);
 insert into role_privilege(roles_id,privileges_id) values(11,357);
 delete from role_noprivilege where role_id='11' and privilege_id='185';
 delete from role_noprivilege where role_id='11' and privilege_id='186';
+
+insert into privilege(id,url,parent_id) values(359,'/baiduAddress',68);

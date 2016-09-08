@@ -117,12 +117,14 @@
 			<result name="toList" type="redirectAction">car_list</result>
 		</action>
 
-		<!-- 车型管理 -->
-		<action name="carServiceType_*" class="carServiceTypeAction"
+		<!-- 价格表管理管理 -->
+		<action name="priceTable_*" class="priceTableAction"
 			method="{1}">
-			<result name="list">/WEB-INF/view/carAction/carServiceTypeAction/carServiceType_list.jsp
+			<result name="list">/WEB-INF/view/carAction/priceTableAction/priceTable_list.jsp
 			</result>
-			<result name="saveUI">/WEB-INF/view/carAction/carServiceTypeAction/carServiceType_saveUI.jsp
+			<result name="serviceTypeList">/WEB-INF/view/carAction/priceTableAction/serviceType_list.jsp
+			</result>
+			<result name="serviceTypeSaveUI">/WEB-INF/view/carAction/priceTableAction/serviceType_saveUI.jsp
 			</result>
 			<result name="toList" type="redirectAction">carServiceType_list</result>
 		</action>
@@ -430,6 +432,10 @@
 		<!-- 百度地图API转发 -->
 		<action name="baidu" class="baiduApiAction" method="api">
 		</action>
+		<!-- 百度地图API地址转换 -->
+		<action name="baiduAddress" class="baiduAddressApiAction" method="api">
+		</action>	
+	
 
 		<!-- 登录注销功能 -->
 		<action name="login_*" class="loginAction" method="{1}">

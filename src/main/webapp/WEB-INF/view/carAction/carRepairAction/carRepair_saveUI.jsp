@@ -40,6 +40,8 @@
         <div class="editBlock detail p30">
         <s:form action="carRepair_%{id == null ? 'add' : 'edit'}" id="pageForm">
         	<s:hidden name="id"></s:hidden>
+        	<s:hidden name="editNormalInfo" id="editNormalInfo"></s:hidden>
+        	<s:hidden name="editKeyInfo" id="editKeyInfo"></s:hidden>
             <table>
             	<colgroup>
 					<col width="80"></col>
@@ -94,13 +96,13 @@
                         <th><s:property value="tr.getText('car.CarRepair.reason')" /><span class="required">*</span></th>
                         
                         <td>
-                        	<s:textarea cssClass="inputText" style="height:100px" name="reason"></s:textarea>
+                        	<s:textarea cssClass="inputText" style="height:100px" name="reason" id="reason"></s:textarea>
 						</td>
                     </tr>
                     <tr>
                         <th><s:property value="tr.getText('car.CarRepair.memo')" /><span class="required">*</span></th>
                         <td>
-                        	<s:textarea cssClass="inputText" style="height:100px" name="memo"></s:textarea>
+                        	<s:textarea cssClass="inputText" style="height:100px" name="memo" id="memo"></s:textarea>
                         </td>
                     </tr>
                 </tbody>
@@ -124,6 +126,25 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+    
+	    //编辑时的权限处理
+		if($("#editNormalInfo").val() == "true" && $("#editKeyInfo").val() == "false" ){
+			$("input[name=fromDate]").attr("readonly",true);
+			$("input[name=fromDate]").removeAttr("onfocus"); 
+			$("input[name=toDate]").attr("readonly",true);
+			$("input[name=toDate]").removeAttr("onfocus"); 
+			$("input[name=money]").attr("readonly",true);
+			$("input[name=moneyNoGuaranteed]").attr("readonly",true);
+		}
+		if($("#editKeyInfo").val() == "true" && $("#editNormalInfo").val() == "false"){
+			$("#carLabel").removeAttr("onclick");
+	    	$("#carLabel").attr("readonly", true); 
+	    	$("#driverLabel").removeAttr("onclick");
+	    	$("#driverLabel").attr("readonly", true); 
+	    	$("input[name=repairLocation]").attr("readonly",true);
+	    	$("#reason").attr("readonly",true);
+	    	$("#memo").attr("readonly",true);
+		}
 	    $(function(){
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },

@@ -80,8 +80,11 @@
                 			<td>${commercialPolicyNumber}</td>
 							<td>${insureCompany}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
-							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
-							<td><s:a action="carInsurance_addCommercialInsuranceUI?id=%{id}"><i class="icon-operate-edit" title="添加商业保险"></i></s:a></td>
+							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0.00"/></td>
+							<td>
+									<s:a action="carInsurance_editUI?id=%{id}&actionFlag=edit"><i class="icon-operate-edit" title="修改"></i></s:a>
+									<s:a action="carInsurance_addCommercialInsuranceUI?id=%{id}"><i class="icon-operate-password" title="添加商业保险"></i></s:a>
+							</td>
 						</tr>
 						</s:iterator> 
 					</tbody>

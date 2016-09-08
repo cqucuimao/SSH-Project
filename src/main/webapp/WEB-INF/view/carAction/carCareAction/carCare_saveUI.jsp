@@ -31,6 +31,8 @@
         <div class="editBlock detail p30">
         <s:form action="carCare_%{id == null ? 'add' : 'edit'}" id="pageForm">
         	<s:hidden name="id"></s:hidden>
+        	<s:hidden name="editNormalInfo" id="editNormalInfo"></s:hidden>
+        	<s:hidden name="editKeyInfo" id="editKeyInfo"></s:hidden>
             <table>
             	<colgroup>
 					<col width="80"></col>
@@ -86,7 +88,7 @@
                     <tr>
                         <th><s:property value="tr.getText('car.CarCare.memo')" /><span class="required">*</span></th>
                         <td>
-                        	<s:textarea cssClass="inputText" style="height:100px" name="memo"></s:textarea>
+                        	<s:textarea cssClass="inputText" style="height:100px" id="memo" name="memo"></s:textarea>
                         </td>
                     </tr>
                 </tbody>
@@ -110,6 +112,25 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+	    //编辑时的权限处理
+		//alert($("#editNormalInfo").val());
+		//alert($("#editKeyInfo").val());
+		if($("#editNormalInfo").val() == "true" && $("#editKeyInfo").val() == "false" ){
+    		$("input[name=money]").attr("readonly",true);
+    		$("input[name=date]").attr("readonly",true);
+    		$("input[name=date]").removeAttr("onfocus"); 
+    	}
+    	if($("#editKeyInfo").val() == "true" && $("#editNormalInfo").val() == "false"){
+    		$("#carLabel").removeAttr("onclick");
+	    	$("#carLabel").attr("readonly", true); 
+	    	$("#driverLabel").removeAttr("onclick");
+	    	$("#driverLabel").attr("readonly", true); 
+	    	$("input[name=careDepo]").attr("readonly",true);
+	    	$("input[name=careMiles]").attr("readonly",true);
+	    	$("input[name=mileInterval]").attr("readonly",true);
+	    	$("#memo").attr("readonly",true);
+    	}
+    
 	    $(function(){
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },

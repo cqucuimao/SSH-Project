@@ -88,7 +88,7 @@
         
         <!-- 播放控制栏 -->
         <div class="playBar mt10 subtract" id="playBar" style="display:none;">
-        	<div class="timeAndAddress" style="font-size:18px;margin-left:285px"></div>
+        	<div class="timeAndAddress" style="font-size:16px;margin-left:300px"></div>
         	<div>
 	            <span class="speed switch"><label class="on" id="normalBn">正常</label><label id="fastBn">快速</label><label id="fasterBn">特快</label></span>
 	            <span class="playBtn" id="play">Play</span>

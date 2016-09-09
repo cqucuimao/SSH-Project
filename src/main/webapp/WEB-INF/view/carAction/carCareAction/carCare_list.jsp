@@ -24,7 +24,7 @@
 			<table>
 				<tr>
 				    <td><s:a action="carCare_appointList"><span>预约车辆保养</span></s:a></td>
-					<td class="on"><a href="#"><span>车辆保养记录</span></a></td>
+					<td class="on"><s:a action="carCare_list" href="#"><span>车辆保养记录</span></s:a></td>
 				</tr>
 			</table>
 		</div>

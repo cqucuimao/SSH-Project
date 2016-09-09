@@ -67,7 +67,7 @@
 				        <s:iterator value="recordList">
 				        
 						<tr>
-							<td>${car.plateNumber}</td>
+							<td><cqu:carDetailList id="${id}" /> </td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td width="30%">${content}</td>

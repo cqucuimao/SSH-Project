@@ -83,7 +83,7 @@
 				        <s:iterator value="recordList">
 				        
 						<tr>
-							<td>${car.plateNumber}</td>
+							<td><cqu:carDetailList id="${id}" /> </td>
 							<td>${driver.name}</td>
 							<td ><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>${shop.name}</td>
@@ -92,7 +92,6 @@
 							<td >${polishingMoney }</td>
 							<td >${engineCleanMoney }</td>
 							<td >${cushionCleanMoney }</td>
-							
 							
 							<td>
                     			<s:a action="carWash_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>

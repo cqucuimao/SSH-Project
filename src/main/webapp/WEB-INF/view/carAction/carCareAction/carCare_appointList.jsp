@@ -23,7 +23,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td class="on"><a href="#"><span>预约车辆保养</span></a></td>
+				    <td class="on"><s:a action="carCare_appointList" href="#"><span>预约车辆保养</span></s:a></td>
 					<td><s:a action="carCare_list"><span>车辆保养记录</span></s:a></td>
 				</tr>
 			</table>
@@ -75,7 +75,7 @@
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">				        
 						<tr>
-							<td>${car.plateNumber}</td>
+							<td><cqu:carDetailList id="${id}" /> </td>
 							<td>${driver.name}</td>
 							<td><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>

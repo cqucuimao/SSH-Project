@@ -3,6 +3,7 @@ package com.yuqincar.tags;
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.classic.Session;
@@ -16,6 +17,7 @@ import com.opensymphony.xwork2.inject.Context;
 import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.impl.CarDaoImpl;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.impl.CarServiceImpl;
 import javax.annotation.Resource;
@@ -23,26 +25,28 @@ import javax.annotation.Resource;
 public class CarDetailListTag extends TagSupport {
 	private static final long serialVersionUID = 1L;
 	private String id;
-	@Resource
-	private CarService carService;
-	//CarDao carDao = new CarDaoImpl();
-	/*WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());  
-	CarServiceType carServiceType = (CarServiceType)wac.getBean("carServiceType"); 
-	*/
 	public int doStartTag() throws JspException {
 		StringBuffer options = new StringBuffer();
 		JspWriter out = pageContext.getOut();
+		User user = (User) pageContext.getSession().getAttribute("user");
+		if (user == null) {
+			throw new RuntimeException("没有登录用户！");
+		}
+
 		try {
 			System.out.println("id=: "+id);
 			WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());  
-
-		   CarService carService = (CarService)wac.getBean("carService"); 
+		    CarService carService = (CarService)wac.getBean("carServiceImpl"); 
 			/*ApplicationContext  ac = new ClassPathXmlApplicationContext("applicationContext.xml");
 			CarService carService = (CarService)ac.getBean("carService");*/
-			System.out.println("carService:= "+carService);
 			String  value=carService.getCarById(Long.parseLong(id)).getPlateNumber();
+			if (user.hasPrivilegeByUrl("/car_carDetail")) 
+			{
+				options.append("<a href=\"/Web/car_carDetail.action?id="+id+"\"> "+value+" </a>");
+			} else {
+				options.append("<a href=\"#\"> "+value+" </a>");
+			}
 			
-			options.append("<a href=\"/Web/car_carDetail.action?id="+id+"\"> "+value+" </a>");
 			out.println(options);
 		} catch (IOException e) {
 			e.printStackTrace();

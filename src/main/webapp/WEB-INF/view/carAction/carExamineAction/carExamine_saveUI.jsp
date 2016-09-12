@@ -68,13 +68,13 @@
                     <tr>
                     	<th><s:property value="tr.getText('car.CarExamine.date')" /><span class="required">*</span></th>
                         <td>
-							<s:textfield cssClass="inputText" id="date" name="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+							<s:textfield cssClass="inputText" id="date" name="date" class="Wdate half" onchange="getDate()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 						</td>
                     </tr>
                 	<tr>
                         <th><s:property value="tr.getText('car.CarExamine.nextExamineDate')" /><span class="required">*</span></th>
                         <td>
-							<s:textfield cssClass="inputText" id="nextExamineDate" name="nextExamineDate" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+							<s:textfield cssClass="inputText" id="nextExamineDate" name="nextExamineDate" class="Wdate half" onchange="getDate1()" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 							<input class="btn" type="button" name="getNextExamineDate" value="点击获取推荐日期">
 						</td>
                     </tr>  
@@ -175,6 +175,18 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+    
+    	function getDate(){
+    		var date = $("#date").val();
+    		$("#payDate").val(date);
+    	}	
+    	
+    	function getDate1(){
+    		var date = $("#nextExamineDate").val();
+    		$("#nextPayDate").val(date);
+    	}	
+    
+    	//登记时显示路桥费信息，编辑时不显示
     	var actionFlag = $("input[name=actionFlag]").val();
     	if(actionFlag == "register"){
     		$(".toll").show();
@@ -278,6 +290,7 @@
 								}	
 							}							
 							$("#nextExamineDate").val(time1);
+							$("#nextPayDate").val(time1);
 						},
 						error : function(msg) {  			         
 					    	console.log("异常"+msg);  

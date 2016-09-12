@@ -34,17 +34,22 @@ public class CarDetailListTag extends TagSupport {
 		}
 
 		try {
+			String color="#22bdf6";
 			System.out.println("id=: "+id);
 			WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());  
 		    CarService carService = (CarService)wac.getBean("carServiceImpl"); 
-			/*ApplicationContext  ac = new ClassPathXmlApplicationContext("applicationContext.xml");
-			CarService carService = (CarService)ac.getBean("carService");*/
 			String  value=carService.getCarById(Long.parseLong(id)).getPlateNumber();
+			Car car=carService.getCarById(Long.parseLong(id));
+			if (car.isCareExpired() || car.isInsuranceExpired() ||car.isExamineExpired() || car.isTollChargeExpired() ) 
+			{
+				color="red";
+			}
+			
 			if (user.hasPrivilegeByUrl("/car_carDetail")) 
 			{
-				options.append("<a href=\"/Web/car_carDetail.action?id="+id+"\"> "+value+" </a>");
+				options.append("<a href=\"/Web/car_carDetail.action?id="+id+"\"><font color="+color+"> "+value+"</font> </a>");
 			} else {
-				options.append("<a href=\"#\"> "+value+" </a>");
+				options.append("<a href=\"#\"> <font color="+color+"> "+value+"</font> </a>");
 			}
 			
 			out.println(options);

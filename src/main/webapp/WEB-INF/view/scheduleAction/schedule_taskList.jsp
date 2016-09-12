@@ -92,7 +92,10 @@
 							<tr>
   								<c:forEach items="${temp}" var="map">  
   									<td>${map.key.driverName}</td>
-									<td>${map.key.plateNumber}</td>
+									<td>
+									<cqu:carDetailList id="${map.key.id}" />
+									<%-- ${map.key.plateNumber} --%>
+									</td>
 									<td>${map.key.serviceType}</td>
 									<td>${map.key.phone}</td>								
   									<c:forEach items="${map.value}" var="mapValue">

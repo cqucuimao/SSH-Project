@@ -67,24 +67,16 @@ public class DriverAction extends BaseAction {
          
         teMap = new LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>();
         driverUseInfoNum = new LinkedHashMap<String, Integer>();
-        List<List<BaseEntity>> driverUseInfo = orderService.getDriverTask(driver, beginDate, endDate);
+        List<List<Order>> driverUseInfo = orderService.getDriverTask(driver, beginDate, endDate);
         int i = 0;
-        for (List<BaseEntity> dayList : driverUseInfo) {
+        for (List<Order> dayList : driverUseInfo) {
         	if(dayList!=null && dayList.size()>0){
-     			BaseEntity baseEntity=dayList.get(0);//用最前面的实体作为显示依据。
-     			if (baseEntity instanceof CarCare) {
-     				driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 0);
-     			} else if (baseEntity instanceof CarRepair) {
-     				driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
-     			} else if (baseEntity instanceof CarExamine) {
-     				driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 2);
-     			} else if (baseEntity instanceof Order) {
-     				driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 3);
-     			} else {
-     				driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 4);
-     			}
+        		if(dayList.get(0)!=null)
+        			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 0);
+ 				else
+ 					driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
      		}else{
-     			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 4);
+     			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
      		}
      	}
         LineTitleVO ltvo=new LineTitleVO();
@@ -127,25 +119,17 @@ public class DriverAction extends BaseAction {
             try {
                 teMap = new LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>();
                 carUseInfoNum = new LinkedHashMap<String, Integer>();
-                List<List<BaseEntity>> carUseInfo = orderService.getCarTask(car, beginDate, endDate);
+                List<List<Order>> carUseInfo = orderService.getCarTask(car, beginDate, endDate);
                 int i = 0;
                 System.out.println("carUseInfo.size="+carUseInfo.size());
-                for (List<BaseEntity> dayList : carUseInfo) {
+                for (List<Order> dayList : carUseInfo) {
     				if(dayList!=null && dayList.size()>0){
-    					BaseEntity baseEntity=dayList.get(0);//用最前面的实体作为显示依据。
-    					if (baseEntity instanceof CarCare) {
+    					if(dayList.get(0)!=null)
     						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 0);
-    					} else if (baseEntity instanceof CarRepair) {
-    						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
-    					} else if (baseEntity instanceof CarExamine) {
-    						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 2);
-    					} else if (baseEntity instanceof Order) {
-    						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 3);
-    					} else {
-    						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 4);
-    					}
+						else
+							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
     				}else{
-    					carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 4);
+    					carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
     				}
     			}
                 LineTitleVO ltvo=new LineTitleVO();

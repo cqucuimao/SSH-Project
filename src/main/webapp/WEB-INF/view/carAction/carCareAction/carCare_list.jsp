@@ -23,7 +23,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td><s:a action="carCare_appointList"><span>预约车辆保养</span></s:a></td>
+				    <td><s:a action="carCareAppointment_List"><span>预约车辆保养</span></s:a></td>
 					<td class="on"><s:a action="carCare_list" href="#"><span>车辆保养记录</span></s:a></td>
 				</tr>
 			</table>
@@ -56,9 +56,6 @@
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 					<td>
-						<s:a cssClass="buttonA" action="carCare_remind" style="float:right">保养提醒</s:a>
-					</td>
-					<td>
 						<s:a cssClass="buttonA" action="carCare_excel" style="float:right">导入保养</s:a>
 					</td>
 					<td>
@@ -80,7 +77,6 @@
 							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
               				<th><s:property value="tr.getText('car.CarCare.date')" /></th>
               				<th><s:property value="tr.getText('car.CarCare.careMiles')" /></th>
-                			<th><s:property value="tr.getText('car.CarCare.mileInterval')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.money')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.memo')" /></th>
                 			<th><s:property value="tr.getText('car.CarCare.careDepo')" /></th>
@@ -91,11 +87,10 @@
 				        <s:iterator value="recordList">
 				        
 						<tr>
-							<td><s:a action="carCare_detail?id=%{id}">${car.plateNumber}</s:a></td>
+							<td><cqu:carDetailList id="${car.id}"/></td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right">${careMiles}</td>
-							<td style="text-align:right">${mileInterval}</td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
 							<td width="40%">${memo}</td>
 							<td>${careDepo}</td>

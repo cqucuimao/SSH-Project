@@ -26,28 +26,8 @@ public interface CarExamineService {
 	
 	public PageBean<CarExamine> queryCarExamine(int pageNum , QueryHelper helper);
 	
-	/**
-	 * 
-	 * @param carExamine
-	 * @return carExamine.appointment==true
-	 */
-	public boolean canDeleteCarExamine(CarExamine carExamine);
-	
 	public void deleteCarExamineById(Long id);
 	
-	/**
-	 * 
-	 * @param carExamine
-	 * @return carExamine.appointment==true
-	 */
-	public boolean canUpdateCarExamine(CarExamine carExamine);
-	
-	/**
-	 * 修改年审记录。只能对预约的保养记录进行修改。
-	 * 设置appointment为false
-	 * 关于设置车辆下次保养里程，请参见saveCarExamine的说明。
-	 * @param carExamine
-	 */
 	public void updateCarExamine(CarExamine carExamine);
 	
 	/**
@@ -57,15 +37,6 @@ public interface CarExamineService {
 	 */
 	public PageBean<Car> getNeedExamineCars(int pageNum,QueryHelper helper);
 	
-	/**
-	 * 获取下一次年审的日期。
-	 * @return Date
-	 */
 	public Date getNextExamineDate(Car car, Date recentExamineDate);
 
-	public void saveAppointment(CarExamine carExamine);
-	
-	public void updateAppointment(CarExamine carExamine);
-	
-	public CarExamine getUnDoneAppointExamine(Car car);
 }

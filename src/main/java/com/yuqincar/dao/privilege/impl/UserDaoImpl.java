@@ -19,6 +19,8 @@ import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 @Repository
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 
@@ -137,5 +139,12 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		if(users.size() != 0)
 			return true;
 		return false;
+	}
+	
+	public List<User> getUsersByRoleName(String roleName){
+		Criteria crit = getSession().createCriteria(User.class)
+				.createCriteria("roles");
+		crit.add(Restrictions.eq("name", roleName));
+		return (List<User>) crit.list();
 	}
 }

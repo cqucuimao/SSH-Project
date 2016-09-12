@@ -23,14 +23,14 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td class="on"><s:a action="carCare_appointList" href="#"><span>预约车辆保养</span></s:a></td>
+				    <td class="on"><s:a action="carCareAppointment_list" href="#"><span>预约车辆保养</span></s:a></td>
 					<td><s:a action="carCare_list"><span>车辆保养记录</span></s:a></td>
 				</tr>
 			</table>
 		</div>
 		<br/>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carCare_queryAppointForm">
+			<s:form id="pageForm" action="carCareAppointment_query">
 			<table>
 				<tr>
 					<td>
@@ -88,8 +88,7 @@
 							</td>
 							<td>
 								<s:if test="done==false">
-                    				<s:a action="carCare_deleteAppointment?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
-                    				<s:a action="carCare_editAppointmentUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+                    				<s:a action="carCareAppointment_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
                     			</s:if>                    			
                 			</td>
 						</tr>

@@ -16,10 +16,6 @@ public class Device extends BaseEntity {
 	@Text("SN")
 	@Column(nullable=false, unique=true)
 	private String SN;
-
-	@Text("PN")
-	@Column(nullable=false)
-	private String PN;
 	
 	@Text("SIM卡号码")
 	private String simNumber;
@@ -34,12 +30,6 @@ public class Device extends BaseEntity {
 	}
 	public void setSN(String sN) {
 		SN = sN;
-	}
-	public String getPN() {
-		return PN;
-	}
-	public void setPN(String pN) {
-		PN = pN;
 	}
 	public Date getDate() {
 		return date;

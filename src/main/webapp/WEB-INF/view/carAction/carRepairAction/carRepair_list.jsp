@@ -87,7 +87,7 @@
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td><s:a action="carRepair_detail?id=%{id}">${car.plateNumber}</s:a></td>
+							<td><cqu:carDetailList id="${car.id}"/></td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 							<td>${repairLocation}</td>

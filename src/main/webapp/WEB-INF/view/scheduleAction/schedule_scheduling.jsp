@@ -662,6 +662,8 @@
 										alert("车辆没有年审")
 									} else if (data.result == 12) {
 										alert("车辆没有交路桥费")
+									} else if (data.result == 13) {
+										alert("车辆过期为保养")
 									}
 								},
 								error : function(msg) {  			         
@@ -720,12 +722,6 @@
 										}
 										jQuery.each(data[i].carInfo,function(date,val) {
 											if (val == 0) {
-												$(".tableHover").append('<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
-											} else if (val == 1) {
-												$(".tableHover").append('<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
-											} else if (val == 2) {
-												$(".tableHover").append('<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
-											} else if (val == 3) {
 												$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
 											} else {
 												$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
@@ -800,12 +796,6 @@
 								}
 								jQuery.each(data[i].carInfo,function(date,val) {
 									if (val == 0) {
-										$(".tableHover").append('<td class="alignCenter"><i class="icon-car maintenance"></i>保养中</td>');
-									} else if (val == 1) {
-										$(".tableHover").append('<td class="alignCenter"><i class="icon-car repair"></i>维修中</td>');
-									} else if (val == 2) {
-										$(".tableHover").append('<td class="alignCenter"><i class="icon-car check"></i>年审中</td>');
-									} else if (val == 3) {
 										$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
 									} else {
 										$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');

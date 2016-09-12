@@ -1,5 +1,6 @@
 package com.yuqincar.dao.lbs.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,38 +35,47 @@ public class LBSDaoImpl implements LBSDao{
 	}
 
 	public float getCurrentMile(Car car) {
-		if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
+		try{
+			if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
+				return 0;
+			String api = "http://api2.capcare.com.cn:1045/api/device.get.do?device_sn="
+					+car.getDevice().getSN()+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN";
+			String json = HttpMethod.get(api);
+			JSONObject data = (JSONObject) JSON.parse(json);
+			JSONObject device = (JSONObject) data.get("device");
+			JSONObject position = (JSONObject) device.get("position");
+			String mileStr=position.getString("altitude");
+			if(!StringUtils.isEmpty(mileStr))
+				return new BigDecimal(mileStr).divide(new BigDecimal(1000)).intValue();
+			else
+				return 0;
+		}catch(Exception e){
+			e.printStackTrace();
 			return 0;
-		String api = "http://api2.capcare.com.cn:1045/api/device.get.do?device_sn="
-				+car.getDevice().getSN()+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN";
-		String json = HttpMethod.get(api);
-		JSONObject data = (JSONObject) JSON.parse(json);
-		JSONObject device = (JSONObject) data.get("device");
-		JSONObject position = (JSONObject) device.get("position");
-		String mileStr=position.getString("altitude");
-		if(!StringUtils.isEmpty(mileStr))
-			return Float.valueOf(mileStr).floatValue();
-		else
-			return 0;
+		}
 	}
 	
 	
 	public float getStepMile(Car car, Date beginTime, Date endTime) {
-		if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
+		try{
+			if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
+				return 0;
+			String api = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="
+					+car.getDevice().getSN()+"&begin="+beginTime.getTime()+"&end="+endTime.getTime()
+					+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN&_=1450765172310";
+			String json = HttpMethod.get(api);
+			JSONObject data = (JSONObject) JSON.parse(json);
+			JSONArray track = (JSONArray) data.get("track");
+			float distance = 0;
+			for(int i=0;i<track.size();i++){
+				JSONObject obj = (JSONObject) track.get(i);
+				distance += obj.getFloatValue("distance");
+			}
+			return distance;
+		}catch(Exception e){
+			e.printStackTrace();
 			return 0;
-		String api = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="
-				+car.getDevice().getSN()+"&begin="+beginTime.getTime()+"&end="+endTime.getTime()
-				+"&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD&language=zh_CN&_=1450765172310";
-		String json = HttpMethod.get(api);
-		JSONObject data = (JSONObject) JSON.parse(json);
-		JSONArray track = (JSONArray) data.get("track");
-		float distance = 0;
-		for(int i=0;i<track.size();i++){
-			JSONObject obj = (JSONObject) track.get(i);
-			distance += obj.getFloatValue("distance");
 		}
-		return distance;
-		
 	
 	}
 	public static void main(String[] args) {

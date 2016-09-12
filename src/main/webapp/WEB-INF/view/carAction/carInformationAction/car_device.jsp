@@ -75,10 +75,6 @@
 						
 					</tr>
 					<tr>
-						<th><s:property value="tr.getText('monitor.Device.PN')" /><span class="required">*</span></th>
-						<td><s:textfield cssClass="inputText" name="device.PN"/></td>
-					</tr>
-					<tr>
 	                <td colspan="2">	                		 
 		                	<input type="submit" class="inputButton" value="确定"/>
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a>	                
@@ -105,10 +101,7 @@
 					// 配置具体的验证规则
 					'device.SN':{
 						required:true,
-					},
-					'device.PN':{
-						required:true,
-					},
+					}
 				}
 			});
 		});

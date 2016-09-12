@@ -122,10 +122,10 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carCare_appointList') || #session.user.hasPrivilegeByUrl('/carCare_list')">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carCareAppointment_list') || #session.user.hasPrivilegeByUrl('/carCare_list')">
 			<dd>
-				<s:if test="#session.user.hasPrivilegeByUrl('/carCare_appointList')">
-				<s:a action="carCare_appointList">车辆保养</s:a>
+				<s:if test="#session.user.hasPrivilegeByUrl('/carCareAppointment_list')">
+				<s:a action="carCareAppointment_list">车辆保养</s:a>
 				</s:if>
 				<s:else>
 				<s:a action="carCare_list">车辆保养</s:a>
@@ -139,9 +139,9 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carRepair_appointList') || #session.user.hasPrivilegeByUrl('/carRepair_list') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carRepairAppointment_list') || #session.user.hasPrivilegeByUrl('/carRepair_list') ">
 			<dd>
-			     <s:if test="#session.user.hasPrivilegeByUrl('/carRepair_appointList')">
+			     <s:if test="#session.user.hasPrivilegeByUrl('/carRepairAppointment_list')">
 				<s:a action="carRepair_appointList">车辆维修</s:a>
 				</s:if>
 				<s:else>
@@ -156,9 +156,9 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/carExamine_appointList') || #session.user.hasPrivilegeByUrl('/carExamine_list') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/carExamineAppointment_list') || #session.user.hasPrivilegeByUrl('/carExamine_list') ">
 			<dd>
-			    <s:if test="#session.user.hasPrivilegeByUrl('/carExamine_appointList')">
+			    <s:if test="#session.user.hasPrivilegeByUrl('/carExamineAppointment_list')">
 				<s:a action="carExamine_appointList">车辆年审</s:a>
 				</s:if>
 				<s:else>

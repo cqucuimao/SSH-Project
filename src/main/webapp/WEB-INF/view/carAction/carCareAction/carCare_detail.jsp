@@ -51,10 +51,6 @@
                     			<td>${careMiles}</td>
                 			</tr>
                 			<tr>
-                				<th><s:property value="tr.getText('car.CarCare.mileInterval')" />(KM)：</th>
-                				<td>${mileInterval}</td>
-                			</tr>
-                			<tr>
                 				<th><s:property value="tr.getText('car.CarCare.money')" />(元)：</th>
                 				<td><fmt:formatNumber value="${money}" pattern="#0"/></td>
                 			</tr>

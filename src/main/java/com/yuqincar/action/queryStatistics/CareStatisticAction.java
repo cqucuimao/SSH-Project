@@ -230,9 +230,9 @@ public class CareStatisticAction extends BaseAction {
 				Date end=DateUtils.getEndDateOfMonth(begin);
 				//System.out.println("begin="+DateUtils.getYMDString(begin));
 				//System.out.println("end="+DateUtils.getYMDString(end));
-				BigDecimal money=carCareService.statisticCarCare(DateUtils.getMinDate(begin),DateUtils.getMaxDate(end));
-				dataset.addValue(money, "保养金额", x + "年" + (i+1) + "月");
-	            lineDataset.addValue(money, "保养金额", x + "年" + (i+1) + "月");
+//				BigDecimal money=carCareService.statisticCarCare(DateUtils.getMinDate(begin),DateUtils.getMaxDate(end));
+//				dataset.addValue(money, "保养金额", x + "年" + (i+1) + "月");
+//	            lineDataset.addValue(money, "保养金额", x + "年" + (i+1) + "月");
 			}
 			
 			JFreeChart chart = ChartFactory.createBarChart("保养金额(元)",
@@ -305,9 +305,9 @@ public class CareStatisticAction extends BaseAction {
 				Date begin=calendar.getTime();
 				System.out.println("begin开始时间="+DateUtils.getYMDString(begin));
 				Date end=DateUtils.getEndDateOfMonth(begin);
-				BigDecimal money = carCareService.statisticCarCare(DateUtils.getMinDate(begin),DateUtils.getMaxDate(end));
-				dataset.addValue(money, "保养金额", z + "年" + y + "月");
-	            lineDataset.addValue(money, "保养金额", z + "年" + y + "月");
+//				BigDecimal money = carCareService.statisticCarCare(DateUtils.getMinDate(begin),DateUtils.getMaxDate(end));
+//				dataset.addValue(money, "保养金额", z + "年" + y + "月");
+//	            lineDataset.addValue(money, "保养金额", z + "年" + y + "月");
 			}else{
 				for(int i=z;i<=x;i++){
 					Calendar calendar=Calendar.getInstance();
@@ -319,9 +319,9 @@ public class CareStatisticAction extends BaseAction {
 					Date end=DateUtils.getEndDateOfMonth(begin);
 					//System.out.println("begin="+DateUtils.getYMDString(begin));
 					//System.out.println("end="+DateUtils.getYMDString(end));
-					BigDecimal money=carCareService.statisticCarCare(DateUtils.getMinDate(begin),DateUtils.getMaxDate(end));
-					dataset.addValue(money, "保养金额", i + "年" + y + "月");
-		            lineDataset.addValue(money, "保养金额", i + "年" + y + "月");
+//					BigDecimal money=carCareService.statisticCarCare(DateUtils.getMinDate(begin),DateUtils.getMaxDate(end));
+//					dataset.addValue(money, "保养金额", i + "年" + y + "月");
+//		            lineDataset.addValue(money, "保养金额", i + "年" + y + "月");
 				}
 			}
 			

@@ -21,6 +21,7 @@ import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserAPPDeviceTypeEnum;
+import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.service.app.DriverAPPService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.privilege.PrivilegeService;
@@ -74,6 +75,8 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		user = userService.getByLoginNameAndMD5Password(username, pwd);
 		
 		if(user!=null && !privilegeService.canUserHasPrivilege(user, "/driver_app"))
+			user=null;
+		if(user.getStatus()!=UserStatusEnum.NORMAL)
 			user=null;
 	}
 

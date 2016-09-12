@@ -71,9 +71,9 @@ public interface OrderService extends BaseService {
 	 *         如果有维修任务，就返回此维修记录对象（CarRepair） 如果有年审任务，就返回此年审记录对象（CarExamine）
 	 * @throws Exception
 	 */
-	public List<List<BaseEntity>> getCarTask(Car car, Date fromDate, Date toDate);
+	public List<List<Order>> getCarTask(Car car, Date fromDate, Date toDate);
 	
-	public List<List<BaseEntity>> getDriverTask(User driver, Date fromDate, Date toDate);
+	public List<List<Order>> getDriverTask(User driver, Date fromDate, Date toDate);
 
 	/**
 	 * 是否可以调度。用于在订单列表中判断是否可以显示“调度”按钮。

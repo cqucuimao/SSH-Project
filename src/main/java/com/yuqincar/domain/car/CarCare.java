@@ -36,23 +36,14 @@ public class CarCare extends BaseEntity {
 	@Text("保养里程")
 	private int careMiles;	//保养里程数
 	
-	@Text("下次保养间隔里程")
-	private int mileInterval;	//下次保养间隔里程数
-	
 	@Text("保养花费")
 	private BigDecimal money;	//保养花费
 	
 	@Text("保养内容")
 	private String memo;	//备注
 	
-	@Text("承修单位")
-	private String careDepo;	//承修单位
-	
-	@Text("是否预约记录")
-	private boolean appointment;	//是否为预约记录
-	
-	@Text("是否完成保养")
-	private boolean done;	//是否完成保养，只有当appointment为true时，本字段才有意义。
+	@Text("保养单位")
+	private String careDepo;	//保养单位
 	
 	public int getCareMiles() {
 		return careMiles;
@@ -65,8 +56,7 @@ public class CarCare extends BaseEntity {
 	}
 	public void setCareDepo(String careDepo) {
 		this.careDepo = careDepo;
-	}
-	
+	}	
 	public Car getCar() {
 		return car;
 	}
@@ -78,12 +68,6 @@ public class CarCare extends BaseEntity {
 	}
 	public void setDate(Date date) {
 		this.date = date;
-	}
-	public int getMileInterval() {
-		return mileInterval;
-	}
-	public void setMileInterval(int mileInterval) {
-		this.mileInterval = mileInterval;
 	}
 	public BigDecimal getMoney() {
 		//return money.setScale(0, BigDecimal.ROUND_HALF_UP);
@@ -98,22 +82,10 @@ public class CarCare extends BaseEntity {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	public boolean isAppointment() {
-		return appointment;
-	}
-	public void setAppointment(boolean appointment) {
-		this.appointment = appointment;
-	}
 	public User getDriver() {
 		return driver;
 	}
 	public void setDriver(User driver) {
 		this.driver = driver;
 	}
-	public boolean isDone() {
-		return done;
-	}
-	public void setDone(boolean done) {
-		this.done = done;
-	}	
 }

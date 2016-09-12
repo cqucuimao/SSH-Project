@@ -1,7 +1,5 @@
 package com.yuqincar.service.car.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.car.CarCareDao;
 import com.yuqincar.dao.car.CarDao;
-import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
-import com.yuqincar.domain.car.CarRepair;
-import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.service.car.CarCareService;
 import com.yuqincar.service.car.CarService;
@@ -39,10 +34,6 @@ public class CarCareServiceImpl implements CarCareService {
 	@Transactional
     public void saveCarCare(CarCare carCare) {
     	carCareDao.save(carCare);
-    
-    	Car car=carCare.getCar();
-    	car.setNextCareMile(car.getMileage()+carCare.getMileInterval());
-    	carDao.update(car);
     }
 
 	public CarCare getCarCareById(long id) {
@@ -53,47 +44,14 @@ public class CarCareServiceImpl implements CarCareService {
 		return carCareDao.getPageBean(pageNum, helper);
 	}
 
-	public boolean canDeleteCarCare(CarCare carCare) {
-		return carCare.isAppointment()==true;
-	}
-
 	@Transactional
 	public void deleteCarCareById(long id) {
-		CarCare carCare=carCareDao.getById(id);
-		Car car=carCare.getCar();
 		carCareDao.delete(id);
-		
-		CarCare cc=carCareDao.getRecentCarCare(car);
-		if(cc!=null){
-			car.setNextCareMile(cc.getCareMiles()+cc.getMileInterval());
-			if(car.getNextCareMile()>=car.getMileage())
-				car.setCareExpired(true);
-			else
-				car.setCareExpired(false);
-			carDao.update(car);
-		}
-	}
-
-	public boolean canUpdateCarCare(CarCare carCare) {
-		return carCare.isAppointment()==true;
 	}
 
 	@Transactional
 	public void updateCarCare(CarCare carCare) {
-		Car car=carCare.getCar();
-		car.setNextCareMile(car.getMileage()+carCare.getMileInterval());
 		carCareDao.update(carCare);
-	}
-
-	public PageBean<Car> getNeedCareCars(int pageNum) {
-		QueryHelper helper = new QueryHelper(Car.class, "c");
-		helper.addWhereCondition("mileNeedCare<300 and c.status=? and c.borrowed=?", CarStatusEnum.NORMAL, false);
-		helper.addOrderByProperty("mileNeedCare", true);
-		return carDao.getPageBean(pageNum, helper);
-	}
-
-	public BigDecimal statisticCarCare(Date fromDate,Date toDate){
-		return carCareDao.statisticCarCare(fromDate,toDate);
 	}
 			
 	@Transactional
@@ -102,29 +60,5 @@ public class CarCareServiceImpl implements CarCareService {
 		for(int i=0;i<carCares.size();i++){
 			carCareDao.save(carCares.get(i));
 		}	
-	}
-	
-	@Transactional
-	public void saveAppointment(CarCare carCare) {
-		carCare.setAppointment(true);
-		carCareDao.save(carCare);
-	}
-	
-	@Transactional
-	public void updateAppointment(CarCare carCare) {
-		carCareDao.update(carCare);
-	}
-	
-	public CarCare getUnDoneAppointCare(Car car){
-		QueryHelper helper=new QueryHelper(CarCare.class,"cc");
-		helper.addWhereCondition("cc.car=?", car);
-		helper.addWhereCondition("cc.appointment=?", true);
-		helper.addWhereCondition("cc.done=?", false);
-		helper.addOrderByProperty("cc.date", false);
-		List<CarCare> list=carCareDao.getPageBean(1, helper).getRecordList();
-		if(list!=null && list.size()>0){
-			return list.get(0);
-		}else
-			return null;
-	}
+	}	
 }

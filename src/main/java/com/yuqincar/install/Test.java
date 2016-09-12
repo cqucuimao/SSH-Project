@@ -23,10 +23,7 @@ import com.yuqincar.utils.DateUtils;
 public class Test {
 
 	public static void main(String[] args) {
-		Date date1=DateUtils.getYMDHMS("2016-09-05 09:55:00");
-		System.out.println(date1.getTime());
-		Date date2=DateUtils.getYMDHMS("2016-09-07 12:00:00");
-		System.out.println(date2.getTime());
+		System.out.println(new BigDecimal("1.12780252E8").divide(new BigDecimal(1000)).intValue());
 //		dealFuniuPic();
 //		try{
 //			baiduPush();	

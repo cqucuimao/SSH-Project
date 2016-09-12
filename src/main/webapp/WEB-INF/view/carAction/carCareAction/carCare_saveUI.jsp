@@ -18,6 +18,14 @@
         <!-- 标题 -->
         <div class="title">
             <h1>保养信息</h1>
+        </div>        
+		<div class="tab_next style2">
+			<table>
+				<tr>
+				    <td><s:a action="carCareAppointment_list"><span>预约车辆保养</span></s:a></td>
+					<td class="on"><a href="#"><span>车辆保养记录</span></a></td>
+				</tr>
+			</table>			
             <p style="color: red">
 				<s:if test="hasFieldErrors()">
 					<s:iterator value="fieldErrors">
@@ -27,7 +35,8 @@
 					</s:iterator>
 				</s:if>
 			</p>
-        </div>
+		</div>
+		<br/>
         <div class="editBlock detail p30">
         <s:form action="carCare_%{id == null ? 'add' : 'edit'}" id="pageForm">
         	<s:hidden name="id"></s:hidden>
@@ -71,12 +80,6 @@
                     	<th><s:property value="tr.getText('car.CarCare.careMiles')" /></th>
                     	<td>
                     		<s:textfield cssClass="inputText" name="careMiles" />
-                    	</td>
-                    </tr>
-                    <tr>
-                    	<th><s:property value="tr.getText('car.CarCare.mileInterval')" /><span class="required">*</span></th>
-                    	<td>
-                    		<s:textfield cssClass="inputText" name="mileInterval"/>
                     	</td>
                     </tr>
                     <tr>

@@ -23,10 +23,12 @@ public class CarExamine extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
 	private Car car;	//车辆
+	
 	@Text("司机")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
 	private User driver;
+	
 	@Text("年审日期")
 	@JoinColumn(nullable=false)
 	private Date date;	//年审时间
@@ -45,12 +47,6 @@ public class CarExamine extends BaseEntity {
 	
 	@Text("车身喷漆费用")
 	private BigDecimal carPainterMoney;
-
-	@Text("是否预约记录")
-	private boolean appointment;	//是否为预约记录
-	
-	@Text("是否完成年审")
-	private boolean done;	//是否完成年审，只有当appointment为true时，本字段才有意义。
 	
 	public BigDecimal getCarPainterMoney() {
 		return carPainterMoney;
@@ -95,22 +91,10 @@ public class CarExamine extends BaseEntity {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	public boolean isAppointment() {
-		return appointment;
-	}
-	public void setAppointment(boolean appointment) {
-		this.appointment = appointment;
-	}
 	public User getDriver() {
 		return driver;
 	}
 	public void setDriver(User driver) {
 		this.driver = driver;
-	}
-	public boolean isDone() {
-		return done;
-	}
-	public void setDone(boolean done) {
-		this.done = done;
 	}	
 }

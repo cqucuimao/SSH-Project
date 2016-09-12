@@ -75,28 +75,19 @@
               				<th><s:property value="tr.getText('car.CarExamine.money')" /></th>
               				<th><s:property value="tr.getText('car.CarExamine.carPainterMoney')" /></th>
                 			<th><s:property value="tr.getText('car.CarExamine.memo')" /></th>
-                			<th><s:property value="tr.getText('car.CarExamine.appointment')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td><s:a action="carExamine_detail?id=%{id}">${car.plateNumber}</s:a></td>
+							<td><cqu:carDetailList id="${car.id}"/></td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right"><s:date name="nextExamineDate" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right">${money}</td>
 							<td style="text-align:right">${carPainterMoney}</td>
 							<td width="40%">${memo}</td>
-							<td>
-								<s:if test="appointment==true">
-								<s:text name="是"></s:text>
-								</s:if>
-								<s:else>
-								<s:text name="否"></s:text>
-								</s:else>
-							</td>
 							<td>
                     			<s:a action="carExamine_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:a action="carExamine_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>

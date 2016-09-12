@@ -441,16 +441,14 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 			
 			deviceId = car.getDevice().getId();
 			Device device = deviceService.getDeviceById(deviceId);
-			device.setPN(model.getDevice().getPN());
-			device.setSN(model.getDevice().getSN());
+			device.setSN(model.getDevice().getSN().trim());
 			System.out.println("deviceId="+deviceId);
 			
 			deviceService.update(device);
 			
 		}else{
 			Device device = new Device();
-			device.setSN(model.getDevice().getSN());
-			device.setPN(model.getDevice().getPN());	
+			device.setSN(model.getDevice().getSN().trim());
 			carService.saveDevice(device);
 			car.setDevice(device);
 			
@@ -535,9 +533,10 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	public String carDetail(){
 		Car car = carService.getCarById(model.getId());
-		unDoneAppointRepair = carRepairService.getUnDoneAppointRepair(car);
-		unDoneAppointExamine = carExamineService.getUnDoneAppointExamine(car);
-		unDoneAppointCare = carCareService.getUnDoneAppointCare(car);
+		//TODO 应该将还没有完成的预约赋值给三个变量
+//		unDoneAppointRepair = carRepairService.getUnDoneAppointRepair(car);
+//		unDoneAppointExamine = carExamineService.getUnDoneAppointExamine(car);
+//		unDoneAppointCare = carCareService.getUnDoneAppointCare(car);
 		ActionContext.getContext().getValueStack().push(car);
 		return "detail";
 	}

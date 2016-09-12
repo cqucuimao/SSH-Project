@@ -60,29 +60,10 @@ public class CarExamineServiceImpl implements CarExamineService {
 		return carExamineDao.getPageBean(pageNum, helper);
 	}
 
-	public boolean canDeleteCarExamine(CarExamine carExamine) {
-		return carExamine.isAppointment()==true;
-	}
-
 	@Transactional
 	public void deleteCarExamineById(Long id) {
 		CarExamine carExamine=carExamineDao.getById(id);
-		Car car=carExamine.getCar();
 		carExamineDao.delete(id);
-		
-		CarExamine ce=carExamineDao.getRecentCarExamine(car);
-		if(ce!=null){
-			car.setNextExaminateDate(ce.getNextExamineDate());
-			if(car.getNextExaminateDate().before(new Date()))
-				car.setExamineExpired(true);
-			else
-				car.setExamineExpired(false);
-			carDao.update(car);
-		}
-	}
-
-	public boolean canUpdateCarExamine(CarExamine carExamine) {
-		return carExamine.isAppointment()==true;
 	}
 
 	@Transactional
@@ -99,7 +80,6 @@ public class CarExamineServiceImpl implements CarExamineService {
 	}
 	
 	public PageBean<Car> getNeedExamineCars(int pageNum,QueryHelper helper) {
-		
 		return carDao.getPageBean(pageNum, helper);
 	}
 
@@ -166,29 +146,4 @@ public class CarExamineServiceImpl implements CarExamineService {
 		}
 		return nextExamineDate;
 	}
-	
-	@Transactional
-	public void saveAppointment(CarExamine carExamine) {
-		carExamine.setAppointment(true);
-		carExamineDao.save(carExamine);
-	}
-	
-	@Transactional
-	public void updateAppointment(CarExamine carExamine) {
-		carExamineDao.update(carExamine);
-	}
-	
-	public CarExamine getUnDoneAppointExamine(Car car){
-		QueryHelper helper=new QueryHelper(CarExamine.class,"ce");
-		helper.addWhereCondition("ce.car=?", car);
-		helper.addWhereCondition("ce.appointment=?", true);
-		helper.addWhereCondition("ce.done=?", false);
-		helper.addOrderByProperty("ce.date", false);
-		List<CarExamine> list=carExamineDao.getPageBean(1, helper).getRecordList();
-		if(list!=null && list.size()>0){
-			return list.get(0);
-		}else
-			return null;
-	}
-	
 }

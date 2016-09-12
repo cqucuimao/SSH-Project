@@ -81,4 +81,6 @@ public interface UserService extends BaseService{
 	 * 登录名是否存在
 	 */
 	boolean isLoginNameExist(long selfId,String loginName);
+	
+	public List<User> getUserByRoleName(String roleName);
 }

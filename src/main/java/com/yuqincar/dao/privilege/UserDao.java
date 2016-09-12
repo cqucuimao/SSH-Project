@@ -13,4 +13,5 @@ public interface UserDao extends BaseDao<User>{
 	public boolean canDeleteUser(Long id);
 	public boolean isNameExist(long selfId,String name);
 	public boolean isLoginNameExist(long selfId,String loginName);
+	public List<User> getUsersByRoleName(String roleName);
 } 

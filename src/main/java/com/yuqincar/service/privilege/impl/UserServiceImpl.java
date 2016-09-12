@@ -239,4 +239,7 @@ public class UserServiceImpl implements UserService{
 		return userDao.isNameExist(selfId, loginName);
 	}
 
+	public List<User> getUserByRoleName(String roleName){
+		return userDao.getUsersByRoleName(roleName);
+	}
 }

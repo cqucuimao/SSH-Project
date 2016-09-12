@@ -92,6 +92,8 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>	
+	
+	<bean id="applicationHelper" class="com.yuqincar.tags.ApplicationHelper"/>
 
 	<!-- 注解方式配置事物 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />

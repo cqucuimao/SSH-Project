@@ -130,30 +130,15 @@ public class ScheduleAction extends BaseAction {
 			myCar = new myCar();
 			teMap = new LinkedHashMap<myCar, LinkedHashMap<String, Integer>>();
 			carUseInfoNum = new LinkedHashMap<String, Integer>();
-			System.out.println("0000");
-			List<List<BaseEntity>> carUseInfo = orderService.getCarTask(car,
+			List<List<Order>> carUseInfo = orderService.getCarTask(car,
 					beginDate_, endDate_);
-			System.out.println("carUseInfo.size="+carUseInfo.size());
 			int i = 0;
-			for (List<BaseEntity> dayList : carUseInfo) {
+			for (List<Order> dayList : carUseInfo) {
 				if(dayList!=null && dayList.size()>0){
-					BaseEntity baseEntity=dayList.get(0);//用最前面的实体作为显示依据。
-					if (baseEntity instanceof CarCare) {
-						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-								.getOffsetDate(beginDate_, i++)), 0);
-					} else if (baseEntity instanceof CarRepair) {
-						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-								.getOffsetDate(beginDate_, i++)), 1);
-					} else if (baseEntity instanceof CarExamine) {
-						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-								.getOffsetDate(beginDate_, i++)), 2);
-					} else if (baseEntity instanceof Order) {
-						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-								.getOffsetDate(beginDate_, i++)), 3);
-					} else {
-						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-								.getOffsetDate(beginDate_, i++)), 4);
-					}
+					if(dayList.get(0)!=null)
+						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 0);
+					else
+						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 1);
 				}else{
 					carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
 							.getOffsetDate(beginDate_, i++)), 4);
@@ -494,7 +479,6 @@ public class ScheduleAction extends BaseAction {
 		order.setPhone(phone);
 		
 		order.setMemo(memo);
-		System.out.println("needCopy="+needCopy);
 		if(needCopy==null || needCopy.isEmpty() || needCopy.equals("off"))
 			copyNumber=0;
 		
@@ -524,7 +508,6 @@ public class ScheduleAction extends BaseAction {
 			str=OrderService.SCHEDULE_FROM_UPDATE;
 		User user=(User)ActionContext.getContext().getSession().get("user");
 		result = orderService.scheduleOrder(str, order,customerOrganizationName, customerName, selectedCar, selectedDriver, copyNumber,toUpdateOrder,user);
-		System.out.println("result="+result);
 		if (result == 0){
 			if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE)){	
 				return "orderView";
@@ -566,9 +549,6 @@ public class ScheduleAction extends BaseAction {
 	}
 
 	public void getRecommandDriver() {
-		System.out.println("in getRecommendDriver");
-		System.out.println("planBeginDate=" + planBeginDate);
-		System.out.println("planEndDate=" + planEndDate);
 		Date beginDate_=null;
 		Date endDate_=null;
 		if (getChargeMode(chargeMode) == ChargeModeEnum.MILE || getChargeMode(chargeMode) == ChargeModeEnum.PLANE) {
@@ -581,52 +561,27 @@ public class ScheduleAction extends BaseAction {
 		List<Car> cars = orderService.getRecommandedCar(serviceType,getChargeMode(chargeMode),
 				beginDate_, endDate_, pageNum).getRecordList();
 
-		List<LinkedHashMap<myCar, LinkedHashMap<String, Integer>>> carStatus = new ArrayList<LinkedHashMap<myCar, LinkedHashMap<String, Integer>>>();
-		LinkedHashMap<myCar, LinkedHashMap<String, Integer>> teMap = null;
 		LinkedHashMap<String, Integer> carUseInfoNum = null;
 		List<myCar> myCars = new ArrayList<myCar>();
 		myCar myCar = null;
 		for (Car car : cars) {
 			try {
 				myCar = new myCar();
-				teMap = new LinkedHashMap<myCar, LinkedHashMap<String, Integer>>();
 				carUseInfoNum = new LinkedHashMap<String, Integer>();
-				List<List<BaseEntity>> carUseInfo = orderService.getCarTask(car,
+				List<List<Order>> carUseInfo = orderService.getCarTask(car,
 						beginDate_, endDate_);
 				int i = 0;
-				for (List<BaseEntity> dayList : carUseInfo) {
-					System.out.println("in dayList");
+				for (List<Order> dayList : carUseInfo) {
 					if(dayList!=null && dayList.size()>0){
-						System.out.println("1");
-						BaseEntity baseEntity=dayList.get(0);//用最前面的实体作为显示依据。
-						if (baseEntity instanceof CarCare) {
-							System.out.println("2");
-							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-									.getOffsetDate(beginDate_, i++)), 0);
-						} else if (baseEntity instanceof CarRepair) {
-							System.out.println("3");
-							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-									.getOffsetDate(beginDate_, i++)), 1);
-						} else if (baseEntity instanceof CarExamine) {
-							System.out.println("4");
-							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-									.getOffsetDate(beginDate_, i++)), 2);
-						} else if (baseEntity instanceof Order) {
-							System.out.println("5");
-							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-									.getOffsetDate(beginDate_, i++)), 3);
-						} else {
-							System.out.println("6");
-							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
-									.getOffsetDate(beginDate_, i++)), 4);
-						}
+						if(dayList.get(0)!=null)
+							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 0);
+						else
+							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 1);
 					}else{
-						System.out.println("7");
 						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
 								.getOffsetDate(beginDate_, i++)), 4);
 					}
 				}
-				System.out.println("8");
 				myCar.setId(car.getId().toString());
 				myCar.setCarNumber(car.getPlateNumber());
 				if(car.getDriver()!=null){
@@ -638,7 +593,6 @@ public class ScheduleAction extends BaseAction {
 				myCars.add(myCar);
 
 			} catch (Exception e) {
-				System.out.println("9");
 				e.printStackTrace();
 			}
 		}
@@ -646,8 +600,6 @@ public class ScheduleAction extends BaseAction {
 	}
 
 	public String queue() {
-		System.out.println("in queue.");
-		System.out.println("pageNum="+pageNum);
 		QueryHelper helper = new QueryHelper("order_", "o");
 		helper.addWhereCondition("o.status=?", OrderStatusEnum.INQUEUE);
 		helper.addWhereCondition("o.scheduling=?", false);

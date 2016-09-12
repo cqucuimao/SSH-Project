@@ -18,29 +18,11 @@ public interface CarRepairService {
 	 */
 	public void saveCarRepair(CarRepair carRepair);
 	
-	public void saveAppointment(CarRepair carRepair);
-	
-	public void updateAppointment(CarRepair carRepair);
-	
 	public CarRepair getCarRepairById(long id);
 	
 	public PageBean<CarRepair> queryCarRepair(int pageNum , QueryHelper helper);
-	
-	/**
-	 * 
-	 * @param carRepair
-	 * @return carRepair.appointment==true
-	 */
-	public boolean canDeleteCarRepair(CarRepair carRepair);
-	
+		
 	public void deleteCarRepairById(Long id);
-	
-	/**
-	 * 
-	 * @param carRepair
-	 * @return carRepair.appointment==true
-	 */
-	public boolean canUpdateCarRepair(CarRepair carRepair);
 	
 	/**
 	 * 修改维修记录。只能对预约的维修记录进行修改。
@@ -53,5 +35,4 @@ public interface CarRepairService {
 	
 	public void importExcelFile(List<CarRepair> carRepairs);
 	
-	public CarRepair getUnDoneAppointRepair(Car car);
 }

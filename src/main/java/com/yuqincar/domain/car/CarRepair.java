@@ -23,10 +23,12 @@ public class CarRepair extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
 	private Car car;	//车辆
+	
 	@Text("司机")
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(nullable=false)
 	private User driver;
+	
 	@Text("维修原因")
 	private String reason;	//维修原因
 	
@@ -49,12 +51,6 @@ public class CarRepair extends BaseEntity {
 	@Text("维修内容")
 	private String memo;	//备注
 
-	@Text("是否预约记录")
-	private boolean appointment;	//是否为预约记录
-	
-	@Text("是否完成维修")
-	private boolean done;	//是否完成维修，只有当appointment为true时，本字段才有意义。
-	
 	public Car getCar() {
 		return car;
 	}
@@ -91,12 +87,6 @@ public class CarRepair extends BaseEntity {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	public boolean isAppointment() {
-		return appointment;
-	}
-	public void setAppointment(boolean appointment) {
-		this.appointment = appointment;
-	}
 	public String getRepairLocation() {
 		return repairLocation;
 	}
@@ -114,11 +104,5 @@ public class CarRepair extends BaseEntity {
 	}
 	public void setMoneyNoGuaranteed(BigDecimal moneyNoGuaranteed) {
 		this.moneyNoGuaranteed = moneyNoGuaranteed;
-	}
-	public boolean isDone() {
-		return done;
-	}
-	public void setDone(boolean done) {
-		this.done = done;
 	}	
 }

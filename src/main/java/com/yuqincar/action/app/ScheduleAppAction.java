@@ -211,25 +211,17 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 			ctvo.setCarId(car.getId());
 			ctvo.setDriver(car.getDriver().getName());
 			ctvo.setPlateNumber(car.getPlateNumber());
-			List<List<BaseEntity>> carUseInfo = orderService.getCarTask(car,
+			List<List<Order>> carUseInfo = orderService.getCarTask(car,
 					fromDate, toDate);
 			List<DayTaskVO> dayTaskList=new ArrayList<DayTaskVO>(carUseInfo.size());
 			int i = 0;
-			for(List<BaseEntity> daytask:carUseInfo){
+			for(List<Order> daytask:carUseInfo){
 				DayTaskVO dtvo=new DayTaskVO();
 				dtvo.setDay(DateUtils.getOffsetDate(fromDate, i++).getTime());
-				BaseEntity baseEntity=daytask.get(0);//用最前面的实体作为显示依据。
-				if (baseEntity instanceof CarCare) {
-					dtvo.setTask("保养");
-				} else if (baseEntity instanceof CarRepair) {
-					dtvo.setTask("维修");
-				} else if (baseEntity instanceof CarExamine) {
-					dtvo.setTask("年审");
-				} else if (baseEntity instanceof Order) {
+				if(daytask.get(0)!=null)
 					dtvo.setTask("任务");
-				} else {
+				else
 					dtvo.setTask("空闲");
-				}
 				dayTaskList.add(dtvo);
 			}
 			ctvo.setTasks(dayTaskList);
@@ -279,9 +271,9 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		Date _date=new Date();
 		_date.setTime(date);
 		Car car=carService.getCarById(carId);
-		List<List<BaseEntity>> taskList=orderService.getCarTask(car, DateUtils.getMinDate(_date), DateUtils.getMaxDate(_date));
+		List<List<Order>> taskList=orderService.getCarTask(car, DateUtils.getMinDate(_date), DateUtils.getMaxDate(_date));
 		List<TaskVO> taskVOList=new ArrayList<TaskVO>(taskList.get(0).size());
-		for(BaseEntity be:taskList.get(0)){
+		for(Order be:taskList.get(0)){
 			TaskVO tvo=new TaskVO();
 			if(be instanceof Order){	//只显示订单任务。忽略掉其它任务。
 				Order order=(Order)be;

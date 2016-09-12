@@ -18,15 +18,15 @@
 		<!-- 标题 -->
         <div class="title">
             <h1>保养预约登记</h1>
-        </div>        
+        </div> 
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td class="on"><a href="#"><span>预约车辆保养</span></a></td>
+				    <td class="on"><s:a action="carCareAppointment_list" href="#"><span>预约车辆保养</span></s:a></td>
 					<td><s:a action="carCare_list"><span>车辆保养记录</span></s:a></td>
 				</tr>
 			</table>
-		</div>		
+		</div>
             <p style="color: red">
 				<s:if test="hasFieldErrors()">
 					<s:iterator value="fieldErrors">

@@ -95,22 +95,13 @@
 									<td>${map.key.plateNumber}</td>
 									<td>${map.key.serviceType}</td>
 									<td>${map.key.phone}</td>								
-  									<c:forEach items="${map.value}" var="mapValue">  										
-  										<c:if test="${mapValue.value==0}">
-  											<td><i class="icon-car maintenance"></i>保养中</td>
-  										</c:if>
-  										<c:if test="${mapValue.value==1}">
-  											<td><i class="icon-car repair"></i>维修中</td>
-  										</c:if>
-  										<c:if test="${mapValue.value==2}">
-  											<td><i class="icon-car check"></i>年审中</td>
-  										</c:if>
-  										<c:if test="${mapValue.value==3}">  																										
+  									<c:forEach items="${map.value}" var="mapValue">
+  										<c:if test="${mapValue.value==0}">  																										
   											<td>
   												<a href="#" onclick="taskClick('${map.key.type}',${map.key.id},'${mapValue.key}')"><i class="icon-car"></i>任务中</a>
   											</td>
   										</c:if>
-  										<c:if test="${mapValue.value==4}">
+  										<c:if test="${mapValue.value==1}">
   											<td><i class="icon-car gray"></i>空闲</td>
   										</c:if>
   									</c:forEach>

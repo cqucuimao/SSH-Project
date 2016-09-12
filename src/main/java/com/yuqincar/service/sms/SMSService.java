@@ -5,7 +5,6 @@ import java.util.Map;
 public interface SMSService {
 	public final static String SMS_TEMPLATE_MILE_ORDER_ACCEPTED = "91550674";
 	public final static String SMS_TEMPLATE_DAY_ORDER_ACCEPTED = "91550675";
-	public final static String SMS_TEMPLATE_CARCARE_APPOINTMENT = "91550676";
 	public final static String SMS_TEMPLATE_EXAMINE_APPOINTMENT = "91550677";
 	public final static String SMS_TEMPLATE_REPAIR_APPOINTMENT = "91550678";
 	public final static String SMS_TEMPLATE_VERFICATION_CODE = "91550121";
@@ -13,6 +12,9 @@ public interface SMSService {
 	public final static String SMS_TEMPLATE_ORDER_CANCELLED = "91550689";
 	public final static String SMS_TEMPLATE_ORDER_ENQUEUE = "91550805";
 	public final static String SMS_TEMPLATE_NEW_ORDER = "91551512";
+	public final static String SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER="";
+	public final static String SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER="";
+	public final static String SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER="";
 	
 	/**
 	 * 发送模板短信

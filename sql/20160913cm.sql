@@ -1,13 +1,13 @@
-insert into privilege(id,name,url,parent_id) values(360,'º€∏Ò±Ì','/priceTable_list',106);
+insert into privilege(id,name,url,parent_id) values(360,'‰ª∑Ê†ºË°®','/priceTable_list',106);
 insert into role_privilege(roles_id,privileges_id)
 values (15,360);
-insert into privilege(id,name,url,parent_id) values(361,'º€∏Ò±Ì','/priceTable_serviceTypeList',360);
+insert into privilege(id,name,url,parent_id) values(361,'‰ª∑Ê†ºË°®','/priceTable_serviceTypeList',360);
 insert into privilege(id,name,url,parent_id) values(362,'','/priceTable_addServiceTypeUI',360);
 insert into privilege(id,name,url,parent_id) values(363,'','/priceTable_addServiceType',360);
 insert into privilege(id,name,url,parent_id) values(364,'','/priceTable_editServiceTypeUI',360);
 insert into privilege(id,name,url,parent_id) values(365,'','/priceTable_editServiceType',360);
 
-insert into privilege(id,name,url,parent_id) values(366,'±£—¯‘§‘º','/carCareAppointment_list',132);
+insert into privilege(id,name,url,parent_id) values(366,'‰øùÂÖªÈ¢ÑÁ∫¶','/carCareAppointment_list',132);
 insert into privilege(id,name,url,parent_id) values(367,'','/carCareAppointment_addUI',132);
 insert into privilege(id,name,url,parent_id) values(368,'','/carCareAppointment_add',132);
 insert into privilege(id,name,url,parent_id) values(369,'','/carCareAppointment_editUI',132);
@@ -16,7 +16,7 @@ insert into privilege(id,name,url,parent_id) values(371,'','/carCareAppointment_
 insert into privilege(id,name,url,parent_id) values(372,'','/carCareAppointment_queryForm',132);
 insert into privilege(id,name,url,parent_id) values(373,'','/carCareAppointment_freshList',132);
 
-insert into privilege(id,name,url,parent_id) values(374,'Œ¨–ﬁ‘§‘º','/carRepairAppointment_list',160);
+insert into privilege(id,name,url,parent_id) values(374,'Áª¥‰øÆÈ¢ÑÁ∫¶','/carRepairAppointment_list',160);
 insert into privilege(id,name,url,parent_id) values(375,'','/carRepairAppointment_queryList',160);
 insert into privilege(id,name,url,parent_id) values(376,'','/carRepairAppointment_freshList',160);
 insert into privilege(id,name,url,parent_id) values(377,'','/carRepairAppointment_addUI',160);
@@ -25,7 +25,7 @@ insert into privilege(id,name,url,parent_id) values(379,'','/carRepairAppointmen
 insert into privilege(id,name,url,parent_id) values(380,'','/carRepairAppointment_edit',160);
 insert into privilege(id,name,url,parent_id) values(381,'','/carRepairAppointment_delete',160);
 
-insert into privilege(id,name,url,parent_id) values(382,'ƒÍ…Û‘§‘º','/carExamineAppointment_list',181);
+insert into privilege(id,name,url,parent_id) values(382,'Âπ¥ÂÆ°È¢ÑÁ∫¶','/carExamineAppointment_list',181);
 insert into privilege(id,name,url,parent_id) values(383,'','/carExamineAppointment_queryList',181);
 insert into privilege(id,name,url,parent_id) values(384,'','/carExamineAppointment_freshList',181);
 insert into privilege(id,name,url,parent_id) values(385,'','/carExamineAppointment_addUI',181);

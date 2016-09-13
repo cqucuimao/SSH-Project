@@ -42,7 +42,7 @@
 			</p>
 		<!--显示表单内容-->
 		<div class="editBlock detail p30">
-		<s:form action="carExamine_%{id == null ? 'save' : 'edit'}Appointment" id="pageForm">
+		<s:form action="carExamineAppointment_%{id == null ? 'add' : 'edit'}?actionFlag=register" id="pageForm">
         	<s:hidden name="id"></s:hidden>
             <table>
             	<colgroup>

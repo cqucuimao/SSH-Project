@@ -264,4 +264,8 @@ public class CarServiceImpl implements CarService {
 		
 	}
 
+	public CarServiceSuperType getCarServiceSuperTypeByTitle(String title) {
+		return carServiceSuperTypeDao.getCarServiceSuperTypeByTitle(title);
+	}
+
 }

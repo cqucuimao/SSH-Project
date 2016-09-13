@@ -30,17 +30,17 @@
 		</div>
 		<br/>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carCareAppointment_query">
+			<s:form id="pageForm" action="carCareAppointment_queryForm">
 			<table>
 				<tr>
 					<td>
-						<s:a cssClass="buttonA" action="carCare_appoint">保养预约</s:a>
+						<s:a cssClass="buttonA" action="carCareAppointment_addUI">保养预约</s:a>
 					</td>
-					<th><s:property value="tr.getText('car.CarCare.car')" /></th>
+					<th><s:property value="tr.getText('car.CarCareAppointment.car')" /></th>
 					<td>
 						<cqu:carSelector name="car"/>
 					</td>
-					<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
+					<th><s:property value="tr.getText('car.CarCareAppointment.driver')" /></th>
 					<td>
 						<cqu:userSelector name="driver"/>
 					</td>
@@ -51,6 +51,10 @@
 					<th>到</th>
 					<td>
 						<s:textfield name="date2" id="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+					</td>
+					<th>是否完成</th>
+					<td>
+						<s:select name="doneOrUndone" cssClass="selectClass" list="#{1:'是',2:'所有'}" listKey="key" listValue="value"  headerKey="0" headerValue="否"></s:select>
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
@@ -65,17 +69,17 @@
 					
 					<thead>
 						<tr>
-							<th><s:property value="tr.getText('car.CarCare.car')" /></th>
-							<th><s:property value="tr.getText('car.CarCare.driver')" /></th>
-              				<th><s:property value="tr.getText('car.CarCare.date')" /></th>
-              				<th><s:property value="tr.getText('car.CarCare.done')" /></th>
+							<th><s:property value="tr.getText('car.CarCareAppointment.car')" /></th>
+							<th><s:property value="tr.getText('car.CarCareAppointment.driver')" /></th>
+              				<th><s:property value="tr.getText('car.CarCareAppointment.date')" /></th>
+              				<th><s:property value="tr.getText('car.CarCareAppointment.done')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">				        
 						<tr>
-							<td><cqu:carDetailList id="${id}" /> </td>
+							<td><cqu:carDetailList id="${car.id}" /> </td>
 							<td>${driver.name}</td>
 							<td><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>
@@ -88,6 +92,7 @@
 							</td>
 							<td>
 								<s:if test="done==false">
+                    				<s:a action="carCareAppointment_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
                     				<s:a action="carCareAppointment_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
                     			</s:if>                    			
                 			</td>
@@ -96,7 +101,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="carCare_freshAppointList">
+			<s:form id="pageForm" action="carCareAppointment_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>

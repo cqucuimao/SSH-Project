@@ -39,6 +39,8 @@ public interface CarService {
 	
 	public void saveCarServiceSuperType(CarServiceSuperType carServiceSuperType);
 	
+	public CarServiceSuperType getCarServiceSuperTypeByTitle(String title);
+	
 	/**
 	 * 可以删除车型吗
 	 * 如果有订单与此车型关联，就不能删除，即使该订单是CANCELLED也不行。

@@ -30,11 +30,11 @@
 		</div>
 		<br/>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carRepair_queryAppointForm">
+			<s:form id="pageForm" action="carRepairAppointment_queryList">
 			<table>
 				<tr>
 					<td>
-						<s:a cssClass="buttonA" action="carRepair_appoint">维修预约</s:a>
+						<s:a cssClass="buttonA" action="carRepairAppointment_addUI">维修预约</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarRepair.car')" /></th>
 					<td>
@@ -52,6 +52,10 @@
 					<td>
 						<s:textfield name="date2" id="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
+					<th>是否完成</th>
+					<td>
+						<s:select name="doneOrUndone" cssClass="selectClass" list="#{1:'是',2:'所有'}" listKey="key" listValue="value"  headerKey="0" headerValue="否"></s:select>
+					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 					</td>
@@ -64,17 +68,17 @@
 				<table>					
 					<thead>
 						<tr>
-							<th><s:property value="tr.getText('car.CarRepair.car')" /></th>
-							<th><s:property value="tr.getText('car.CarRepair.driver')" /></th>
+							<th><s:property value="tr.getText('car.CarRepairAppointment.car')" /></th>
+							<th><s:property value="tr.getText('car.CarRepairAppointment.driver')" /></th>
               				<th>维修时间</th>
-                			<th><s:property value="tr.getText('car.CarRepair.done')" /></th>
+                			<th><s:property value="tr.getText('car.CarRepairAppointment.done')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td><cqu:carDetailList id="${id}" /> </td>
+							<td><cqu:carDetailList id="${car.id}" /> </td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="fromDate" format="yyyy-MM-dd"/>&nbsp;&nbsp;&nbsp;&nbsp;<s:date name="toDate" format="yyyy-MM-dd"/></td>
 							<td>
@@ -87,8 +91,8 @@
 							</td>
 							<td>
                 				<s:if test="done==false">
-                    			<s:a action="carRepair_deleteAppointment?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
-                    			<s:a action="carRepair_editAppointmentUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+                    			<s:a action="carRepairAppointment_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="carRepairAppointment_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
                     			</s:if>
                 			</td>
 						</tr>
@@ -96,7 +100,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="carRepair_refreshAppointList">
+			<s:form id="pageForm" action="carRepairAppointment_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>

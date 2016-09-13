@@ -38,7 +38,7 @@
 			</p>
 		<!--显示表单内容-->
 		<div class="editBlock">
-		<s:form action="carCare_%{id == null ? 'save' : 'edit'}Appointment" id="pageForm">
+		<s:form action="carCareAppointment_%{id == null ? 'add' : 'edit'}" id="pageForm">
         	<s:hidden name="id"></s:hidden>
             <table>
             	<colgroup>
@@ -49,26 +49,34 @@
 				</colgroup>
             	<tbody>
                 	<tr>
-						<th><s:property value="tr.getText('car.CarCare.car')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarCareAppointment.car')" /><span class="required">*</span></th>
 						<td>
 							<cqu:carSelector name="car" synchDriver="driver"/>
 						</td>
                     </tr>
                     <tr>
-						<th><s:property value="tr.getText('car.CarCare.driver')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('car.CarCareAppointment.driver')" /><span class="required">*</span></th>
 						<td>
 							<cqu:userSelector name="driver"/>
 						</td>
 					</tr>
                     <tr>
-                    	<th><s:property value="tr.getText('car.CarCare.date')" /><span class="required">*</span></th>
+                    	<th><s:property value="tr.getText('car.CarCareAppointment.date')" /><span class="required">*</span></th>
 						<td>
 							<s:textfield cssClass="inputText" name="date" id="date" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 						</td>
                     </tr>
+                     <s:if test="id!=null">
+					<tr>
+						<th>保养间隔里程</th>
+						<td>
+							<s:textfield cssClass="inputText" name="mileInterval" id="mileInterval"/>
+						</td>
+					</tr>
+					</s:if>
                     <s:if test="id!=null">
 					<tr>
-						<th><s:property value="tr.getText('car.CarCare.done')" /></th>
+						<th><s:property value="tr.getText('car.CarCareAppointment.done')" /></th>
 						<td>
 							<s:checkbox class="m10" id="done" name="done"/>
 						</td>
@@ -78,14 +86,9 @@
 				<tfoot>
 					<tr>
                         <td colspan="2">
-                        	<input class="inputButton" type="submit" value="确定" />
+                        	<input class="inputButton" id="btn" type="submit" value="确定" />
                         	<a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
-                    </tr>
-                    <tr>
-                    	<td>
-                    		<input type="hidden" name="mileInterval" value="5000">
-                    	</td>
                     </tr>
 				</tfoot>
         	</table>
@@ -100,6 +103,16 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+        //当done是true时，必须填写mileInterval
+	    $("#btn").click(function(){
+			if($("#done").is(":checked") && $("#mileInterval").val()==""){
+				alert("完成保养预约时必须指定保养间隔里程！");
+				return false;
+			}
+	 	}); 
+    	
+    	//保养里程间隔默认为8000
+    	$("input[name=mileInterval]").val(8000);
 	    $(function(){
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },

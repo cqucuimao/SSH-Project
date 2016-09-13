@@ -23,7 +23,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td><s:a action="carRepair_appointList"><span>预约车辆维修</span></s:a></td>
+				    <td><s:a action="carRepairAppointment_list"><span>预约车辆维修</span></s:a></td>
 					<td class="on"><a href="#"><span>车辆维修</span></a></td>
 				</tr>
 			</table>

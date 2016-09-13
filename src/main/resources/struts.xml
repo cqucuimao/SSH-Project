@@ -126,7 +126,7 @@
 			</result>
 			<result name="serviceTypeSaveUI">/WEB-INF/view/carAction/priceTableAction/serviceType_saveUI.jsp
 			</result>
-			<result name="toList" type="redirectAction">carServiceType_list</result>
+			<result name="toList" type="redirectAction">priceTable_list</result>
 		</action>
 
 		<!-- 违章信息管理 -->
@@ -154,18 +154,12 @@
 		<action name="carCare_*" class="carCareAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carCareAction/carCare_list.jsp
 			</result>
-			<result name="appointList">/WEB-INF/view/carAction/carCareAction/carCare_appointList.jsp
-			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/carCareAction/carCare_saveUI.jsp
 			</result>
 			<result name="success">/WEB-INF/view/carAction/carCareAction/success.jsp
 			</result>
 			<result name="false">/WEB-INF/view/carAction/carCareAction/false.jsp
 			</result>
-			<result name="saveAppoint">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp
-			</result>
-			<!-- <result name="input">/WEB-INF/view/carAction/carCareAction/carCare_saveAppoint.jsp 
-				</result> -->
 			<result name="remindList">/WEB-INF/view/carAction/carCareAction/carCare_checkRemind.jsp
 			</result>
 			<result name="carCareDetail">/WEB-INF/view/carAction/carCareAction/carCare_detail.jsp
@@ -173,7 +167,14 @@
 			<result name="excel">/WEB-INF/view/carAction/carCareAction/carCare_excel.jsp
 			</result>
 		</action>
-
+		
+		<!-- 车辆保养预约 -->
+		<action name="carCareAppointment_*" class="carCareAppointmentAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carCareAppointmentAction/carCareAppointment_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carCareAppointmentAction/carCareAppointment_saveUI.jsp
+			</result>
+		</action>
 		<!-- 车辆保险管理 -->
 		<action name="carInsurance_*" class="carInsuranceAction"
 			method="{1}">
@@ -226,6 +227,13 @@
 			<result name="carRepairDetail">/WEB-INF/view/carAction/carRepairAction/carRepair_detail.jsp
 			</result>
 		</action>
+		<!-- 车辆维修预约 -->
+		<action name="carRepairAppointment_*" class="carRepairAppointmentAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carRepairAppointmentAction/carRepairAppointment_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carRepairAppointmentAction/carRepairAppointment_saveUI.jsp
+			</result>
+		</action>
 
 		<!-- 车辆加油管理 -->
 		<action name="carRefuel_*" class="carRefuelAction" method="{1}">
@@ -259,6 +267,16 @@
 			<result name="remindList">/WEB-INF/view/carAction/carExamineAction/carExamine_checkRemind.jsp
 			</result>
 			<result name="carExamineDetail">/WEB-INF/view/carAction/carExamineAction/carExamine_detail.jsp
+			</result>
+		</action>
+		
+		<!-- 车辆年审预约 -->
+		<action name="carExamineAppointment_*" class="carExamineAppointmentAction" method="{1}">
+			<result name="list">/WEB-INF/view/carAction/carExamineAppointmentAction/carExamineAppointment_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/carExamineAppointmentAction/carExamineAppointment_saveUI.jsp
+			</result>
+			<result name="saveUI1">/WEB-INF/view/carAction/carExamineAction/carExamine_saveUI.jsp
 			</result>
 		</action>
 

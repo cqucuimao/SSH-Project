@@ -29,11 +29,11 @@
 		</div>
 		<br/>
 		<div class="editBlock search">
-			<s:form id="pageForm" action="carExamine_queryAppointForm">
+			<s:form id="pageForm" action="carExamineAppointment_queryList">
 			<table>
 				<tr>
 					<td>
-						<s:a cssClass="buttonA" action="carExamine_appoint">年审预约</s:a>
+						<s:a cssClass="buttonA" action="carExamineAppointment_addUI">年审预约</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarExamine.car')" /></th>
 					<td><cqu:carSelector name="car"/></td>
@@ -46,6 +46,10 @@
 					<th>到</th>
 					<td>
 						<s:textfield name="date2" id="date2" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+					</td>
+					<th>是否完成</th>
+					<td>
+						<s:select name="doneOrUndone" cssClass="selectClass" list="#{1:'是',2:'所有'}" listKey="key" listValue="value"  headerKey="0" headerValue="否"></s:select>
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
@@ -70,7 +74,7 @@
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
 						<tr>
-							<td><cqu:carDetailList id="${id}" /> </td>
+							<td><cqu:carDetailList id="${car.id}" /> </td>
 							<td>${driver.name}</td>
 							<td><s:date name="date" format="yyyy-MM-dd"/></td>
 							<td>
@@ -83,8 +87,8 @@
 							</td>
 							<td>
                 				<s:if test="done==false">
-                    			<s:a action="carExamine_deleteAppointment?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
-                    			<s:a action="carExamine_editAppointmentUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
+                    			<s:a action="carExamineAppointment_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="carExamineAppointment_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
                     			</s:if>
 								<s:else>
 								</s:else>
@@ -94,7 +98,7 @@
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="carExamine_freshAppointList">
+			<s:form id="pageForm" action="carExamineAppointment_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 		</div>

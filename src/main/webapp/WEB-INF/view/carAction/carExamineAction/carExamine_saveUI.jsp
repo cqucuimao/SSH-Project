@@ -23,7 +23,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td><s:a action="carExamine_appointList"><span>预约车辆年审</span></s:a></td>
+				    <td><s:a action="carExamineAppointment_list"><span>预约车辆年审</span></s:a></td>
 					<td class="on"><a href="#"><span>车辆年审记录</span></a></td>
 				</tr>
 			</table>
@@ -175,6 +175,10 @@
     <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
     <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
+    
+
+		var date = $("#date").val();
+		$("#payDate").val(date);
     
     	function getDate(){
     		var date = $("#date").val();

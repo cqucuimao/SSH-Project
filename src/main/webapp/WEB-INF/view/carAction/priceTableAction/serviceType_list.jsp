@@ -12,6 +12,13 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="skins/main.css">
+	<style >
+	.ttt tr td:first-child 
+   {
+        border: 1px solid #eaeaea !important;
+    }
+
+</style>
 </head>
 <body class="minW">
 	<div class="space">
@@ -20,10 +27,10 @@
 			<h1>车型管理</h1>
 		</div>
 		<div class="editBlock search">
-			<table>
+			<table style="border:none">
 				<tr>
 					<td>
-						<s:a cssClass="buttonA" action="carServiceType_addUI">车型登记</s:a>
+						<s:a cssClass="buttonA" action="priceTable_addServiceTypeUI">新增车类</s:a>
 					</td>					
 				</tr>
 			</table>
@@ -31,32 +38,35 @@
 		<div class="dataGrid">
 			<div class="tableWrap">
 			
-				<table>
+				<table class="ttt">
 					<thead>
 						<tr>
-							<th><s:property value="tr.getText('car.CarServiceType.title')" /></th>
-							<th><s:property value="tr.getText('car.CarServiceType.pricePerKM')" />(元/KM)</th>
-							<th><s:property value="tr.getText('car.CarServiceType.pricePerDay')" />(元/天)</th>
-							<th><s:property value="tr.getText('car.CarServiceType.personLimit')" /></th>
-							<th class="alignCenter">操作</th>
+							<th>车类</th>
+							<th>车型</th>
+							<th class="alignCenter" colspan="2">操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
-						<s:iterator value="carServiceTypeList">
+						<s:iterator value="#session.mapList" id="column">
+						<s:set name="total" value="#column.value.size"/> 
+						<s:iterator value="#column.value" status="s" id="list">
 						<tr>
-							<td>${title}</td>
-							<td><fmt:formatNumber value="${pricePerKM}" pattern="#0.0"/></td>
-							<td><fmt:formatNumber value="${pricePerDay}" pattern="#0"/></td>
-							<td>${personLimit}</td>
-							<td class="alignCenter">
-							<s:a action="carServiceType_editUI?id=%{id}" ><i class="icon-operate-edit" title="修改"></i></s:a>
-							<s:if test="canDeleteServiceType">
-								<s:a action="carServiceType_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>								
+							<s:if test="#s.first">
+								<td class="td" rowspan="${total }">
+									<s:property value="#column.key"/>
+								</td>
 							</s:if>
-							<s:else>
-							</s:else>
+							<td><s:property value="#list"/></td>
+							<td class="alignCenter">
+								<s:a action="priceTable_editServiceTypeUI" ><i class="icon-operate-delete" title="删除"></i></s:a>
 							</td>
+							<s:if test="#s.first">
+							<td class="alignCenter" rowspan="${total }">
+								<a href="priceTable_editServiceTypeUI.action?actionFlag=edit&superTypeTitle=<s:property value="#column.key"/>" ><i class="icon-operate-edit" title="编辑"></i></a>
+							</td>
+							</s:if>
 						</tr>
+						</s:iterator>
 						</s:iterator> 
 					</tbody>
 				</table>

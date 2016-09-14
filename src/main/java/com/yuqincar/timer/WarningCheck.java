@@ -18,6 +18,7 @@ import com.yuqincar.domain.order.Order;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.monitor.WarningMessageService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.HttpMethod;
 
 @Component
@@ -36,21 +37,23 @@ public class WarningCheck {
 	@Scheduled(cron = "10 * * * * ?")  //每分钟（第10秒）执行一次
 	@Transactional
 	public void checkPullOutWarning(){
-		System.out.println("in checkPullOutWarning");
-		String json = HttpMethod.get(PULL_OUT_WARNING_URL);
-		JSONObject result=JSON.parseObject(json);
-		JSONArray alarms=result.getJSONArray("alarms");
-		if(alarms!=null && alarms.size()>0){
-			for(int i=0;i<alarms.size();i++){
-				String sn=alarms.getJSONObject(i).getString("deviceSn");
-				if("拔出报警".equals(alarms.getJSONObject(i).getString("info"))){
-					Date date=new Date(Long.valueOf(alarms.getJSONObject(i).getString("time")));
-					warningService.addWarningMessage(carService.getCarByDeviceSN(sn).getId(), date, WarningMessageTypeEnum.PULLEDOUT);
+		if("on".equals(Configuration.getPullWarningSwitch())){
+			System.out.println("in checkPullOutWarning");
+			String json = HttpMethod.get(PULL_OUT_WARNING_URL);
+			JSONObject result=JSON.parseObject(json);
+			JSONArray alarms=result.getJSONArray("alarms");
+			if(alarms!=null && alarms.size()>0){
+				for(int i=0;i<alarms.size();i++){
+					String sn=alarms.getJSONObject(i).getString("deviceSn");
+					if("拔出报警".equals(alarms.getJSONObject(i).getString("info"))){
+						Date date=new Date(Long.valueOf(alarms.getJSONObject(i).getString("time")));
+						warningService.addWarningMessage(carService.getCarByDeviceSN(sn).getId(), date, WarningMessageTypeEnum.PULLEDOUT);
+					}
+					//删除报警
+					String warningId=alarms.getJSONObject(i).getString("id");
+					String url=String.format(DELETE_PULL_OUT_WARNING_URL, sn,warningId);
+					String re = HttpMethod.get(url.toString());
 				}
-				//删除报警
-				String warningId=alarms.getJSONObject(i).getString("id");
-				String url=String.format(DELETE_PULL_OUT_WARNING_URL, sn,warningId);
-				String re = HttpMethod.get(url.toString());
 			}
 		}
 	}

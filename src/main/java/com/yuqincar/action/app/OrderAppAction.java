@@ -145,6 +145,7 @@ public class OrderAppAction extends BaseAction{
 	}
 	
 	public void registCustomerInfo(){
+		System.out.println("in registCustomerInfo");
 		if(!checkPrivilege()){
 			writeJson("{\"status\":\"unauthorized\"}");
 			return;
@@ -158,22 +159,36 @@ public class OrderAppAction extends BaseAction{
 	}
 	
 	public void getAllCarServiceType(){
+		System.out.println("in getAllCarServiceType");
+		System.out.println("validationCode="+validationCode);
+		System.out.println("phoneNumber="+phoneNumber);
 		if(!checkPrivilege()){
+			System.out.println("unauthorized");
 			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
-		
+		System.out.println("1");
 		Customer customer=customerService.getCustomerByPhoneNumber(phoneNumber);
 		List<CarServiceTypeVO> list=new LinkedList<CarServiceTypeVO>();
 		for(CarServiceType cst:carService.getAllCarServiceType()){
 			CarServiceTypeVO cstvo=new CarServiceTypeVO();
 			cstvo.setId(cst.getId().intValue());
 			cstvo.setName(cst.getTitle());
+			System.out.println(customer);
+			System.out.println(customer.getCustomerOrganization());
+			System.out.println(customer.getCustomerOrganization().getPriceTable());
+			System.out.println(customer.getCustomerOrganization().getPriceTable().
+					getCarServiceType());
+			System.out.println(customer.getCustomerOrganization().getPriceTable().
+					getCarServiceType().get(cst));
+			System.out.println(customer.getCustomerOrganization().getPriceTable().
+					getCarServiceType().get(cst).toPriceDescription());
 			cstvo.setPriceDescription(customer.getCustomerOrganization().getPriceTable().
 					getCarServiceType().get(cst).toPriceDescription());
 			list.add(cstvo);
 		}
 		String json = JSON.toJSONString(list);
+		System.out.println("json");
 		writeJson(json);
 	}
 	

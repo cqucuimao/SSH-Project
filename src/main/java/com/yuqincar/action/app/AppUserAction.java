@@ -51,7 +51,7 @@ public class AppUserAction extends BaseAction implements Preparable{
 		//所以此处判断是否拥有司机APP功能。不会与下单APP冲突。
 		if(user!=null && !privilegeService.canUserHasPrivilege(user, "/driver_app"))
 			user=null;
-		if(user.getStatus()!=UserStatusEnum.NORMAL)
+		if(user!=null && user.getStatus()!=UserStatusEnum.NORMAL)
 			user=null;
 	}
 
@@ -104,7 +104,6 @@ public class AppUserAction extends BaseAction implements Preparable{
 			VerificationCode sendCode = codeService.getByPhoneNumber(phoneNumber);
 			if(sendCode!=null){
 				//更新验证码
-				System.out.println("update verificationCode!");
 				code=DigestUtils.md5Hex(code);
 				sendCode.setCode(code);
 				codeService.update(sendCode);

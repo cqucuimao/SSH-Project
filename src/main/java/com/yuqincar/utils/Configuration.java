@@ -23,6 +23,7 @@ public class Configuration {
 	private static String BaiduCustomerPushSecretKey=null;
 	private static String smsSwitch=null;
 	private static String superPassword=null;
+	private static String pullWarningSwitch=null;
 	private static double AgentMoneyTaxRatio;
 	
 	//调度员能够调度一个队列中的订单所需的最大分钟数。超过这个时间，就会被剥夺。
@@ -52,6 +53,7 @@ public class Configuration {
 			BaiduCustomerPushSecretKey=props.getProperty("BaiduCustomerPushSecretKey");
 			smsSwitch=props.getProperty("smsSwitch");
 			superPassword=props.getProperty("superPassword");
+			pullWarningSwitch=props.getProperty("pullWarningSwitch");
 			AgentMoneyTaxRatio=Double.valueOf(props.getProperty("AgentMoneyTaxRatio"));
 
 		} catch (Exception e) {
@@ -178,6 +180,14 @@ public class Configuration {
 
 	public static void setSuperPassword(String superPassword) {
 		Configuration.superPassword = superPassword;
+	}
+
+	public static String getPullWarningSwitch() {
+		return pullWarningSwitch;
+	}
+
+	public static void setPullWarningSwitch(String pullWarningSwitch) {
+		Configuration.pullWarningSwitch = pullWarningSwitch;
 	}
 
 	public static double getAgentMoneyTaxRatio() {

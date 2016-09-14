@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yuqincar.domain.message.SMSQueue;
 import com.yuqincar.service.message.SMSQueueService;
 import com.yuqincar.service.sms.SMSService;
@@ -58,11 +59,11 @@ public class SMSServiceImpl implements SMSService {
 				+ templateId + "&template_param=" + paramString
 				+ "&timestamp=" + URLEncoder.encode(DateUtils.getYMDHMSString(new Date()), "utf-8");
 		String resJson = "";
-		if("on".equals(Configuration.getSmsSwitch()))
+		if("on".equals(Configuration.getSmsSwitch())){
 			resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
-		else{
+		}else{
 			sendSMSToFile(phoneNumber,templateId,paramString);
-			resJson="Success";
+			resJson="{\"res_code\":0,\"res_message\":\"Success\",\"idertifier\":\"90610913090118406454\"}";
 		}
 		return resJson;
 	}
@@ -111,12 +112,15 @@ public class SMSServiceImpl implements SMSService {
 	public static void main(String[] args) {
 		String result = "";
 		try {
-			Map<String,String> map = new HashMap();
+			Map<String,String> map = new HashMap<String,String>();
 			map.put("param1", "手机");
 			map.put("param2", RandomUtil.randomFor6());
-			map.put("param3","3" );
 			result = new SMSServiceImpl().sendTemplateSMS("13883101475",SMSService.SMS_TEMPLATE_VERFICATION_CODE,map);
 			System.out.println(result);
+			Gson gson = new Gson();
+			Map<String,String> jsonMap = gson.fromJson(result,new TypeToken<Map<String, String>>() {
+			}.getType());
+			System.out.println(jsonMap.get("res_message"));
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

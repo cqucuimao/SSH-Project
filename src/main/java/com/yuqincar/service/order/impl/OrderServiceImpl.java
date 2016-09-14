@@ -808,6 +808,11 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	public List<BaseEntity> dealCCP(String customerOrganizationName,String customerName,String phoneNumber){
+		System.out.println("in dealCCP");
+		System.out.println("customerOrganizationName="+customerOrganizationName);
+		System.out.println("customerName="+customerName);
+		System.out.println("phoneNumber="+phoneNumber);
+		
 		boolean customerOrganizationExist=false,customerExist=false,phoneNumberExist=false;
 		List<BaseEntity> cc=new ArrayList<BaseEntity>(2);
 		customerOrganizationExist=customerOrganizationDao.isNameExist(0, customerOrganizationName);

@@ -393,7 +393,7 @@
    	   		 
    	   		//设置分页信息
    	   	     num_entries = length;	    //获取记录总数
-   	   	     showCount = 3;             //每页显示记录数
+   	   	     showCount = 10;             //每页显示记录数
    	   	     //计算分页数
    	   	     lastPage=Math.ceil(num_entries/showCount);  //Math.ceil向上取整
    	   	     //设置当前页

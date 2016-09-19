@@ -59,9 +59,7 @@
                 <div class="form-group" >
                     <input class="inputButton" type="submit" value="登 录" />
                 </div>
-                <div class="form-group" style="text-align: center">
-                 <p>推荐使用IE9及其以上版本访问</p>
-                </div>
+                <br/>
 			</s:form>
         </div>
     </div>

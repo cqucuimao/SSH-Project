@@ -60,6 +60,7 @@ public class MileageUpdate {
 			
 			//判断是否保养过期
 			if(car.getMileage()>car.getNextCareMile()){
+				System.out.println(car.getPlateNumber()+"保养里程过期。 "+mile+">"+car.getNextCareMile());
 				car.setCareExpired(true);
 				
 				CarCareAppointment cca=new CarCareAppointment();
@@ -82,13 +83,13 @@ public class MileageUpdate {
 				}
 				cca.setDate(date);
 				cca.setDone(false);
+				//保存预约信息时，已经给司机发送短信了。
 				carCareAppointmentService.saveCarCareAppointment(cca);
 					
 				if(cca.getDriver()!=null){
 					Map<String,String> params=new HashMap<String,String>();
 					params.put("plateNumber", car.getPlateNumber());
 					params.put("date", DateUtils.getYMDString(date));
-					smsService.sendTemplateSMS(cca.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER, params);
 					for(User manager:userService.getUserByRoleName("车辆保养管理员"))
 						smsService.sendTemplateSMS(manager.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER, params);
 				}else{

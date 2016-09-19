@@ -77,8 +77,13 @@
 	 <tag-class>com.yuqincar.tags.CarDetailListTag</tag-class>
 	 <attribute>    
                 <name>id</name>    
-                <required>false</required>    
+                <required>true</required>    
                 <rtexprvalue>true</rtexprvalue>    
+      </attribute> 
+	 <attribute>    
+                <name>textColor</name>    
+                <required>false</required>  
+                <rtexprvalue>true</rtexprvalue>  
       </attribute> 
 </tag>     
 </taglib>  

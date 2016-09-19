@@ -174,8 +174,13 @@ public class AlarmAction extends BaseAction{
 			MessageVO message=new MessageVO();
 			message.setId(messages.get(i).getId().toString());
 			message.setPlateNumber(messages.get(i).getCar().getPlateNumber());
-			message.setDriverName(messages.get(i).getCar().getDriver().getName());
-			message.setPhoneNumber(messages.get(i).getCar().getDriver().getPhoneNumber());
+			if(messages.get(i).getCar().getDriver()!=null){
+				message.setDriverName(messages.get(i).getCar().getDriver().getName());
+				message.setPhoneNumber(messages.get(i).getCar().getDriver().getPhoneNumber());
+			}else{
+				message.setDriverName("");
+				message.setPhoneNumber("");
+			}
 			message.setDate(DateUtils.getYMDHMSString(messages.get(i).getDate()));
 			message.setCarId(messages.get(i).getCar().getId().toString());
 			String type=null;

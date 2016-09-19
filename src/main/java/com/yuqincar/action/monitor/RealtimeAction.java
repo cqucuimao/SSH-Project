@@ -142,11 +142,16 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	public CarVO parseCar(Car car){
 		CarVO carVO=new CarVO();
 		carVO.setType(car.getModel());
-		carVO.setDriver(car.getDriver().getName());
+		if(car.getDriver()!=null){
+			carVO.setDriver(car.getDriver().getName());
+			carVO.setPhone(car.getDriver().getPhoneNumber());
+		}else{
+			carVO.setDriver("");
+			carVO.setPhone("");
+		}
 		carVO.setId(car.getId());
 		carVO.setLocation(car.getServicePoint().getName());
 		carVO.setNumber(car.getPlateNumber());
-		carVO.setPhone(car.getDriver().getPhoneNumber());
 		carVO.setSn(car.getDevice().getSN());
 		return carVO;
 	}

@@ -55,86 +55,93 @@ public class DriverAction extends BaseAction {
     
     private Car car;
     private User driver;
+    private LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>> map;
     
-    private void prepareDriverData(){
-    	if(beginDate==null)
-    		beginDate = new Date();
-    	if(endDate==null)
-    		endDate = DateUtils.getOffsetDate(beginDate, 4);
+    private void prepareDriverData(User _driver, Date _beginDate, Date _endDate){
+    	if(_beginDate==null)
+    		_beginDate = new Date();
+    	if(_endDate==null)
+    		_endDate = DateUtils.getOffsetDate(_beginDate, 4);
     	List<LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>> driverStatus = new ArrayList<LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>>();
         LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>> teMap = null;
-        LinkedHashMap<String, Integer> driverUseInfoNum = null;
-         
-        teMap = new LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>();
-        driverUseInfoNum = new LinkedHashMap<String, Integer>();
-        List<List<Order>> driverUseInfo = orderService.getDriverTask(driver, beginDate, endDate);
-        int i = 0;
-        for (List<Order> dayList : driverUseInfo) {
-        	if(dayList!=null && dayList.size()>0){
-        		if(dayList.get(0)!=null)
-        			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 0);
- 				else
- 					driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
-     		}else{
-     			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
-     		}
-     	}
-        LineTitleVO ltvo=new LineTitleVO();
-        ltvo.setType("driver");
-        ltvo.setId(driver.getId());
-        ltvo.setDriverName(driver.getName());
-        ltvo.setPlateNumber("");
-        ltvo.setServiceType("");
-        ltvo.setPhone(driver.getPhoneNumber());
-        teMap.put(ltvo, driverUseInfoNum);
-        driverStatus.add(teMap);
+
+        for(Car c: carService.getCarsByDriver(_driver)){
+	        LinkedHashMap<String, Integer> driverUseInfoNum = null;
+	         
+	        teMap = new LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>();
+	        driverUseInfoNum = new LinkedHashMap<String, Integer>();
+	        List<List<Order>> driverUseInfo = orderService.getDriverTask(_driver, _beginDate, _endDate);
+	        int i = 0;
+	        for (List<Order> dayList : driverUseInfo) {
+	        	if(dayList!=null && dayList.size()>0){
+	        		if(dayList.get(0)!=null)
+	        			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 0);
+	 				else
+	 					driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 1);
+	     		}else{
+	     			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 1);
+	     		}
+	     	}
+	        LineTitleVO ltvo=new LineTitleVO();
+	        ltvo.setType("driver");
+	        ltvo.setCarId(c.getId());
+	        if(c.isCareExpired() || c.isExamineExpired() || c.isInsuranceExpired() || c.isTollChargeExpired())
+	        	ltvo.setAvailable(false);
+	        else
+	        	ltvo.setAvailable(true);
+	        ltvo.setDriverName(_driver.getName());
+	        ltvo.setServiceType("");
+	        ltvo.setPhone(_driver.getPhoneNumber());
+	        teMap.put(ltvo, driverUseInfoNum);
+	        driverStatus.add(teMap);
+        }
 
         PageBean<LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>> pageBean = new PageBean<LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>>(
              pageNum, 10, driverStatus.size(), driverStatus);
         ActionContext.getContext().getValueStack().push(pageBean);
     }
     
-    private void prepareCarData(){
+    private void prepareCarData(long _servicePointId, User _driver, Car _car, Date _beginDate, Date _endDate){
     	QueryHelper helper = new QueryHelper(Car.class, "c");
 		helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
-		if(car!=null)
-			helper.addWhereCondition("c.id=?", car.getId());
-		if(driver!=null)
-			helper.addWhereCondition("c.driver=?", driver);
-		if(servicePointId==0)
-			servicePointId=1;
-		helper.addWhereCondition("c.servicePoint.id=?", servicePointId);
-    	List<Car> carList=carService.queryCar(pageNum, helper).getRecordList();
+		if(_car!=null)
+			helper.addWhereCondition("c.id=?", _car.getId());
+		if(_driver!=null)
+			helper.addWhereCondition("c.driver=?", _driver);
+		if(_servicePointId==0)
+			_servicePointId=1;
+		helper.addWhereCondition("c.servicePoint.id=?", _servicePointId);
+		PageBean<Car> carPageBean=carService.queryCar(pageNum, helper);
+    	List<Car> carList=carPageBean.getRecordList();
+    	
 
-    	if(beginDate==null)
-    		beginDate = new Date();
-    	if(endDate==null)
-    		endDate = DateUtils.getOffsetDate(beginDate, 4);
+    	if(_beginDate==null)
+    		_beginDate = new Date();
+    	if(_endDate==null)
+    		_endDate = DateUtils.getOffsetDate(_beginDate, 4);
         //每一个car保存对应5天的状态信息
         List<LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>> carStatus = new ArrayList<LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>>();
         LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>> teMap = null;
         LinkedHashMap<String, Integer> carUseInfoNum = null;
-        System.out.println("carList.size="+carList.size());
         for (Car car : carList) {
             try {
                 teMap = new LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>();
                 carUseInfoNum = new LinkedHashMap<String, Integer>();
-                List<List<Order>> carUseInfo = orderService.getCarTask(car, beginDate, endDate);
+                List<List<Order>> carUseInfo = orderService.getCarTask(car, _beginDate, _endDate);
                 int i = 0;
-                System.out.println("carUseInfo.size="+carUseInfo.size());
                 for (List<Order> dayList : carUseInfo) {
     				if(dayList!=null && dayList.size()>0){
     					if(dayList.get(0)!=null)
-    						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 0);
+    						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 0);
 						else
-							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
+							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 1);
     				}else{
-    					carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate, i++)), 1);
+    					carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 1);
     				}
     			}
                 LineTitleVO ltvo=new LineTitleVO();
     	        ltvo.setType("car");
-    	        ltvo.setId(car.getId());
+    	        ltvo.setCarId(car.getId());
     	        if(car.getDriver()!=null){
     	        	ltvo.setDriverName(car.getDriver().getName());
         	        ltvo.setPhone(car.getDriver().getPhoneNumber());
@@ -143,7 +150,10 @@ public class DriverAction extends BaseAction {
     	        	ltvo.setDriverName("");
     	        	ltvo.setPhone("");
     	        }
-    	        ltvo.setPlateNumber(car.getPlateNumber());
+    	        if(car.isCareExpired() || car.isExamineExpired() || car.isInsuranceExpired() || car.isTollChargeExpired())
+    	        	ltvo.setAvailable(false);
+    	        else
+    	        	ltvo.setAvailable(true);
     	        ltvo.setServiceType(car.getServiceType().getTitle());
     	        teMap.put(ltvo, carUseInfoNum);
                 carStatus.add(teMap);
@@ -152,17 +162,22 @@ public class DriverAction extends BaseAction {
                 e.printStackTrace();
             }
         }
-        System.out.println("carStatus.size="+carStatus.size());
         PageBean<LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>> pageBean = new PageBean<LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>>(
-            pageNum, 10, carStatus.size(), carStatus);
+            pageNum, 10, carPageBean.getRecordCount(), carStatus);
         ActionContext.getContext().getValueStack().push(pageBean);
     }
 
     public String taskList() {
-    	if(driver!=null)
-    		prepareDriverData();
+    	ActionContext.getContext().getSession().put("taskList_driver", driver);
+    	ActionContext.getContext().getSession().put("taskList_beginDate", beginDate);
+    	ActionContext.getContext().getSession().put("taskList_endDate", endDate);
+    	ActionContext.getContext().getSession().put("taskList_servicePointId", servicePointId);
+    	ActionContext.getContext().getSession().put("taskList_car", car);
+    	if(driver!=null){
+    		prepareDriverData(driver,beginDate,endDate);
+    	}
     	else
-    		prepareCarData();
+    		prepareCarData(servicePointId,driver,car,beginDate,endDate);
     		
      	ActionContext.getContext().put("servicePointList", carService.getAllServicePoint());
     	servicePointId=0;
@@ -170,6 +185,26 @@ public class DriverAction extends BaseAction {
     	endDate=null;
         return "taskList";
     }
+    
+    public boolean isAvailable(){
+		System.out.println("in isAvailable");
+    	System.out.println("asdfasfffffffff"+getMap().keySet().toArray(new LineTitleVO[0])[0].isAvailable());
+    	return false;
+    }
+	
+	public String freshList(){
+		User _driver=(User)ActionContext.getContext().getSession().get("taskList_driver");
+		Date _beginDate=(Date)ActionContext.getContext().getSession().get("taskList_beginDate");
+		Date _endDate=(Date)ActionContext.getContext().getSession().get("taskList_endDate");
+		long _servicePointId=(Long)ActionContext.getContext().getSession().get("taskList_servicePointId");
+		Car _car=(Car)ActionContext.getContext().getSession().get("taskList_car");
+		if(_driver!=null){
+    		prepareDriverData(_driver,_beginDate,_endDate);
+    	}else
+    		prepareCarData(_servicePointId,_driver,_car,_beginDate,_endDate);
+		ActionContext.getContext().put("servicePointList", carService.getAllServicePoint());
+		return "taskList";
+	}
 
     public OrderService getOrderService() {
         return orderService;
@@ -243,11 +278,21 @@ public class DriverAction extends BaseAction {
 		this.driver = driver;
 	}
 
+	public LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>> getMap() {
+		System.out.println("in getMap, map="+map);
+		return map;
+	}
+
+	public void setMap(
+			LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>> map) {
+		this.map = map;
+	}
+
 	public class LineTitleVO{
     	private String type;//如果是查车，type="car";如果是查人，type="driver"
-    	private long id;
+    	private long carId;
     	private String driverName;
-    	private String plateNumber;
+    	private boolean available;
     	private String serviceType;
     	private String phone;
     	
@@ -257,23 +302,17 @@ public class DriverAction extends BaseAction {
 		public void setType(String type) {
 			this.type = type;
 		}
-		public long getId() {
-			return id;
+		public long getCarId() {
+			return carId;
 		}
-		public void setId(long id) {
-			this.id = id;
+		public void setCarId(long carId) {
+			this.carId = carId;
 		}
 		public String getDriverName() {
 			return driverName;
 		}
 		public void setDriverName(String driverName) {
 			this.driverName = driverName;
-		}
-		public String getPlateNumber() {
-			return plateNumber;
-		}
-		public void setPlateNumber(String plateNumber) {
-			this.plateNumber = plateNumber;
 		}
 		public String getPhone() {
 			return phone;
@@ -286,6 +325,12 @@ public class DriverAction extends BaseAction {
 		}
 		public void setServiceType(String serviceType) {
 			this.serviceType = serviceType;
+		}
+		public boolean isAvailable() {
+			return available;
+		}
+		public void setAvailable(boolean available) {
+			this.available = available;
 		}    		
     }
 }

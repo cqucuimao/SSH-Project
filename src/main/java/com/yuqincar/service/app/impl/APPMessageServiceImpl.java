@@ -85,7 +85,7 @@ public class APPMessageServiceImpl implements APPMessageService {
 			PushMsgToSingleDeviceRequest request=new PushMsgToSingleDeviceRequest().
 					addChannelId(appToken). //设备token
 					addDeviceType(3).  //3 is for android
-					addMessageType(1). //1标示推送为通知
+					addMessageType(1). //0表示推送为透传消息，1表示推送为通知
 					addMessage(notification.toString());
 
 			PushMsgToSingleDeviceResponse response=pushClient.pushMsgToSingleDevice(request);	

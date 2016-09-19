@@ -273,8 +273,12 @@ public class OrderServiceImpl implements OrderService {
 				saveOtherPassenger(order);
 			if(scheduleMode==OrderService.SCHEDULE_FROM_NEW || scheduleMode==OrderService.SCHEDULE_FROM_QUEUE){
 				if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null)){
-					appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。上车时间："+DateUtils.getYMDHMString(order.getPlanBeginDate())
-							+ "；上车地点："+order.getFromAddress(),null);
+					String timeString=null;
+					if(order.getChargeMode()==ChargeModeEnum.DAY)
+						timeString=DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate());
+					else
+						timeString=DateUtils.getYMDHMString(order.getPlanBeginDate());
+					appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。用车时间："+timeString+ "；上车地点："+order.getFromAddress(),null);
 					
 					Map<String,String> param=new HashMap<String,String>();
 					param.put("customerOrganization", order.getCustomerOrganization().getName());

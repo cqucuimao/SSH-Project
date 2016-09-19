@@ -93,8 +93,14 @@
   								<c:forEach items="${temp}" var="map">  
   									<td>${map.key.driverName}</td>
 									<td>
-									<cqu:carDetailList id="${map.key.id}" />
-									<%-- ${map.key.plateNumber} --%>
+									<c:choose>
+										<c:when test="${map.key.available}">
+											<cqu:carDetailList id="${map.key.carId}" /> 
+   										</c:when>  
+     									<c:otherwise>
+     										<cqu:carDetailList id="${map.key.carId}" textColor="red"/>
+										</c:otherwise>  
+									</c:choose>
 									</td>
 									<td>${map.key.serviceType}</td>
 									<td>${map.key.phone}</td>								
@@ -113,10 +119,10 @@
   							</tr>							
 					</tbody>
 				</table>
-			</div>
-			<div class="pageToolbar">
+			</div>			
+			<s:form id="pageForm" action="driver_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>		   
-			</div>
+			</s:form>
 		</div>
 	</div>
 	<script type="text/javascript" src="<%=basePath%>js/jquery-1.7.1.min.js"></script>

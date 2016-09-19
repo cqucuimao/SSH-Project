@@ -25,6 +25,7 @@ import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.monitor.Device;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.utils.QueryHelper;
 
@@ -70,6 +71,12 @@ public class CarServiceImpl implements CarService {
 
 	public boolean isEngineSNExist(long selfId, String engineSN) {
 		return carDao.isEngineSNExist(selfId,engineSN);
+	}
+	
+	public List<Car> getCarsByDriver(User driver){
+		QueryHelper helper=new QueryHelper(Car.class,"c");
+		helper.addWhereCondition("c.driver=?", driver);
+		return carDao.getAllQuerry(helper);
 	}
 
 	public boolean canDeleteCar(long id) {

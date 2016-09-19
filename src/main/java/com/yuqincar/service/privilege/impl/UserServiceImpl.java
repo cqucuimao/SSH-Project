@@ -168,6 +168,9 @@ public class UserServiceImpl implements UserService{
 		rootNode.setName("公司");
 		rootNode.setNocheck("true");
 		for(User u:users) {
+//				//测试员 是给APP上架审查员使用的。不出现在员工选择框和员工管理功能中
+//				if(u.getName().startsWith("测试员"))
+//					continue;
 			
 				TreeNode child = new TreeNode();
 				child.setName(u.getName());

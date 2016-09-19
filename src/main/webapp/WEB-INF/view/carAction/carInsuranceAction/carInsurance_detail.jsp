@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
 	String path = request.getContextPath();
@@ -38,7 +39,7 @@
 					<tbody class="tableHover">
 							<tr>
                     			<th width="100"><s:property value="tr.getText('car.Car.plateNumber')" />：</th>
-                    			<td>${car.plateNumber}</td>
+                    			<td><cqu:carDetailList id="${car.id}" /></td>
                 			</tr>
                 			<tr>
                     			<th><s:property value="tr.getText('car.CarInsurance.insureCompany')" />：</th>

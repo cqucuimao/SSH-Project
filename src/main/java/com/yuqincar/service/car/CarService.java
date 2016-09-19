@@ -9,6 +9,7 @@ import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.monitor.Device;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
 
 public interface CarService {
@@ -138,4 +139,6 @@ public interface CarService {
 	 * @return
 	 */
 	public boolean isEngineSNExist(long selfId, String plateNumber);
+	
+	public List<Car> getCarsByDriver(User driver);
 }

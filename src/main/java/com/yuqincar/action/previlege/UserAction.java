@@ -72,6 +72,9 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		if(model.getName()!=null && !"".equals(model.getName()))
 			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
 		helper.addWhereCondition("u.department.name <> ?", "外派");
+		//测试员 是给APP上架审查员使用的。不出现在员工选择框和员工管理功能中
+		helper.addWhereCondition("u.name not like ?", "测试员%");
+		helper.addWhereCondition("u.loginName <> ?", "admin");
 		helper.addOrderByProperty("u.id", false);
 		helper.addOrderByProperty("u.name", true);
 		PageBean pageBean = userService.getPageBean(pageNum, helper);	
@@ -84,6 +87,9 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	public String list(){
 		QueryHelper helper = new QueryHelper("User", "u");
 		helper.addWhereCondition("u.department.name <> ?", "外派");
+		//测试员 是给APP上架审查员使用的。不出现在员工选择框和员工管理功能中
+		helper.addWhereCondition("u.name not like ?", "测试员%");
+		helper.addWhereCondition("u.loginName <> ?", "admin");
 		helper.addOrderByProperty("u.id", false);
 		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -167,6 +173,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备回显的数据
 		User user = userService.getById(model.getId());
+		if(user.getLoginName().equals("admin"))
+			return null;
 		if(user.getUserType() == UserTypeEnum.DRIVER){
 			System.out.println("licenseID="+licenseID);
 			licenseID = user.getDriverLicense().getLicenseID();
@@ -199,7 +207,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	}
 
 	/** 修改 */
-	public String edit() throws Exception {	
+	public String edit() throws Exception {
 		if(userService.isLoginNameExist(model.getId(), model.getLoginName())){
 			addFieldError("loginName", "登录名已经存在！");
 			return addUI();

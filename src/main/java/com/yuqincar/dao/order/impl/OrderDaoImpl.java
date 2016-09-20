@@ -231,7 +231,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					  hql = hql+" and car not in (select o.car from order_ as o where (o.chargeMode=? or o.chargeMode=?) and o.status<>? and o.status<>? and o.status<>? and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate))";
 					  hql = hql+" and car not in (select cca.car from CarCareAppointment as cca where cca.done=?)";
 					  hql = hql+" and car not in (select cea.car from CarExamineAppointment as cea where cea.done=?)";
-					  hql = hql+" and car not in (select cra.car from CarRepairAppointment as cra where cra cr.done=?)";
+					  hql = hql+" and car not in (select cra.car from CarRepairAppointment as cra where cra.done=?)";
 					  
 					  hql = hql+" and car.driver is not null";
 					  hql = hql+" and car.driver not in (select o.driver from order_ as o where (o.chargeMode=? or o.chargeMode=?) and o.status<>? and o.status<>? and o.status<>? and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate))";

@@ -117,13 +117,13 @@
 									<tr>
 										<th>上车地点<span class="required">*</span></th>
 										<td>
-											<s:textfield class="inputText" type="text" name="fromAddress" id="fromAddress" value="电话联系"/>
+											<s:textfield class="inputText" type="text" name="fromAddress" id="fromAddress"/>
 										</td>
 									</tr>
 									<tr class="filter_mileage filter_plane">
 										<th>下车地点<span class="required">*</span></th>
 										<td>
-											<s:textfield class="inputText" type="text" placeholder="下车地点" name="toAddress" id="toAddress" />
+											<s:textfield class="inputText" type="text" name="toAddress" id="toAddress" />
 										</td>
 									</tr>	
 									<tr class="filter_protocol">
@@ -255,6 +255,9 @@
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
 			
+			$("#fromAddress").val("${fromAddress}");
+			$("#toAddress").val("${toAddress}");
+			
 			if("filter_days"=="${chargeMode}" || "filter_protocol"=="${chargeMode}"){
 				formatDateField1($("#planBeginDate"));
 				formatDateField1($("#planEndDate"));
@@ -290,6 +293,9 @@
 			
 			$("#planBeginDate").val("${planBeginDate}");
 			$("#planEndDate").val("${planEndDate}");
+			
+			$("#fromAddress").val("${fromAddress}");
+			$("#toAddress").val("${toAddress}");
 			
 			$("#schedule").val("确认修改");
 			$("#inQueue").hide();
@@ -477,6 +483,9 @@
 						setInterval(checkNeedDeprive,10000);
 					}else if($("#scheduleMode").val()=="FROM_UPDATE"){
 						initFromUpdate();
+					}else{
+						$("#fromAddress").val("电话联系");
+						$("#toAddress").val("电话联系");
 					}
 				}
 			);

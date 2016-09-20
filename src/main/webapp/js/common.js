@@ -377,10 +377,14 @@ function filter(){
 				$(".filter_"+radio.eq(i).val()).hide();
 			} 
 			$("."+checked).show();
-			if(checked=="filter_plane" || checked=="filter_mileage")
+			if(checked=="filter_plane" || checked=="filter_mileage"){
 				$("#planBeginDate").attr("onfocus","new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})");
-			else if(checked=="filter_days" || checked=="filter_protocol")
+				$("#planBeginDate").val("");
+			}else if(checked=="filter_days" || checked=="filter_protocol"){
 				$("#planBeginDate").attr("onfocus","new WdatePicker({dateFmt:'yyyy-MM-dd'})");
+				$("#planBeginDate").val("");
+				$("#planEndDate").val("");
+			}
 		}
 	});
 }

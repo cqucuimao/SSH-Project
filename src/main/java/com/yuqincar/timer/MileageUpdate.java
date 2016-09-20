@@ -58,35 +58,34 @@ public class MileageUpdate {
 			int mile = (int) lbsDao.getCurrentMile(car);
 			car.setMileage(mile);
 			
-			//判断是否保养过期
-			if(car.getMileage()>car.getNextCareMile()){
+			//判断是否保养过期，如果car.getNextCareMile==0，说明该车的数据不全，不处理。
+			if(car.getNextCareMile()>0 && car.getMileage()>car.getNextCareMile()){
 				System.out.println(car.getPlateNumber()+"保养里程过期。 "+mile+">"+car.getNextCareMile());
 				car.setCareExpired(true);
-				
-				CarCareAppointment cca=new CarCareAppointment();
-				cca.setCar(car);
-				cca.setDriver(car.getDriver());
+								
+				if(car.getDriver()!=null){
+					CarCareAppointment cca=new CarCareAppointment();
+					cca.setCar(car);
+					cca.setDriver(car.getDriver());						
+					int n=0;
+					Date date=null;
+					while(true){
+						date=DateUtils.getOffsetDateFromNow(n);
+						List<List<Order>> carOrderList=orderService.getCarTask(car, date, date);
+						List<List<Order>> driverOrderList=null;
+						if(cca.getDriver()!=null)
+							driverOrderList=orderService.getDriverTask(cca.getDriver(), date, date);
+						if((carOrderList==null || carOrderList.size()==0 || carOrderList.get(0)==null || carOrderList.get(0).size()==0)
+								&& (driverOrderList==null || driverOrderList.size()==0 || driverOrderList.get(0)==null || driverOrderList.get(0).size()==0)){
+							break;
+						}else
+							n++;
+					}
+					cca.setDate(date);
+					cca.setDone(false);
+					//保存预约信息时，已经给司机发送短信了。
+					carCareAppointmentService.saveCarCareAppointment(cca);
 					
-				int n=0;
-				Date date=null;
-				while(true){
-					date=DateUtils.getOffsetDateFromNow(n);
-					List<List<Order>> carOrderList=orderService.getCarTask(car, date, date);
-					List<List<Order>> driverOrderList=null;
-					if(cca.getDriver()!=null)
-						driverOrderList=orderService.getDriverTask(cca.getDriver(), date, date);
-					if((carOrderList==null || carOrderList.size()==0 || carOrderList.get(0)==null || carOrderList.get(0).size()==0)
-							&& (driverOrderList==null || driverOrderList.size()==0 || driverOrderList.get(0)==null || driverOrderList.get(0).size()==0)){
-						break;
-					}else
-						n++;
-				}
-				cca.setDate(date);
-				cca.setDone(false);
-				//保存预约信息时，已经给司机发送短信了。
-				carCareAppointmentService.saveCarCareAppointment(cca);
-					
-				if(cca.getDriver()!=null){
 					Map<String,String> params=new HashMap<String,String>();
 					params.put("plateNumber", car.getPlateNumber());
 					params.put("date", DateUtils.getYMDString(date));

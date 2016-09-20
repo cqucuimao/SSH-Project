@@ -360,6 +360,7 @@ public class OrderAppAction extends BaseAction{
 		}else if(orderStatus.equals("CANCELLED")){
 			helper.addWhereCondition("o.customer=? and o.status=?", customer, OrderStatusEnum.CANCELLED);
 		}
+		helper.addOrderByProperty("id", false);
 		pageBean=orderService.queryOrder(pageNum, helper);
 		
 		ordersVO.setCurrentPage(pageBean.getCurrentPage());
@@ -372,14 +373,28 @@ public class OrderAppAction extends BaseAction{
 			ovo.setId(order.getId().intValue());
 			
 			StringBuffer time=new StringBuffer();
-			if(order.getActualBeginDate()!=null)
-				time.append(DateUtils.getYMDHMString(order.getActualBeginDate()));
-			else
-				time.append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
-			if(order.getActualEndDate()!=null)
-				time.append(" 到 ").append(DateUtils.getYMDHMString(order.getActualEndDate()));
-			else if(order.getPlanEndDate()!=null)
-				time.append(" 到 ").append(DateUtils.getYMDHMString(order.getPlanEndDate()));
+			if(order.getActualBeginDate()!=null){
+				if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+					time.append(DateUtils.getYMDString(order.getActualBeginDate()));
+				else
+					time.append(DateUtils.getYMDHMString(order.getActualBeginDate()));
+			}else{
+				if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+					time.append(DateUtils.getYMDString(order.getPlanBeginDate()));
+				else
+					time.append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
+			}
+			if(order.getActualEndDate()!=null){
+				if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+					time.append(" 到 ").append(DateUtils.getYMDString(order.getActualEndDate()));
+				else
+					time.append(" 到 ").append(DateUtils.getYMDHMString(order.getActualEndDate()));
+			}else if(order.getPlanEndDate()!=null){
+				if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+					time.append(" 到 ").append(DateUtils.getYMDString(order.getPlanEndDate()));
+				else
+					time.append(" 到 ").append(DateUtils.getYMDHMString(order.getPlanEndDate()));
+			}
 			ovo.setTime(time.toString());
 			
 			ovo.setFromAddress(order.getFromAddress());
@@ -415,6 +430,7 @@ public class OrderAppAction extends BaseAction{
 		OrderDetailVO odvo=new OrderDetailVO();
 		
 		odvo.setSN(order.getSn());
+		odvo.setChargeMode(order.getChargeMode().getLabel());
 		
 		StringBuffer passenger=new StringBuffer();
 		passenger.append(order.getCustomer().getName()).append("（").append(order.getPhone()).append("）");
@@ -969,6 +985,7 @@ public class OrderAppAction extends BaseAction{
 	
 	class OrderDetailVO{
 		private String SN;
+		private String chargeMode;
 		private String passenger;
 		private String time;
 		private String fromAddress;
@@ -981,6 +998,12 @@ public class OrderAppAction extends BaseAction{
 		}
 		public void setSN(String sN) {
 			SN = sN;
+		}
+		public String getChargeMode() {
+			return chargeMode;
+		}
+		public void setChargeMode(String chargeMode) {
+			this.chargeMode = chargeMode;
 		}
 		public String getPassenger() {
 			return passenger;

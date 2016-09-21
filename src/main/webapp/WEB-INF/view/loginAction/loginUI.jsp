@@ -11,6 +11,8 @@
     <title></title>
     <link title="" type="image/x-icon" rel="icon" href="skins/images/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="skins/login.css">
+	<link rel="stylesheet" type="text/css" href="js/artDialog4.1.7/skins/blue.css">
+    
     <%
 		String path = request.getContextPath();
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -63,9 +65,17 @@
 			</s:form>
         </div>
     </div>
-    
+    <div style="width:300px;margin-right:25px;margin-top:275px;float:right;background-color:">
+    <img width="300" height="146px" src="skins/images/code.png"/>
+    </div>
+    <script type="text/javascript" src="js/common.js"></script>
+	<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/artDialog4.1.7/artDialog.js"></script>
+	<script type="text/javascript" src="js/artDialog4.1.7/plugins/iframeTools.js"></script>
     <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript">
+	
 		$(function(){
 
 		

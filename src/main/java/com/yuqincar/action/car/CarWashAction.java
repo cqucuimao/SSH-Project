@@ -117,8 +117,7 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
    
    public String importExcelFile() throws Exception{
 		InputStream is = new FileInputStream(upload);
-		ExcelUtil eu = new ExcelUtil();
-		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 9, 0);
+		List<List<String>> excelLines = ExcelUtil.getLinesFromExcel(is, 1, 1, 9, 0);
 		List<CarWash> carWash = new ArrayList<CarWash>();
 		List<CarWashShop>  shoplists=new ArrayList<CarWashShop>();
 		boolean flag=false;

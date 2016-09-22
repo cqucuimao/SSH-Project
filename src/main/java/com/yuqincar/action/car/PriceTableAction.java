@@ -29,9 +29,7 @@ import com.yuqincar.service.order.PriceService;
 
 @Controller
 @Scope("prototype")
-public class PriceTableAction extends BaseAction implements ModelDriven<CarServiceType>{
-	
-	private CarServiceType model = new CarServiceType();
+public class PriceTableAction extends BaseAction{
 		
 	@Autowired
 	private CarService carService;
@@ -45,18 +43,12 @@ public class PriceTableAction extends BaseAction implements ModelDriven<CarServi
 	private List<String> typeTitle;
 	private String actionFlag;
 	
-	/** 列表 */
+	/** 价格表列表 */
 	public String list() throws Exception {
 		List<PriceTable> priceTableList = priceService.getAllPriceTable();
 		ActionContext.getContext().put("priceTableList",priceTableList);
 		return "list";
 		
-	}
-	/** 删除 */
-	public String delete() throws Exception {
-		if(carService.canDeleteCarServiceType(model.getId()))
-			carService.deleteCarServiceType(model.getId());
-		return "toList";
 	}
 	
 	/** 添加页面 */
@@ -70,11 +62,13 @@ public class PriceTableAction extends BaseAction implements ModelDriven<CarServi
 		CarServiceSuperType csst = new CarServiceSuperType();
 		List<CarServiceType> carServiceTypes = new ArrayList<CarServiceType>();
 		for(int i=0;i<inputRows;i++){
-			CarServiceType carServiceType = new CarServiceType();
 			if(typeTitle.get(i) != null){
+				CarServiceType carServiceType = new CarServiceType();
 				carServiceType.setTitle(typeTitle.get(i));
+				carServiceTypes.add(carServiceType);
+			}else{
+				carServiceTypes = null;
 			}
-			carServiceTypes.add(carServiceType);
 		}
 		csst.setTitle(superTypeTitle);
 		csst.setTypes(carServiceTypes);
@@ -95,18 +89,27 @@ public class PriceTableAction extends BaseAction implements ModelDriven<CarServi
 	}
 	
 	
-	/** 修改 */
+	/** 修改   只增加superType下的一个type*/
 	public String editServiceType() throws Exception {
 		//从数据库中取出原对象
 		CarServiceSuperType carServiceSuperType = carService.getCarServiceSuperTypeByTitle(superTypeTitle);
 		//设置要修改的属性
+		List<CarServiceType> carServiceTypes = carServiceSuperType.getTypes();
+		for(int i=0;i<inputRows;i++){
+			CarServiceType carServiceType = new CarServiceType();
+			if(typeTitle.get(i) != null){
+				carServiceType.setTitle(typeTitle.get(i));
+			}
+			carServiceTypes.add(carServiceType);
+		}
+		carServiceSuperType.setTypes(carServiceTypes);
 		
 		//更新到数据库
-		//carService.updateCarServiceType(carServiceType);
+		carService.updateCarServiceSuperType(carServiceSuperType,inputRows);
 
-		return "toList";
+		return serviceTypeList();
 	}
-	
+	/**车型列表*/
 	public String serviceTypeList(){
 		//List<CarServiceType> carServiceTypes = carService.getAllCarServiceType();
 		
@@ -125,7 +128,16 @@ public class PriceTableAction extends BaseAction implements ModelDriven<CarServi
 		
 		return "serviceTypeList";
 	}
-	
+	//判断superType是否可以删除，具有type的就不能删除
+	public boolean isCanDeleteSuperServiceType(){
+		CarServiceSuperType carServiceSuperType = (CarServiceSuperType)ActionContext.getContext().getValueStack().peek();
+		List<CarServiceType> carServiceTypes = carServiceSuperType.getTypes();
+		System.out.println("####"+carServiceTypes.get(0).getTitle());
+		if(carServiceTypes == null || carServiceTypes.size() == 0 || carServiceTypes.get(0).getTitle() == null)
+			return true;
+		else
+			return false;
+	}
 	//判断车型能否删除
 	public boolean isCanDeleteServiceType(){
 		CarServiceType carServiceType = (CarServiceType) ActionContext.getContext().getValueStack().peek();
@@ -133,12 +145,6 @@ public class PriceTableAction extends BaseAction implements ModelDriven<CarServi
 			return true;
 		else 
 			return false;
-	}
-	
-	
-	
-	public CarServiceType getModel() {
-		return model;
 	}
 
 	public Long getOrderId() {

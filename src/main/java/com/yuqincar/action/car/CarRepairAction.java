@@ -120,8 +120,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	
 	public String importExcelFile() throws Exception{
         InputStream is = new FileInputStream(upload);
-		ExcelUtil eu = new ExcelUtil();
-		List<List<String>> excelLines = eu.getLinesFromExcel(is, 1, 1, 9, 0);
+		List<List<String>> excelLines = ExcelUtil.getLinesFromExcel(is, 1, 1, 9, 0);
 		List<CarRepair> carRepairs = new ArrayList<CarRepair>();
 				for(int i=1;i<excelLines.size();i++){
 					try {

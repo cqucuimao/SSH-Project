@@ -425,7 +425,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		car.setRegistDate(model.getRegistDate());
 		car.setDriver(model.getDriver());
 		car.setServicePoint(carService.getServicePointById(servicePointId));
-
+		car.setStandbyCar(model.isStandbyCar());
+		
 		//更新到数据库
 		carService.updateCar(car);
 		ActionContext.getContext().getValueStack().push(new Car());

@@ -130,7 +130,7 @@
           //百度地图的GPS坐标转Baidu坐标的API接口限制数
           var limitLen=98;
   
-          //每隔10秒刷新位置
+          //每隔10秒刷新位置。每个10s执行一次flushByGroup()
           window.setInterval(flushByGroup,monitorInterval); 
    
           //子窗口关闭之前，需要通知父窗口
@@ -433,7 +433,7 @@
   function flushTrack(){
 	   
 	    //设置ajax请求为同步进行 这里改为同步后chrome浏览器警告，但是好像不影响
-	    $.ajaxSettings.async=false; 
+	    //$.ajaxSettings.async=false; 
   	    //查看 allRecordedCars中被选中的车辆数目
   	    var monitoredCarNum=0;
   	    for(var i=0;i<allRecordedCars.length;i++){
@@ -682,7 +682,7 @@
            }
            
            //恢复同步设置
-           $.ajaxSettings.async=true; 
+           //$.ajaxSettings.async=true; 
        }
   	    
   	}    

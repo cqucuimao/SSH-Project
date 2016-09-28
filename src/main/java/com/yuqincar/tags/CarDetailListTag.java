@@ -33,7 +33,7 @@ public class CarDetailListTag extends TagSupport {
 			String  value=carService.getCarById(Long.parseLong(id)).getPlateNumber();
 			if (user.hasPrivilegeByUrl("/car_carDetail")) 
 			{
-				options.append("<a href=\"/Web/car_carDetail.action?id="+id+"\">");
+				options.append("<a href=\"car_carDetail.action?id="+id+"\">");
 			} else {
 				options.append("<a href=\"#\"> <font color="+textColor+">");
 			}

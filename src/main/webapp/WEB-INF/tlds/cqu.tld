@@ -4,7 +4,7 @@
     <jsp-version>2.0</jsp-version>
     <short-name>cqu</short-name>       
     <uri>cqu.tld</uri>   
-  
+ 
 <tag>  
  <name>border</name>                            
  <tag-class>com.yuqincar.tags.BorderTags</tag-class> 

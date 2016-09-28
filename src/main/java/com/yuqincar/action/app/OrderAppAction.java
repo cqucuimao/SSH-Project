@@ -439,16 +439,30 @@ public class OrderAppAction extends BaseAction{
 		odvo.setPassenger(passenger.toString());
 		
 		StringBuffer time=new StringBuffer();
-		if(order.getActualBeginDate()!=null)
-			time.append(DateUtils.getYMDHMString(order.getActualBeginDate()));
-		else
-			time.append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
-		if(order.getActualEndDate()!=null)
-			time.append(" 到 ").append(DateUtils.getYMDHMString(order.getActualEndDate()));
-		else if(order.getPlanEndDate()!=null)
-			time.append(" 到 ").append(DateUtils.getYMDHMString(order.getPlanEndDate()));
+		if(order.getActualBeginDate()!=null){
+			if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+				time.append(DateUtils.getYMDString(order.getActualBeginDate()));
+			else
+				time.append(DateUtils.getYMDHMString(order.getActualBeginDate()));
+		}else{
+			if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+				time.append(DateUtils.getYMDString(order.getPlanBeginDate()));
+			else
+				time.append(DateUtils.getYMDHMString(order.getPlanBeginDate()));
+		}
+		if(order.getActualEndDate()!=null){
+			if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+				time.append(" 到 ").append(DateUtils.getYMDString(order.getActualEndDate()));
+			else
+				time.append(" 到 ").append(DateUtils.getYMDHMString(order.getActualEndDate()));
+		}else if(order.getPlanEndDate()!=null){
+			if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+				time.append(" 到 ").append(DateUtils.getYMDString(order.getPlanEndDate()));
+			else
+				time.append(" 到 ").append(DateUtils.getYMDHMString(order.getPlanEndDate()));
+		}
 		odvo.setTime(time.toString());
-		
+				
 		odvo.setFromAddress(order.getFromAddress());
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			odvo.setToAddress(order.getToAddress());

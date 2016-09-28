@@ -45,7 +45,7 @@ public class MileageUpdate {
 	@Autowired
 	public LBSDao lbsDao;
 
-	@Scheduled(cron = "0 0 1 * * ?")
+	@Scheduled(cron = "0 0 8 * * ?")
 	@Transactional
 	public void update() {
 		List<Car> cars = carService.getAll();
@@ -59,7 +59,7 @@ public class MileageUpdate {
 			car.setMileage(mile);
 			
 			//判断是否保养过期，如果car.getNextCareMile==0，说明该车的数据不全，不处理。
-			if(car.getNextCareMile()>0 && car.getMileage()>car.getNextCareMile()){
+			if(!car.isCareExpired() && car.getNextCareMile()>0 && car.getMileage()>car.getNextCareMile()){
 				System.out.println(car.getPlateNumber()+"保养里程过期。 "+mile+">"+car.getNextCareMile());
 				car.setCareExpired(true);
 								

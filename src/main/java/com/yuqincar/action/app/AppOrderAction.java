@@ -226,7 +226,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
-		if(orderId==null){
+		if(orderId==null || orderId==0){
 			writeJson("{\"status\":\"badParameter\"}");
 			return;
 		}

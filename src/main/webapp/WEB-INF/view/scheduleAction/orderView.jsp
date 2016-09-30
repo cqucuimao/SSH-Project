@@ -9,7 +9,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title></title>
-<link href="<%=basePath %>skins/main.css" rel="stylesheet" type="text/css" />
+<link href="skins/main.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="minW">
     <div class="space">
@@ -159,44 +159,45 @@
              		</tbody>
              	</table>
              </s:iterator>
-          	<table>
-                <tfoot>                    
+             </div>
+             
+		<div class="editBlock search">
+          	<table style="margin-left:15px">
+          			<tr>
+	          			<td></td>
+	          			<td></td>
+	          			<td></td>
+	          			<td></td>
+	          			<td></td>
+          			</tr>
                     <tr>
-                        <th></th>
-                        <td></td>
-                        <th></th>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">
-                        	<form id="myForm">
+                        <td height="50px">
                         		<s:if test="canUpdateOrder">
-                        			<s:a action="schedule_updateOrder?scheduleFromUpdateOrderId=%{id}">
-                        				<input type="button" class="inputButton" value="修改订单"/>
-                        			</s:a>
+                        			<s:a cssClass="buttonB" action="schedule_updateOrder?scheduleFromUpdateOrderId=%{id}">修改订单</s:a>
                         		</s:if>
+                        </td>
+                        <td>
                         		<s:if test="canPushBackOrder">
-                        			<s:a action="order_postpone?orderId=%{id}">
-                        				<input type="button" class="inputButton" value="延后订单"/>
-                        			</s:a>
+                        			<s:a cssClass="buttonB" action="order_postpone?orderId=%{id}">延后订单</s:a>
                         		</s:if>
+                        </td>
+                        <td>
                         		<s:if test="canRescheduleOrder">
-                        			<s:a action="order_reschedule?orderId=%{id}">
-                        				<input type="button" class="inputButton" value="重新调度"/>
-                        			</s:a>
+                        			<s:a cssClass="buttonB" action="order_reschedule?orderId=%{id}">重新调度</s:a>
                         		</s:if>
+                        </td>
+                        <td>
                         		<s:if test="canCancelOrder">
-                        			<s:a action="order_cancel?orderId=%{id}">
-                        				<input type="button" class="inputButton" value="取消订单"/>
-                        			</s:a>
+                        			<s:a cssClass="buttonB" action="order_cancel?orderId=%{id}">取消订单</s:a>
                         		</s:if>
+                        </td>
+                        <td>
                             	<a class="p15" href="javascript:history.go(-1);">返回</a>
-                            </form>
+                           
                         </td>
                     </tr>
-                </tfoot>
             </table>
-          </div>
+            </div>
     </div>
     <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="<%=basePath %>js/common.js"></script>

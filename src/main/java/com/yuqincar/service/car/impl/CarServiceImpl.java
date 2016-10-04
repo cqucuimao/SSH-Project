@@ -274,5 +274,16 @@ public class CarServiceImpl implements CarService {
 	public CarServiceSuperType getCarServiceSuperTypeByTitle(String title) {
 		return carServiceSuperTypeDao.getCarServiceSuperTypeByTitle(title);
 	}
+	
+	@Transactional
+	public void updateCarServiceSuperType(CarServiceSuperType carServiceSuperType,int inputRows) {
+		
+		List<CarServiceType> carServiceTypes = carServiceSuperType.getTypes();
+		for(int i=carServiceTypes.size()-1;i>inputRows;i--){
+			carServiceSuperType.getTypes().get(i).setSuperType(carServiceSuperType);
+			carServiceTypeDao.save(carServiceSuperType.getTypes().get(i));
+		}
+		carServiceSuperTypeDao.update(carServiceSuperType);
+	}
 
 }

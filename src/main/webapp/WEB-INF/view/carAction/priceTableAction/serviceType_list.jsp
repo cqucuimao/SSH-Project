@@ -63,6 +63,9 @@
 							<s:if test="#s.first">
 							<td class="alignCenter" rowspan="${total }">
 								<a href="priceTable_editServiceTypeUI.action?actionFlag=edit&superTypeTitle=<s:property value="#column.key"/>" ><i class="icon-operate-edit" title="编辑"></i></a>
+								<s:if test="canDeleteSuperServiceType">
+									<s:a action="priceTable_editServiceTypeUI" ><i class="icon-operate-delete" title="删除"></i></s:a>
+								</s:if>
 							</td>
 							</s:if>
 						</tr>

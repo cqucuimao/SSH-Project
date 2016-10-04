@@ -32,20 +32,30 @@
 					<col width="120"></col>
 				</colgroup>
 				<tbody id="tb">
-					<tr>
-						<th>车类<%-- <s:property value="tr.getText('car.CarServiceType.title')" /> --%><span class="required">*</span></th>
-						<td>
-								<s:textfield cssClass="inputText" name="superTypeTitle"/>
-						</td>
-					</tr>
+					<s:if test="id==null">
+						<tr>
+							<th>车类<span class="required">*</span></th>
+							<td>
+									<s:textfield cssClass="inputText" name="superTypeTitle"/>
+							</td>
+						</tr>
+					</s:if>
+					<s:else>
+						<tr>
+							<th>车类</th>
+							<td>
+									<s:textfield cssClass="inputText" name="superTypeTitle" readonly="true"/>
+							</td>
+						</tr>
+					</s:else>
 					<s:iterator value="carServiceTypes">
 						<tr>
 							<th>车型</th>
-							<td><s:textfield cssClass="inputText" name="title" /></td>
+							<td><s:textfield cssClass="inputText" name="title" readonly="true"/></td>
 						</tr>
 					</s:iterator>
 					<tr class="trClass">
-						<th>车型</th>
+						<th>车型<span class="required">*</span></th>
 						<td>
 							<s:textfield cssClass="inputText" name="typeTitle" />
 							&nbsp;&nbsp;<input class="btn" id="btn" type="button" value="点击新增" />
@@ -84,7 +94,10 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					title:{
+					superTypeTitle:{
+						required:true,
+					},
+					typeTitle:{
 						required:true,
 					},
 					pricePerKM:{

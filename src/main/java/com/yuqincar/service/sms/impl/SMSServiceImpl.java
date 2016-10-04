@@ -18,10 +18,12 @@ import com.google.gson.reflect.TypeToken;
 import com.yuqincar.domain.message.SMSQueue;
 import com.yuqincar.service.message.SMSQueueService;
 import com.yuqincar.service.sms.SMSService;
+import com.yuqincar.token.MessageToken;
 import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.HttpInvoker;
 import com.yuqincar.utils.RandomUtil;
+import com.yuqincar.utils.SMSToken;
 
 @Service
 public class SMSServiceImpl implements SMSService {
@@ -55,7 +57,7 @@ public class SMSServiceImpl implements SMSService {
 	
 	private String sendTemplateSMS(String phoneNumber,String templateId, String paramString) throws Exception{
 		String postEntity = "app_id=" + APP_ID + "&access_token="
-				+ Configuration.getSmsToken() + "&acceptor_tel=" + phoneNumber + "&template_id="
+				+ SMSToken.getSMSToken() + "&acceptor_tel=" + phoneNumber + "&template_id="
 				+ templateId + "&template_param=" + paramString
 				+ "&timestamp=" + URLEncoder.encode(DateUtils.getYMDHMSString(new Date()), "utf-8");
 		String resJson = "";

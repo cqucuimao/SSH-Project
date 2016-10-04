@@ -13,7 +13,6 @@ public class Configuration {
 	private static int pageSize; 
 	private static String workspaceFolder = null;
 	private static String smsLogFile = null;
-	private static String smsToken = null;
 	private static String IOSDriverPushKeyStore=null;
 	private static String IOSCustomerPushKeyStore=null;
 	private static String AppleDeveloperPassword=null;
@@ -42,7 +41,6 @@ public class Configuration {
 			pageSize = Integer.parseInt(props.getProperty("pageSize"));
 			workspaceFolder = props.getProperty("workspaceFolder");
 			smsLogFile = props.getProperty("smsLogFile");
-			smsToken = props.getProperty("smsToken");
 			IOSDriverPushKeyStore = props.getProperty("IOSDriverPushKeyStore");
 			IOSCustomerPushKeyStore = props.getProperty("IOSCustomerPushKeyStore");
 			AppleDeveloperPassword = props.getProperty("AppleDeveloperPassword");			
@@ -104,15 +102,6 @@ public class Configuration {
 	public static int getDepriveScheduleMinute() {
 		return depriveScheduleMinute;
 	}	
-
-	public static String getSmsToken() {
-		return smsToken;
-	}
-
-	public static void setSmsToken(String smsToken) {
-		Configuration.smsToken = smsToken;
-	}
-
 	public static void setDepriveScheduleMinute(int depriveScheduleMinute) {
 		Configuration.depriveScheduleMinute = depriveScheduleMinute;
 	}

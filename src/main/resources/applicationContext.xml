@@ -19,14 +19,13 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 	
 
 	<!-- 自动扫描与装配bean -->
-	<context:component-scan	base-package="com.yuqincar.service,com.yuqincar.dao,com.yuqincar.action,com.yuqincar.install,com.yuqincar.timer"></context:component-scan>
+	<context:component-scan	base-package="com.yuqincar.service,com.yuqincar.dao,com.yuqincar.action,com.yuqincar.install,com.yuqincar.timer,com.yuqincar.interceptor"></context:component-scan>
 	
 	<!-- 定时器注解 -->
 	<task:annotation-driven/>
 
 	<!-- 导入外部的properties配置文件 -->
 	<context:property-placeholder location="classpath:jdbc.properties" />
-
 
 	<!-- 配置数据库连接池 -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -97,4 +96,5 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
 	<!-- 注解方式配置事物 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
+	
 </beans>

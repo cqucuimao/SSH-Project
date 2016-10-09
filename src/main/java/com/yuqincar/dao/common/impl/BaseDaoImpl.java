@@ -78,7 +78,6 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	}
 
 	public void delete(Long id) {
-		System.out.println("in daoDelete");
 		if (id == null) {
 			return;
 		}
@@ -99,10 +98,8 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 				BaseEntity baseEntity = (BaseEntity)entity;
 				record.setEntityId(((BaseEntity) entity).getId());
 			}
-			System.out.println("in daoDelete2222");
 			getSession().delete(entity);
 			getSession().save(record);
-			System.out.println("in daoDelete3333");
 		}
 		
 	}

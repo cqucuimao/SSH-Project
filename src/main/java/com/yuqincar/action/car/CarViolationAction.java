@@ -117,10 +117,13 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 			   System.out.println("in edit");
 			    System.out.println("********************************"+DateUtils.getYMDHMString(model.getDate()));
 			    CarViolation carViolation = carViolationService.getCarViolationById(model.getId());				
-				User driver=userService.getById(model.getDriver().getId());
+				
 				Car car= carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 				carViolation.setCar(car);
-				carViolation.setDriver(driver);
+				if(model.getDriver()!=null){
+					User driver=userService.getById(model.getDriver().getId());
+					carViolation.setDriver(driver);
+				}
 				carViolation.setDate(model.getDate());
 				carViolation.setPlace(model.getPlace());
 				carViolation.setDescription(model.getDescription());

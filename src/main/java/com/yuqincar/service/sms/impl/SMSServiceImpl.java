@@ -61,7 +61,8 @@ public class SMSServiceImpl implements SMSService {
 				+ templateId + "&template_param=" + paramString
 				+ "&timestamp=" + URLEncoder.encode(DateUtils.getYMDHMSString(new Date()), "utf-8");
 		String resJson = "";
-		if("on".equals(Configuration.getSmsSwitch())){
+		//验证码短信不需要打开开关。这是为了使测试服务器能够正常发送验证码。
+		if("on".equals(Configuration.getSmsSwitch()) || templateId.equals(SMSService.SMS_TEMPLATE_VERFICATION_CODE)){
 			resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
 		}else{
 			sendSMSToFile(phoneNumber,templateId,paramString);

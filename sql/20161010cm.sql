@@ -1,0 +1,1 @@
+insert into privilege(id,name,url,parent_id) values(391,'','/apiReplay',68);

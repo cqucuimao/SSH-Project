@@ -2,6 +2,7 @@ package com.yuqincar.action.lbs;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,12 +35,30 @@ public class BaiduApiAction {
 		try {
 			out = response.getWriter();
 			String queryString = request.getQueryString();
-			String url = BASEURL+queryString+ENDURL;
-			
-			//System.out.println(url);
+			String baiduQueryString =  URLDecoder.decode(queryString,"utf-8");
+			System.out.println("baiduQueryString:"+baiduQueryString);
+			String[] array = baiduQueryString.split("carId");
+			String realBaiduQueryString="";
+			String plateNumber = "";
+			String carId = "";
+			String addedJson = "";
+			if(array.length>1){
+				realBaiduQueryString = array[0].substring(0,array[0].length()-7);
+
+				plateNumber = array[0].substring(array[0].length()-7, array[0].length());
+				carId = array[1];
+				addedJson = "\"plateNumber\":\""+plateNumber+"\",\"carId\":\""+carId+"\",";
+			}else{
+				realBaiduQueryString = array[0];
+			}
+
+			String url = BASEURL+realBaiduQueryString+ENDURL;
 			String json = HttpMethod.get(url);
-			
-			out.write(json);
+
+			String firstJson = json.substring(0, 1);
+			String lastJson = json.substring(1,json.length());
+			String finalJson = firstJson+addedJson+lastJson;
+			out.write(finalJson);
 			out.flush();
 			out.close();
 		} catch (IOException e) {

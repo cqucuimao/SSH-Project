@@ -46,12 +46,18 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 	private String date;
 	
 	private Long carId;
+	
+	private String isDeal;
 
 		//头部快速查询
 		public String queryForm(){
 			QueryHelper helper = new QueryHelper("CarViolation", "cv");
 			if(model.getCar()!=null)
 				helper.addWhereCondition("cv.car=?", model.getCar());
+			if(isDeal.equals("1"))
+				helper.addWhereCondition("cv.dealt=?",true);
+			else if(isDeal.equals("0"))
+				helper.addWhereCondition("cv.dealt=?",false);
 			if(beginDate!=null && endDate!=null)
 				helper.addWhereCondition("(TO_DAYS(cv.date)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(cv.date))>=0", 
 						beginDate ,endDate);
@@ -59,8 +65,7 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 				helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(cv.date))>=0", endDate);
 			else if(beginDate!=null && endDate==null)
 				helper.addWhereCondition("(TO_DAYS(cv.date)-TO_DAYS(?))>=0", beginDate);
-			helper.addOrderByProperty("cv.date", false);
-			
+				helper.addOrderByProperty("cv.date", false);
 			PageBean pageBean = carViolationService.queryCarViolation(pageNum, helper);		
 			ActionContext.getContext().getValueStack().push(pageBean);		
 			ActionContext.getContext().getSession().put("carViolationHelper", helper);
@@ -180,5 +185,14 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 
 	public void setCarId(Long carId) {
 		this.carId = carId;
+	}
+
+	public String getIsDeal() {
+		return isDeal;
+	}
+
+	public void setIsDeal(String isDeal) {
+		this.isDeal = isDeal;
 	}	
+	
 }

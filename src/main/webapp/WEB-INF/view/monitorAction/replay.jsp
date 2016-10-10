@@ -204,7 +204,7 @@
                      console.log("结束时间时间戳");
                      console.log(endTime);
                      //查询相应device_sn号下，当前时间段内的所有轨迹段信息的请求url
-                     var reqUrl="api.action?get.part.do?"+"device_sn="+device_sn+"&begin="+beginTime+"&end="+endTime;
+                     var reqUrl="apiReplay.action?get.part.do?"+"device_sn="+device_sn+"&begin="+beginTime+"&end="+endTime;
                    
                      console.log("请求序列");
                      console.log(reqUrl);
@@ -465,7 +465,7 @@
          	console.log("=================查看一下trackPartsData里的数据===============");
          	console.log(trackPartsData);
          	//解析轨迹列表中的某一段轨迹的url
-    		var reqUrl="api.action?get.track.do?device_sn="+device_sn+"&begin="+
+    		var reqUrl="apiReplay.action?get.track.do?device_sn="+device_sn+"&begin="+
     				   begin+"&end="+end+"&page_number=-1&page_size=-1";
     		//解析当前轨迹段的gps序列
     		$.get(reqUrl,function(gpsTrackData){

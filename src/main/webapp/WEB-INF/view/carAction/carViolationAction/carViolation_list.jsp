@@ -38,6 +38,12 @@
 					<td>
 						<s:textfield name="endDate" id="endDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
+					<th>已经处理</th>
+					<td>
+					 <s:select name="isDeal" 
+					 list="#{'0':'否','1':'是','2':'全部'}"  headerKey="0" >
+					 </s:select>
+					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询"/>
 						<s:if test="carId!=null">

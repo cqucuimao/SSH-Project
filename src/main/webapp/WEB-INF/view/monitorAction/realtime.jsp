@@ -80,7 +80,8 @@
             </div>
         </div>
         <div class="pageToolbar" id="pageBar" style="display:none;">
-			    <span class="page" id="pageInfo"><span id="currentPageNum"></span>/<span id="totalPageNum"></span>&nbsp;&nbsp;
+			    <span class="page" id="pageInfo"><span id="allRecords"></span>
+			    	<span id="currentPageNum"></span>/<span id="totalPageNum"></span>&nbsp;&nbsp;
 			    	<a href="javascript: gotoPage('first')"><img id="first" src="skins/images/page/page_first_b.gif" alt="first page" /></a>
 			    	<a href="javascript: gotoPage('previous')"><img id="previous" src="skins/images/page/page_pre_b.gif" alt="previous page"/></a>
 			    	<a href="javascript: gotoPage('next')"><img id="next" src="skins/images/page/page_next_a.gif" alt="next page"/></a>
@@ -349,83 +350,88 @@
     	}
     });
     
+    function getAllCars(){
+    	$.get("realtime_list.action",$("#queryForm").serializeArray(),function(carsJson){
+       	 carData=carsJson;
+      		 length=carData.cars.length; 
+      		 //定义保存id的数组
+      		 currentQueryCarIds=new Array(length);
+      		 //如果得到的车辆数据不为空
+      		 if(!((length==1)&&(carData.cars[0]==null))){
+      		     //保存当前查询到车辆的所有ids 查找最大id作为数组的长度
+      	   		 var maxId=0;
+      	   		 for(var i=0;i<length;i++){
+      	   		     currentQueryCarIds[i]=carData.cars[i].id;
+      	   			 if(parseInt(carData.cars[i].id)>maxId)
+      	   			     maxId=carData.cars[i].id;
+      	   		 }
+      	   		 //初始化查询得到的车辆记录的复选框状态时，需要比对allRecordedCars中的记录，如果当前车辆已经记录过，则它对应的复选框状态为记录中的状态
+      	   		 //保存所有记录的复选框状态,初始化，全部为false
+      	   		 checkboxStatus=new Array(maxId+1);
+      	   		 for(var i=0;i<checkboxStatus.length;i++){
+      	   			 if(allRecordedCars[i]===undefined){
+      	   			    checkboxStatus[i]=false; 
+      	   			 }else{
+      	   				checkboxStatus[i]=allRecordedCars[i][1];
+      	   			 }
+      	   		 }
+      	   		 //记录查询到的车辆的信息
+      	   		 for(var i=0;i<length;i++){
+      	   			 var carId=carData.cars[i].id;
+      	   		     //只对未记录的车辆进行登记，并初始化状态，对已经存在的不做处理，时期保持原有状态
+      	   		     if(allRecordedCars[carId]===undefined){
+      	   		        allRecordedCars[carId]=new Array(3);
+    	   		        //以id作为索引的车辆记录包含两个信息  车辆具体信息 和 是否被选中 用于监控
+    	   		        allRecordedCars[carId][0]=carData.cars[i];
+    	   		        allRecordedCars[carId][1]=false;
+    	   		        //用于记录车辆当前处于 正常状态 0 还是 异常状态(异常状态包括  异常行驶 1  和 设备拔出 2) 默认初始化都处于正常状态
+    	   		        allRecordedCars[carId][2]=0;
+      	   		     }
+      	   		 }
+      	   		//清除所有复选框状态
+      	   		$("[type=checkbox]").prop("checked",false);
+      	   		 
+      	   		//设置分页信息
+      	   	     num_entries = length;	    //获取记录总数
+      	   	     showCount = 10;             //每页显示记录数
+      	   	     //计算分页数
+      	   	     lastPage=Math.ceil(num_entries/showCount);  //Math.ceil向上取整
+      	   	     //设置当前页
+      	   	     currentPage=0;
+      	   		 pageList();                //查询之后调用分页组件
+      	   	     pageselectCallback(currentPage);  //分页
+      	   	     $("#pageSkip").empty();
+      	   	     //设置页码跳转框
+      	   	     var selector=$("#pageSkip");     
+      	         for(var i=0;i<lastPage;i++){ 
+      	             selector.append('<option value="'+i+'">'+eval(i+1)+'</option>');     
+      	         }
+      	   		 
+      	   	     //分页组件的当前页和总页数信息
+    	         //如果总页数大于0，则置当前页为1，否则0
+    	         $("#allRecords").html(num_entries+" 条结果 ");
+    	         if(num_entries>0)
+    	   		    $("#currentPageNum").html(currentPage+1);
+    	         else
+    	        	$("#currentPageNum").html(0); 
+    	   		 $("#totalPageNum").html(lastPage);
+      	   		 
+      	   		 //显示数据表
+      	   		 $("#dataList").show();
+      	   		 //初始化分页栏样式
+      	   	     initPageBarStyle()
+      	   		 //显示分页栏
+      	   		 $("#pageBar").show();
+      		 }else{
+      			 $("#htcList").empty();	
+      		 }
+      	});
+    }
+    getAllCars();
     //查询按钮的Ajax异步请求，集成Strusts框架进行参数传递
     $("#queryBn").click(function(){
-    	$.get("realtime_list.action",$("#queryForm").serializeArray(),function(carsJson){
-    	 carData=carsJson;
-   		 length=carData.cars.length; 
-   		 //定义保存id的数组
-   		 currentQueryCarIds=new Array(length);
-   		 //如果得到的车辆数据不为空
-   		 if(!((length==1)&&(carData.cars[0]==null))){
-   		     //保存当前查询到车辆的所有ids 查找最大id作为数组的长度
-   	   		 var maxId=0;
-   	   		 for(var i=0;i<length;i++){
-   	   		     currentQueryCarIds[i]=carData.cars[i].id;
-   	   			 if(parseInt(carData.cars[i].id)>maxId)
-   	   			     maxId=carData.cars[i].id;
-   	   		 }
-   	   		 //初始化查询得到的车辆记录的复选框状态时，需要比对allRecordedCars中的记录，如果当前车辆已经记录过，则它对应的复选框状态为记录中的状态
-   	   		 //保存所有记录的复选框状态,初始化，全部为false
-   	   		 checkboxStatus=new Array(maxId+1);
-   	   		 for(var i=0;i<checkboxStatus.length;i++){
-   	   			 if(allRecordedCars[i]===undefined){
-   	   			    checkboxStatus[i]=false; 
-   	   			 }else{
-   	   				checkboxStatus[i]=allRecordedCars[i][1];
-   	   			 }
-   	   		 }
-   	   		 //记录查询到的车辆的信息
-   	   		 for(var i=0;i<length;i++){
-   	   			 var carId=carData.cars[i].id;
-   	   		     //只对未记录的车辆进行登记，并初始化状态，对已经存在的不做处理，时期保持原有状态
-   	   		     if(allRecordedCars[carId]===undefined){
-   	   		        allRecordedCars[carId]=new Array(3);
- 	   		        //以id作为索引的车辆记录包含两个信息  车辆具体信息 和 是否被选中 用于监控
- 	   		        allRecordedCars[carId][0]=carData.cars[i];
- 	   		        allRecordedCars[carId][1]=false;
- 	   		        //用于记录车辆当前处于 正常状态 0 还是 异常状态(异常状态包括  异常行驶 1  和 设备拔出 2) 默认初始化都处于正常状态
- 	   		        allRecordedCars[carId][2]=0;
-   	   		     }
-   	   		 }
-   	   		//清除所有复选框状态
-   	   		$("[type=checkbox]").prop("checked",false);
-   	   		 
-   	   		//设置分页信息
-   	   	     num_entries = length;	    //获取记录总数
-   	   	     showCount = 10;             //每页显示记录数
-   	   	     //计算分页数
-   	   	     lastPage=Math.ceil(num_entries/showCount);  //Math.ceil向上取整
-   	   	     //设置当前页
-   	   	     currentPage=0;
-   	   		 pageList();                //查询之后调用分页组件
-   	   	     pageselectCallback(currentPage);  //分页
-   	   	     $("#pageSkip").empty();
-   	   	     //设置页码跳转框
-   	   	     var selector=$("#pageSkip");     
-   	         for(var i=0;i<lastPage;i++){ 
-   	             selector.append('<option value="'+i+'">'+eval(i+1)+'</option>');     
-   	         }
-   	   		 
-   	   	     //分页组件的当前页和总页数信息
- 	         //如果总页数大于0，则置当前页为1，否则0
- 	         if(num_entries>0)
- 	   		    $("#currentPageNum").html(currentPage+1);
- 	         else
- 	        	$("#currentPageNum").html(0); 
- 	   		 $("#totalPageNum").html(lastPage);
-   	   		 
-   	   		 //显示数据表
-   	   		 $("#dataList").show();
-   	   		 //初始化分页栏样式
-   	   	     initPageBarStyle()
-   	   		 //显示分页栏
-   	   		 $("#pageBar").show();
-   		 }else{
-   			 $("#htcList").empty();	
-   		 }
-   	});
-   });
+    	getAllCars();
+    });
    
    //全选按钮绑定单击事件响应
    $("#checkAll").bind("click", function(){

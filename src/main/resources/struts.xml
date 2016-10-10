@@ -447,6 +447,8 @@
 		<!-- GPS设备API -->
 		<action name="api" class="apiAction" method="api">
 		</action>
+		<action name="apiReplay" class="apiReplayAction" method="api">
+		</action>
 		<!-- 百度地图API转发 -->
 		<action name="baidu" class="baiduApiAction" method="api">
 		</action>

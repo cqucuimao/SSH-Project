@@ -311,7 +311,7 @@
 			</result>
 			<result name="excel">/WEB-INF/view/carAction/carWashAction/carWash_excel.jsp
 			</result>
-			<result name="test">/WEB-INF/template/index.jsp
+			<result name="test">/WEB-INF/template/body.jsp
 			</result>
 		</action>
 		

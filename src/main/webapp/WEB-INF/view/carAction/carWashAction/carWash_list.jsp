@@ -1,21 +1,6 @@
-<%@page import="com.itextpdf.text.log.SysoLogger"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%
-	String path = request.getContextPath();//显示根目录
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="skins/main.css">
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/template/taglibs.jsp" %>
+<cqu:overwrite name="content">
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -50,9 +35,9 @@
 						<s:a cssClass="buttonA" action="carWash_excel">洗车信息导入</s:a>
 						
 					</td>
-					<%-- <td>
+					<td>
 					<s:a cssClass="buttonA" action="carWash_test">测试</s:a>  
-					</td> --%>
+					</td> 
 					<td>
 						<s:if test="carId!=null">
 							<a class="p15" href="javascript:history.go(-1);">返回</a>
@@ -108,16 +93,12 @@
 			</s:form>
 		</div>
 	</div>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	<script type="text/javascript" src="js/common.js"></script>	
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
 	<script type="text/javascript">
 		$(function(){
 			formatDateField2($("#beginDate"));
 			formatDateField2($("#endDate"));
 	    })
 	</script>
-</body>
-</html>
+	
+</cqu:overwrite>
+ <jsp:include page="/WEB-INF/template/JspTemplateBlockName.jsp"></jsp:include>  

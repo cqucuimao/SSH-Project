@@ -132,7 +132,7 @@
           var limitLen=98;
   
           //每隔10秒刷新位置。每个10s执行一次flushByGroup()
-          //window.setInterval(flushByGroup,monitorInterval); 
+          window.setInterval(flushByGroup,monitorInterval); 
    
           //子窗口关闭之前，需要通知父窗口
           window.onbeforeunload=function() { 

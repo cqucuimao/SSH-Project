@@ -36,12 +36,15 @@ public class ApiAction extends BaseAction {
 			out = response.getWriter();
 			String queryString = request.getQueryString();
 			String queryStringUrl =  URLDecoder.decode(queryString,"utf-8");	
-			String realQueryString = queryString.substring(0, 64);
+			String realQueryString = queryStringUrl.substring(0, 64);
 			String plateNumber = queryStringUrl.substring(64,71);
+			System.out.println("车牌号="+plateNumber);
 			String carId = queryStringUrl.substring(71,queryStringUrl.length());
 			String addedJson = "\"plateNumber\":\""+plateNumber+"\",\"carId\":\""+carId+"\",";
-			String url = BASEURL+realQueryString+ENDURL;		
+			String url = BASEURL+realQueryString+ENDURL;	
+			System.out.println("url="+url);
 			String json = HttpMethod.get(url);
+			System.out.println("Capcare comeback!!!");
 			String firstJson = json.substring(0, 1);
 			String lastJson = json.substring(1,json.length());
 			String finalJson = firstJson+addedJson+lastJson;

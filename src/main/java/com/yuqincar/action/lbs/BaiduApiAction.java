@@ -19,7 +19,8 @@ import com.yuqincar.utils.HttpMethod;
 public class BaiduApiAction {
 	
 	private final static String BASEURL = "http://api.map.baidu.com/geoconv/v1/?";
-	private static final String ENDURL = "&from=1&to=5&ak=XNcVScWmj4gRZeSvzIyWQ5TZ";
+	//private static final String ENDURL = "&from=1&to=5&ak=XNcVScWmj4gRZeSvzIyWQ5TZ";
+	private static final String ENDURL = "&from=1&to=5&ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd";
 	public void api() {
 		PrintWriter out;
 		HttpServletRequest request = (HttpServletRequest) ActionContext.getContext()
@@ -51,10 +52,10 @@ public class BaiduApiAction {
 			}else{
 				realBaiduQueryString = array[0];
 			}
-
+			System.out.println("realBaiduQueryString"+realBaiduQueryString);
 			String url = BASEURL+realBaiduQueryString+ENDURL;
 			String json = HttpMethod.get(url);
-
+			System.out.println(json);
 			String firstJson = json.substring(0, 1);
 			String lastJson = json.substring(1,json.length());
 			String finalJson = firstJson+addedJson+lastJson;

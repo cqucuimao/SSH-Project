@@ -17,7 +17,8 @@ import com.yuqincar.utils.HttpMethod;
 @Scope("prototype")
 public class BaiduAddressApiAction {
 
-	private final static String BASEURL = "http://api.map.baidu.com/geocoder/v2/?ak=XNcVScWmj4gRZeSvzIyWQ5TZ&callback=renderReverse&";
+	//private final static String BASEURL = "http://api.map.baidu.com/geocoder/v2/?ak=XNcVScWmj4gRZeSvzIyWQ5TZ&callback=renderReverse&";
+	private final static String BASEURL = "http://api.map.baidu.com/geocoder/v2/?ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd&callback=renderReverse&";
 	private static final String ENDURL = "&output=json";
 	public void api() {
 		

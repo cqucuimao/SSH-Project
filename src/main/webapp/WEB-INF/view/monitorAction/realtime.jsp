@@ -201,7 +201,7 @@
 	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
 	<script type="text/javascript" src="js/common.js"></script>	
 	
-    <script src="http://api.map.baidu.com/api?v=2.0&ak=XNcVScWmj4gRZeSvzIyWQ5TZ"></script>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd"></script>
     <script type="text/javascript">
     
     window.onbeforeunload = function()

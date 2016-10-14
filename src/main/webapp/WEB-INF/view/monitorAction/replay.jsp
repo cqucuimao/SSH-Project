@@ -101,7 +101,7 @@
         </div>
         <div id="BaiduMap"></div>
     </div>
-    <script src="http://api.map.baidu.com/api?v=2.0&ak=XNcVScWmj4gRZeSvzIyWQ5TZ"></script>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd"></script>
     <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="js/LuShuUpdate.js"></script>
     <script type="text/javascript" src="js/jquery-ui/jquery-ui.min.js"></script>
@@ -519,7 +519,7 @@
     	               	   }
     	            	}
     	                //每一段轨迹的百度API坐标转换请求
-    	           	    var reqUrl=head+gpsPositionStr;
+    	           	    var reqUrl=head+gpsPositionStr+"carId";
     	           	    $.getJSON(reqUrl,function(baiduTrackData){
          	    	         console.log("转换得到的百度地图轨迹序列");
          	    	         console.log(baiduTrackData);

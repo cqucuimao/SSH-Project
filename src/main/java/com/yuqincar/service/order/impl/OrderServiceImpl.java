@@ -631,7 +631,7 @@ public class OrderServiceImpl implements OrderService {
     	//轨迹提取的长度，即轨迹中序列的最大点数
     	int TRACK_LENGTH=9;
     	//百度地图服务的ak账号
-    	String baiduMapAk="XNcVScWmj4gRZeSvzIyWQ5TZ";
+    	String baiduMapAk="wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd";
 		//获取开始时间和结束时间的时间戳
 		String begin=new Long(beginDate.getTime()).toString();
 		String end=new Long(endDate.getTime()).toString();

@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
 	String path = request.getContextPath();
@@ -79,8 +80,8 @@
 							<td><s:a action="carRefuel_detail?id=%{id}">${car.plateNumber}</s:a></td>
 							<td>${driver.name}</td>
 							<td style="text-align:right"><s:date name="date" format="yyyy-MM-dd"/></td>
-                			<td style="text-align:right">${volume}</td>
-							<td style="text-align:right">${money}</td>
+                			<td style="text-align:right"><fmt:formatNumber value="${volume}" pattern="#0"/></td>
+							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
 							<s:if test="outSource"><td>是</td></s:if>
 							<s:else><td>否</td></s:else>
 							<td>

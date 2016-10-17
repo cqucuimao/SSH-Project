@@ -42,7 +42,7 @@
                 <tbody>
                 	<tr><th>模板下载</th>
 	                	<td>
-							<a href="file/维修信息.xls">维修信息模板</a>
+							<a href="excelModel/维修信息.xls">维修信息模板</a>
 						</td>
 					</tr>
                 	<tr>

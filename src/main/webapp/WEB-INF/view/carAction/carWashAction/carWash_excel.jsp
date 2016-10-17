@@ -33,7 +33,7 @@
                 <tbody>
                 	<tr><th>模板下载</th>
 	                	<td>
-							<a href="file/洗车信息.xls">洗车信息模板</a>
+							<a href="excelModel/洗车信息.xls">洗车信息模板</a>
 						</td>
 					</tr>
                 	<tr>

@@ -15,12 +15,16 @@ import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.utils.HttpMethod;
 
+import net.sf.json.JSONObject;
+
 @Controller
 @Scope("prototype")
 public class ApiAction extends BaseAction {
 	
 	private final static String BASEURL = "http://api.capcare.com.cn:1045/api";
 	private static final String ENDURL = "&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";
+	private final static String BAIDUBASEURL = "http://api.map.baidu.com/geoconv/v1/?coords=";
+	private static final String BAIDUENDURL = "&from=1&to=5&ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd";
 	public void api() {
 		PrintWriter out;
 		HttpServletRequest request = (HttpServletRequest) ActionContext.getContext()
@@ -34,20 +38,45 @@ public class ApiAction extends BaseAction {
 		response.setCharacterEncoding("utf-8");
 		try {
 			out = response.getWriter();
-			String queryString = request.getQueryString();
-			String queryStringUrl =  URLDecoder.decode(queryString,"utf-8");	
-			String realQueryString = queryStringUrl.substring(0, 64);
-			String plateNumber = queryStringUrl.substring(64,71);
-			System.out.println("车牌号="+plateNumber);
-			String carId = queryStringUrl.substring(71,queryStringUrl.length());
-			String addedJson = "\"plateNumber\":\""+plateNumber+"\",\"carId\":\""+carId+"\",";
-			String url = BASEURL+realQueryString+ENDURL;	
-			System.out.println("url="+url);
-			String json = HttpMethod.get(url);
-			System.out.println("Capcare comeback!!!");
-			String firstJson = json.substring(0, 1);
-			String lastJson = json.substring(1,json.length());
+			
+			String queryString = request.getQueryString();//获取url的参数
+			String queryStringUrl =  URLDecoder.decode(queryString,"utf-8");//进行编码，中文参数会乱码
+			String realQueryString = queryStringUrl.substring(0, 64);//截取前面64个字符，真正的参数
+			String plateNumber = queryStringUrl.substring(64,71);//截取参数中的车牌号
+			//System.out.println("车牌号="+plateNumber);
+			String carId = queryStringUrl.substring(71,queryStringUrl.length());//截取参数中的车辆id号
+			
+			String url = BASEURL+realQueryString+ENDURL;	//请求Capcare的url
+			//System.out.println("url="+url);
+			String jsonString = HttpMethod.get(url);
+			
+			//从Capcare获取到String类型的结果，然后转成json类型
+			JSONObject jsonObject = JSONObject.fromObject(jsonString);
+			String device = jsonObject.getString("device");
+			JSONObject deviceObject = JSONObject.fromObject(device);
+			String position = deviceObject.getString("position");
+			
+			JSONObject positionObject = JSONObject.fromObject(position);
+			String lng = positionObject.getString("lng");
+			String lat = positionObject.getString("lat");
+			String baiduString = lng+","+lat;
+			String capcareStatus = positionObject.getString("status");
+			String speed = positionObject.getString("speed");
+			//System.out.println("lng="+lng+"&"+"lat="+lat);
+			//System.out.println("capcareStatus="+capcareStatus+"&"+"speed="+speed);
+			String baiduUrl = BAIDUBASEURL+baiduString+BAIDUENDURL;
+			//System.out.println("baiduUrl="+baiduUrl);
+			/*获取lng和lat之后，再到百度进行坐标转码*/
+			String baiduJson = HttpMethod.get(baiduUrl);
+			//System.out.println("baiduJson="+baiduJson);
+			String firstJson = baiduJson.substring(0,1);
+			String lastJson = baiduJson.substring(1,baiduJson.length());
+			String addedJson = "\"plateNumber\":\""+plateNumber+"\",\"carId\":\""+carId+"\",\"speed\":\""+speed+"\",\"capcareStatus\":\""+capcareStatus+"\",";
+			
+			//String firstJson = jsonString.substring(0, 1);
+			//String lastJson = jsonString.substring(1,jsonString.length());
 			String finalJson = firstJson+addedJson+lastJson;
+			System.out.println("finalJson="+finalJson);
 			out.write(finalJson);
 			out.flush();
 			out.close();

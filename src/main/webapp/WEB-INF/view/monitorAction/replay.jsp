@@ -519,7 +519,7 @@
     	               	   }
     	            	}
     	                //每一段轨迹的百度API坐标转换请求
-    	           	    var reqUrl=head+gpsPositionStr+"carId";
+    	           	    var reqUrl=head+gpsPositionStr;
     	           	    $.getJSON(reqUrl,function(baiduTrackData){
          	    	         console.log("转换得到的百度地图轨迹序列");
          	    	         console.log(baiduTrackData);

@@ -196,18 +196,12 @@
 		       		  console.log("********发送请求URL,车牌号="+plateNumber+"********");
 		       		  $.get("api.action?/device.get.do?device_sn="+device_sn+"&timestamp="+new Date().getTime()+encodeURI(plateNumber)+car_id,function(gpsData){
 		       				console.log("********请求返回的数据********");
-		       				console.log("凯步返回车牌号"+gpsData.plateNumber+":"+gpsData.device.position.lng+","+gpsData.device.position.lat+"ID="+gpsData.carId);
-		       				$.getJSON(head+gpsData.device.position.lng+","+gpsData.device.position.lat+encodeURI(gpsData.plateNumber)+"carId"+gpsData.carId,function(baiduData){
-		       				 console.log("向百度转码的操作执行了");
-	            		     console.log("转码url="+head+gpsData.device.position.lng+","+gpsData.device.position.lat);
-	            		     console.log("转码返回的数据");
-	            		     console.log(baiduData);
+	            		    console.log(gpsData);
 		       				 var point;      //选中的记录的经纬度坐标点
 	       	  	             var marker;     //地图上的标识物
 	       	  	             //车辆的车牌
-	       	  	             var carPlateNumber=baiduData.plateNumber;
-	       	  	             var carId = baiduData.carId;
-	       	  	             //alert(baiduData.plateNumber);
+	       	  	             var carPlateNumber=gpsData.plateNumber;
+	       	  	             var carId = gpsData.carId;
 	       	  	             //自定义信息显示
 	        	      		     var opts={
 	      				                width : 10,     // 信息窗口宽度
@@ -215,10 +209,10 @@
 	      				                title : "车辆信息" , // 信息窗口标题
 	      				                enableMessage:false//设置允许信息窗发送短息
 	      			             };
-	        	      		     point = new BMap.Point(parseFloat(baiduData.result[0].x),parseFloat(baiduData.result[0].y));
+	        	      		     point = new BMap.Point(parseFloat(gpsData.result[0].x),parseFloat(gpsData.result[0].y));
 	        	      		     //获取当前车辆的状态status和速度speed
-	        	      		     var carStatus=gpsData.device.position.status;
-	        	      		     var carSpeed=gpsData.device.position.speed;
+	        	      		     var carStatus=gpsData.capcareStatus;
+	        	      		     var carSpeed=gpsData.speed;
 	        	      		     //定义车辆状态的图片路径
 	        	      		     var imagePath;
 	        	      		     //如果车辆处于正常状态
@@ -374,7 +368,6 @@
 	            	      		    	    }); 
 	            	                  };	      		    	 
 	        	      		     })(carId,carPlateNumber)); 
-		       				});
 		       		  });
 	       	   }
      	   }

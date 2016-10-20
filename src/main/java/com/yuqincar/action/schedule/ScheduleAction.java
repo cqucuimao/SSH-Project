@@ -335,7 +335,7 @@ public class ScheduleAction extends BaseAction {
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
 		order.setServiceType(serviceType);
 		int result=orderService.isCarAndDriverAvailable(order, selectedCar,selectedDriver);
-		System.out.println("resutl="+result);
+		//System.out.println("resutl="+result);
 		writeJson("{\"result\":" + result + "}");
 	}
 	
@@ -631,18 +631,16 @@ public class ScheduleAction extends BaseAction {
     	int keyId=0;
     	List<CarServiceSuperType> listSuper=new ArrayList<CarServiceSuperType>();
     	Map<CarServiceType, Price> priceMap=new HashMap<CarServiceType, Price>();
-    	Map<String, List<List<String>>> mapList=new LinkedHashMap<String, List<List<String>>>();
-    	 List<List<String>> listsda=new ArrayList<List<String>>();
-    	 List<List<String>> listskst=new ArrayList<List<String>>();
-    	 List<List<String>> listsswc=new ArrayList<List<String>>();
-    	 List<List<String>> listsxc=new ArrayList<List<String>>();
-    	 List<List<String>> listsyy=new ArrayList<List<String>>();
-    	 
+    	Map<String, List<List<String>>> mapListResults=new LinkedHashMap<String, List<List<String>>>();
+    	listSuper=carServiceSuperTypeDao.getAll();
     	PriceTable priceTable=new PriceTable();
     	priceTable=priceSerivce.getDefaultPriceTable();
     	System.out.println("priceTable=: "+priceTable.getId());
     	priceMap=priceTable.getCarServiceType();
-    	 for (CarServiceType key : priceMap.keySet()) {
+    	for (int i = 0; i < listSuper.size(); i++) 
+    		mapListResults.put(listSuper.get(i).getTitle(), new ArrayList<List<String>>());
+        for (CarServiceType key : priceMap.keySet()) 
+    	 {
     	        //System.out.println("key= " + key.getId() + " and value= " + priceMap.get(key).getId());
     	        List<String> list=new ArrayList<String>();
 	    		list.add(key.getId().toString());
@@ -660,60 +658,11 @@ public class ScheduleAction extends BaseAction {
 				}
 	      		list.add(priceMap.get(key).getPerHourAfterLimit().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
 	      		list.add(priceMap.get(key).getPerPlaneTime().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
-    	        keyId = Integer.parseInt(String.valueOf(key.getSuperType().getId().toString()));
-    	        
-    	        switch (keyId) 
-    	        {
-					case 1:
-						listsda.add(list);
-						break;
-					case 2:
-						listskst.add(list);
-						break;
-					case 3:
-						listsswc.add(list);
-						break;
-					case 4:
-						listsxc.add(list);
-						break;
-					case 5:
-						listsyy.add(list);
-						break;
-					default:
-						break;
-				}
-    	       
+	      		mapListResults.get(key.getSuperType().getTitle()).add(list);
     	    }
-    	 
-    	 //存入表格对应的值
-    	  listSuper=carServiceSuperTypeDao.getAll();
-     	 for (int i = 0; i < listSuper.size(); i++) {
- 			switch (i) {
-			case 0:
-				 mapList.put(listSuper.get(i).getTitle(), listsda);
-				break;
-			case 1:
-				mapList.put(listSuper.get(i).getTitle(), listskst);
-				break;
-			case 2:
-				mapList.put(listSuper.get(i).getTitle(), listsswc);
-				break;
-			case 3:
-				mapList.put(listSuper.get(i).getTitle(), listsxc);
-				break;
-			case 4:
-				mapList.put(listSuper.get(i).getTitle(), listsyy);
-				break;
-
-			default:
-				break;
-			}
- 		}
-    	     	 
-     	ActionContext.getContext().getSession().put("mapList", mapList);
+     	ActionContext.getContext().getSession().put("mapList", mapListResults);
      	return "popup";
 	}
-	
 	
 
 	public OrderService getOrderService() {

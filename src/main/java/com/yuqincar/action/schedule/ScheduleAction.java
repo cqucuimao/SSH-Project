@@ -628,7 +628,6 @@ public class ScheduleAction extends BaseAction {
 		DecimalFormat df = new DecimalFormat ("#.0");
 		String tmp;
 		int index=0;
-    	int keyId=0;
     	List<CarServiceSuperType> listSuper=new ArrayList<CarServiceSuperType>();
     	Map<CarServiceType, Price> priceMap=new HashMap<CarServiceType, Price>();
     	Map<String, List<List<String>>> mapListResults=new LinkedHashMap<String, List<List<String>>>();

@@ -17,9 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Query;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.dao.common.impl.BaseDaoImpl;
 import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.domain.car.Car;
@@ -40,6 +42,7 @@ import com.yuqincar.utils.QueryHelper;
 
 @Repository
 public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
+	
 
 	@SuppressWarnings("unchecked")
 	public List<CarServiceType> getAllCarServiceType() {
@@ -592,6 +595,11 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 	}
 
 	private void dealSN(Order order, String baseSN) {
+		User user=null;
+		if(ActionContext.getContext()!=null)
+			user=(User) ActionContext.getContext().getSession().get("user");
+		String SN_PREFIX=user.getCompany().getOrderPrefix();
+		String SN_COOPERATION_PREFIX=user.getCompany().getCooperationOrderPrefix();
 		if(baseSN==null){
 			if(order.getSn()==null){
 				// 设置sn号,从数据库查当前年月的数据,如果没有,从00001开始,如果有加1即可
@@ -609,34 +617,34 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					sn = yearMonth + "00001";
 				} else {
 					String lastSN=((Order)list.get(0)).getSn();
-					if(lastSN.startsWith(OrderService.SN_PREFIX))
-						lastSN=lastSN.substring(OrderService.SN_PREFIX.length());
-					else if(lastSN.startsWith(OrderService.SN_COOPERATION_PREFIX))
-						lastSN=lastSN.substring(OrderService.SN_COOPERATION_PREFIX.length());
+					if(lastSN.startsWith(SN_PREFIX))
+						lastSN=lastSN.substring(SN_PREFIX.length());
+					else if(lastSN.startsWith(SN_COOPERATION_PREFIX))
+						lastSN=lastSN.substring(SN_COOPERATION_PREFIX.length());
 					sn = String.valueOf(Integer.parseInt(lastSN) + 1);
 				}
 				if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null))
-					order.setSn(OrderService.SN_COOPERATION_PREFIX+sn);
+					order.setSn(SN_COOPERATION_PREFIX+sn);
 				else
-					order.setSn(OrderService.SN_PREFIX+sn);
+					order.setSn(SN_PREFIX+sn);
 			}else{
 				if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null)){
-					if(order.getSn().startsWith(OrderService.SN_PREFIX))
-						order.setSn(OrderService.SN_COOPERATION_PREFIX+order.getSn().substring(OrderService.SN_PREFIX.length()));
+					if(order.getSn().startsWith(SN_PREFIX))
+						order.setSn(SN_COOPERATION_PREFIX+order.getSn().substring(SN_PREFIX.length()));
 				}else
-					if(order.getSn().startsWith(OrderService.SN_COOPERATION_PREFIX))
-						order.setSn(OrderService.SN_PREFIX+order.getSn().substring(OrderService.SN_COOPERATION_PREFIX.length()));
+					if(order.getSn().startsWith(SN_COOPERATION_PREFIX))
+						order.setSn(SN_PREFIX+order.getSn().substring(SN_COOPERATION_PREFIX.length()));
 			}
 		}else{	//复制订单时，需要指定
 			String sn=null;
-			if(baseSN.startsWith(OrderService.SN_PREFIX)){
-				sn=baseSN.substring(OrderService.SN_PREFIX.length());
+			if(baseSN.startsWith(SN_PREFIX)){
+				sn=baseSN.substring(SN_PREFIX.length());
 				sn=String.valueOf(Integer.parseInt(sn)+1);
-				order.setSn(OrderService.SN_PREFIX+sn);
-			}else if(baseSN.startsWith(OrderService.SN_COOPERATION_PREFIX)){
-				sn=baseSN.substring(OrderService.SN_COOPERATION_PREFIX.length());
+				order.setSn(SN_PREFIX+sn);
+			}else if(baseSN.startsWith(SN_COOPERATION_PREFIX)){
+				sn=baseSN.substring(SN_COOPERATION_PREFIX.length());
 				sn=String.valueOf(Integer.parseInt(sn)+1);
-				order.setSn(OrderService.SN_COOPERATION_PREFIX+sn);
+				order.setSn(SN_COOPERATION_PREFIX+sn);
 			}
 		}
 	}

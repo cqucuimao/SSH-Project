@@ -36,7 +36,7 @@ public class RoleAction extends BaseAction implements ModelDriven<Role> {
 
 		if (model.getName() != null && !"".equals(model.getName()))
 			helper.addWhereCondition("r.name like ?", "%"+model.getName()+"%");
-		
+			helper.addWhereCondition("company is null");
 		PageBean pageBean = roleService.getPageBean(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "list";

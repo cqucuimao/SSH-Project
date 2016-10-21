@@ -15,7 +15,7 @@ import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.privilege.PrivilegeService;
 import com.yuqincar.service.privilege.UserService;
-import com.yuqincar.utils.Configuration;
+import com.yuqincar.utils.Configuration;;
 
 @Controller
 @Scope("prototype")
@@ -38,6 +38,7 @@ public class LoginAction extends BaseAction{
 	
 	private Company company;
 	
+	
 	/** 登录页面 */
 	public String loginUI() throws Exception {
 		System.out.println("in loginUI");
@@ -57,7 +58,6 @@ public class LoginAction extends BaseAction{
 			{
 				List<User> Sameusers=new ArrayList<User>();
 				Sameusers=userService.getUsersByLoginName(loginName);
-				System.out.println("***********"+Sameusers.size());
 				if(Sameusers.size()>1)
 				{   //todo 得到有这个用户的公司，然后返回给login界面去选择，并重新登录
 					List<Company> companies=new ArrayList<Company>();
@@ -68,6 +68,7 @@ public class LoginAction extends BaseAction{
 					return "loginUI";
 				}
 			}
+			
 			// 验证用户名与密码，如果正确就返回这个用户，否则返回null
 			user = userService.getByLoginNameAndPassword(loginName, password,company);
 		}
@@ -77,7 +78,6 @@ public class LoginAction extends BaseAction{
 			{
 				List<User> Sameusers=new ArrayList<User>();
 				Sameusers=userService.getUsersByLoginName(loginName);
-				System.out.println("***********"+Sameusers.size());
 				if(Sameusers.size()>1)
 				{   //todo 得到有这个用户的公司，然后返回给login界面去选择，并重新登录
 					List<Company> companies=new ArrayList<Company>();
@@ -88,8 +88,8 @@ public class LoginAction extends BaseAction{
 					return "loginUI";
 				}
 			}
-			user = userService.getByLoginNameAndPassword(loginName, password,company);
-			//user=userService.getByLoginName(loginName);
+			//user = userService.getByLoginNameAndPassword(loginName, password,company);
+			user=userService.getByLoginName(loginName);
 		}
 
 		// 如果登录名或密码不正确，就转回到登录页面并提示错误消息
@@ -101,7 +101,6 @@ public class LoginAction extends BaseAction{
 				return "loginUI";
 			}
 		}
-		
 		ActionContext.getContext().getSession().put("user", user);
 		ActionContext.getContext().getSession().put("company", user.getCompany());
 		ActionContext.getContext().getSession().put("companyLogoName", user.getCompany().getLogoName());

@@ -31,7 +31,7 @@
 	            	<div id="header" class="header">
 	            		<a href="#" id="split" class="split" title="显示/隐藏菜单"></a>
 	            		<div class="userInfo">
-							欢迎光临渝勤汽车综合业务管理系统,
+							欢迎光临${sessionScope.company.name}综合业务管理系统
 							<a class="popUserInfo" title="点击可修改用户信息和密码" href="#"><s:property value="#session.user.loginName"/></a>
 							<em>|</em>
 							<s:a action="login_logout">退出</s:a>

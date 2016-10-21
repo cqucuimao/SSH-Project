@@ -45,7 +45,8 @@ public class User extends BaseEntity implements Serializable {
 	private Date birth;
 	
 	@Text("登录名")
-	@Column(nullable=false,unique=true)
+	//@Column(nullable=false,unique=true)
+	@Column(nullable=false)
 	private String loginName;
 	
 	@Text("密码")

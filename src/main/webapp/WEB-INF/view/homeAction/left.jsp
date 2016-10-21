@@ -14,7 +14,11 @@
 </head>
 <base target="rightFrame" />
 <body>
-	<div class="header"></div>
+	
+	<div class="header">
+	<input id="logoName" type="hidden" value="${session.companyLogoName}"/>	
+	</div>
+	
 	<div id="menu">
 		<dl class="on">
 			<dt>
@@ -23,7 +27,7 @@
 			</dt>
 		</dl>
 		
-		<s:if test=" #session.user.hasPrivilegeByUrl('/privilege') ">
+		<s:if test="#session.user.hasPrivilegeByUrl('/privilege')">
 		<dl>
 			<dt>
 				<i class="icon-menu-rights"></i>
@@ -320,5 +324,11 @@
 	</div>
 	<script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="<%=basePath %>js/left.js"></script>
+	<script type="text/javascript">
+	    var logo=$("#logoName").val();
+	    logo="skins/images/"+logo
+	    //console.log(logo);
+		$(".header").css("background","url("+logo+") no-repeat center 8px");
+	</script>
 </body>
 </html>

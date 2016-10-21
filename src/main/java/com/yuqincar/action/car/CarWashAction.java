@@ -71,6 +71,8 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	//头部快速查询
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper("CarWash", "cw");
+		System.out.println("***in carWashAction mode.getCar(): "+model.getCar());
+		System.out.println(model.getCar().getPlateNumber());
 		if(model.getCar()!=null)
 			helper.addWhereCondition("cw.car=?", model.getCar());
 		if(beginDate!=null && endDate!=null)

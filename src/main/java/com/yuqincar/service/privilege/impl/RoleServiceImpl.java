@@ -28,7 +28,17 @@ public class RoleServiceImpl implements RoleService {
 			}
 		return roles;
 	}
-
+	
+	public List<Role> getAllCompanyNull() {
+		List<Role> roles=roleDao.getAllCompanyNull();
+		for(int i=roles.size()-1;i>=0;i--)
+			if(roles.get(i).getName().equals("超级管理员")){
+				roles.remove(i);
+				break;
+			}
+		return roles;
+	}
+	
 	@Transactional
 	public void delete(Long id) {
 		roleDao.delete(id);
@@ -54,7 +64,11 @@ public class RoleServiceImpl implements RoleService {
 		// TODO Auto-generated method stub
 		return roleDao.getByIds(ids);
 	}
-
+	
+	public List<Role> getByIdsCompanyNull(Long[] ids) {
+		// TODO Auto-generated method stub
+		return roleDao.getByIdsCompanyNull(ids);
+	}
 	
 	public PageBean getPageBean(int pageNum, QueryHelper queryHelper) {		
 		return roleDao.getPageBean(pageNum, queryHelper);

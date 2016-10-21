@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<dataset>
-  <car id="1" createTime="2015-12-22 21:25:42.0" lastUpdateTime="2015-12-22 21:25:45.0" EngineSN="1212" VIN="1212" brand="&#22885;&#36842;" insuranceExpiredDate="2015-12-22 21:25:56.0" memo="&#22885;&#36842;&#26834;&#26834;&#21714;" mileage="11" model="121" nextCareMile="111" nextExaminateDate="2015-12-22 21:26:38.0" plateNumber="121212" registDate="2015-12-22 21:26:45.0" driver_id="1" servicePoint_id="1"/>
-  <carcare id="1" createTime="2015-12-22 21:28:05.0" appointment="true" fromDate="2015-12-22 21:28:22.0" mileInterval="111" toDate="2015-12-23 21:28:33.0" car_id="1"/>
-  <carexamine id="1" appointment="true" fromDate="2015-12-24 21:28:49.0" toDate="2015-12-25 21:28:53.0" car_id="1"/>
-  <carrepair id="1" appointment="true" memo="11" fromDate="2015-12-26 21:29:21.0" toDate="2015-12-27 21:29:24.0" car_id="1"/>
-  <order_ id="2" actualDay="0" car_id="1" createTime="2015-12-22 17:47:25.0" lastUpdateTime="2015-12-22 17:47:25.0" actualBeginMile="0.0" actualEndMile="0.0" actualMile="0.0" actualMoney="120.000000" chargeMode="1" orderMile="0.0" orderMoney="120.000000" passengerNumber="4" phone="1234566777" planBeginDate="2015-12-28 10:23:26.0" actualBeginDate="2015-12-28 10:23:26.0" planEndDate="2015-12-22 10:29:26.0" actualEndDate="2015-12-30 10:23:26.0" sn="151100001" status="2" customer_id="1" customerOrganization_id="1" fromAddress_id="1" serviceType_id="1" toAddress_id="1"/>
-</dataset>

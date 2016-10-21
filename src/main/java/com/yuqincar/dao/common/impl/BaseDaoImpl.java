@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.Where;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.dao.common.BaseDao;
@@ -54,16 +55,18 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 
 	public void save(T entity) {
 		if(entity instanceof BaseEntity) {
-			BaseEntity baseEntity = (BaseEntity)entity;
-			User user = getCurrentUser();
 			
+			BaseEntity baseEntity = (BaseEntity)entity;
+			if(getCurrentUser()!=null)
+				baseEntity.setCompany(getCurrentUser().getCompany());
+			User user = getCurrentUser();
 			baseEntity.setCreator(user);
 			baseEntity.setLastUpdator(user);
-			
 			baseEntity.setCreateTime(new Date());
 			baseEntity.setLastUpdateTime(new Date());
 			
 		}
+		System.out.println("getSession().save()");
 		getSession().save(entity);
 	}
 
@@ -119,12 +122,28 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 				.setParameterList("ids", ids)// 注意一定要使用setParameterList()方法！
 				.list();
 	}
+	
+	public List<T> getByIdsCompanyNull(Long[] ids) {
+		if(ids == null || ids.length == 0){
+			return Collections.EMPTY_LIST;
+		}
+		return getSession().createQuery(//
+				// 注意空格！
+				"FROM " + clazz.getSimpleName() + " WHERE company is null and id IN (:ids)")//
+				.setParameterList("ids", ids)// 注意一定要使用setParameterList()方法！
+				.list();
+	}
+
 
 	public List<T> getAll() {
 		// 注意空格！
 		return getSession().createQuery("FROM " + clazz.getSimpleName()).list();
 	}
-
+	
+	public List<T> getAllCompanyNull() {
+		// 注意空格！
+		return getSession().createQuery("FROM " + clazz.getSimpleName()+" where company is null").list();
+	}
 	public PageBean getPageBean(int pageNum, QueryHelper queryHelper ) {
 		int pageSize = Configuration.getPageSize();
 		return getPageBean(pageNum,queryHelper,pageSize);

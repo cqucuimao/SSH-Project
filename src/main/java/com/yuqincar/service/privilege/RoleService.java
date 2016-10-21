@@ -16,6 +16,8 @@ public interface RoleService extends BaseService{
 	 * @return
 	 */
 	List<Role> getAll();
+	
+	List<Role> getAllCompanyNull();
 
 	/**
 	 * 删除岗位信息
@@ -43,6 +45,8 @@ public interface RoleService extends BaseService{
 	void update(Role role);
 
 	List<Role> getByIds(Long[] roleIds);
+	
+	List<Role> getByIdsCompanyNull(Long[] roleIds);
 
 	PageBean getPageBean(int pageNum, QueryHelper helper);
 	

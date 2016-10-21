@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.util.SystemOutLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -634,7 +635,6 @@ public class ScheduleAction extends BaseAction {
     	listSuper=carServiceSuperTypeDao.getAll();
     	PriceTable priceTable=new PriceTable();
     	priceTable=priceSerivce.getDefaultPriceTable();
-    	System.out.println("priceTable=: "+priceTable.getId());
     	priceMap=priceTable.getCarServiceType();
     	for (int i = 0; i < listSuper.size(); i++) 
     		mapListResults.put(listSuper.get(i).getTitle(), new ArrayList<List<String>>());

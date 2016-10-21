@@ -1,4 +1,5 @@
-﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+﻿<%@page import="com.yuqincar.domain.privilege.User"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%
 	String path = request.getContextPath();
@@ -17,7 +18,8 @@
 <div class="space"> 
   <!-- 标题 -->
   <div class="title">
-    <h1>欢迎光临渝勤汽车综合业务管理系统</h1>
+    <h1>欢迎光临${sessionScope.company.name }综合业务管理系统</h1>
+    <s:property value="%{session.user}"/> 
     <p></p>
   </div>
   <div class="homeInfo"> <img width="80" height="80" src="skins/images/icon_userInfo.png" />

@@ -9,6 +9,7 @@ import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarRefuel;
 import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.car.CarWash;
+import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserStatusEnum;
@@ -32,7 +33,22 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		return (User)getSession().createQuery("from User u where u.loginName=?")//
 					.setParameter(0, loginName).uniqueResult();
 	}
-
+		
+     public List<User> getUsersByLoginName(String loginName){
+    	 if(StringUtils.isEmpty(loginName)) {
+ 			return null;
+ 		}
+ 		
+ 		return (List<User>)getSession().createQuery("from User u where u.loginName=?")//
+ 					.setParameter(0, loginName).list();
+	}
+	
+	public User getByLoginNameAndPassword(String loginName, String password,Company company) {
+		if(loginName == null || password == null) return null;
+		String md5 = DigestUtils.md5Hex(password);
+		return getByLoginNameAndMD5Password(loginName,md5,company);
+	}
+	
 	public User getByLoginNameAndPassword(String loginName, String password) {
 		if(loginName == null || password == null) return null;
 		String md5 = DigestUtils.md5Hex(password);
@@ -42,11 +58,34 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 	public User getByLoginNameAndMD5Password(String loginName, String password){
 		if(loginName == null || password == null) 
 			return null;
+		
 		return (User) getSession().createQuery(
 				"FROM User u WHERE u.loginName=? AND u.password=?")
 				.setParameter(0, loginName)
 				.setParameter(1, password)
 				.uniqueResult();
+	}
+	
+	
+	public User getByLoginNameAndMD5Password(String loginName, String password,Company company){
+		if(loginName == null || password == null) 
+			return null;
+		if(company==null)
+		{
+		return (User) getSession().createQuery(
+				"FROM User u WHERE u.loginName=? AND u.password=?")
+				.setParameter(0, loginName)
+				.setParameter(1, password)
+				.uniqueResult();
+		}else
+		{
+			return (User) getSession().createQuery(
+					"FROM User u WHERE u.loginName=? AND u.password=? AND u.company.id=?")
+					.setParameter(0, loginName)
+					.setParameter(1, password)
+					.setParameter(2, company.getId())
+					.uniqueResult();
+		}
 	}
 
 	public List<User> getByRealNameAndDepartment(String username, Long departmentId) {

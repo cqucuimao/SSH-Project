@@ -3,6 +3,7 @@ package com.yuqincar.service.privilege;
 import java.util.List;
 
 import com.yuqincar.domain.car.DriverLicense;
+import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.privilege.User;
@@ -41,6 +42,8 @@ public interface UserService extends BaseService{
 	 */
 	void update(User user);
 	
+	public User getByLoginNameAndMD5Password(String loginName, String password);
+	
 	List<User> getByIds(Long ids[]);
 
 	/**
@@ -49,9 +52,11 @@ public interface UserService extends BaseService{
 	 * @param password
 	 * @return
 	 */
+	List<User> getUsersByLoginName(String loginName);
+	User getByLoginNameAndPassword(String loginName, String password,Company company);
 	User getByLoginNameAndPassword(String loginName, String password);
 	
-	User getByLoginNameAndMD5Password(String loginName, String password);
+	User getByLoginNameAndMD5Password(String loginName, String password,Company company);
 	
 	User getByLoginName(String loginName);
 

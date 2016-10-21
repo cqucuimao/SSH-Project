@@ -125,7 +125,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		ActionContext.getContext().put("departmentList", departmentService.getAll());
 
 		// 准备数据：roleList
-		List<Role> roleList = roleService.getAll();
+		List<Role> roleList = roleService.getAllCompanyNull();
 		ActionContext.getContext().put("roleList", roleList);
 		List<Role> selectedList = new ArrayList<Role>();
 		ActionContext.getContext().put("selectedList", selectedList);
@@ -159,7 +159,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			for(int i=0;i<roleIds.length;i++){
 				longRoleIds[i] = Long.parseLong(roleIds[i]);
 			}	
-			List<Role> roleList = roleService.getByIds(longRoleIds);
+			List<Role> roleList = roleService.getByIdsCompanyNull(longRoleIds);
 			model.setRoles(new HashSet<Role>(roleList));
 		}
 		// 保存到数据库
@@ -187,7 +187,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		}
 		// 处理岗位
 		List<Role> selectedList = new ArrayList<Role>(user.getRoles());
-		List<Role> roleList = roleService.getAll();
+		List<Role> roleList = roleService.getAllCompanyNull();
 		selectedRoleIds = new Long[user.getRoles().size()];
 		String selectedRoleString = "";
 		int index = 0;
@@ -218,6 +218,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		}
 		model.setGender(UserGenderEnum.getById(genderId));
 		model.setStatus(UserStatusEnum.getById(statusId));
+		System.out.println("departmentId: "+departmentId);
 		model.setDepartment(departmentService.getById(departmentId));
 		//处理角色
 		System.out.println("roleString="+roleString);
@@ -227,7 +228,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			for(int i=0;i<roleIds.length;i++){
 				longRoleIds[i] = Long.parseLong(roleIds[i]);
 			}
-			List<Role> roleList = roleService.getByIds(longRoleIds);
+			List<Role> roleList = roleService.getByIdsCompanyNull(longRoleIds);
+			System.out.println("roleList.size()"+roleList.size());
 			model.setRoles(new HashSet<Role>(roleList));
 		}
 		

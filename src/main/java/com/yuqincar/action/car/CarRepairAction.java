@@ -211,6 +211,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 			addFieldError("toDate", "你输入的截止时间不能早于起始时间！");
 			return "saveUI";
 		}
+		
 		carRepairService.saveCarRepair(model);
 		model=null;
 		ActionContext.getContext().getValueStack().push(getModel());
@@ -221,7 +222,6 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 		// 准备回显的数据
 		
 		CarRepair carRepair = carRepairService.getCarRepairById(model.getId());
-		
 		if(carRepair.getMoney()!=null)
 			carRepair.setMoney(carRepair.getMoney().setScale(0, BigDecimal.ROUND_HALF_UP));
 		carRepair.setFromDate(DateUtils.getYMD(DateUtils.getYMDString(carRepair.getFromDate())));

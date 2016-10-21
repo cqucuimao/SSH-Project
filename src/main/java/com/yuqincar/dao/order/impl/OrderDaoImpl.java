@@ -394,7 +394,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
 		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null) && car.getServiceType()!=order.getServiceType())
 			return 7;
-
+		
 		if(car.isInsuranceExpired())
 			return 10;
 		

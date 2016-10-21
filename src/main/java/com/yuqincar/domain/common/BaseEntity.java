@@ -48,6 +48,11 @@ public abstract class BaseEntity {
 	@JoinColumn(name = "creator_id")
 	private User creator;
 
+	@Text("公司")
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="company_id")
+	private Company company;
+	
 	/**
 	 * 最后修改人。
 	 */
@@ -125,5 +130,14 @@ public abstract class BaseEntity {
 	public void setLastUpdator(User lastUpdator) {
 		this.lastUpdator = lastUpdator;
 	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+	
 
 }

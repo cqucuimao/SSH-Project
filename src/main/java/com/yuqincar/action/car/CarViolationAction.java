@@ -76,6 +76,7 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 			 	QueryHelper helper = new QueryHelper("CarViolation", "cv");
 			 	if(carId!=null)
 			 		helper.addWhereCondition("cv.car.id=?", carId);
+			 	helper.addWhereCondition("cv.dealt=?", false);
 				helper.addOrderByProperty("cv.id", false);
 				PageBean pageBean = carViolationService.queryCarViolation(pageNum, helper);
 				ActionContext.getContext().getValueStack().push(pageBean);
@@ -103,8 +104,10 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 		   public String save(){
 			    Car car = carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 				model.setCar(car);
-				User driver=userService.getById(model.getDriver().getId());
-				model.setDriver(driver);
+				if(model.getDriver()!=null){
+					User driver=userService.getById(model.getDriver().getId());
+					model.setDriver(driver);
+				}
 				model.setImported(false);
 				
 				carViolationService.saveCarViolation(model);
@@ -119,9 +122,7 @@ public class CarViolationAction extends BaseAction implements ModelDriven<CarVio
 			}
 		   
 		   public String edit(){
-			   System.out.println("in edit");
-			    System.out.println("********************************"+DateUtils.getYMDHMString(model.getDate()));
-			    CarViolation carViolation = carViolationService.getCarViolationById(model.getId());				
+			   	CarViolation carViolation = carViolationService.getCarViolationById(model.getId());				
 				
 				Car car= carService.getCarByPlateNumber(model.getCar().getPlateNumber());
 				carViolation.setCar(car);

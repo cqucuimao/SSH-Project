@@ -32,7 +32,7 @@ public class ExportServiceImpl implements ExportService {
 				+ fileName);
 
 		String tempFileName = Configuration.getWorkspaceFolder()
-				+ "\\ExportTemp\\"
+				//+ "\\ExportTemp\\"
 				+ new Date().getTime()
 				+ ".xls";
 		for (ExcelSheetContent esc : sheetContents)

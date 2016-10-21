@@ -42,6 +42,8 @@ public interface BaseDao<T> {
 	 * @return
 	 */
 	List<T> getByIds(Long[] ids);
+	
+	List<T> getByIdsCompanyNull(Long[] ids);
 
 
 	/**
@@ -49,6 +51,8 @@ public interface BaseDao<T> {
 	 * @return
 	 */
 	List<T> getAll();
+	
+	List<T> getAllCompanyNull();
 	
 	List<T> getAllQuerry( QueryHelper queryHelper) ;
 		// 注意空格！

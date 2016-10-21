@@ -21,7 +21,7 @@
 <body>
     <div class="bg"><div class="inner"></div></div>
     <div class="loginWrap">
-        <h1 class="logo"><em></em>综合业务管理系统</h1>
+        <h1 class="logo">重庆车改业务平台</h1>
         <div class="loginBox">
 			<s:form action="login_login" >
                 <div class="note">
@@ -58,6 +58,15 @@
                     </div>
                     <img width="80" height="39" id="validationCodeImage"  onclick="this.src=this.src+'?rand='+Math.random();"/>
                 </div>
+                
+                <s:if test="#display==true">
+	                <div class="form-group">
+						<s:select id="select_list" name="company.id" cssClass="SelectStyle inputText" 
+	                        		list="companies" listKey="id" listValue="name"
+	                        		headerKey="" headerValue="请选择您所在的公司" style="width:270px"/>
+	                </div>
+			    </s:if>
+			    
                 <div class="form-group" >
                     <input class="inputButton" type="submit" value="登 录" />
                 </div>
@@ -78,85 +87,46 @@
 	
 		$(function(){
 
-		
 			 var userAgent = navigator.userAgent,    
-
              rMsie = /(msie\s|trident.*rv:)([\w.]+)/,    
-
              rFirefox = /(firefox)\/([\w.]+)/,    
-
              rOpera = /(opera).+version\/([\w.]+)/,    
-
              rChrome = /(chrome)\/([\w.]+)/,    
-
              rSafari = /version\/([\w.]+).*(safari)/;   
-
              var browser;   
-
              var version;   
-
              var ua = userAgent.toLowerCase();   
-
              function uaMatch(ua) {   
-
                  var match = rMsie.exec(ua);   
-
                  if (match != null) {   
-
                      return { browser : "IE", version : match[2] || "0" };   
-
                  }   
-
                  var match = rFirefox.exec(ua);   
-
                  if (match != null) {   
-
                      return { browser : match[1] || "", version : match[2] || "0" };   
-
                  }   
-
                  var match = rOpera.exec(ua);   
-
                  if (match != null) {   
-
                      return { browser : match[1] || "", version : match[2] || "0" };   
-
                  }   
-
                  var match = rChrome.exec(ua);   
-
                  if (match != null) {   
-
                      return { browser : match[1] || "", version : match[2] || "0" };   
-
                  }   
-
                  var match = rSafari.exec(ua);   
-
                  if (match != null) {   
-
                      return { browser : match[2] || "", version : match[1] || "0" };   
-
                  }   
-
                  if (match != null) {   
-
                      return { browser : "", version : "0" };   
-
                  }   
-
              }   
 
              var browserMatch = uaMatch(userAgent.toLowerCase());   
-
              if (browserMatch.browser) {   
-
                  browser = browserMatch.browser;   
-
                  version = browserMatch.version;   
-
              }   
-
 				if(browser!="IE" || version<9 ){
 					alert("请使用IE9及其以上版本访问本系统，否则某些功能可能会有问题。")
 				}

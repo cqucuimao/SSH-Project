@@ -13,6 +13,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.yuqincar.dao.car.DriverLicenseDao;
 import com.yuqincar.dao.privilege.UserDao;
 import com.yuqincar.domain.car.DriverLicense;
+import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.privilege.Department;
@@ -131,14 +132,27 @@ public class UserServiceImpl implements UserService{
 		userDao.save(user);
 	}
 	
-	public User getByLoginNameAndPassword(String loginName, String password) {
+	public User getByLoginNameAndPassword(String loginName, String password,Company company) {
+		return userDao.getByLoginNameAndPassword(loginName, password,company);
+	}
+	
+	public User getByLoginNameAndPassword(String loginName, String password)
+	{
 		return userDao.getByLoginNameAndPassword(loginName, password);
+	}
+	
+	public User getByLoginNameAndMD5Password(String loginName, String password,Company company){
+		return userDao.getByLoginNameAndMD5Password(loginName, password,company);
 	}
 	
 	public User getByLoginNameAndMD5Password(String loginName, String password){
 		return userDao.getByLoginNameAndMD5Password(loginName, password);
 	}
 
+	public List<User> getUsersByLoginName(String loginName){
+		return userDao.getUsersByLoginName(loginName);
+	}
+	
 	
 	public PageBean getPageBean(int pageNum, QueryHelper queryHelper) {
 		return userDao.getPageBean(pageNum, queryHelper);
@@ -239,7 +253,7 @@ public class UserServiceImpl implements UserService{
 	
 	public boolean isLoginNameExist(long selfId, String loginName) {
 
-		return userDao.isNameExist(selfId, loginName);
+		return userDao.isLoginNameExist(selfId, loginName);
 	}
 
 	public List<User> getUserByRoleName(String roleName){

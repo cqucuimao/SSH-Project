@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<dataset>
-  <customer id="1" name="张三" customerOrganization_id="1"/>
-  <customer id="2" name="李四" customerOrganization_id="1"/>
-  <customer id="3" name="王五" customerOrganization_id="2"/>
-  <customer id="4" name="陈六" customerOrganization_id="2"/>
-  <customerorganization id="1" name="重庆大学" abbreviation="重大" address_id="1"/>
-  <customerorganization id="2" name="北京大学" abbreviation="北大" address_id="1"/>
-</dataset>

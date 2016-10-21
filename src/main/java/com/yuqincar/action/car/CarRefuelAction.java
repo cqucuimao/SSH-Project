@@ -214,7 +214,7 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 	}
 	//到处报表弹出时间函数
      public String outPutOil_time() {
-    	 System.out.println("in outputoil_time");
+    	 //System.out.println("in outputoil_time");
 		return "outPutOil_time";
 	}
 	

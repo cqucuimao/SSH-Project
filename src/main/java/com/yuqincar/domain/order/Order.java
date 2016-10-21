@@ -26,7 +26,7 @@ import com.yuqincar.utils.Text;
 public class Order extends BaseEntity {
 
 	@Text("订单号")
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false,unique=true)
 	private String sn; // 订单号。 形如YYMMXXXXX
 
 	@Text("客户单位")

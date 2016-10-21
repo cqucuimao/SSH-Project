@@ -20,6 +20,7 @@ public class HomeAction extends ActionSupport {
 	@Autowired
 	private OrderService orderService;
 	
+	
 	@Autowired
 	private WarningMessageService warningMessageService;
 	

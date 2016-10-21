@@ -22,8 +22,8 @@ public interface OrderService extends BaseService {
 	public static final String SCHEDULE_FROM_NEW="FROM_NEW";
 	public static final String SCHEDULE_FROM_QUEUE="FROM_QUEUE";
 	public static final String SCHEDULE_FROM_UPDATE="FROM_UPDATE";
-	public static final String SN_PREFIX="YQ";
-	public static final String SN_COOPERATION_PREFIX="W";
+	//public static final String SN_PREFIX="YQ";
+	//public static final String SN_COOPERATION_PREFIX="W";
 
 	/**
 	 * 得到所有的车型。

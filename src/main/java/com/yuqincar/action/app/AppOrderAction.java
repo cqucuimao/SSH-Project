@@ -71,7 +71,8 @@ public class AppOrderAction extends BaseAction implements Preparable {
 	public void prepare() throws Exception {
 		String username = request.getParameter("username");
 		String pwd = request.getParameter("pwd");
-		user = userService.getByLoginNameAndMD5Password(username, pwd);
+		long companyId = Long.valueOf(request.getParameter("companyId"));
+		user = userService.getByLoginNameAndMD5Password(username, pwd,companyId);
 		
 		if(user!=null && !privilegeService.canUserHasPrivilege(user, "/driver_app"))
 			user=null;

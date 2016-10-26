@@ -27,7 +27,6 @@ public class CarDetailListTag extends TagSupport {
 		}
 
 		try {
-			System.out.println("id=: "+id);
 			WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());  
 		    CarService carService = (CarService)wac.getBean("carServiceImpl"); 
 			String  value=carService.getCarById(Long.parseLong(id)).getPlateNumber();

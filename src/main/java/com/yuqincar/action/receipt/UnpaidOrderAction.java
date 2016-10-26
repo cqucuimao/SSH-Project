@@ -27,8 +27,10 @@ public class UnpaidOrderAction implements ModelDriven<Order> {
 	    //重置结束时间23:59:59
 		Date endDate=DateUtils.getMaxDate(model.getActualEndDate());
 		
-		List<Order> orderList=orderService.getUnpaidOrderByOrgNameAndTime(model.getCustomerOrganization().getName(),
-				                             beginDate, endDate);
+		String orgName=null;
+		if(model.getCustomerOrganization()!=null)
+			orgName=model.getCustomerOrganization().getName();		
+		List<Order> orderList=orderService.getUnpaidOrderByOrgNameAndTime(orgName,beginDate, endDate);
 		ActionContext.getContext().put("orderList", orderList);
 		return "list";
 	}

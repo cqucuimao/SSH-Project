@@ -107,7 +107,7 @@
   									<c:forEach items="${map.value}" var="mapValue">
   										<c:if test="${mapValue.value==0}">  																										
   											<td>
-  												<a href="#" onclick="taskClick('${map.key.type}',${map.key.id},'${mapValue.key}')"><i class="icon-car"></i>任务中</a>
+  												<a href="#" onclick="taskClick('${map.key.type}',${map.key.carId},'${mapValue.key}')"><i class="icon-car"></i>有任务</a>
   											</td>
   										</c:if>
   										<c:if test="${mapValue.value==1}">

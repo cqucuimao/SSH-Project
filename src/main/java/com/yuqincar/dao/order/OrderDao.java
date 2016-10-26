@@ -60,7 +60,7 @@ public interface OrderDao extends BaseDao<Order> {
      * 再操作前，必须要判断如下的合法性： 1. order的状态必须为null或INQUEUE才能调度。以防止已被其它调度员先调度。 2.
      * 必须判断car在时间上是空闲的（按天算）。以防止此car已被其它调度员调度。 3. 必须判断car.status==NORMAL 4.
      * 必须判断car没有在订单时间内进行维修、年审、保养（没有时间段内的CarInsurance记录,CarRepair记录,CarExamine记录）
-     * 调度成功后，需要生成APPRemindMessage，并发送相同内容的短消息给司机。
+     * 调度成功后，需要发送相同内容的短消息给司机。
      * 
      * @param order
      *            订单

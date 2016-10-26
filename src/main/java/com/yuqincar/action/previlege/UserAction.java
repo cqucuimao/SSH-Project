@@ -73,7 +73,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
 		helper.addWhereCondition("u.department.name <> ?", "外派");
 		//测试员 是给APP上架审查员使用的。不出现在员工选择框和员工管理功能中
-		helper.addWhereCondition("u.name not like ?", "测试员%");
+		helper.addWhereCondition("u.name not like ?", "测试%");
 		helper.addWhereCondition("u.loginName <> ?", "admin");
 		helper.addOrderByProperty("u.id", false);
 		helper.addOrderByProperty("u.name", true);
@@ -88,7 +88,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		QueryHelper helper = new QueryHelper("User", "u");
 		helper.addWhereCondition("u.department.name <> ?", "外派");
 		//测试员 是给APP上架审查员使用的。不出现在员工选择框和员工管理功能中
-		helper.addWhereCondition("u.name not like ?", "测试员%");
+		helper.addWhereCondition("u.name not like ?", "测试%");
 		helper.addWhereCondition("u.loginName <> ?", "admin");
 		helper.addOrderByProperty("u.id", false);
 		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	

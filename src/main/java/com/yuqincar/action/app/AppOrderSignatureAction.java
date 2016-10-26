@@ -38,6 +38,7 @@ public class AppOrderSignatureAction extends BaseAction{
 	
 	private String username;
 	private String pwd;
+	private long companyId;
 	
 	private User user = null;
 	private Order order = null;
@@ -204,7 +205,7 @@ public class AppOrderSignatureAction extends BaseAction{
 	
 	public void prepare() throws Exception {
 		if(username!=null && pwd!=null)
-			user = userService.getByLoginNameAndMD5Password(username, pwd);
+			user = userService.getByLoginNameAndMD5Password(username, pwd, companyId);
 		if(orderId!=null)
 			order = orderService.getOrderById(orderId);
 	}
@@ -231,5 +232,13 @@ public class AppOrderSignatureAction extends BaseAction{
 
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
+	}
+
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
 	}
 }

@@ -10,14 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.lbs.LBSDao;
-import com.yuqincar.dao.monitor.APPRemindMessageDao;
 import com.yuqincar.dao.monitor.LocationDao;
 import com.yuqincar.dao.order.DayOrderDetailDao;
 import com.yuqincar.dao.order.OrderDao;
 import com.yuqincar.dao.order.OrderOperationRecordDao;
 import com.yuqincar.domain.common.DiskFile;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.order.APPRemindMessage;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
@@ -38,8 +36,6 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 	
 	@Autowired
 	private OrderDao orderDao;
-	@Autowired
-	private APPRemindMessageDao appRemindMessageDao;
 	@Autowired
 	private LBSDao lbsDao;
 	@Autowired
@@ -82,24 +78,6 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 	 */
 	public int getNumberOfUndoOrders(User user) {
 		return getAllUndoOrders(user).size();
-	}
-	
-	/**
-	 * 得到还没有获取的提醒消息。获取之后，不对sended属性做改变，因为有可能接收不成功。
-	 * @param user
-	 * @return
-	 */
-	public List<APPRemindMessage> getAllUnsendedRemindMessage(User user){
-		return appRemindMessageDao.getAllUnsendedRemindMessage(user);
-	}
-	
-	/**
-	 * 将参数message中的sended设置为true，以表示成功发送到了APP端。
-	 * @param message
-	 */
-	@Transactional
-	public void setRemindMessageSended(APPRemindMessage message){
-		appRemindMessageDao.setRemindMessageSended(message);
 	}
 
 	@Transactional

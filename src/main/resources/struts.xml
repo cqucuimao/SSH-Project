@@ -303,7 +303,7 @@
 		<action name="carWash_*" class="carWashAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carWashAction/carWash_list.jsp
 			</result>
-			<result name="saveUI">/WEB-INF/view/carAction/carWashAction/CarWash_saveUI.jsp
+			<result name="saveUI">/WEB-INF/view/carAction/carWashAction/carWash_saveUI.jsp
 			</result>
 			<result name="success">/WEB-INF/view/carAction/carWashAction/success.jsp
 			</result>

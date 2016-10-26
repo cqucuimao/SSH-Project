@@ -88,7 +88,7 @@
 			</s:if>
 			<s:if test=" #session.user.hasPrivilegeByUrl('/driver_taskList') ">
 			<dd>
-				<s:a action="driver_taskList">司机任务动态表</s:a>
+				<s:a action="driver_taskList">动态任务表</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

@@ -115,7 +115,7 @@
                     </tr>
                     <tr>
                         <th>实际路码：</th>
-                        <td>${endMile-beginMile}KM</td>
+                        <td>${actualMileString}KM</td>
                         <th><s:property value="tr.getText('order.Order.totalChargeMile')" />：</th>
                         <td>${totalChargeMile}KM</td>
                     </tr>

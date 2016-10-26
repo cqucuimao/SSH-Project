@@ -356,6 +356,10 @@
 				alert("上车时间不能为空！");
 				return false;
 			}
+			if($("#serviceType").val() == "") {
+				alert("用车类型不能为空！");
+				return false;
+			}
 			if ($("#fromAddress").val() == "") {
 				alert("上车地点不能为空！");
 				return false;
@@ -452,6 +456,10 @@
 					alert("下车时间晚于了上车时间！")
 					return false;
 				}
+			}
+			if($("#serviceType").val() == "") {
+				alert("用车类型不能为空！");
+				return false;
 			}
 			return true;
 		}
@@ -731,7 +739,7 @@
 										}
 										jQuery.each(data[i].carInfo,function(date,val) {
 											if (val == 0) {
-												$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
+												$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>有任务</a></td>');
 											} else {
 												$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
 											}
@@ -805,7 +813,7 @@
 								}
 								jQuery.each(data[i].carInfo,function(date,val) {
 									if (val == 0) {
-										$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>任务中</a></td>');
+										$(".tableHover").append('<td class="alignCenter"><a href="javascript:taskClick(\''+date+'\','+data[i].id+');"><i class="icon-car"></i>有任务</a></td>');
 									} else {
 										$(".tableHover").append('<td class="alignCenter orang"><i class="icon-car gray"></i>空闲</td>');
 									}

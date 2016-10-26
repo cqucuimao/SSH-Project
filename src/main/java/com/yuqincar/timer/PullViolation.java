@@ -14,6 +14,7 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.CarViolationService;
+import com.yuqincar.utils.Configuration;
 
 @Component
 public class PullViolation {
@@ -24,7 +25,8 @@ public class PullViolation {
 	@Scheduled(cron = "0 30 02 5 * ? ") 
 	@Transactional
 	public void update() throws UnsupportedEncodingException, ParseException {
-		carViolationService.pullViolationFromCQJG();
-		
+		if("on".equals(Configuration.getPullViolationSwitch())){
+			carViolationService.pullViolationFromCQJG();
+		}
 	}
 }

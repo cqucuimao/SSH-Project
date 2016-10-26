@@ -122,6 +122,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
         InputStream is = new FileInputStream(upload);
 		List<List<String>> excelLines = ExcelUtil.getLinesFromExcel(is, 1, 1, 9, 0);
 		List<CarRepair> carRepairs = new ArrayList<CarRepair>();
+		User user=(User) ActionContext.getContext().getSession().get("user");
 				for(int i=1;i<excelLines.size();i++){
 					try {
 							result=i;
@@ -155,7 +156,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 							
 							//送修人
 							String name = excelLines.get(i).get(4).replaceAll( "\\s", "" );
-							User driver = userService.getByLoginName(name);
+							User driver = userService.getByLoginName(name,user.getCompany().getId());
 							if(driver == null){
 								failReason = "未知司机";
 								ActionContext.getContext().getValueStack().push(failReason);

@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yuqincar.domain.common.DiskFile;
-import com.yuqincar.domain.order.APPRemindMessage;
-import com.yuqincar.domain.order.ChargeModeEnum;
-import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
-import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 
 	
@@ -31,19 +27,6 @@ public interface DriverAPPService {
 	 * @return
 	 */
 	public int getNumberOfUndoOrders(User user);
-	
-	/**
-	 * 得到还没有获取的提醒消息。获取之后，不对sended属性做改变，因为有可能接收不成功。
-	 * @param user
-	 * @return
-	 */
-	public List<APPRemindMessage> getAllUnsendedRemindMessage(User user);
-	
-	/**
-	 * 将参数message中的sended设置为true，以表示成功发送到了APP端。
-	 * @param message
-	 */
-	public void setRemindMessageSended(APPRemindMessage message);
 	
 	public int orderBegin(Order order, User user, Date date);
 	

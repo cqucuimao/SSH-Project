@@ -148,6 +148,7 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 		
 		List<List<String>> excelLines = ExcelUtil.getLinesFromExcel(is, 1, 1, 7, 0);
 		List<CarRefuel> carRefuels = new ArrayList<CarRefuel>();
+		User user=(User) ActionContext.getContext().getSession().get("user");
 		try {
 			System.out.println("size="+excelLines.size());
 			for(int i=1;i<excelLines.size();i++){
@@ -178,7 +179,7 @@ public class CarRefuelAction extends BaseAction implements ModelDriven<CarRefuel
 				}
 				//司机
 				String name = excelLines.get(i).get(4).replaceAll( "\\s", "" );
-				User driver = userService.getByLoginName(name);
+				User driver = userService.getByLoginName(name,user.getCompany().getId());
 				if(driver == null){
 					unknownCarOrDriver = "未知司机";
 					ActionContext.getContext().getValueStack().push(unknownCarOrDriver);

@@ -21,6 +21,7 @@ public class AppCheckPrivilegeInterceptor extends AbstractInterceptor {
 	
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
+		System.out.println("in AppCheckPrivilegeInterceptor check");
         ActionContext context=ActionContext.getContext();    
         HttpServletRequest request = (HttpServletRequest)context.get(ServletActionContext.HTTP_REQUEST);     
         HttpServletResponse response = (HttpServletResponse) ActionContext.getContext()
@@ -33,7 +34,8 @@ public class AppCheckPrivilegeInterceptor extends AbstractInterceptor {
         
         String username=request.getParameter("username");
         String password=request.getParameter("pwd");
-        User user = userService.getByLoginNameAndPassword(username, password);
+        long companyId=Long.valueOf(request.getParameter("companyId"));
+        User user = userService.getByLoginNameAndMD5Password(username, password,companyId);
         
         if(user == null) {
         	try {

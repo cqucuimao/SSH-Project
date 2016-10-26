@@ -614,6 +614,14 @@ public class OrderAction extends BaseAction {
 			return order.getActualMoney().setScale(1, BigDecimal.ROUND_HALF_UP).toString();
 	}
 	
+	public String getActualMileString(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		if(order.getStatus()==OrderStatusEnum.END || order.getStatus()==OrderStatusEnum.PAYED)
+			return String.valueOf(order.getEndMile()-order.getBeginMile());
+		else
+			return "0";
+	}
+	
 	private OrderStatusEnum getOrderStatus(String status){
 		if(status==null || status.isEmpty())
 			return null;

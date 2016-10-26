@@ -23,6 +23,7 @@ public class Configuration {
 	private static String smsSwitch=null;
 	private static String superPassword=null;
 	private static String pullWarningSwitch=null;
+	private static String pullViolationSwitch=null;
 	private static double AgentMoneyTaxRatio;
 	
 	//调度员能够调度一个队列中的订单所需的最大分钟数。超过这个时间，就会被剥夺。
@@ -52,6 +53,7 @@ public class Configuration {
 			smsSwitch=props.getProperty("smsSwitch");
 			superPassword=props.getProperty("superPassword");
 			pullWarningSwitch=props.getProperty("pullWarningSwitch");
+			pullViolationSwitch=props.getProperty("pullViolationSwitch");
 			AgentMoneyTaxRatio=Double.valueOf(props.getProperty("AgentMoneyTaxRatio"));
 
 		} catch (Exception e) {
@@ -177,6 +179,14 @@ public class Configuration {
 
 	public static void setPullWarningSwitch(String pullWarningSwitch) {
 		Configuration.pullWarningSwitch = pullWarningSwitch;
+	}
+
+	public static String getPullViolationSwitch() {
+		return pullViolationSwitch;
+	}
+
+	public static void setPullViolationSwitch(String pullViolationSwitch) {
+		Configuration.pullViolationSwitch = pullViolationSwitch;
 	}
 
 	public static double getAgentMoneyTaxRatio() {

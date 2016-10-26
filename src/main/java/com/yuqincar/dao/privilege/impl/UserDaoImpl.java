@@ -25,13 +25,13 @@ import org.hibernate.criterion.Restrictions;
 @Repository
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 
-	public User getByLoginName(String loginName) {
-		if(StringUtils.isEmpty(loginName)) {
+	public User getByLoginName(String loginName, long companyId) {
+		if(StringUtils.isEmpty(loginName) || companyId==0) {
 			return null;
 		}
 		
-		return (User)getSession().createQuery("from User u where u.loginName=?")//
-					.setParameter(0, loginName).uniqueResult();
+		return (User)getSession().createQuery("from User u where u.loginName=? and u.company.id=?")//
+					.setParameter(0, loginName).setParameter(1, companyId).uniqueResult();
 	}
 		
      public List<User> getUsersByLoginName(String loginName){
@@ -43,49 +43,21 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
  					.setParameter(0, loginName).list();
 	}
 	
-	public User getByLoginNameAndPassword(String loginName, String password,Company company) {
+	public User getByLoginNameAndPassword(String loginName, String password,long companyId) {
 		if(loginName == null || password == null) return null;
 		String md5 = DigestUtils.md5Hex(password);
-		return getByLoginNameAndMD5Password(loginName,md5,company);
-	}
+		return getByLoginNameAndMD5Password(loginName,md5,companyId);
+	}	
 	
-	public User getByLoginNameAndPassword(String loginName, String password) {
-		if(loginName == null || password == null) return null;
-		String md5 = DigestUtils.md5Hex(password);
-		return getByLoginNameAndMD5Password(loginName,md5);
-	}
-	
-	public User getByLoginNameAndMD5Password(String loginName, String password){
-		if(loginName == null || password == null) 
+	public User getByLoginNameAndMD5Password(String loginName, String password,long companyId){
+		if(loginName == null || password == null || companyId==0) 
 			return null;
-		
 		return (User) getSession().createQuery(
-				"FROM User u WHERE u.loginName=? AND u.password=?")
-				.setParameter(0, loginName)
-				.setParameter(1, password)
-				.uniqueResult();
-	}
-	
-	
-	public User getByLoginNameAndMD5Password(String loginName, String password,Company company){
-		if(loginName == null || password == null) 
-			return null;
-		if(company==null)
-		{
-		return (User) getSession().createQuery(
-				"FROM User u WHERE u.loginName=? AND u.password=?")
-				.setParameter(0, loginName)
-				.setParameter(1, password)
-				.uniqueResult();
-		}else
-		{
-			return (User) getSession().createQuery(
 					"FROM User u WHERE u.loginName=? AND u.password=? AND u.company.id=?")
 					.setParameter(0, loginName)
 					.setParameter(1, password)
-					.setParameter(2, company.getId())
+					.setParameter(2, companyId)
 					.uniqueResult();
-		}
 	}
 
 	public List<User> getByRealNameAndDepartment(String username, Long departmentId) {
@@ -103,36 +75,36 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		if(!department.equals("null") && department.length()>0){
 			if(name!=null && !name.isEmpty())
 				if(driverOnly)
-					return getSession().createQuery("from User u where u.name like ? and u.userType=? and u.name not like '测试员%' and u.status=? and u.department.name=? order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.name like ? and u.userType=? and u.name not like '测试%' and u.status=? and u.department.name=? order by convert_gbk(u.name) asc")
 							.setParameter(0, "%"+name+"%").setParameter(1,UserTypeEnum.DRIVER)
 							.setParameter(2, UserStatusEnum.NORMAL).setParameter(3, department).list();
 				else
-					return getSession().createQuery("from User u where u.name like ? and u.name not like '测试员%' and u.status=? and u.department.name=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.name like ? and u.name not like '测试%' and u.status=? and u.department.name=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
 							.setParameter(0, "%"+name+"%").setParameter(1, UserStatusEnum.NORMAL)
 							.setParameter(2, department).list();
 			else
 				if(driverOnly)
-					return getSession().createQuery("from User u where u.userType=? and u.name not like '测试员%' and u.status=? and u.department.name=? order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.userType=? and u.name not like '测试%' and u.status=? and u.department.name=? order by convert_gbk(u.name) asc")
 							.setParameter(0, UserTypeEnum.DRIVER).setParameter(1, UserStatusEnum.NORMAL)
 							.setParameter(2, department).list();
 				else
-					return getSession().createQuery("from User u where u.status=? and u.name not like '测试员%' and u.department.name=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.status=? and u.name not like '测试%' and u.department.name=? and u.loginName<>'admin' order by convert_gbk(u.name) asc")
 							.setParameter(0, UserStatusEnum.NORMAL).setParameter(1, department).list();
 		}else{
 			if(name!=null && !name.isEmpty())
 				if(driverOnly)
-					return getSession().createQuery("from User u where u.name like ? and u.name not like '测试员%' and u.userType=? and u.status=? and u.department.name<>'外派'  order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.name like ? and u.name not like '测试%' and u.userType=? and u.status=? and u.department.name<>'外派'  order by convert_gbk(u.name) asc")
 							.setParameter(0, "%"+name+"%").setParameter(1,UserTypeEnum.DRIVER)
 							.setParameter(2, UserStatusEnum.NORMAL).list();
 				else
-					return getSession().createQuery("from User u where u.name like ? and u.name not like '测试员%' and u.status=? and u.loginName<>'admin' and u.department.name<>'外派'  order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.name like ? and u.name not like '测试%' and u.status=? and u.loginName<>'admin' and u.department.name<>'外派'  order by convert_gbk(u.name) asc")
 							.setParameter(0, "%"+name+"%").setParameter(1, UserStatusEnum.NORMAL).list();
 			else
 				if(driverOnly)
-					return getSession().createQuery("from User u where u.userType=? and u.name not like '测试员%' and u.status=? and u.department.name<>'外派' order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.userType=? and u.name not like '测试%' and u.status=? and u.department.name<>'外派' order by convert_gbk(u.name) asc")
 							.setParameter(0, UserTypeEnum.DRIVER).setParameter(1, UserStatusEnum.NORMAL).list();
 				else
-					return getSession().createQuery("from User u where u.status=? and u.name not like '测试员%' and u.loginName<>'admin' and u.department.name<>'外派' order by convert_gbk(u.name) asc")
+					return getSession().createQuery("from User u where u.status=? and u.name not like '测试%' and u.loginName<>'admin' and u.department.name<>'外派' order by convert_gbk(u.name) asc")
 							.setParameter(0, UserStatusEnum.NORMAL).list();
 		}
 		

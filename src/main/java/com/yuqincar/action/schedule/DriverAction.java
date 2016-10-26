@@ -23,6 +23,7 @@ import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;
@@ -74,9 +75,25 @@ public class DriverAction extends BaseAction {
 	        int i = 0;
 	        for (List<Order> dayList : driverUseInfo) {
 	        	if(dayList!=null && dayList.size()>0){
-	        		if(dayList.get(0)!=null)
-	        			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 0);
-	 				else
+	        		if(dayList.get(0)!=null){
+						boolean alldone=true;
+						for(Order order : dayList){
+							if(order!=null && (order.getStatus()==OrderStatusEnum.SCHEDULED ||
+									order.getStatus()==OrderStatusEnum.ACCEPTED ||
+									order.getStatus()==OrderStatusEnum.BEGIN ||
+									order.getStatus()==OrderStatusEnum.GETON ||
+									order.getStatus()==OrderStatusEnum.GETOFF)){
+								alldone=false;
+								break;
+							}
+								
+						}
+						//如果有任务，且存在没有完成和订单，那么就应该在界面上显示“有任务”（0），否则应该显示空闲（非0）。
+						if(!alldone)							
+							driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 0);
+						else
+							driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 5);
+					}else
 	 					driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 1);
 	     		}else{
 	     			driverUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 1);
@@ -131,9 +148,25 @@ public class DriverAction extends BaseAction {
                 int i = 0;
                 for (List<Order> dayList : carUseInfo) {
     				if(dayList!=null && dayList.size()>0){
-    					if(dayList.get(0)!=null)
-    						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 0);
-						else
+    					if(dayList.get(0)!=null){
+    						boolean alldone=true;
+    						for(Order order : dayList){
+    							if(order!=null && (order.getStatus()==OrderStatusEnum.SCHEDULED ||
+    									order.getStatus()==OrderStatusEnum.ACCEPTED ||
+    									order.getStatus()==OrderStatusEnum.BEGIN ||
+    									order.getStatus()==OrderStatusEnum.GETON ||
+    									order.getStatus()==OrderStatusEnum.GETOFF)){
+    								alldone=false;
+    								break;
+    							}
+								
+    						}
+    						//如果有任务，且存在没有完成和订单，那么就应该在界面上显示“有任务”（0），否则应该显示空闲（非0）。
+    						if(!alldone)							
+    							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 0);
+    						else
+    							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 5);
+    					}else
 							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 1);
     				}else{
     					carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(_beginDate, i++)), 1);
@@ -184,12 +217,6 @@ public class DriverAction extends BaseAction {
     	beginDate=null;	//为了不在界面上回显日期
     	endDate=null;
         return "taskList";
-    }
-    
-    public boolean isAvailable(){
-		System.out.println("in isAvailable");
-    	System.out.println("asdfasfffffffff"+getMap().keySet().toArray(new LineTitleVO[0])[0].isAvailable());
-    	return false;
     }
 	
 	public String freshList(){

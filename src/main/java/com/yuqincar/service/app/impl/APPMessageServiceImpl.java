@@ -22,7 +22,6 @@ import com.yuqincar.domain.order.Customer;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserAPPDeviceTypeEnum;
 import com.yuqincar.service.app.APPMessageService;
-import com.yuqincar.service.app.APPRemindMessageService;
 import com.yuqincar.utils.Configuration;
 
 @Service
@@ -31,9 +30,6 @@ public class APPMessageServiceImpl implements APPMessageService {
 	private static IApnsService apnsCustomerAPPService;
 	private static PushKeyPair driverPushKeyPair;
 	private static PushKeyPair customerPushKeyPair;
-
-	@Autowired
-	private APPRemindMessageService appRemindMessageService;
 	
 	private void sendMessageToApple(IApnsService service, String appToken, String message,Map<String,Object> params){
 		if(appToken==null)

@@ -42,7 +42,7 @@ public interface UserService extends BaseService{
 	 */
 	void update(User user);
 	
-	public User getByLoginNameAndMD5Password(String loginName, String password);
+	public User getByLoginNameAndMD5Password(String loginName, String password,long companyId);
 	
 	List<User> getByIds(Long ids[]);
 
@@ -53,12 +53,10 @@ public interface UserService extends BaseService{
 	 * @return
 	 */
 	List<User> getUsersByLoginName(String loginName);
-	User getByLoginNameAndPassword(String loginName, String password,Company company);
-	User getByLoginNameAndPassword(String loginName, String password);
 	
-	User getByLoginNameAndMD5Password(String loginName, String password,Company company);
-	
-	User getByLoginName(String loginName);
+	User getByLoginNameAndPassword(String loginName, String password,long companyId);
+
+	User getByLoginName(String loginName, long companyId);
 
 	PageBean getPageBean( int pageNum , QueryHelper helper);
 	
@@ -88,4 +86,9 @@ public interface UserService extends BaseService{
 	boolean isLoginNameExist(long selfId,String loginName);
 	
 	public List<User> getUserByRoleName(String roleName);
+	
+	/**
+	 * 获取具有相同登录名用户的所有公司
+	 */
+	public List<Company> getUserCompanys(String loginName);
 }

@@ -124,6 +124,7 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 		List<CarWashShop>  shoplists=new ArrayList<CarWashShop>();
 		boolean flag=false;
 		shoplists=carWashService.getAllCarWashShop();
+		User user=(User) ActionContext.getContext().getSession().get("user");
 		for(int i=1;i<excelLines.size();i++){
 					
 		        try {       
@@ -145,7 +146,7 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 							
 							//司机
 							String name = excelLines.get(i).get(1).replaceAll( "\\s", "" );
-							User driver = userService.getByLoginName(name);
+							User driver = userService.getByLoginName(name,user.getCompany().getId());
 							if(driver == null){
 								failReason = "未知司机";
 								ActionContext.getContext().getValueStack().push(failReason);
@@ -219,8 +220,7 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 		return "success";	
 	}
    
-   public String saveUI(){
-	   
+   public String saveUI(){	   
 	   ActionContext.getContext().put("carWashShopList", carWashService.getAllCarWashShop());
 	   ActionContext.getContext().getSession().put("type", "save");
 	   return "saveUI";

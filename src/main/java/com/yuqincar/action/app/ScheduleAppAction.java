@@ -122,7 +122,8 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 	public void prepare() throws Exception {
 		String username = request.getParameter("username");
 		String password = request.getParameter("pwd");
-		user = userService.getByLoginNameAndMD5Password(username, password);
+		long companyId=Long.valueOf(request.getParameter("companyId"));
+		user = userService.getByLoginNameAndMD5Password(username, password,companyId);
 		//TODO 应该限制没有权限的用户来使用。
 		//if(user!=null && !user.hasPrivilegeByUrl("/schedule"))
 		//	user=null;

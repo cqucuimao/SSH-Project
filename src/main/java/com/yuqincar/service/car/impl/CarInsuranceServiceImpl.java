@@ -127,6 +127,14 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 		for(int i=0;i<carInsurance.getCommercialInsuranceList().size();i++){
 			commercialInsuranceDao.update(carInsurance.getCommercialInsuranceList().get(i));
 		}
+		
+		carInsurance.getCar().setInsuranceExpiredDate(carInsurance.getToDate());
+		if(carInsurance.getCar().getInsuranceExpiredDate().after(new Date()))
+			carInsurance.getCar().setInsuranceExpired(false);
+		else
+			carInsurance.getCar().setInsuranceExpired(true);
+		carDao.update(carInsurance.getCar());
+		
 		carInsuranceDao.update(carInsurance);
 	}
 

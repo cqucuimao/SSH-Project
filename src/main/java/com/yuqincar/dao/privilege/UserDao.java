@@ -7,11 +7,9 @@ import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.privilege.User;
 
 public interface UserDao extends BaseDao<User>{
-	public User getByLoginName(String loginName);
-	public User getByLoginNameAndPassword(String loginName, String password,Company company);
-	public User getByLoginNameAndPassword(String loginName, String password);
-	public User getByLoginNameAndMD5Password(String loginName, String password,Company company);		
-	public User getByLoginNameAndMD5Password(String loginName, String password);
+	public User getByLoginName(String loginName,long companyId);
+	public User getByLoginNameAndPassword(String loginName, String password,long companyId);
+	public User getByLoginNameAndMD5Password(String loginName, String password,long companyId);
 	public List<User> getByName(String name,boolean driverOnly,String department);
 	public boolean canDeleteUser(Long id);
 	public boolean isNameExist(long selfId,String name);

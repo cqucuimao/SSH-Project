@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.struts2.StrutsConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.opensymphony.xwork2.inject.Inject;
 import com.yuqincar.dao.car.DriverLicenseDao;
 import com.yuqincar.dao.privilege.UserDao;
 import com.yuqincar.domain.car.DriverLicense;
@@ -132,21 +130,12 @@ public class UserServiceImpl implements UserService{
 		userDao.save(user);
 	}
 	
-	public User getByLoginNameAndPassword(String loginName, String password,Company company) {
-		return userDao.getByLoginNameAndPassword(loginName, password,company);
+	public User getByLoginNameAndPassword(String loginName, String password,long companyId) {
+		return userDao.getByLoginNameAndPassword(loginName, password,companyId);
 	}
 	
-	public User getByLoginNameAndPassword(String loginName, String password)
-	{
-		return userDao.getByLoginNameAndPassword(loginName, password);
-	}
-	
-	public User getByLoginNameAndMD5Password(String loginName, String password,Company company){
-		return userDao.getByLoginNameAndMD5Password(loginName, password,company);
-	}
-	
-	public User getByLoginNameAndMD5Password(String loginName, String password){
-		return userDao.getByLoginNameAndMD5Password(loginName, password);
+	public User getByLoginNameAndMD5Password(String loginName, String password,long companyId){
+		return userDao.getByLoginNameAndMD5Password(loginName, password,companyId);
 	}
 
 	public List<User> getUsersByLoginName(String loginName){
@@ -158,8 +147,8 @@ public class UserServiceImpl implements UserService{
 		return userDao.getPageBean(pageNum, queryHelper);
 	}
 
-	public User getByLoginName(String loginName) {
-		return userDao.getByLoginName(loginName);
+	public User getByLoginName(String loginName, long companyId) {
+		return userDao.getByLoginName(loginName, companyId);
 	}
 
 	
@@ -181,11 +170,7 @@ public class UserServiceImpl implements UserService{
 		TreeNode rootNode = new TreeNode();
 		rootNode.setName("公司");
 		rootNode.setNocheck("true");
-		for(User u:users) {
-//				//测试员 是给APP上架审查员使用的。不出现在员工选择框和员工管理功能中
-//				if(u.getName().startsWith("测试员"))
-//					continue;
-			
+		for(User u:users) {			
 				TreeNode child = new TreeNode();
 				child.setName(u.getName());
 				child.setId(u.getId());
@@ -258,5 +243,15 @@ public class UserServiceImpl implements UserService{
 
 	public List<User> getUserByRoleName(String roleName){
 		return userDao.getUsersByRoleName(roleName);
+	}
+
+	public List<Company> getUserCompanys(String loginName){
+		QueryHelper helper=new QueryHelper(User.class,"u");
+		helper.addWhereCondition("u.loginName=?", loginName);
+		List<User> users=userDao.getAllQuerry(helper);
+		List<Company> companies=new ArrayList<Company>(users.size());
+		for(User user:users)
+			companies.add(user.getCompany());
+		return companies;
 	}
 }

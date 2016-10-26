@@ -99,7 +99,7 @@
 <tag>  
 	 <name>carDetailList</name>                              
 	 <tag-class>com.yuqincar.tags.CarDetailListTag</tag-class>
-	 <attribute>    
+	 <attribute>
                 <name>id</name>    
                 <required>true</required>    
                 <rtexprvalue>true</rtexprvalue>    

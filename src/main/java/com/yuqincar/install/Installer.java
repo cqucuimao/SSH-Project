@@ -645,7 +645,7 @@ public class Installer {
 	private void initEmployeeTable(String fileName){
 		List<List<String>> tableContent = ExcelUtil.getLinesFromExcel(fileName, 2, 1, 8, 0);
 		for(List<String> line:tableContent){
-			User user = userDao.getByLoginName(line.get(0));
+			User user = userDao.getByLoginName(line.get(0),0);
 			if(user == null){
 				user = new User();
 				user.setLoginName(line.get(0));
@@ -774,7 +774,7 @@ public class Installer {
 					//是否为备用车，非备用车指定司机
 					boolean standbyCar = true;
 					if(line.get(7) == "否" || line.get(7).equals("否")){
-						car.setDriver(userDao.getByLoginName(line.get(6)));
+						car.setDriver(userDao.getByLoginName(line.get(6),0));
 						standbyCar = false;
 						car.setStandbyCar(standbyCar);
 					}else{

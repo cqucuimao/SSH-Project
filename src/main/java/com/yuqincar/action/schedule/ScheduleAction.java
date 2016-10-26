@@ -136,9 +136,25 @@ public class ScheduleAction extends BaseAction {
 			int i = 0;
 			for (List<Order> dayList : carUseInfo) {
 				if(dayList!=null && dayList.size()>0){
-					if(dayList.get(0)!=null)
-						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 0);
-					else
+					if(dayList.get(0)!=null){
+						boolean alldone=true;
+						for(Order order : dayList){
+							if(order!=null && (order.getStatus()==OrderStatusEnum.SCHEDULED ||
+									order.getStatus()==OrderStatusEnum.ACCEPTED ||
+									order.getStatus()==OrderStatusEnum.BEGIN ||
+									order.getStatus()==OrderStatusEnum.GETON ||
+									order.getStatus()==OrderStatusEnum.GETOFF)){
+								alldone=false;
+								break;
+							}
+								
+						}
+						//如果有任务，且存在没有完成和订单，那么就应该在界面上显示“有任务”（0），否则应该显示空闲（非0）。
+						if(!alldone)							
+							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 0);
+						else
+							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 5);
+					}else
 						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 1);
 				}else{
 					carUseInfoNum.put(DateUtils.getYMDString2(DateUtils
@@ -380,10 +396,14 @@ public class ScheduleAction extends BaseAction {
 	public String dispatchOrder(){
 		System.out.println("in dispatchOrder");
 		Order order=orderService.distributeOrder((User)ActionContext.getContext().getSession().get("user"),null);
-		scheduleFromQueueOrderId=order.getId();
-		scheduleMode=OrderService.SCHEDULE_FROM_QUEUE;
-		initInputField(order);
-		return "scheduling";
+		if(order!=null){
+			scheduleFromQueueOrderId=order.getId();
+			scheduleMode=OrderService.SCHEDULE_FROM_QUEUE;
+			initInputField(order);
+			return "scheduling";
+		}else{
+			return queue();
+		}
 	}
 	
 	public String updateOrder(){
@@ -574,9 +594,25 @@ public class ScheduleAction extends BaseAction {
 				int i = 0;
 				for (List<Order> dayList : carUseInfo) {
 					if(dayList!=null && dayList.size()>0){
-						if(dayList.get(0)!=null)
-							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 0);
-						else
+						if(dayList.get(0)!=null){
+							boolean alldone=true;
+							for(Order order : dayList){
+								if(order!=null && (order.getStatus()==OrderStatusEnum.SCHEDULED ||
+										order.getStatus()==OrderStatusEnum.ACCEPTED ||
+										order.getStatus()==OrderStatusEnum.BEGIN ||
+										order.getStatus()==OrderStatusEnum.GETON ||
+										order.getStatus()==OrderStatusEnum.GETOFF)){
+									alldone=false;
+									break;
+								}
+									
+							}
+							//如果有任务，且存在没有完成和订单，那么就应该在界面上显示“有任务”（0），否则应该显示空闲（非0）。
+							if(!alldone)							
+								carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 0);
+							else
+								carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 5);
+						}else
 							carUseInfoNum.put(DateUtils.getYMDString2(DateUtils.getOffsetDate(beginDate_, i++)), 1);
 					}else{
 						carUseInfoNum.put(DateUtils.getYMDString2(DateUtils

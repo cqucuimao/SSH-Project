@@ -44,7 +44,7 @@
 			</s:form>
 		</div>
 	</div>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
+	<!-- <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	<script type="text/javascript" src="js/common.js"></script>	
+	<script type="text/javascript" src="js/common.js"></script>	 -->
 </cqu:border>

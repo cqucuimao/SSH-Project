@@ -1,6 +1,6 @@
+<%@ page language="java" import="java.util.*"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ page language="java" import="java.util.*"  pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
 	String path = request.getContextPath();

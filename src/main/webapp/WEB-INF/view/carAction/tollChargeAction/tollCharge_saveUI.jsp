@@ -1,6 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%> 
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
-
 <cqu:border  exceptJquery="jquery">
     <div class="space">
         <!-- 标题 -->
@@ -81,9 +80,9 @@
         </s:form>
         </div>
     </div>
-    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <!-- <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script> -->
+    
     <script type="text/javascript">
-
 	formatDateField1($("#nextPayDate"));
 	formatDateField1($("#payDate"));
       function autoDate(x)

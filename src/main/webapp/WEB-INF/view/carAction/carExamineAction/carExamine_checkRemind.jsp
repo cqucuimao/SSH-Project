@@ -9,7 +9,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td><s:a action="carExamine_appointList"><span>预约车辆年审</span></s:a></td>
+				    <td><s:a action="carExamineAppointment_list"><span>预约车辆年审</span></s:a></td>
 					<td class="on"><a href="#"><span>车辆年审记录</span></a></td>
 				</tr>
 			</table>

@@ -58,7 +58,7 @@
 				        <s:iterator value="recordList">
 				        
 						<tr>
-							<td><cqu:carDetailList id="${id}" /> </td>
+							<td><cqu:carDetailList id="${car.id}" /> </td>
 							<td style="text-align:right"><s:date name="payDate" format="yyyy-MM-dd"/></td>
 							<td style="text-align:right"><fmt:formatNumber value="${money}" pattern="#0"/></td>
 							<td style="text-align:right"><fmt:formatNumber value="${overdueFine}" pattern="#0"/></td>

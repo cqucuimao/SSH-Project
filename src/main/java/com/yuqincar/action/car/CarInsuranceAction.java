@@ -1,5 +1,6 @@
 package com.yuqincar.action.car;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,12 +17,17 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarInsurance;
 import com.yuqincar.domain.car.CarRefuel;
+import com.yuqincar.domain.car.CarStatusEnum;
+import com.yuqincar.domain.car.CarViolation;
 import com.yuqincar.domain.car.CommercialInsurance;
 import com.yuqincar.domain.car.CommercialInsuranceType;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarInsuranceService;
 import com.yuqincar.service.car.CarService;
+import com.yuqincar.service.common.ExportService;
+import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
 @Controller
@@ -35,6 +41,9 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 	
 	@Autowired
 	private CarService carService;
+	
+	@Autowired
+	private ExportService exportservice;
 	
 	private Date date1;
 	
@@ -187,6 +196,65 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 		PageBean pageBean = carInsuranceService.getNeedInsuranceCars(pageNum);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "remindList";
+	}
+	
+	//导出保险提醒
+	public void exportRemind() throws IOException{
+		QueryHelper helper = new QueryHelper(Car.class, "c");
+		Date now = new Date();
+		Date a = new Date(now.getTime() +  24*60*60*1000 * 30L );
+		helper.addWhereCondition("c.insuranceExpiredDate < ? and c.status=? and c.borrowed=?", a,CarStatusEnum.NORMAL,false);
+		helper.addOrderByProperty("c.insuranceExpiredDate", true);
+		//获得所有需要提醒的车辆
+		List<Car> cars = carInsuranceService.getAllNeedInsuranceCars(helper);
+		
+		//表名
+		String excelName = "重庆渝勤公司车辆保险到期提醒表";
+		
+		//表格的title
+		List<String> title = new ArrayList<String>();
+		title.add("车牌号");
+		title.add("司机");
+		title.add("手机");
+		title.add("保险过期日期");
+		title.add("是否过保");
+		
+		//导出到excel中的类型
+		List<List<String>> allList = new ArrayList<List<String>>();
+		
+		
+		for(int i=0;i<cars.size();i++){
+			//excel表中的每一行（车牌号，司机，手机，保险过期日期，是否过保）
+			List<String> excelCarsList = new ArrayList<String>();
+			//车牌号（车牌号不能为空）
+			excelCarsList.add(cars.get(i).getPlateNumber());
+			//司机(司机可能为空)
+			if(cars.get(i).getDriver() != null){
+				excelCarsList.add(cars.get(i).getDriver().getName());
+			}else{
+				excelCarsList.add("");
+			}
+			//手机号，即司机手机号码
+			if(cars.get(i).getDriver() != null){
+				excelCarsList.add(cars.get(i).getDriver().getPhoneNumber()+"");
+			}else{
+				excelCarsList.add("");
+			}
+			//保险过期日期,日期只保留年月日
+			excelCarsList.add(DateUtils.getYMDString(cars.get(i).getInsuranceExpiredDate()));
+			//是否过保
+			if(cars.get(i).isInsuranceExpired()){
+				excelCarsList.add("是");
+			}else{
+				excelCarsList.add("否");
+			}
+			
+			allList.add(excelCarsList);
+			
+		}
+		//调用exportservice中的exportExcel接口实现表格的导出
+		exportservice.exportExcel(excelName, title, allList, response);
+		
 	}
 	
 	/** 详细信息*/

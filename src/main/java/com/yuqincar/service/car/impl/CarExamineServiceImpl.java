@@ -146,4 +146,8 @@ public class CarExamineServiceImpl implements CarExamineService {
 		}
 		return nextExamineDate;
 	}
+
+	public List<Car> getAllNeedExamineCars(QueryHelper helper) {
+		return carDao.getAllQuerry(helper);
+	}
 }

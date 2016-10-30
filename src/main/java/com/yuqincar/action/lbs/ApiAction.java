@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.utils.HttpMethod;
-
+import com.yuqincar.utils.Configuration;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -22,9 +22,9 @@ import net.sf.json.JSONObject;
 public class ApiAction extends BaseAction {
 	
 	private final static String BASEURL = "http://api.capcare.com.cn:1045/api";
-	private static final String ENDURL = "&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";
+	private static final String ENDURL = "&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()+"&app_name="+Configuration.getCapcareAppName();
 	private final static String BAIDUBASEURL = "http://api.map.baidu.com/geoconv/v1/?coords=";
-	private static final String BAIDUENDURL = "&from=1&to=5&ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd";
+	private static final String BAIDUENDURL = "&from=1&to=5&ak="+Configuration.getBaiduKey();
 	public void api() {
 		PrintWriter out;
 		HttpServletRequest request = (HttpServletRequest) ActionContext.getContext()

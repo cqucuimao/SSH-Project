@@ -12,6 +12,8 @@ import com.yuqincar.dao.lbs.LBSDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarCareAppointment;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.privilege.User;
+import com.yuqincar.service.businessParameter.BusinessParameterService;
 import com.yuqincar.service.car.CarCareAppointmentService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.sms.SMSService;
@@ -28,14 +30,21 @@ public class CarCareAppointmentServiceImpl implements CarCareAppointmentService 
 	private LBSDao lbsDao;
 	@Autowired
 	private CarService carService;
+	@Autowired
+	private BusinessParameterService businessParameterService;
 	@Transactional
     public void saveCarCareAppointment(CarCareAppointment carCareAppointment) {
     	carCareAppointmentDao.save(carCareAppointment);
     	Map<String,String> params=new HashMap<String,String>();
 		params.put("plateNumber",carCareAppointment.getCar().getPlateNumber());
 		params.put("date", DateUtils.getYMDString(carCareAppointment.getDate()));
+		//给司机发短信
 		smsService.sendTemplateSMS(carCareAppointment.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER, params);
-		
+		//给4S员工发短信
+		//目前只有一个4S员工
+		for(User in4SUser:businessParameterService.getBusinessParameter().getEmployeesIn4SForSMS()){
+			smsService.sendTemplateSMS(in4SUser.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_4S_EMPLOYEE, params);
+		}
     }
 	
 	public CarCareAppointment getCarCareAppointmentById(Long id){

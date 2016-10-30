@@ -545,6 +545,11 @@
             </result>
 	     </action>
 
+		<!-- 配置功能的管理 -->
+		<action name="businessParameter_*" class="businessParameterAction" method="{1}">
+	    	<result name="employees">/WEB-INF/view/businessParameterAction/BusinessParameterUpdate.jsp</result>
+	     </action>
+		
 		<!-- 司机任务管理功能 -->
 		<action name="driver_*" class="driverAction" method="{1}">
 			<result name="taskList">/WEB-INF/view/scheduleAction/schedule_taskList.jsp

@@ -137,6 +137,9 @@ public class CarInsuranceServiceImpl implements CarInsuranceService {
 		
 		carInsuranceDao.update(carInsurance);
 	}
+	public List<Car> getAllNeedInsuranceCars(QueryHelper helper) {
+		return carDao.getAllQuerry(helper);
+	}
 
 	
 

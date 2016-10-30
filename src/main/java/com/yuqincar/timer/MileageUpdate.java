@@ -17,6 +17,7 @@ import com.yuqincar.domain.car.CarCareAppointment;
 import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.User;
+import com.yuqincar.service.businessParameter.BusinessParameterService;
 import com.yuqincar.service.car.CarCareAppointmentService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
@@ -44,6 +45,9 @@ public class MileageUpdate {
 
 	@Autowired
 	public LBSDao lbsDao;
+	
+	@Autowired
+	public BusinessParameterService businessParameterService;
 
 	@Scheduled(cron = "0 0 8 * * ?")
 	@Transactional
@@ -57,6 +61,15 @@ public class MileageUpdate {
 			
 			int mile = (int) lbsDao.getCurrentMile(car);
 			car.setMileage(mile);
+			
+			//要到保养里程前，提前通知司机
+			if(car.getDriver()!=null && !car.isCareExpired() && car.getNextCareMile()>0 && (car.getNextCareMile()-businessParameterService.getBusinessParameter().getMileageForCarCareRemind()<car.getMileage() && car.getMileage()<=car.getNextCareMile())){
+				Map<String,String> params=new HashMap<String,String>();
+				params.put("plateNumber", car.getPlateNumber());
+				String mileage = businessParameterService.getBusinessParameter().getMileageForCarCareRemind()+"";
+				params.put("mileage", mileage);
+				smsService.sendTemplateSMS(car.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_NEARBY, params);
+			}
 			
 			//判断是否保养过期，如果car.getNextCareMile==0，说明该车的数据不全，不处理。
 			if(!car.isCareExpired() && car.getNextCareMile()>0 && car.getMileage()>car.getNextCareMile()){
@@ -89,13 +102,13 @@ public class MileageUpdate {
 					Map<String,String> params=new HashMap<String,String>();
 					params.put("plateNumber", car.getPlateNumber());
 					params.put("date", DateUtils.getYMDString(date));
-					for(User manager:userService.getUserByRoleName("车辆保养管理员"))
-						smsService.sendTemplateSMS(manager.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER, params);
+					for(User managerForCarCareAppointment:businessParameterService.getBusinessParameter().getEmployeesForCarCareAppointmentSMS())
+						smsService.sendTemplateSMS(managerForCarCareAppointment.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER, params);
 				}else{
 					Map<String,String> params=new HashMap<String,String>();
 					params.put("plateNumber", car.getPlateNumber());
-					for(User manager:userService.getUserByRoleName("车辆保养管理员"))
-						smsService.sendTemplateSMS(manager.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER, params);
+					for(User managerForCarCareAppointment:businessParameterService.getBusinessParameter().getEmployeesForCarCareAppointmentSMS())
+						smsService.sendTemplateSMS(managerForCarCareAppointment.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER, params);
 				}
 			}
 			carService.updateCar(car);

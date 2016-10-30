@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.HttpMethod;
 
 @Controller
@@ -20,7 +21,7 @@ import com.yuqincar.utils.HttpMethod;
 public class ApiReplayAction extends BaseAction {
 	
 	private final static String BASEURL = "http://api.capcare.com.cn:1045/api/";
-	private static final String ENDURL = "&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";
+	private static final String ENDURL = "&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()+"&app_name="+Configuration.getCapcareAppName();
 	public void api() {
 		PrintWriter out;
 		HttpServletRequest request = (HttpServletRequest) ActionContext.getContext()

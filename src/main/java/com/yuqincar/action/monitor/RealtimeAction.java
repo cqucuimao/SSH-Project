@@ -17,6 +17,7 @@ import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
 
 @Controller
@@ -25,7 +26,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	
 	private Car model=new Car();
 	private String carId;
-	
+	private String baiduKey;
 
 	@Autowired
 	private CarService carService;
@@ -139,6 +140,10 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		this.carId = carId;
 	}
 	
+	public String getBaiduKey() {
+		System.out.println("&&&&&&&&&&");
+		return Configuration.getBaiduKey();
+	}
 	public CarVO parseCar(Car car){
 		CarVO carVO=new CarVO();
 		carVO.setType(car.getModel());

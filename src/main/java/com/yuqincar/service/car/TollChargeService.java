@@ -1,5 +1,7 @@
 package com.yuqincar.service.car;
 
+import java.util.List;
+
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
@@ -18,4 +20,6 @@ public interface TollChargeService {
 	public TollCharge getTollChargeById(Long id);
 	
 	public TollCharge getRecentTollCharge(Car car);
+	
+	public List<Car> getAllNeedTollCharge(QueryHelper helper);
 }

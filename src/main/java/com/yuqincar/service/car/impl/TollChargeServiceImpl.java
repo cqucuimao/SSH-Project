@@ -1,6 +1,7 @@
 package com.yuqincar.service.car.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,5 +73,9 @@ public class TollChargeServiceImpl implements TollChargeService {
 	
 	public TollCharge getRecentTollCharge(Car car){
 		return tollChargeDao.getRecentTollCharge(car);
+	}
+
+	public List<Car> getAllNeedTollCharge(QueryHelper helper) {
+		return carDao.getAllQuerry(helper);
 	}
 }

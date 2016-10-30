@@ -19,7 +19,9 @@
 			<s:form id="pageForm" action="carExamine_queryRemind">
 			<table>
 				<tr>
-					<td><input id="export" class="inputButton" type="button" value="导出"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<td><s:a action="carExamine_exportRemind" cssClass="buttonA">导出</s:a>
+					</td>
+					<td>
 						<s:textfield name="yearMonth" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM'})" />
 					</td>
 					<td>

@@ -1,6 +1,7 @@
 package com.yuqincar.action.car;
 
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -22,15 +23,18 @@ import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
+import com.yuqincar.domain.car.CarViolation;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.CustomerOrganization;
+import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.TollChargeService;
+import com.yuqincar.service.common.ExportService;
 import com.yuqincar.service.order.PriceService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
@@ -55,6 +59,10 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	private ExportService exportservice;
+	
 	@Autowired
 	CustomerOrganizationService organizationService;
 	
@@ -170,6 +178,49 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 		pageBean.setRecordList(voList);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "remind";
+	}
+	
+	//导出路桥费提醒
+	public void exportRemind() throws IOException{
+		QueryHelper helper = new QueryHelper("Car", "c");
+		helper.addWhereCondition("c.nextTollChargeDate is not null");
+		helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
+		helper.addWhereCondition("c.borrowed=?", false);
+		//获得所有需要提醒路桥费的车辆
+		List<Car> cars = tollChargeService.getAllNeedTollCharge(helper);
+		
+		//表名
+		String excelName = "重庆渝勤公司车辆路桥费提醒表";
+		
+		//表格的title
+		List<String> title = new ArrayList<String>();
+		title.add("车牌号");
+		title.add("上次缴款日期");
+		title.add("下次缴款日期");
+		
+		//导出到excel中的类型
+		List<List<String>> allList = new ArrayList<List<String>>();
+		
+		
+		for(int i=0;i<cars.size();i++){
+			//excel表中的每一行（车牌号，上次缴款日期，下次缴款日期）
+			List<String> excelCarsList = new ArrayList<String>();
+			//车牌号（车牌号不能为空）
+			excelCarsList.add(cars.get(i).getPlateNumber());
+			//上次缴款日期，日期只保留年月日，可能为空
+			if(tollChargeService.getRecentTollCharge(cars.get(i)) != null){
+				excelCarsList.add(DateUtils.getYMDString(tollChargeService.getRecentTollCharge(cars.get(i)).getPayDate()));
+			}else{
+				excelCarsList.add("");
+			}
+			//下次缴款日期，日期只保留年月日
+			excelCarsList.add(DateUtils.getYMDString(cars.get(i).getNextTollChargeDate()));
+			
+			allList.add(excelCarsList);
+		}
+		//调用exportservice中的exportExcel接口实现表格的导出
+		exportservice.exportExcel(excelName, title, allList, response);
+
 	}
 	
 	public TollCharge getModel() {

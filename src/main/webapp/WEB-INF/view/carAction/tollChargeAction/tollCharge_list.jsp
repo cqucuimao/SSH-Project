@@ -29,7 +29,7 @@
 						<input class="inputButton" type="submit" onClick="registerClick()" value="查询"/>
 					</td>
 					<td>
-						<s:a cssClass="buttonA" action="tollCharge_remind"></s:a>
+						<s:a cssClass="buttonA" action="tollCharge_remind">路桥费缴费提醒</s:a>
 					</td>	
 					<td>
 						<s:if test="carId!=null">

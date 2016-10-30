@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.poi.util.SystemOutLogger;
+import org.objectweb.asm.commons.StaticInitMerger;
+
 public class Configuration {
 
 	private static int pageSize; 
@@ -25,10 +28,14 @@ public class Configuration {
 	private static String pullWarningSwitch=null;
 	private static String pullViolationSwitch=null;
 	private static double AgentMoneyTaxRatio;
+	private static String baiduKey = null;
+	private static String capcareToken = null;
+	private static String capcareUserId = null;
+	private static String capcareAppName = null;
 	
 	//调度员能够调度一个队列中的订单所需的最大分钟数。超过这个时间，就会被剥夺。
 	private static int depriveScheduleMinute = 10;
-
+	
 	static {
 		InputStream in = null;
 		try {
@@ -55,6 +62,10 @@ public class Configuration {
 			pullWarningSwitch=props.getProperty("pullWarningSwitch");
 			pullViolationSwitch=props.getProperty("pullViolationSwitch");
 			AgentMoneyTaxRatio=Double.valueOf(props.getProperty("AgentMoneyTaxRatio"));
+			baiduKey = props.getProperty("baiduKey");
+			capcareToken = props.getProperty("capcareToken");
+			capcareUserId = props.getProperty("capcareUserId");
+			capcareAppName = props.getProperty("capcareAppName");
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -195,5 +206,40 @@ public class Configuration {
 
 	public static void setAgentMoneyTaxRatio(double agentMoneyTaxRatio) {
 		AgentMoneyTaxRatio = agentMoneyTaxRatio;
+	}
+
+	public static String getBaiduKey() {
+		return baiduKey;
+	}
+
+	public static void setBaiduKey(String baiduKey) {
+		Configuration.baiduKey = baiduKey;
+	}
+
+	public static String getCapcareToken() {
+		System.out.println("每次都执行吗？");
+		return capcareToken;
+	}
+
+	public static void setCapcareToken(String capcareToken) {
+		Configuration.capcareToken = capcareToken;
+	}
+
+	public static String getCapcareUserId() {
+		return capcareUserId;
+	}
+
+	public static void setCapcareUserId(String capcareUserId) {
+		Configuration.capcareUserId = capcareUserId;
+	}
+
+	public static String getCapcareAppName() {
+		return capcareAppName;
+	}
+
+	public static void setCapcareAppName(String capcareAppName) {
+		Configuration.capcareAppName = capcareAppName;
 	}	
+	
+	
 }

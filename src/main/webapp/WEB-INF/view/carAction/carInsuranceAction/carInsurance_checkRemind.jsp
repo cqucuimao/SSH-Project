@@ -23,7 +23,9 @@
 			<table>
 				<tr>
 					<td>
-						<input id="export" class="inputButton" type="button" value="导出"/>
+						<s:a action="carInsurance_exportRemind" cssClass="buttonA">导出</s:a>
+					</td>
+					<td>
 						<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>
 				</tr>
@@ -51,10 +53,10 @@
 							<td>${driver.phoneNumber}</td>
 							<td style="text-align:right"><s:date name="insuranceExpiredDate" format="yyyy-MM-dd"/></td>
 							<s:if test="insuranceExpired">
-								<td>否</td>
+								<td><font color="red">是</font></td>
 							</s:if>
 							<s:else>
-								<td><font color="red">是</font></td>
+								<td>否</td>
 							</s:else>
 						</tr>
 						</s:iterator> 

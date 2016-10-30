@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.service.car.CarService;
+import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
 
 @Controller
@@ -23,6 +24,8 @@ public class ReplayAction extends BaseAction{
 	private Date beginTime;
 	
 	private Date endTime;
+	
+	private String baiduKey;
 		
 	@Autowired
 	private CarService carService;
@@ -65,6 +68,15 @@ public class ReplayAction extends BaseAction{
 		this.car = car;
 	}
 	
+	
+	public String getBaiduKey() {
+		return Configuration.getBaiduKey();
+	}
+
+	public void setBaiduKey(String baiduKey) {
+		this.baiduKey = baiduKey;
+	}
+
 	public SnVO parseCar(Car car){
 		SnVO snVO=new SnVO();
 		snVO.setSn(car.getDevice().getSN());

@@ -101,7 +101,7 @@
         </div>
         <div id="BaiduMap"></div>
     </div>
-    <script src="http://api.map.baidu.com/api?v=2.0&ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd"></script>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=${baiduKey }"></script>
     <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="js/LuShuUpdate.js"></script>
     <script type="text/javascript" src="js/jquery-ui/jquery-ui.min.js"></script>

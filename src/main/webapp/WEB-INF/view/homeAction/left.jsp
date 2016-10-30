@@ -321,6 +321,22 @@
 			</s:if>
 		</dl>
 		</s:if>
+		
+		<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter') ">
+		<dl>
+			<dt>
+				<i class="icon-menu-customer"></i>
+				配置
+				<div class="group-collapsed"></div>
+			</dt>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_employees') ">
+			<dd>
+				<s:a action="businessParameter_employees">配置</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+		</dl>
+		</s:if>
 	</div>
 	<script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="<%=basePath %>js/left.js"></script>

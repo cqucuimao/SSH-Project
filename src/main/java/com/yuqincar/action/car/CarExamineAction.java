@@ -1,6 +1,8 @@
 package com.yuqincar.action.car;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,7 @@ import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarExamineService;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.CarViolationService;
+import com.yuqincar.service.common.ExportService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
@@ -52,6 +55,9 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 	
 	@Autowired
 	private CarViolationService carViolationService;
+	
+	@Autowired
+	private ExportService exportservice;
 	
 	@Autowired
 	private UserService userService;
@@ -295,6 +301,79 @@ public class CarExamineAction extends BaseAction implements ModelDriven<CarExami
 		return "carExamineDetail";
 	}
 	
+	//导出年审提醒到excel表格
+	public void exportRemind() throws IOException{
+		QueryHelper helper = new QueryHelper(Car.class, "c");
+		
+		Date now=new Date();
+		Date b = new Date(now.getTime() +  24*60*60*1000 * 15L );
+		helper.addWhereCondition("c.nextExaminateDate < ? and c.status=? and c.borrowed=?", b,CarStatusEnum.NORMAL,false);	
+		if(yearMonth != null && yearMonth.length()>0){
+			String ymd = yearMonth + "-01";
+			Date d1= DateUtils.getYMD(ymd);
+			Date d2 = DateUtils.getEndDateOfMonth(d1);
+			helper.addWhereCondition("(TO_DAYS(c.nextExaminateDate) - TO_DAYS(?)) >=0 and (TO_DAYS(c.nextExaminateDate) - TO_DAYS(?)) <= 0", d1,d2);
+		}		
+		helper.addOrderByProperty("c.nextExaminateDate", true);	
+		//所有需要年审的车辆
+		List<Car> cars=carExamineService.getAllNeedExamineCars(helper);
+		
+		//表名
+		String excelName = "重庆渝勤公司车辆年审提醒表";
+		
+		//表格的title
+		List<String> title = new ArrayList<String>();
+		title.add("车牌号");
+		title.add("司机");
+		title.add("手机");
+		title.add("年检到期时间");
+		title.add("违章数量");
+		title.add("协议用车");
+		
+		//导出到excel中的类型
+		List<List<String>> allList = new ArrayList<List<String>>();
+		
+		
+		for(int i=0;i<cars.size();i++){
+			//excel表中的每一行（车牌号，司机，手机，年检到期时间，违章数量，是否为协议用车）
+			List<String> excelCarsList = new ArrayList<String>();
+			//车牌号（车牌号不能为空）
+			excelCarsList.add(cars.get(i).getPlateNumber());
+			//司机(司机可能为空)
+			if(cars.get(i).getDriver() != null){
+				excelCarsList.add(cars.get(i).getDriver().getName());
+			}else{
+				excelCarsList.add("");
+			}
+			//手机号，即司机手机号码
+			if(cars.get(i).getDriver() != null){
+				excelCarsList.add(cars.get(i).getDriver().getPhoneNumber()+"");
+			}else{
+				excelCarsList.add("");
+			}
+			//年检到期时间,日期只保留年月日
+			excelCarsList.add(DateUtils.getYMDString(cars.get(i).getNextExaminateDate()));
+			//违章数量
+			String carViolationCount = "";
+			List<CarViolation> carViolations = carViolationService.getCarViolationByCar(cars.get(i));
+			if(carViolations != null && carViolations.size()>0){
+				carViolationCount = carViolations.size()+"";
+			}
+			excelCarsList.add(carViolationCount);
+			//是否协议用车
+			String protocolInfo = "";
+			Order order = orderService.getProtocolOrderByCar(cars.get(i));
+			if(order != null){
+				protocolInfo = order.getCustomerOrganization().getName()+"("+order.getCustomer().getName()+" "+order.getPhone()+")";
+			}
+			excelCarsList.add(protocolInfo);
+			
+			allList.add(excelCarsList);
+			
+		}
+		//调用exportservice中的exportExcel接口实现表格的导出
+		exportservice.exportExcel(excelName, title, allList, response);
+	}
 
 	public CarExamine getModel() {
 		if(model==null)

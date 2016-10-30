@@ -37,6 +37,8 @@ public interface CarExamineService {
 	 */
 	public PageBean<Car> getNeedExamineCars(int pageNum,QueryHelper helper);
 	
+	public List<Car> getAllNeedExamineCars(QueryHelper helper);
+	
 	public Date getNextExamineDate(Car car, Date recentExamineDate);
 
 }

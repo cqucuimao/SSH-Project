@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.HttpMethod;
 
 @Controller
@@ -18,7 +19,7 @@ import com.yuqincar.utils.HttpMethod;
 public class BaiduApiAction {
 	
 	private final static String BASEURL = "http://api.map.baidu.com/geoconv/v1/?";
-	private static final String ENDURL = "&from=1&to=5&ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd";
+	private static final String ENDURL = "&from=1&to=5&ak="+Configuration.getBaiduKey();
 	public void api() {
 		PrintWriter out;
 		HttpServletRequest request = (HttpServletRequest) ActionContext.getContext()

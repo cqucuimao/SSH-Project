@@ -34,6 +34,9 @@ public interface CarInsuranceService {
 	 */
 	public PageBean<Car> getNeedInsuranceCars(int pageNum);
 	
+	//获取所有需要提醒保险过期的车辆，不分页
+	public List<Car> getAllNeedInsuranceCars(QueryHelper helper);
+	
 	public BigDecimal statisticCarInsurance(Date fromDate, Date toDate);
 	
 	public void saveCommercialInsuranceType(CommercialInsuranceType commercialInsuranceType);

@@ -7,15 +7,16 @@
 			<h1>路桥费缴款提醒</h1>
 		</div>
 		<div class="editBlock search">
-			<s:form id="exportForm" action="tollCharge_remindExport">
 			<table>
 				<tr>
 					<td>
-						<input id="export" class="inputButton" type="button" value="导出"/>
+						<s:a cssClass="buttonA" action="tollCharge_exportRemind">导出</s:a>
+					</td>
+					<td>
+					<a class="p15" href="javascript:history.go(-1);">返回</a>
 					</td>
 				</tr>
 			</table>
-			</s:form>
 		</div>
 		<div class="dataGrid">
 			<div class="tableWrap">

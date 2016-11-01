@@ -76,13 +76,10 @@ public class LoginAction extends BaseAction{
 			user = userService.getByLoginNameAndPassword(loginName, password,company!=null ? company.getId() : 0);
 		}
 		else{
-			System.out.println("1");
 			if(company==null)
 			{
-				System.out.println("2");
 				List<User> Sameusers=new ArrayList<User>();
 				Sameusers=userService.getUsersByLoginName(loginName);
-				System.out.println("size="+Sameusers.size());
 				if(Sameusers.size()>1)
 				{   
 					List<Company> companies=new ArrayList<Company>();
@@ -95,8 +92,6 @@ public class LoginAction extends BaseAction{
 				else if(Sameusers.size()==1)
 					company=Sameusers.get(0).getCompany();	
 			}
-			System.out.println("3");
-			System.out.println("loginName="+loginName+",company="+(company!=null ? company.getId() : 0));
 			user=userService.getByLoginName(loginName, company!=null ? company.getId() : 0);
 		}
 

@@ -46,6 +46,7 @@ public class LoginAction extends BaseAction{
 
 	/** 登录 */
 	public String login() throws Exception {
+		System.out.println("in login");
 		User user;
 		if(devMode.equals("false"))
 		{
@@ -54,7 +55,7 @@ public class LoginAction extends BaseAction{
 				List<User> Sameusers=new ArrayList<User>();
 				Sameusers=userService.getUsersByLoginName(loginName);
 				if(Sameusers.size()>1)
-				{   //todo 得到有这个用户的公司，然后返回给login界面去选择，并重新登录
+				{   
 					List<Company> companies=new ArrayList<Company>();
 					for(int i=0;i<Sameusers.size();i++)
 						companies.add(Sameusers.get(i).getCompany());
@@ -75,13 +76,15 @@ public class LoginAction extends BaseAction{
 			user = userService.getByLoginNameAndPassword(loginName, password,company!=null ? company.getId() : 0);
 		}
 		else{
-
+			System.out.println("1");
 			if(company==null)
 			{
+				System.out.println("2");
 				List<User> Sameusers=new ArrayList<User>();
 				Sameusers=userService.getUsersByLoginName(loginName);
+				System.out.println("size="+Sameusers.size());
 				if(Sameusers.size()>1)
-				{   //todo 得到有这个用户的公司，然后返回给login界面去选择，并重新登录
+				{   
 					List<Company> companies=new ArrayList<Company>();
 					for(int i=0;i<Sameusers.size();i++)
 						companies.add(Sameusers.get(i).getCompany());
@@ -92,6 +95,8 @@ public class LoginAction extends BaseAction{
 				else if(Sameusers.size()==1)
 					company=Sameusers.get(0).getCompany();	
 			}
+			System.out.println("3");
+			System.out.println("loginName="+loginName+",company="+(company!=null ? company.getId() : 0));
 			user=userService.getByLoginName(loginName, company!=null ? company.getId() : 0);
 		}
 

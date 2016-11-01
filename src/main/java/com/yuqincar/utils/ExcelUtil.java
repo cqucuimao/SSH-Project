@@ -6,10 +6,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.shape.Line;
-
-import org.apache.commons.lang3.StringUtils;
-
 import jxl.Cell;
 import jxl.Range;
 import jxl.Sheet;
@@ -18,6 +14,8 @@ import jxl.write.Label;
 import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class ExcelUtil {
 	public static String MERGE_LEFT = "${L}";

@@ -1,4 +1,4 @@
-insert into company(id,name,logoName) values(1,'渝勤汽车','yuqinLogo.png');
+insert into company(id,name,logoName,cooperationOrderPrefix,orderPrefix) values(1,'渝勤汽车','yuqinLogo.png','W','YQ');
 update car set company_id=1;
 update carcare set company_id=1;
 update carcareappointment set company_id=1;

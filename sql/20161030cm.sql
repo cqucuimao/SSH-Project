@@ -1,9 +1,9 @@
-insert into privilege(id,name,url,parent_id) values(392,'µ¼³öÄêÉóÌáĞÑ','/carExamine_exportRemind',181);
-insert into privilege(id,name,url,parent_id) values(393,'µ¼³ö±£ÏÕÌáĞÑ','/carInsurance_exportRemind',144);
-insert into privilege(id,name,url,parent_id) values(394,'µ¼³öÂ·ÇÅ·ÑÌáĞÑ','/tollCharge_exportRemind',195);
+insert into privilege(id,name,url,parent_id) values(392,'å¯¼å‡ºå¹´å®¡æé†’','/carExamine_exportRemind',181);
+insert into privilege(id,name,url,parent_id) values(393,'å¯¼å‡ºä¿é™©æé†’','/carInsurance_exportRemind',144);
+insert into privilege(id,name,url,parent_id) values(394,'å¯¼å‡ºè·¯æ¡¥è´¹æé†’','/tollCharge_exportRemind',195);
 
-insert into role(id,name) values(21,'ÅäÖÃÈËÔ±');
-insert into privilege(id,name,url) values(395,'ÅäÖÃ','/businessParameter');
+insert into role(id,name) values(21,'é…ç½®äººå‘˜');
+insert into privilege(id,name,url) values(395,'é…ç½®','/businessParameter');
 insert into privilege(id,name,url,parent_id) values(396,'','/businessParameter_employees',395);
 insert into role_privilege(roles_id,privileges_id)
 values (21,396);

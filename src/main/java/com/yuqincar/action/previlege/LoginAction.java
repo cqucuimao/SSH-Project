@@ -46,7 +46,6 @@ public class LoginAction extends BaseAction{
 
 	/** 登录 */
 	public String login() throws Exception {
-		System.out.println("in login");
 		User user;
 		if(devMode.equals("false"))
 		{

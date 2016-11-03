@@ -22,7 +22,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td class="on"><a href="#"><span>预约车辆年审</span></a></td>
+				    <td class="on"><a href="#"><span>预约车df辆年审</span></a></td>
 					<td><s:a action="carExamine_list"><span>车辆年审记录</span></s:a></td>
 				</tr>
 			</table>
@@ -64,10 +64,10 @@
 					
 					<thead>
 						<tr>
-							<th><s:property value="tr.getText('car.CarExamine.car')" /></th>
-							<th><s:property value="tr.getText('car.CarExamine.driver')" /></th>
-              				<th><s:property value="tr.getText('car.CarExamine.date')" /></th>
-              				<th><s:property value="tr.getText('car.CarExamine.done')" /></th>
+							<th><s:property value="tr.getText('car.CarExamineAppointment.car')" /></th>
+							<th><s:property value="tr.getText('car.CarExamineAppointment.driver')" /></th>
+              				<th><s:property value="tr.getText('car.CarExamineAppointment.date')" /></th>
+              				<th><s:property value="tr.getText('car.CarExamineAppointment.done')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>

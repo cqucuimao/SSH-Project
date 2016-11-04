@@ -50,7 +50,7 @@ public class LoginAction extends BaseAction{
 		if(devMode.equals("false"))
 		{
 			if(company==null)
-			{
+			{ 
 				List<User> Sameusers=new ArrayList<User>();
 				Sameusers=userService.getUsersByLoginName(loginName);
 				if(Sameusers.size()>1)
@@ -113,6 +113,9 @@ public class LoginAction extends BaseAction{
 	/** 注销 */
 	public String logout() throws Exception {
 		ActionContext.getContext().getSession().remove("user");
+		ActionContext.getContext().getSession().remove("company");
+		ActionContext.getContext().getSession().remove("companyLogoName");
+		ActionContext.getContext().getSession().remove("userPrivileges");
 		return "logout";
 	}
 	

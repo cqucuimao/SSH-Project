@@ -30,7 +30,7 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 			return null;
 		}
 		
-		return (User)getSession().createQuery("from User u where u.loginName=? and u.company.id=?")//
+		return (User)getSession().createQuery("from User where loginName=? and company.id=?")//
 					.setParameter(0, loginName).setParameter(1, companyId).uniqueResult();
 	}
 		
@@ -39,7 +39,7 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
  			return null;
  		}
  		
- 		return (List<User>)getSession().createQuery("from User u where u.loginName=?")//
+ 		return (List<User>)getSession().createQuery("from User where loginName=?")//
  					.setParameter(0, loginName).list();
 	}
 	
@@ -53,7 +53,7 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		if(loginName == null || password == null || companyId==0) 
 			return null;
 		return (User) getSession().createQuery(
-					"FROM User u WHERE u.loginName=? AND u.password=? AND u.company.id=?")
+					"FROM User WHERE loginName=? AND password=? AND company.id=?")
 					.setParameter(0, loginName)
 					.setParameter(1, password)
 					.setParameter(2, companyId)

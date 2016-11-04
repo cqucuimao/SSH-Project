@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.common.Company;
@@ -21,6 +22,7 @@ import com.yuqincar.domain.common.VerificationCode;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.service.common.VerificationCodeService;
+import com.yuqincar.service.privilege.CompanyService;
 import com.yuqincar.service.privilege.PrivilegeService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.service.sms.SMSService;
@@ -36,6 +38,8 @@ public class AppUserAction extends BaseAction implements Preparable{
 	@Autowired
 	private VerificationCodeService codeService;
 	@Autowired
+	private CompanyService companyService;
+	@Autowired
 	private SMSService smsService;
 	
 	private User user;
@@ -47,10 +51,15 @@ public class AppUserAction extends BaseAction implements Preparable{
 	private String userCode;
 
 	public void prepare() throws Exception {
-		System.out.println("in AppUserAction prepare");
 		String username = request.getParameter("username");
 		String password = request.getParameter("pwd");
 		String companyId = request.getParameter("companyId");
+		
+		if(!StringUtils.isEmpty(companyId)){
+			Company company=companyService.getCompanyById(Long.valueOf(companyId));
+			ActionContext.getContext().getSession().put("company", company);
+		}
+		
 		if(!StringUtils.isEmpty(companyId))
 			user = userService.getByLoginNameAndMD5Password(username, password,Long.valueOf(companyId));
 		//本Action主要用于司机APP，但是有getSMSCode方法同时被司机APP和下单APP使用。当下单APP使用getSMSCode方法时，不需要user对象。
@@ -76,7 +85,6 @@ public class AppUserAction extends BaseAction implements Preparable{
 			this.writeJson("{status:false}");
 		}
 		String md5 = DigestUtils.md5Hex(newPwd);
-		System.out.println(md5);
 		user.setPassword(md5);
 		userService.update(user);
 		this.writeJson("{\"status\":true}");

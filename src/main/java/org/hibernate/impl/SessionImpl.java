@@ -143,7 +143,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.yuqincar.domain.privilege.User;
+import com.yuqincar.domain.common.Company;
 
 
 /**
@@ -1766,36 +1766,35 @@ public final class SessionImpl extends AbstractSessionImpl
 	}
 	
 	public Query createQuery(String queryString) {
-		User user=null;
+		Company company=null;
 		//系统定时任务执行时，ActionContext.getContext()为空，不能获取User对象
 		if(ActionContext.getContext()!=null)
-			user=(User) ActionContext.getContext().getSession().get("user");
+			company=(Company) ActionContext.getContext().getSession().get("company");
 		
-		if(user!=null)
+		if(company!=null)
 		{
-			//TODO 在这里将当前用户的company作为查询条件插入到queryString之中
-			 if(user.getCompany().getId()!=null && !(queryString.contains(" where company is null")
+			if(company.getId()!=null && !(queryString.contains(" where company is null")
 					 ||queryString.contains(" Where company is null")||queryString.contains(" WHERE company is null")))
 			 {
 					 if(queryString.contains("where "))
-						    queryString=queryString.replaceAll("where ","where company="+user.getCompany().getId()+" "+"and"+" ");
+						    queryString=queryString.replaceAll("where ","where company="+company.getId()+" "+"and"+" ");
 					 if(queryString.contains("Where "))
-						    queryString=queryString.replaceAll("Where ","where company="+user.getCompany().getId()+" "+"and"+" ");
+						    queryString=queryString.replaceAll("Where ","where company="+company.getId()+" "+"and"+" ");
 					 if(queryString.contains("WHERE "))
-						    queryString=queryString.replaceAll("WHERE ","where company="+user.getCompany().getId()+" "+"and"+" ");
+						    queryString=queryString.replaceAll("WHERE ","where company="+company.getId()+" "+"and"+" ");
 					 if(!(queryString.contains("where ")||queryString.contains("Where ")||
 								queryString.contains("WHERE "))&&queryString.contains("order by"))
-						    queryString= queryString.replaceAll("order by","where company="+user.getCompany().getId()+" "+"order by");
+						    queryString= queryString.replaceAll("order by","where company="+company.getId()+" "+"order by");
 					 if(!(queryString.contains("where ")||queryString.contains("Where ")||
 								queryString.contains("WHERE "))&&queryString.contains("Order By"))
-						    queryString= queryString.replaceAll("Order By","where company="+user.getCompany().getId()+" "+"Order By");
+						    queryString= queryString.replaceAll("Order By","where company="+company.getId()+" "+"Order By");
 					 if(!(queryString.contains("where ")||queryString.contains("Where ")||
 								queryString.contains("WHERE "))&&queryString.contains("ORDER BY"))
-						    queryString= queryString.replaceAll("ORDER BY","where company="+user.getCompany().getId()+" "+"ORDER BY");
+						    queryString= queryString.replaceAll("ORDER BY","where company="+company.getId()+" "+"ORDER BY");
 					if(!(queryString.contains("where ")||queryString.contains("Where ")||
 							queryString.contains("WHERE ")||queryString.contains("order by")||
 							queryString.contains("ORDER BY")||queryString.contains("ORDER BY")))
-						    queryString+=" "+"where company="+user.getCompany().getId();
+						    queryString+=" "+"where company="+company.getId();
 			}			    
 				    
 		}

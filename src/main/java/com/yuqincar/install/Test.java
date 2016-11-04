@@ -23,8 +23,8 @@ import com.yuqincar.utils.DateUtils;
 public class Test {
 
 	public static void main(String[] args) {
-		System.out.println(DateUtils.getMinDate(DateUtils.getYMD("2016-09-20")).getTime());
-		System.out.println(DateUtils.getMaxDate(DateUtils.getYMD("2016-10-04")).getTime());
+		System.out.println(DateUtils.getMinDate(DateUtils.getYMD("2016-11-5")).getTime());
+		System.out.println(DateUtils.getMaxDate(DateUtils.getYMD("2016-11-5")).getTime());
 	}
 	
 	private static void testURLEncode(){

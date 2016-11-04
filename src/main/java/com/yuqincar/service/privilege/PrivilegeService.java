@@ -3,8 +3,8 @@ package com.yuqincar.service.privilege;
 import java.util.Collection;
 import java.util.List;
 
+import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.privilege.Privilege;
-import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.base.BaseService;
 

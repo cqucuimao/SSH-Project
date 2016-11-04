@@ -56,8 +56,6 @@ public class CarServiceImpl implements CarService {
 	}
 
 	public Car getCarById(long id) {
-		System.out.println("carDao="+carDao);
-		System.out.println("ID="+id);
 		return carDao.getById(id);
 	}
 

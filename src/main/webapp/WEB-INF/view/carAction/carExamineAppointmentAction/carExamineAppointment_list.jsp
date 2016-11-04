@@ -22,7 +22,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-				    <td class="on"><a href="#"><span>预约车df辆年审</span></a></td>
+				    <td class="on"><a href="#"><span>预约车辆年审</span></a></td>
 					<td><s:a action="carExamine_list"><span>车辆年审记录</span></s:a></td>
 				</tr>
 			</table>

@@ -29,6 +29,7 @@ public class InsuranceExpired {
 			if(car.getInsuranceExpiredDate()==null ||
 				car.getInsuranceExpiredDate().before(now)){
 				car.setInsuranceExpired(true);
+				car.setLastUpdateTime(now);
 				carService.updateCar(car);
 			}
 		}

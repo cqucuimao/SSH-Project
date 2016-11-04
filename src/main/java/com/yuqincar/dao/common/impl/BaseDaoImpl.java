@@ -10,11 +10,11 @@ import javax.annotation.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.annotations.Where;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.dao.common.BaseDao;
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.DeleteRecord;
 import com.yuqincar.domain.privilege.User;
@@ -47,18 +47,22 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		return sessionFactory.getCurrentSession();
 	}
 	
+	private Company getCurrentOperatorCompany() {
+		if(ActionContext.getContext()!=null)
+			return (Company)ActionContext.getContext().getSession().get("company");
+		return null;
+	}
+	
 	private User getCurrentUser() {
 		if(ActionContext.getContext()!=null)
-			return (User) ActionContext.getContext().getSession().get("user");
+			return (User)ActionContext.getContext().getSession().get("user");
 		return null;
 	}
 
 	public void save(T entity) {
-		if(entity instanceof BaseEntity) {
-			
+		if(entity instanceof BaseEntity) {			
 			BaseEntity baseEntity = (BaseEntity)entity;
-			if(getCurrentUser()!=null)
-				baseEntity.setCompany(getCurrentUser().getCompany());
+			baseEntity.setCompany(getCurrentOperatorCompany());
 			User user = getCurrentUser();
 			baseEntity.setCreator(user);
 			baseEntity.setLastUpdator(user);

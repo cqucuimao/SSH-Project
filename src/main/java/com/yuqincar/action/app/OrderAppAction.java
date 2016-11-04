@@ -14,9 +14,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSON;
+import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.VerificationCode;
 import com.yuqincar.domain.order.ChargeModeEnum;
@@ -26,6 +28,7 @@ import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserAPPDeviceTypeEnum;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;
@@ -33,6 +36,7 @@ import com.yuqincar.service.common.DiskFileService;
 import com.yuqincar.service.common.VerificationCodeService;
 import com.yuqincar.service.customer.CustomerService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.privilege.CompanyService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
@@ -98,6 +102,8 @@ public class OrderAppAction extends BaseAction{
 	
 	private String deviceToken;
 	
+	private String companyId;
+	
 	@Autowired
 	private CustomerOrganizationService customerOrganizationService;
 	
@@ -116,25 +122,55 @@ public class OrderAppAction extends BaseAction{
 	@Autowired
 	private DiskFileService diskFileService;
 	
+	@Autowired
+	private CompanyService companyService;
+	
+	private boolean checkPrivilege(){
+		System.out.println("in checkPrivilege,phoneNumber="+phoneNumber+",validationCode="+validationCode);
+		if(phoneNumber==null || phoneNumber.length()==0 || !StringUtils.isNumeric(phoneNumber) ||
+				validationCode==null || validationCode.length()==0)
+			return false;
+		System.out.println("1");
+		VerificationCode sendCode = verificationCodeService.getByPhoneNumber(phoneNumber);
+		if(sendCode ==null ||  !sendCode.getCode().equals(validationCode)){
+			System.out.println("2");
+			return false;
+		}else{
+			System.out.println("3");
+			if(StringUtils.isEmpty(companyId)){
+				System.out.println("4");
+				return false;
+			}else{
+				System.out.println("5");
+				Company company=companyService.getCompanyById(Long.valueOf(companyId));
+				if(company==null){
+					System.out.println("6");					
+					return false;
+				}else{
+					System.out.println("7");
+					ActionContext.getContext().getSession().put("company", company);
+					return true;
+				}
+			}
+		}
+	}
+	
 	public void searchCustomerOrganization(){
+		if(!checkPrivilege()){
+			writeJson("{\"status\":\"unauthorized\"}");
+			return;
+		}
+		if(StringUtils.isEmpty(keyword)){
+			writeJson("{\"status\":\"badParameter\"}");
+			return;
+		}
+		
 		PageBean<CustomerOrganization> pageBean=customerOrganizationService.queryCustomerOrganizationByKeyword(keyword);
 		List<String> names=new ArrayList<String>(pageBean.getRecordList().size());
 		for(CustomerOrganization co:pageBean.getRecordList())
 			names.add(co.getName());
 		String json = JSON.toJSONString(names);
 		writeJson(json);		
-	}
-	
-	private boolean checkPrivilege(){
-		if(phoneNumber==null || phoneNumber.length()==0 || !StringUtils.isNumeric(phoneNumber) ||
-				validationCode==null || validationCode.length()==0)
-			return false;
-		
-		VerificationCode sendCode = verificationCodeService.getByPhoneNumber(phoneNumber);
-		if(sendCode ==null ||  !sendCode.getCode().equals(validationCode))
-			return false;
-		else
-			return true;
 	}
 	
 	public void login(){		
@@ -145,7 +181,6 @@ public class OrderAppAction extends BaseAction{
 	}
 	
 	public void registCustomerInfo(){
-		System.out.println("in registCustomerInfo");
 		if(!checkPrivilege()){
 			writeJson("{\"status\":\"unauthorized\"}");
 			return;
@@ -159,36 +194,21 @@ public class OrderAppAction extends BaseAction{
 	}
 	
 	public void getAllCarServiceType(){
-		System.out.println("in getAllCarServiceType");
-		System.out.println("validationCode="+validationCode);
-		System.out.println("phoneNumber="+phoneNumber);
 		if(!checkPrivilege()){
-			System.out.println("unauthorized");
 			writeJson("{\"status\":\"unauthorized\"}");
 			return;
 		}
-		System.out.println("1");
 		Customer customer=customerService.getCustomerByPhoneNumber(phoneNumber);
 		List<CarServiceTypeVO> list=new LinkedList<CarServiceTypeVO>();
 		for(CarServiceType cst:carService.getAllCarServiceType()){
 			CarServiceTypeVO cstvo=new CarServiceTypeVO();
 			cstvo.setId(cst.getId().intValue());
 			cstvo.setName(cst.getTitle());
-			System.out.println(customer);
-			System.out.println(customer.getCustomerOrganization());
-			System.out.println(customer.getCustomerOrganization().getPriceTable());
-			System.out.println(customer.getCustomerOrganization().getPriceTable().
-					getCarServiceType());
-			System.out.println(customer.getCustomerOrganization().getPriceTable().
-					getCarServiceType().get(cst));
-			System.out.println(customer.getCustomerOrganization().getPriceTable().
-					getCarServiceType().get(cst).toPriceDescription());
 			cstvo.setPriceDescription(customer.getCustomerOrganization().getPriceTable().
 					getCarServiceType().get(cst).toPriceDescription());
 			list.add(cstvo);
 		}
 		String json = JSON.toJSONString(list);
-		System.out.println("json");
 		writeJson(json);
 	}
 	
@@ -871,6 +891,14 @@ public class OrderAppAction extends BaseAction{
 
 	public void setToAddress(String toAddress) throws UnsupportedEncodingException {
 		this.toAddress = URLDecoder.decode(toAddress,"UTF-8");
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 
 	class CarServiceTypeVO{

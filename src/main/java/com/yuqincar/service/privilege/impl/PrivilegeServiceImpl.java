@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.dao.privilege.PrivilegeDao;
+import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.privilege.Privilege;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;

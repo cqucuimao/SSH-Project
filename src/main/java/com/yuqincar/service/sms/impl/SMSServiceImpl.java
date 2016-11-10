@@ -18,7 +18,6 @@ import com.google.gson.reflect.TypeToken;
 import com.yuqincar.domain.message.SMSQueue;
 import com.yuqincar.service.message.SMSQueueService;
 import com.yuqincar.service.sms.SMSService;
-import com.yuqincar.token.MessageToken;
 import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.HttpInvoker;

@@ -569,7 +569,7 @@
 	              tracksLocation[index] = BaiduLocations;
     		 });
     		 //将ajax请求恢复为异步请求
-       		 $.ajaxSettings.async=false;
+       		 $.ajaxSettings.async=true;
          }
          
         //初始化播放栏

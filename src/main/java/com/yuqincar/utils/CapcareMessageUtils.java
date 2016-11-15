@@ -30,11 +30,12 @@ public class CapcareMessageUtils {
 		JSONArray notNullDevices = new JSONArray();
 		//需要访问百度API进行坐标转换，每次最多100个坐标
 		int sum = devices.size();
-		//去除其中坐标为0的元素		
+		//去除其中坐标为0的元素  && 去除mode不为A的元素
 		for(int i=0;i<sum;i++){
 			String lng = devices.getJSONObject(i).getJSONObject("position").get("lng").toString();
 			String lat = devices.getJSONObject(i).getJSONObject("position").get("lat").toString();
-			if(! lng.equals("0.0") && ! lat.equals("0.0")){
+			String mode = devices.getJSONObject(i).getJSONObject("position").get("mode").toString();
+			if(! lng.equals("0.0") && ! lat.equals("0.0") && mode.equals("A")){
 				notNullDevices.add(devices.getJSONObject(i));
 			}
 		}

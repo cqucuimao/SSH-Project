@@ -157,7 +157,6 @@
    
    //对当前所有选中车辆进行分组刷新
    function flushByGroup(){
-	   //$.ajaxSettings.async=false; 
  	       //如果被监控的车辆数目大于0
      	   var allSelectedCars=new Array();  //用于保存被勾选的车辆信息及相应的gps经纬度数据的 连续数组	
      	   var index=0; 
@@ -176,7 +175,7 @@
      		       }
      		    }
      	   }
-
+		  
      	   if(allSelectedCars.length>0){
 	     		 for(var i=0;i<allSelectedCars.length;i++){
 	     			  var plateNumber=allSelectedCars[i][0];
@@ -243,7 +242,11 @@
     	      		         if(checkboxStatus[carId]== true){
     	      		        	map.addOverlay(marker);     // 将标注添加到地图中       
     	      		         }
-	    	      		       	
+    	      		       	 marker.addEventListener('mouseover', function(){
+    	      		       		 marker.setTop(true);
+    	      		       		 //marker.setShadow(ic);
+    	      		       		 //marker.setZIndex(100000000);
+    	      		       	 });
         	      		     //非常重要的一个问题
         	      		     //这里有一个关键问题  批量事件绑定环境下   响应函数需要的参数的变化问题   使用 闭包 将局部变量carId 和 carPlateNumber 作为参数传递到 事件响应函数中去
         	      		     marker.addEventListener('click',(function(myCarId,myCarPlateNumber){
@@ -368,8 +371,8 @@
     	//获取所有未报废的车辆  此处由于alarmAction中已经存在该方法，所以直接向此action发送请求
     	$.get("realtime_allNormalCars.action"+"?timestamp="+new Date().getTime(),function(allNormalCars){
     		
-    		console.log("***********所有车辆的信息");
-    		console.log(allNormalCars);
+    		console.log("*****所有车辆的信息******");
+    		console.log("监控界面中车辆="+allNormalCars.length);
     		
     		
     		for(var i=0;i<allNormalCars.length;i++){
@@ -398,9 +401,7 @@
    			}
     	});
     	$.ajaxSettings.async=true;
-    	console.log("执行前！");
     	flushByGroup();
-    	console.log("执行后！");
     }
     
     //清除所有车辆

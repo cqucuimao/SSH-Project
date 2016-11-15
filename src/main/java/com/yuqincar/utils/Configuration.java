@@ -43,6 +43,7 @@ public class Configuration {
 			Properties props = new Properties();
 			in = Configuration.class.getClassLoader().getResourceAsStream(
 					"default.properties");
+			
 			BufferedReader bf = new BufferedReader(new InputStreamReader(in,"UTF-8"));
 			props.load(bf);
 			
@@ -217,7 +218,6 @@ public class Configuration {
 	}
 
 	public static String getCapcareToken() {
-		System.out.println("每次都执行吗？");
 		return capcareToken;
 	}
 

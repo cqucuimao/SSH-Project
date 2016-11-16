@@ -78,11 +78,6 @@
 			</s:form>
 		</div>
 	</div>
-	<!-- <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	<script type="text/javascript" src="js/common.js"></script>	
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script> -->
 	<script type="text/javascript">
 		$(function(){
 			formatDateField2($("#beginDate"));

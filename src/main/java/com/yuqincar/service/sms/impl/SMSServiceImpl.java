@@ -31,6 +31,7 @@ public class SMSServiceImpl implements SMSService {
 	private static String APP_ID = "593884530000249253";//应用ID------登录平台在应用设置可以找到
 	private static String APP_SECRET = "ba1a8529eef141b3d5b631d998f33fd0";//应用secret-----登录平台在应用设置可以找到
 	private static int SMS_TRY_TIMES = 6;
+	private static String SEND_SUCCESS_TEMPLATE="{\"res_code\":0,\"res_message\":\"Success\",\"idertifier\":\"90610913090118406454\"}";
 	
 	@Autowired
 	private SMSQueueService sMSQueueService;
@@ -63,9 +64,10 @@ public class SMSServiceImpl implements SMSService {
 		//验证码短信不需要打开开关。这是为了使测试服务器能够正常发送验证码。
 		if("on".equals(Configuration.getSmsSwitch()) || templateId.equals(SMSService.SMS_TEMPLATE_VERFICATION_CODE)){
 			resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
+			System.out.println("***resJson="+resJson);
 		}else{
 			sendSMSToFile(phoneNumber,templateId,paramString);
-			resJson="{\"res_code\":0,\"res_message\":\"Success\",\"idertifier\":\"90610913090118406454\"}";
+			resJson=SEND_SUCCESS_TEMPLATE;
 		}
 		return resJson;
 	}
@@ -79,6 +81,7 @@ public class SMSServiceImpl implements SMSService {
 			String resJson=sendTemplateSMS(phoneNumber,templateId,template_param);
 			return resJson;
 		}catch(Exception e){
+			e.printStackTrace();
 			SMSQueue sq=new SMSQueue();
 			sq.setPhoneNumber(phoneNumber);
 			sq.setTemplateId(templateId);
@@ -86,7 +89,7 @@ public class SMSServiceImpl implements SMSService {
 			sq.setInQueueDate(new Date());
 			sq.setTryTimes(0);
 			sMSQueueService.saveSMSQueue(sq);
-			return "Success";
+			return SEND_SUCCESS_TEMPLATE;
 		}
 	}
 	

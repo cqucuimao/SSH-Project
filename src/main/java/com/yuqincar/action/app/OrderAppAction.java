@@ -28,7 +28,6 @@ import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
-import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserAPPDeviceTypeEnum;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;

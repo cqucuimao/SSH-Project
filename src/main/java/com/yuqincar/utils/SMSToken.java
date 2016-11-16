@@ -19,7 +19,6 @@ public class SMSToken {
 		//System.out.println(str);
 		JSONObject json = JSONObject.fromObject(str);
 		String token = json.getString("access_token");
-		System.out.println("token="+token);
 		/**{"res_code":"0",
 		 * 	  "res_message":"Success",
 		 *	  "access_token":"cac0fe969bf628b0b8b16afdfd0e517c1474371427613",

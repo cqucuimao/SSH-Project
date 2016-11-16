@@ -7,6 +7,7 @@ import java.util.Date;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 
 import com.baidu.yun.core.log.YunLogEvent;
@@ -23,8 +24,7 @@ import com.yuqincar.utils.DateUtils;
 public class Test {
 
 	public static void main(String[] args) {
-		System.out.println(DateUtils.getMinDate(DateUtils.getYMD("2016-11-5")).getTime());
-		System.out.println(DateUtils.getMaxDate(DateUtils.getYMD("2016-11-5")).getTime());
+		System.out.println(DigestUtils.md5Hex("813583"));
 	}
 	
 	private static void testURLEncode(){

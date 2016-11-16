@@ -3,9 +3,7 @@ package com.yuqincar.service.car.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,18 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.car.CarExamineDao;
-import com.yuqincar.dao.car.TollChargeDao;
 import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarExamine;
-import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarExamineService;
+import com.yuqincar.service.car.TollChargeService;
 import com.yuqincar.service.sms.SMSService;
-import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
 @Service
@@ -36,11 +30,11 @@ public class CarExamineServiceImpl implements CarExamineService {
 	@Autowired
 	private SMSService smsService;
 	@Autowired
-	private TollChargeDao tollChargeDao;
+	private TollChargeService tollChargeService;
 
 	@Transactional
 	public void saveCarExamine(CarExamine carExamine,TollCharge tollCharge) {
-		tollChargeDao.save(tollCharge);
+		tollChargeService.saveTollCharge(tollCharge);
 		carExamineDao.save(carExamine);
 		
 		Car car=carExamine.getCar();

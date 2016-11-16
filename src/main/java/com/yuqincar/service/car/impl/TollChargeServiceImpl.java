@@ -66,6 +66,10 @@ public class TollChargeServiceImpl implements TollChargeService {
 	public PageBean<TollCharge> queryTollCharge(int pageNum, QueryHelper helper) {
 		return tollChargeDao.getPageBean(pageNum, helper);
 	}
+	
+	public List<TollCharge> queryAllTollCharge(QueryHelper helper){
+		return tollChargeDao.getAllQuerry(helper);
+	}
 
 	public TollCharge getTollChargeById(Long id) {
 		return tollChargeDao.getById(id);

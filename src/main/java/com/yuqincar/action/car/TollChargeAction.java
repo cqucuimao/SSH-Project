@@ -2,14 +2,9 @@ package com.yuqincar.action.car;
 
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -20,16 +15,9 @@ import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.car.CarServiceSuperType;
-import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
-import com.yuqincar.domain.car.CarViolation;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
-import com.yuqincar.domain.order.CustomerOrganization;
-import com.yuqincar.domain.order.Order;
-import com.yuqincar.domain.order.Price;
-import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.car.CarService;
@@ -102,7 +90,8 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 		PageBean<TollCharge> pageBean = tollChargeService.queryTollCharge(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("tollChargeHelper", helper);
-		return "list";
+		dealProblems();
+		return "list"; 
 	}
 	
 	public String freshList(){
@@ -220,7 +209,31 @@ public class TollChargeAction extends BaseAction implements ModelDriven<TollChar
 		}
 		//调用exportservice中的exportExcel接口实现表格的导出
 		exportservice.exportExcel(excelName, title, allList, response);
-
+	}
+	
+	//由于程序的错误，导致部分车辆的nextTollChargeDate和tollChargeExpired有误。所以写这个方法进行弥补。
+	//在tollCharge_list中调用一次，通过页面访问调用一次。
+	private void dealProblems(){
+		for(Car car:carService.getAll()){
+			if(car.getStatus()==CarStatusEnum.SCRAPPED || car.isBorrowed())
+				continue;
+			QueryHelper helper = new QueryHelper("TollCharge", "tc");
+			helper.addWhereCondition("tc.car=?", car);
+			List<TollCharge> tollCharges=tollChargeService.queryAllTollCharge(helper);
+			if(tollCharges==null || tollCharges.size()==0)
+				continue;
+			Date lastNextDate=tollCharges.get(0).getNextPayDate();
+			for(int i=1;i<tollCharges.size();i++)
+				if(lastNextDate.before(tollCharges.get(i).getNextPayDate()))
+					lastNextDate=tollCharges.get(i).getNextPayDate();
+			
+			car.setNextTollChargeDate(lastNextDate);
+			if(car.getNextTollChargeDate().after(new Date()))
+				car.setTollChargeExpired(false);
+			else
+				car.setTollChargeExpired(true);
+			carService.updateCar(car);
+		}
 	}
 	
 	public TollCharge getModel() {

@@ -35,7 +35,12 @@ public class CapcareMessageUtils {
 			String lng = devices.getJSONObject(i).getJSONObject("position").get("lng").toString();
 			String lat = devices.getJSONObject(i).getJSONObject("position").get("lat").toString();
 			String mode = devices.getJSONObject(i).getJSONObject("position").get("mode").toString();
-			if(! lng.equals("0.0") && ! lat.equals("0.0") && mode.equals("A")){
+			if(capcareMap.size()!=0)	//如果是第一次启动，不管mode的值是什么，都要获取位置
+			{
+				if(!mode.equals("A"))	
+					continue;
+			}
+			if(! lng.equals("0.0") && ! lat.equals("0.0")){
 				notNullDevices.add(devices.getJSONObject(i));
 			}
 		}
@@ -62,12 +67,10 @@ public class CapcareMessageUtils {
 								notNullDevices.getJSONObject(i*limitLen+j).getJSONObject("position").get("lat").toString();
 					}
 			}
-			System.out.println("str="+positionStr);
 			//再对每一组进行坐标转换
 			GetBaiduMsg gbm = new GetBaiduMsg();
 			JSONObject baiduJasonObject = JSONObject.fromObject(gbm.excute(positionStr));
 			JSONArray baiduPositionArray = baiduJasonObject.getJSONArray("result");
-			System.out.println("size="+baiduPositionArray.size());
 			int len = baiduPositionArray.size();
 			//再对每一组封装数据
 			for(int k=0;k<len;k++){

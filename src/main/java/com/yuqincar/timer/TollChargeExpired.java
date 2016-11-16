@@ -26,10 +26,13 @@ public class TollChargeExpired {
 		for(Car car : cars) {
 			if(car.getStatus()==CarStatusEnum.SCRAPPED || car.isBorrowed())
 				continue;
-			if(car.getNextTollChargeDate()==null ||
-					car.getNextTollChargeDate().before(now)){
-				car.setTollChargeExpired(true);
-				carService.updateCar(car);
+			if(!car.isTollChargeExpired())
+			{
+				if(car.getNextTollChargeDate()==null ||
+						car.getNextTollChargeDate().before(now)){
+					car.setTollChargeExpired(true);
+					carService.updateCar(car);
+				}
 			}
 		}
 	}

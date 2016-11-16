@@ -47,7 +47,6 @@ public class ApiAction extends BaseAction {
 			String carId = queryStringUrl.substring(71,queryStringUrl.length());//截取参数中的车辆id号
 			
 			String url = BASEURL+realQueryString+ENDURL;	//请求Capcare的url
-			//System.out.println("url="+url);
 			String jsonString = HttpMethod.get(url);
 			
 			//从Capcare获取到String类型的结果，然后转成json类型
@@ -76,7 +75,6 @@ public class ApiAction extends BaseAction {
 			//String firstJson = jsonString.substring(0, 1);
 			//String lastJson = jsonString.substring(1,jsonString.length());
 			String finalJson = firstJson+addedJson+lastJson;
-			System.out.println("finalJson="+finalJson);
 			out.write(finalJson);
 			out.flush();
 			out.close();

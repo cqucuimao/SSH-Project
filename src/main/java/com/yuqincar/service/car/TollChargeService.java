@@ -17,6 +17,8 @@ public interface TollChargeService {
 	
 	public PageBean<TollCharge> queryTollCharge(int pageNum , QueryHelper helper);
 	
+	public List<TollCharge> queryAllTollCharge(QueryHelper helper);
+	
 	public TollCharge getTollChargeById(Long id);
 	
 	public TollCharge getRecentTollCharge(Car car);

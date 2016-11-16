@@ -49,7 +49,7 @@
                     </td>
                     <!-- 
                     <td>
-                    	<s:a class="buttonA" action="realtime_getCapcareData">测试</s:a>
+                    	<s:a class="buttonA" action="realtime_getCarsBySuperType?superType=小车">测试</s:a>
                     </td>
                      -->
                 </tr>

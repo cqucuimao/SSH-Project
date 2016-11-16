@@ -104,8 +104,13 @@
     map.enableScrollWheelZoom(true);
     
     //地图左上角功能区
-    var contentMark="<span class='actionBar'><a href='javascript:addAllCars()'>添加所有车辆</a><em class='line'></em>"
-                    +"<a href='javascript:clearAllCars()'>清除所有车辆</a></span>"
+    var contentMark="<span class='actionBar'><a href='javascript:addAllCars()'>所有车辆</a><em class='line'></em>"
+                    		+"<a href='javascript:addCarsBySuperType(\"大巴\")'>大巴</a><em class='line'></em>"
+                    		+"<a href='javascript:addCarsBySuperType(\"考斯特\")'>考斯特</a><em class='line'></em>"
+                    		+"<a href='javascript:addCarsBySuperType(\"商务车\")'>商务车</a><em class='line'></em>"
+                    		+"<a href='javascript:addCarsBySuperType(\"小车\")'>小车</a><em class='line'></em>"
+                    		+"<a href='javascript:addCarsBySuperType(\"越野车\")'>越野车</a><em class='line'></em>"
+                    		+"<a href='javascript:clearAllCars()'>清除所有</a></span>"
     
     //为百度地图添加左上角标签                
     $("#BaiduMap").append(contentMark); 
@@ -145,14 +150,6 @@
   	  window.opener.sonWindowFlag=true;
     	  //获取监控屏的百度地图对象
     	  window.opener.map=map;
-    }
-    
-    //我的测试方法
-    function test(){
-    	var plateNumber = "渝A00153";
-    	$.get("realtime_getCapcareData.action?carPlateNumber="+plateNumber,function(data){
-    		console.log(data.speed);
-    	});
     }
    
    //对当前所有选中车辆进行分组刷新
@@ -234,19 +231,21 @@
 		    			     }
         	      		     
         	      		     //自定义车辆图标
-        	      		     var myIcon = new BMap.Icon(imagePath, new BMap.Size(40,30));
+        	      		     var myIcon = new BMap.Icon(imagePath, new BMap.Size(40,20));
         	      		     marker = new BMap.Marker(point,{icon:myIcon});// 创建标注
         	      		     //增加车牌信息  label的offset属性能够调整基于中心点的偏移位置
-        	      		     var label = new BMap.Label(carPlateNumber,{offset:new BMap.Size(-16,-17)});
+        	      		     var label = new BMap.Label(carPlateNumber,{offset:new BMap.Size(-18,-17)});
     	      		         marker.setLabel(label);
     	      		         if(checkboxStatus[carId]== true){
     	      		        	map.addOverlay(marker);     // 将标注添加到地图中       
     	      		         }
-    	      		       	 marker.addEventListener('mouseover', function(){
-    	      		       		 marker.setTop(true);
-    	      		       		 //marker.setShadow(ic);
-    	      		       		 //marker.setZIndex(100000000);
-    	      		       	 });
+							 //添加label的鼠标监听事件
+    	      		         label.addEventListener('mouseover', function(){
+	  	      		       		 marker.setTop(true);
+	  	      		       	 });
+    	      		         marker.addEventListener('mouseover', function(){
+	  	      		       		 marker.setTop(true);
+	  	      		       	 });
         	      		     //非常重要的一个问题
         	      		     //这里有一个关键问题  批量事件绑定环境下   响应函数需要的参数的变化问题   使用 闭包 将局部变量carId 和 carPlateNumber 作为参数传递到 事件响应函数中去
         	      		     marker.addEventListener('click',(function(myCarId,myCarPlateNumber){
@@ -369,7 +368,7 @@
     function addAllCars(){
     	$.ajaxSettings.async=false;
     	//获取所有未报废的车辆  此处由于alarmAction中已经存在该方法，所以直接向此action发送请求
-    	$.get("realtime_allNormalCars.action"+"?timestamp="+new Date().getTime(),function(allNormalCars){
+    	$.get("realtime_allNormalCars.action",function(allNormalCars){
     		
     		console.log("*****所有车辆的信息******");
     		console.log("监控界面中车辆="+allNormalCars.length);
@@ -399,6 +398,47 @@
    			for(var i=0;i<checkboxStatus.length;i++){
    			    checkboxStatus[i]=true;
    			}
+    	});
+    	$.ajaxSettings.async=true;
+    	flushByGroup();
+    }
+    
+    //根据车型大类添加车辆
+    function addCarsBySuperType(superType){
+    	console.log("superType="+superType);
+    	$.ajaxSettings.async=false;
+    	//获取所有未报废的车辆  此处由于alarmAction中已经存在该方法，所以直接向此action发送请求
+    	$.get("realtime_getCarsBySuperType.action?superType="+superType,function(carsData){
+    		
+    		console.log("*****所有车辆的信息******");
+    		console.log("监控界面中车辆="+carsData.length);
+
+    		/* if(allCheckboxes==undefined)
+    			allCheckboxes = new Array(carsData); */
+    		for(var i=0;i<carsData.length;i++){
+    			var carId=carsData[i].id;
+    			if(allRecordedCars[carId]==undefined){
+   	   		       allRecordedCars[carId]=new Array(3);
+   	   		     }
+    			//以id作为索引的车辆记录包含两个信息  车辆具体信息 和 是否被选中 用于监控
+	   		    allRecordedCars[carId][0]=carsData[i];
+	   		    //添加所有车辆  所有选中状态都为true
+	   		    allRecordedCars[carId][1]=true;
+	   		    //用于记录车辆当前处于 正常状态 0 还是 异常状态(异常状态包括  异常行驶 1  和 设备拔出 2) 默认初始化都处于正常状态
+	   		    allRecordedCars[carId][2]=0;
+	   		    
+		   		if(checkboxStatus[carId]==false){
+	 	        	  checkboxes.each(function(){
+	 	        		  if($(this).prop("id")==carId){
+	 	        			 $(this).prop("checked", true);
+	 	        		  }
+	 	        	  });
+	 	        	  checkboxStatus[carId]=true;
+	 	        }
+    		}
+       		
+    		//在checkboxStatus数组中添加所有复选框的勾选状态
+    		
     	});
     	$.ajaxSettings.async=true;
     	flushByGroup();

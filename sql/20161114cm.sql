@@ -1,0 +1,1 @@
+insert into privilege(id,name,url,parent_id) values(397,'','/realtime_getCapcareData',68);

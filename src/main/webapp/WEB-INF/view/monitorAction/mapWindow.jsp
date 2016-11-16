@@ -239,12 +239,19 @@
     	      		         if(checkboxStatus[carId]== true){
     	      		        	map.addOverlay(marker);     // 将标注添加到地图中       
     	      		         }
-							 //添加label的鼠标监听事件
+							 //添加label和marker的鼠标监听事件
     	      		         label.addEventListener('mouseover', function(){
 	  	      		       		 marker.setTop(true);
 	  	      		       	 });
     	      		         marker.addEventListener('mouseover', function(){
 	  	      		       		 marker.setTop(true);
+	  	      		       	 });
+    	      		         
+    	      		       	label.addEventListener('mouseout', function(){
+	  	      		       		 marker.setTop(false);
+	  	      		       	 });
+  	      		        	marker.addEventListener('mouseout', function(){
+	  	      		       		 marker.setTop(false);
 	  	      		       	 });
         	      		     //非常重要的一个问题
         	      		     //这里有一个关键问题  批量事件绑定环境下   响应函数需要的参数的变化问题   使用 闭包 将局部变量carId 和 carPlateNumber 作为参数传递到 事件响应函数中去

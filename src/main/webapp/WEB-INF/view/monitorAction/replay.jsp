@@ -183,6 +183,8 @@
       		map.clearOverlays();   
         	//点击查询之后，清空列表
       		$("#htcList").html("");		
+        	//点击查询之后播放条消失
+        	$("#playBar").hide();
       		//查询相应车辆的设备编号即device_sn
       	    $.get("replay_list.action",$("#queryForm").serializeArray(),function(snsData){
       	    	  console.log("查询得到的设备数据信息");

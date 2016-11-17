@@ -35,7 +35,7 @@
 						<input class="Wdate half" style="width:165px;" type="text" id="beginTime" onfocus="new WdatePicker({dateFmt:'yyyy/MM/dd HH:mm:ss'})" />
 						- 
 						<input class="Wdate half" style="width:165px;" type="text" id="endTime" onfocus="new WdatePicker({dateFmt:'yyyy/MM/dd HH:mm:ss'})" />
-                        <input class="inputButton" type="button" id="queryBn" value="查询"/>
+                        <input class="inputButton" type="button" id="queryBn" value="查询" onclick=""/>
                     </td>
                 </tr>
             </table>
@@ -181,7 +181,8 @@
         	
         	//每次执行查询操作之后，地图重新清空
       		map.clearOverlays();   
-        	
+        	//点击查询之后，清空列表
+      		$("#htcList").html("");		
       		//查询相应车辆的设备编号即device_sn
       	    $.get("replay_list.action",$("#queryForm").serializeArray(),function(snsData){
       	    	  console.log("查询得到的设备数据信息");

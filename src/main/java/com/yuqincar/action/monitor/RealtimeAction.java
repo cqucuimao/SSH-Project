@@ -34,7 +34,8 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	private String carId;
 	private String baiduKey;
 	private String carPlateNumber;//防止和car属性中的plateNumber重名
-
+	private String superType;
+	private String carsStatus;
 	@Autowired
 	private CarService carService;
 	@Autowired
@@ -66,7 +67,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	}
 	
 	/**
-	 * 查询所有未报废车辆的信息
+	 * 查询所有监控的车辆
 	 */
 	public void allNormalCars(){
 		List<Car> cars=carService.getCarsForMonitoring();
@@ -74,6 +75,15 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		this.writeJson(JSON.toJSONString(carsVO));
 	}
 	
+	/**
+	 * 根据车型监控车辆
+	 */
+	public void getCarsBySuperType(){
+		System.out.println("superType="+superType);
+		List<Car> cars = carService.getCarsForMonitoringBySuperType(superType);
+		List<CarVO> carsVO=parseCars(cars);
+		this.writeJson(JSON.toJSONString(carsVO));
+	}
 	
 	public void getCarInfo(){
 		Long id=new Long(Long.parseLong(carId));
@@ -116,25 +126,63 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	 */
 	public void list(){
 		
-		String plateNumber=null;
-		if(car!=null)
-			plateNumber=car.getPlateNumber();
-		String servicePointName=null;
-		if(!"".equals(model.getServicePoint().getName())){
-			//业务点id
-			int servicePointId=Integer.parseInt(model.getServicePoint().getName());
-			//根据业务点id获取相应的业务点名称,实际上不需要此步骤，直接在下面用id查询就行，之前已经写了此接口，所以不做改动了
-			servicePointName=carService.getServicePointById(servicePointId).getName();
+		//对应状态的车辆集合
+		List<Car> carsByStatus = new ArrayList<Car>();
+		//获取所有监控的车辆
+		List<Car> allCars = carService.getCarsForMonitoring();
+		Map<String, CapcareMessage> capcareMap = CapcareMessageUtils.capcareMap;
+		
+		System.out.println("状态="+carsStatus.equals("全部"));
+		//如果是全部，就不做处理
+		if(carsStatus.equals("全部")){
+			String plateNumber=null;
+			if(car!=null)
+				plateNumber=car.getPlateNumber();
+			String servicePointName=null;
+			if(!"".equals(model.getServicePoint().getName())){
+				//业务点id
+				int servicePointId=Integer.parseInt(model.getServicePoint().getName());
+				//根据业务点id获取相应的业务点名称,实际上不需要此步骤，直接在下面用id查询就行，之前已经写了此接口，所以不做改动了
+				servicePointName=carService.getServicePointById(servicePointId).getName();
+			}
+			carsByStatus= carService.findByDriverNameAndPlateNumberAndServicePointName(null,plateNumber,servicePointName);
+			
+		}else if(carsStatus.equals("行驶")){
+			for(Car car:allCars){
+				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
+				String speed = sm.getSpeed();
+				int status = Integer.parseInt(sm.getStatus());
+				if(status == 1 && !speed.equals("0.0")){
+					carsByStatus.add(car);
+				}
+			}
+		}else if(carsStatus.equals("静止")){
+			for(Car car:allCars){
+				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
+				String speed = sm.getSpeed();
+				int status = Integer.parseInt(sm.getStatus());
+				if(status == 1 && speed.equals("0.0")){
+					carsByStatus.add(car);
+				}
+			}
+		}else{//无网络
+			for(Car car:allCars){
+				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
+				int status = Integer.parseInt(sm.getStatus());
+				if(status == 2){
+					carsByStatus.add(car);
+				}
+			}
 		}
-		List<Car> cars= carService.findByDriverNameAndPlateNumberAndServicePointName(null,plateNumber,servicePointName);
-		System.out.println("in list, cars.size="+cars.size());
+		//转为json数据
 		List<CarVO> carsVO=null;
-		if(cars.size()!=0){
-			carsVO=parseCars(cars);
+		if(carsByStatus.size()!=0){
+			carsVO=parseCars(carsByStatus);
 		}
 		String jsonStr="{\"cars\":"+JSON.toJSONString(carsVO)+"}"; 
 		System.out.println("jsonStr="+jsonStr);
 		this.writeJson(jsonStr);
+		
 	}
 
 	public Car getModel() {
@@ -154,6 +202,22 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 
 	public void setCarPlateNumber(String carPlateNumber) {
 		this.carPlateNumber = carPlateNumber;
+	}
+
+	public String getSuperType() {
+		return superType;
+	}
+
+	public void setSuperType(String superType) {
+		this.superType = superType;
+	}
+
+	public String getCarsStatus() {
+		return carsStatus;
+	}
+
+	public void setCarsStatus(String carsStatus) {
+		this.carsStatus = carsStatus;
 	}
 
 	public String getBaiduKey() {

@@ -241,6 +241,15 @@ public class CarServiceImpl implements CarService {
 		return carDao.getAllQuerry(queryHelper);
 	}
 	
+	public List<Car> getCarsForMonitoringBySuperType(String superType) {
+		QueryHelper queryHelper=new QueryHelper(Car.class,"c");
+		queryHelper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
+		queryHelper.addWhereCondition("c.serviceType.superType.title=?", superType);
+		queryHelper.addWhereCondition("c.device is not null");
+		queryHelper.addWhereCondition("c.borrowed=?", false);
+		return carDao.getAllQuerry(queryHelper);
+	}
+	
 	public List<Car> getCarsForPullingViolation(){
 		QueryHelper queryHelper=new QueryHelper(Car.class,"c");
 		queryHelper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);

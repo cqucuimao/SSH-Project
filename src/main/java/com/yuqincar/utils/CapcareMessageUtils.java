@@ -19,6 +19,8 @@ import net.sf.json.JSONObject;
 public class CapcareMessageUtils {
 	public static Map<String,CapcareMessage> capcareMap = new HashMap<String, CapcareMessage>();
 	
+	public static Map<String, String> statusMap = new HashMap<String, String>();
+	
 	public static int limitLen = 100;
 	
 	public static void getCapcareMessage() {

@@ -21,7 +21,6 @@ public class CapcareMessage {
 	//方向
 	private String direction;
 	
-	
 	public String getPlateNumber() {
 		return plateNumber;
 	}

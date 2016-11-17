@@ -112,10 +112,15 @@ public interface CarService {
 	public List<TreeNode> getCarTree(String plateNumber,String synchDriver);
 
 	/**
-	 * 获取所有未报废车辆
+	 * 获取所有监控的车辆
 	 * @return
 	 */
 	public List<Car> getCarsForMonitoring();
+	
+	/**
+	 * 根据不同车型获取监控的车辆
+	 */
+	public List<Car> getCarsForMonitoringBySuperType(String superType);
 	
 	public List<Car> getCarsForPullingViolation();
 		

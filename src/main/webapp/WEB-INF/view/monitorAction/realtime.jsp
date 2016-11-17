@@ -41,6 +41,10 @@
                     <td>
                     <s:select style="width:135px;" name="servicePoint.name" id="servicePointId" list="#servicePointList" listKey="id" listValue="name"/>
                     </td>
+                    <th>车辆状态</th>
+                    <td>
+                    <s:select style="width:135px;" name="carsStatus" list="{'全部','行驶' ,'静止' ,'无网络'}" />
+                    </td>
                     <td>
                     <input class="inputButton" type="button" id="queryBn" value="查询"/>
                     </td>

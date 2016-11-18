@@ -71,14 +71,17 @@
         	$(document).ready(function(){
         		$.fn.zTree.init($("#treeDemo"), setting, zNodes);
         		var treeObj=$.fn.zTree.getZTreeObj("treeDemo");	
+        		treeObj.expandAll(true);
         		var selectorName=art.dialog.data("selectorName");
         	    var origin = artDialog.open.origin;
         	    var input_id_value = origin.document.getElementById(selectorName).value;
         	    if(input_id_value !=""){
         	    	var node = treeObj.getNodesByParam("id",input_id_value, null);
+        	    	
         	    	for(var i=0;i<node.length;i++){
         	    		treeObj.selectNode(node[i]);
         	    		treeObj.checkNode(node[i]);
+        	    		
                     }
         	    }
         	});

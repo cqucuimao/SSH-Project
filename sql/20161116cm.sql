@@ -1,0 +1,1 @@
+insert into privilege(id,name,url,parent_id) values(398,'','/realtime_getCarsBySuperType',68);

@@ -52,7 +52,7 @@ public class ReplayAction extends BaseAction{
 	public void list(){
         List<SnVO> snsVO=new ArrayList<SnVO>();
 		
-		if(car!=null){
+		if(car!=null && car.getDevice()!=null){
 			snsVO.add(parseCar(car));
 		}
 		

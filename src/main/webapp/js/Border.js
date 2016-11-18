@@ -62,3 +62,7 @@ function popUpModal(src, width, height, showScroll){
 	return window.showModalDialog 
 	(src,window,"location:no;status:no;help:no;dialogWidth:"+width+";dialogHeight:"+height+";scroll:"+showScroll+";"); 
 	} 
+
+$(document).ready(function(){
+	//registerClick();
+});

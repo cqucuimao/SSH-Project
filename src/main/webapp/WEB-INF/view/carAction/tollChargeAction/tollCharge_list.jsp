@@ -26,7 +26,7 @@
 						<s:textfield name="endDate" id="endDate" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
 					</td>
 					<td>
-						<input class="inputButton" type="submit" onClick="registerClick()" value="查询"/>
+						<input class="inputButton" type="submit" value="查询"/>
 					</td>
 					<td>
 						<s:a cssClass="buttonA" action="tollCharge_remind">路桥费缴费提醒</s:a>

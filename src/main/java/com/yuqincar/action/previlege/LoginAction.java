@@ -1,5 +1,6 @@
 package com.yuqincar.action.previlege;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +103,7 @@ public class LoginAction extends BaseAction{
 				addFieldError("loginError", "登录名或密码不正确！");
 				return "loginUI";
 			}
-		}
+		}		
 		ActionContext.getContext().getSession().put("user", user);
 		ActionContext.getContext().getSession().put("company", user.getCompany());
 		ActionContext.getContext().getSession().put("companyLogoName", user.getCompany().getLogoName());

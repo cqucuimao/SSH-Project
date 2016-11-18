@@ -37,7 +37,9 @@ public class ApiReplayAction extends BaseAction {
 		try {
 			out = response.getWriter();
 			String queryString = request.getQueryString();
+			System.out.println("queryString="+queryString);
 			String url = BASEURL+queryString+ENDURL;
+			System.out.println("url="+url);
 			String json = HttpMethod.get(url);
 			
 			out.write(json);

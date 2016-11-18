@@ -43,11 +43,11 @@
 	        </tr>
 	    </tbody>
 	</table>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
-	<script type="text/javascript" src="js/artDialog4.1.7/artDialog.js"></script>
-	<script type="text/javascript" src="js/artDialog4.1.7/plugins/iframeTools.js"></script>
+	<script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>	
+	<script type="text/javascript" src="<%=basePath %>js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="<%=basePath %>js/index.js"></script>
+	<script type="text/javascript" src="<%=basePath %>js/artDialog4.1.7/artDialog.js"></script>
+	<script type="text/javascript" src="<%=basePath %>js/artDialog4.1.7/plugins/iframeTools.js"></script>
 	<script type="text/javascript">
 		$(".popUserInfo").click(function(){
             popup("我的信息","user_info.action",700,500,"usertInfo");

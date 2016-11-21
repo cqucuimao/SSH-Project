@@ -132,7 +132,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		List<Car> allCars = carService.getCarsForMonitoring();
 		Map<String, CapcareMessage> capcareMap = CapcareMessageUtils.capcareMap;
 		
-		System.out.println("状态="+carsStatus.equals("全部"));
+		System.out.println("状态="+carsStatus);
 		//如果是全部，就不做处理
 		if(carsStatus.equals("全部")){
 			String plateNumber=null;
@@ -150,27 +150,34 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		}else if(carsStatus.equals("行驶")){
 			for(Car car:allCars){
 				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
-				String speed = sm.getSpeed();
-				int status = Integer.parseInt(sm.getStatus());
-				if(status == 1 && !speed.equals("0.0")){
-					carsByStatus.add(car);
+				if(sm != null){
+					System.out.println("sm="+sm);
+					String speed = sm.getSpeed();
+					int status = Integer.parseInt(sm.getStatus());
+					if(status == 1 && !speed.equals("0.0")){
+						carsByStatus.add(car);
+					}
 				}
 			}
 		}else if(carsStatus.equals("静止")){
 			for(Car car:allCars){
 				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
-				String speed = sm.getSpeed();
-				int status = Integer.parseInt(sm.getStatus());
-				if(status == 1 && speed.equals("0.0")){
-					carsByStatus.add(car);
+				if(sm != null){
+					String speed = sm.getSpeed();
+					int status = Integer.parseInt(sm.getStatus());
+					if(status == 1 && speed.equals("0.0")){
+						carsByStatus.add(car);
+					}
 				}
 			}
 		}else{//无网络
 			for(Car car:allCars){
 				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
-				int status = Integer.parseInt(sm.getStatus());
-				if(status == 2){
-					carsByStatus.add(car);
+				if(sm != null){
+					int status = Integer.parseInt(sm.getStatus());
+					if(status == 2){
+						carsByStatus.add(car);
+					}
 				}
 			}
 		}

@@ -30,7 +30,7 @@
                 <tbody>
                 	<tr><th>模板下载</th>
 	                	<td>
-							<a href="excelModel/保养信息.xls">保养信息模板</a>
+							<a href="excelModel/保养信息.xls" class="coverOff">保养信息模板</a>
 						</td>
 					</tr>
                 	<tr>
@@ -50,7 +50,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="2">
-                            <input id="submit" class="inputButton" type="submit" value="确定" />
+                            <input id="submit" class="inputButton coverOff" type="submit" value="确定" />
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
                     </tr>
@@ -64,6 +64,7 @@
 	    	
 	    	if($("#file").val() == null || $("#file").val()== ""){
 	    		alert("请选择文件！");
+	    		coverSwitcherOff();
 	    		return false;
 	    	}
 	    });

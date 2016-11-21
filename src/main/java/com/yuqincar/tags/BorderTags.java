@@ -58,11 +58,11 @@ public class BorderTags extends TagSupport   {
 	        options.append("		</tr>");
 	        options.append("		<tr>");
 	        options.append("			<td width=\"30%\"></td>");
-	        options.append("			<td style=\"text-align:center\"");
+	        options.append("			<td style=\"text-align:center\">");
 	        options.append("				<table width=\"100%\" style=\"text-align:center\" CELLSPACING=\"0\" CELLPADDING=\"0\">");
 	        options.append("					<tr>");
 	        options.append("						<td style=\"text-align:center\">");
-	        options.append("							<img style=\"text-align:center\" src=\""+pageContext.getServletContext().getContextPath()+"/skins/images/cover.jpg\" height=\"120px\" width=\"400px\"/>");
+	        options.append("							<img style=\"text-align:center\" src=\""+pageContext.getServletContext().getContextPath()+"/skins/images/cover.png\"/>");
 	        options.append("						</td>");
 	        options.append("					</tr>");
 	        options.append("				</table>");
@@ -72,7 +72,7 @@ public class BorderTags extends TagSupport   {
 	        options.append("	</table>");
 	        options.append("</div>");
 	        
-	        options.append("<div id=\"cover\" style=\"background:#cdd0cf;filter:alpha(opacity=10);opacity:.1;left:0px;top:0px;position:fixed;height:100%;width:100%;overflow:hidden;z-index:9;display:none\">");
+	        options.append("<div id=\"cover\" style=\"background:#cdd0cf;filter:alpha(opacity=10);opacity:.7;left:0px;top:0px;position:fixed;height:100%;width:100%;overflow:hidden;z-index:9;display:none\">");
 	        options.append("	<table WIDTH=\"100%\" height=\"100%\" BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"0\">");
 	        options.append("		<tr>");
 	        options.append("			<td align=\"center\">");

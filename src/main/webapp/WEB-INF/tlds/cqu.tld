@@ -109,5 +109,26 @@
                 <required>false</required>  
                 <rtexprvalue>true</rtexprvalue>  
       </attribute> 
-</tag>     
+</tag> 
+<tag>  
+ <name>diskFileSelector</name>                            
+ <tag-class>com.yuqincar.tags.DiskFileSelectorTags</tag-class>          
+ <body-content>empty</body-content>      
+            <attribute>    
+                <name>name</name>    
+                <required>true</required>    
+                <rtexprvalue>false</rtexprvalue>    
+            </attribute>
+            <attribute>    
+                <name>uploadLimit</name>    
+                <required>false</required>    
+                <rtexprvalue>false</rtexprvalue>    
+            </attribute>
+            <attribute>    
+                <name>mutilfiles</name>    
+                <required>false</required>    
+                <rtexprvalue>false</rtexprvalue>    
+            </attribute>
+            
+</tag>      
 </taglib>  

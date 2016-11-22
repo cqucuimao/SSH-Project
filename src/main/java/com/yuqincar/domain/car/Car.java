@@ -117,6 +117,12 @@ public class Car extends BaseEntity {
 	
 	@Text("是否为外调车")
 	private boolean borrowed;
+	
+	@Text("是否属于常备车库")
+	private boolean standingGarage;
+	
+	@Text("是否属于临时常备车库")
+	private boolean tempStandingGarage;
 
 	public String getPlateNumber() {
 		return plateNumber;
@@ -206,8 +212,6 @@ public class Car extends BaseEntity {
 	public void setEnrollDate(Date enrollDate) {
 		this.enrollDate = enrollDate;
 	}
-
-	
 	
 	public String getTollChargeSN() {
 		return tollChargeSN;
@@ -352,6 +356,22 @@ public class Car extends BaseEntity {
 
 	public void setBorrowed(boolean borrowed) {
 		this.borrowed = borrowed;
+	}
+
+	public boolean isStandingGarage() {
+		return standingGarage;
+	}
+
+	public void setStandingGarage(boolean standingGarage) {
+		this.standingGarage = standingGarage;
+	}
+
+	public boolean isTempStandingGarage() {
+		return tempStandingGarage;
+	}
+
+	public void setTempStandingGarage(boolean tempStandingGarage) {
+		this.tempStandingGarage = tempStandingGarage;
 	}
 	
 }

@@ -680,7 +680,9 @@
 									} else if (data.result == 12) {
 										alert("车辆没有交路桥费")
 									} else if (data.result == 13) {
-										alert("车辆过期为保养")
+										alert("车辆过期未保养")
+									} else if (data.result == 14) {
+										alert("车辆不属于常备车库")
 									}
 								},
 								error : function(msg) {  			         

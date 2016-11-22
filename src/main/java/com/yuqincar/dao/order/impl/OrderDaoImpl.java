@@ -242,6 +242,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					  hql = hql+" and car.driver not in (select cra.driver from CarRepairAppointment as cra where cra.done=?)";
 					  
 					  hql = hql+" and car.insuranceExpired=? and car.examineExpired=? and car.tollChargeExpired=? and car.careExpired=?";
+					  hql = hql+" and car.borrowed=? and (car.standingGarage=? or car.tempStandingGarage=?)";
 			tempCarList=getSession().createQuery(hql)
 					.setParameter(0, CarStatusEnum.SCRAPPED).setParameter(1, serviceType).setParameter(2,false)
 					.setParameter(3, ChargeModeEnum.DAY).setParameter(4, ChargeModeEnum.PROTOCOL)
@@ -256,7 +257,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(19, planBeginDate).setParameter(20, false)
 					.setParameter(21, false).setParameter(22, false)
 			
-					.setParameter(23,false).setParameter(24,false).setParameter(25,false).setParameter(26, false).list();
+					.setParameter(23,false).setParameter(24,false).setParameter(25,false).setParameter(26, false)
+					.setParameter(27, false).setParameter(28, true).setParameter(29, true).list();
 		} else {
 			String hql = "from Car as car where car.status<>? and serviceType=? and car.standbyCar =?";
 					  hql = hql+" and car not in (select o.car from order_ as o where o.status<>? and o.status<>? and o.status<>? and (";
@@ -277,6 +279,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					  hql = hql+" and car.driver not in (select cra.driver from CarRepairAppointment as cra where cra.done=?)";
 					   		
 					  hql = hql+" and car.insuranceExpired=? and car.examineExpired=? and car.tollChargeExpired=? and car.careExpired=?";
+					  hql = hql+" and car.borrowed=? and (car.standingGarage=? or car.tempStandingGarage=?)";
 			tempCarList=getSession().createQuery(hql)
 					.setParameter(0, CarStatusEnum.SCRAPPED).setParameter(1, serviceType).setParameter(2, false)
 					
@@ -293,7 +296,8 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(24,false).setParameter(25, false)
 					.setParameter(26, false)
 					
-					.setParameter(27, false).setParameter(28, false).setParameter(29, false).setParameter(30, false).list();
+					.setParameter(27, false).setParameter(28, false).setParameter(29, false).setParameter(30, false)
+					.setParameter(31, false).setParameter(32, true).setParameter(33, true).list();
 		}
 		carList.addAll(tempCarList);
 			
@@ -301,45 +305,35 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		for(Car car:tempCarList){
 			int count;
 			if(chargeMode==ChargeModeEnum.MILE || chargeMode==ChargeModeEnum.PLANE){
-				System.out.println("7");
 				String hql="select count(o) from order_ as o where o.status<>? and o.car=? and (o.chargeMode=? or o.chargeMode=?) and TO_DAYS(?)=TO_DAYS(o.planBeginDate)";
 				Object obj=getSession().createQuery(hql).setParameter(0, OrderStatusEnum.CANCELLED)
 						.setParameter(1, car).setParameter(2, ChargeModeEnum.MILE).setParameter(3, ChargeModeEnum.PLANE)
 						.setParameter(4, planBeginDate).uniqueResult();
-				System.out.println("obj="+obj);
 				count=Integer.parseInt(obj.toString());
-				System.out.println("count="+count);
 			}else{
-				System.out.println("8");
 				String hql="select count(o) from order_ as o where o.status<>? and o.car=? and (o.chargeMode=? or o.chargeMode=?) and TO_DAYS(?)<=TO_DAYS(o.planBeginDate) and TO_DAYS(o.planBeginDate)<=TO_DAYS(?)";
 				Object obj=getSession().createQuery(hql).setParameter(0, OrderStatusEnum.CANCELLED)
 						.setParameter(1, car).setParameter(2, ChargeModeEnum.MILE).setParameter(3, ChargeModeEnum.PLANE)
 						.setParameter(4, planBeginDate).setParameter(5, planEndDate).uniqueResult();
 				count=Integer.parseInt(obj.toString());
 			}
-			System.out.println("8.1");
 			orderCountList.add(count);
-			System.out.println("8.2");
 		}
 
-		System.out.println("9");
 		//为近期（一个月）订单数量排序做准备
 		Date now = new Date();
 		Calendar ca = Calendar.getInstance();
 		ca.add(Calendar.DAY_OF_MONTH, -30);
 		Date monthAgo = ca.getTime();
 		for(Car car:tempCarList){
-			System.out.println("10");
 			String hql = "select count(o) from order_ as o where o.status<>? and o.car=? and TO_DAYS(?)<=TO_DAYS(o.planBeginDate) and TO_DAYS(o.planEndDate)<=TO_DAYS(?)";
 			Object obj=getSession().createQuery(hql)
 				.setParameter(0,OrderStatusEnum.CANCELLED).setParameter(1, car).setParameter(2, now).setParameter(3, monthAgo).uniqueResult();
 			orderMonthCountList.add(Integer.parseInt(obj.toString()));
 		}
 
-		System.out.println("12");
 		Collections.sort(carList,new Comparator<Car>(){
 			public int compare(Car car1, Car car2) {
-				System.out.println("13");
 				int index1=carList.indexOf(car1);
 				int index2=carList.indexOf(car2);
 				if(orderCountList.get(index1)<orderCountList.get(index2))
@@ -355,9 +349,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			}
 		});
 
-		System.out.println("before return");
-		for(Car car:carList)
-			System.out.println("car="+car.getPlateNumber());
 		return new PageBean(pageNum, pageSize, carList.size(),carList);
 	}
 
@@ -408,6 +399,9 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		
 		if(car.isCareExpired())
 			return 13;
+		
+		if(!car.isBorrowed() && !car.isStandingGarage() && !car.isTempStandingGarage())
+			return 14;
 		
 		String hql = null;
 

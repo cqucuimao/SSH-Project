@@ -33,20 +33,20 @@ public enum ChargeModeEnum implements BaseEnum {
 		return label;
 	}
 
-	public static PlateTypeEnum[] getAllEnum() {
-		return PlateTypeEnum.values();
+	public static ChargeModeEnum[] getAllEnum() {
+		return ChargeModeEnum.values();
 	}
 
-	public static PlateTypeEnum getById(int id) {
-		for (PlateTypeEnum u : PlateTypeEnum.values()) {
+	public static ChargeModeEnum getById(int id) {
+		for (ChargeModeEnum u : ChargeModeEnum.values()) {
 			if (u.getId() == id)
 				return u;
 		}
 		return null;
 	}
 
-	public static PlateTypeEnum getByLabel(String label) {
-		for (PlateTypeEnum u : PlateTypeEnum.values()) {
+	public static ChargeModeEnum getByLabel(String label) {
+		for (ChargeModeEnum u : ChargeModeEnum.values()) {
 			if (u.getLabel().equals(label))
 				return u;
 		}

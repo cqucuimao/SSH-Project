@@ -74,14 +74,16 @@
                         <td>
                         <s:if test="standbyCar">是</s:if><s:else>否</s:else>
                         </td>
-                        <th><s:property value="tr.getText('car.Car.status')" />：</th>
-                        <td>${status.label }</td>
+                        <th><s:property value="tr.getText('car.Car.standingGarage')" />：</th>
+                        <td>
+						<s:if test="standingGarage">是</s:if><s:else>否</s:else>
+						</td>
                     </tr>
                     <tr>
+                        <th><s:property value="tr.getText('car.Car.status')" />：</th>
+                        <td>${status.label }</td>
                         <th><s:property value="tr.getText('car.Car.mileage')" />：</th>
                         <td>${mileage}</td>
-                    	<th>&nbsp;</th>
-                    	<td>&nbsp;</td>
                     </tr>
                     <tr>
                     	<th>&nbsp;</th>

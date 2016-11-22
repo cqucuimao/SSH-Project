@@ -551,9 +551,19 @@ public class ScheduleAction extends BaseAction {
 			else if(result==7)
 				addFieldError("scheduleError", "车型不匹配");
 			else if(result==8)
-				addFieldError("scheduleError", "乘车人数超过限定");
+				addFieldError("scheduleError", "司机不可用");
 			else if(result==9)
-				addFieldError("scheduleError", "超过调度时间，被剥夺调度权");
+				addFieldError("scheduleError", "队列订单不能被当前用户调度");
+			else if(result==10)
+				addFieldError("scheduleError", "车辆已经过保");
+			else if(result==11)
+				addFieldError("scheduleError", "车辆没有年审");
+			else if(result==12)
+				addFieldError("scheduleError", "车辆没有交路桥费");
+			else if(result==13)
+				addFieldError("scheduleError", "车辆过期未保养");
+			else if(result==14)
+				addFieldError("scheduleError", "车辆不属于常备车库");
 			return "scheduling";
 		}
 	}

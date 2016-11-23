@@ -238,9 +238,9 @@
         	      		     var label = new BMap.Label(carPlateNumber,{offset:new BMap.Size(-18,-17)});
     	      		         marker.setLabel(label);
     	      		         marker.setRotation(carDirection);//设置旋转角度
-    	      		         if(checkboxStatus[carId]== true){
+    	      		         //if(checkboxStatus[carId]){
     	      		        	map.addOverlay(marker);     // 将标注添加到地图中       
-    	      		         }
+    	      		         //}
 							 //添加label和marker的鼠标监听事件
     	      		         label.addEventListener('mouseover', function(){
 	  	      		       		 marker.setTop(true);
@@ -467,7 +467,11 @@
 		if(allCheckboxes!=undefined){
 	      	for(var i=0;i<checkboxStatus.length;i++){
 			    checkboxStatus[i]=false;
+			    checkboxes.each(function(){
+	      	    	$(this).prop("checked", false);
+	      		});
 			}
+	      	
 	    }
       	//清除allRecordedCars中的车辆记录的选中状态
   		for(var i=0;i<allRecordedCars.length;i++){

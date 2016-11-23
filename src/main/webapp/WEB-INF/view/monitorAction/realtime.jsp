@@ -45,15 +45,15 @@
                     <td>
                     <s:select style="width:135px;" name="carsStatus" list="{'全部','行驶' ,'静止' ,'无网络'}" />
                     </td>
-                     <th>分组</th>
+                    <td>
+                    <input class="inputButton" type="button" id="queryBn" value="查询"/>
+                    </td>
+                    <th>分组</th>
                     <td>
                     <s:select name="monitorGroupIds" cssClass="SelectStyle"
                         		list="monitorGroupList" listKey="id" listValue="title"
-                        		headerKey="" headerValue="全部"
+                        		headerKey="" headerValue="全部" onchange="getAllCars()"
                         		/>
-                    </td>
-                    <td>
-                    <input class="inputButton" type="button" id="queryBn" value="查询"/>
                     </td>
                     <td>
                     <s:a class="buttonA" action="realtime_monitorGroup">分组管理</s:a>
@@ -370,7 +370,9 @@
     });
     
     function getAllCars(){
-    	$.get("realtime_list.action",$("#queryForm").serializeArray(),function(carsJson){
+    	var monitorGroup_id = $("select[name=monitorGroupIds]").val();
+    	//alert(monitorGroup_id);
+    	$.get("realtime_list.action?selectId="+monitorGroup_id,$("#queryForm").serializeArray(),function(carsJson){
        	 carData=carsJson;
       		 length=carData.cars.length; 
       		 //定义保存id的数组

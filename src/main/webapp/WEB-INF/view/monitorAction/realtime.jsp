@@ -930,39 +930,7 @@
 		 }
 		 
 	} 
-    
-    //对select中的option进行排序
-    function sortMe(){
-		var ln = $("selectId option").size();
-		var arr = new Array(); // 这是关键部分
-		
-		// 将select中的所有option的value值将保存在Array中
-		for (var i = 0; i < ln; i++)
-		{
-		
-		  // 如果需要对option中的文本排序，可以改为arr[i] = oSel.options[i].text;
-		  arr[i] = oSel.options[i].value;
-		
-		}
-		
-		arr.sort(); // 开始排序
-		
-		// 清空Select中全部Option
-		
-		while (ln--)
-		{
-		  oSel.options[ln] = null;
-		}
-		
-		// 将排序后的数组重新添加到Select中
-		
-		for (i = 0; i < arr.length; i++)
-		{
-		  oSel.add (new Option(arr[i], arr[i]));
-		}
-	}
-    
-    sortMe($("selectId"));
+
     </script>
 </body>
 </html>

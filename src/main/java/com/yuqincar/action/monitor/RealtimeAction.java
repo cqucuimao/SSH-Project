@@ -1,10 +1,14 @@
 package com.yuqincar.action.monitor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.hibernate.tuple.ElementWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -16,9 +20,12 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.ServicePoint;
 import com.yuqincar.domain.monitor.CapcareMessage;
+import com.yuqincar.domain.monitor.MonitorGroup;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.service.car.CarService;
+import com.yuqincar.service.monitor.MonitorGroupService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.utils.CapcareMessageUtils;
 import com.yuqincar.utils.Configuration;
@@ -40,8 +47,21 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	private CarService carService;
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private MonitorGroupService monitorGroupService;
 	
 	private Car car;
+	
+	//监控分组相关的属性
+	private String monitorGroupTitle;
+	
+	private String carString;
+	
+	private Long monitorGroupId;
+	
+	private Long[] selectedCarIds;
+	
+	private Long monitorGroupIds;
 	
 	public String mapWindow(){
 		return "mapWindow";
@@ -57,12 +77,14 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		
 		List<ServicePoint> servicePointListInDatabase = carService.getAllServicePoint();
 		List<ServicePoint> servicePointList=new ArrayList<ServicePoint>();
+		List<MonitorGroup> monitorGroupList = monitorGroupService.getAll();
 		servicePointList.add(new ServicePoint());
 		for(ServicePoint servicePoint:servicePointListInDatabase){
 			servicePointList.add(servicePoint);
 		}
 		//前端驻车点选择需要一个空选项，所以重置servicePointList
 		ActionContext.getContext().put("servicePointList", servicePointList);
+		ActionContext.getContext().put("monitorGroupList", monitorGroupList);
 		return "home";
 	}
 	
@@ -125,62 +147,65 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	 * @return
 	 */
 	public void list(){
-		
+		System.out.println("monitorGroupIds="+monitorGroupIds);
 		//对应状态的车辆集合
 		List<Car> carsByStatus = new ArrayList<Car>();
 		//获取所有监控的车辆
 		List<Car> allCars = carService.getCarsForMonitoring();
 		Map<String, CapcareMessage> capcareMap = CapcareMessageUtils.capcareMap;
-		
-		System.out.println("状态="+carsStatus);
-		//如果是全部，就不做处理
-		if(carsStatus.equals("全部")){
-			String plateNumber=null;
-			if(car!=null)
-				plateNumber=car.getPlateNumber();
-			String servicePointName=null;
-			if(!"".equals(model.getServicePoint().getName())){
-				//业务点id
-				int servicePointId=Integer.parseInt(model.getServicePoint().getName());
-				//根据业务点id获取相应的业务点名称,实际上不需要此步骤，直接在下面用id查询就行，之前已经写了此接口，所以不做改动了
-				servicePointName=carService.getServicePointById(servicePointId).getName();
-			}
-			carsByStatus= carService.findByDriverNameAndPlateNumberAndServicePointName(null,plateNumber,servicePointName);
-			
-		}else if(carsStatus.equals("行驶")){
-			for(Car car:allCars){
-				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
-				if(sm != null){
-					System.out.println("sm="+sm);
-					String speed = sm.getSpeed();
-					int status = Integer.parseInt(sm.getStatus());
-					if(status == 1 && !speed.equals("0.0")){
-						carsByStatus.add(car);
+		if(monitorGroupIds == null || monitorGroupIds.equals("")){
+			//如果是全部，就不做处理
+			if(carsStatus.equals("全部")){
+				String plateNumber=null;
+				if(car!=null)
+					plateNumber=car.getPlateNumber();
+				String servicePointName=null;
+				if(!"".equals(model.getServicePoint().getName())){
+					//业务点id
+					int servicePointId=Integer.parseInt(model.getServicePoint().getName());
+					//根据业务点id获取相应的业务点名称,实际上不需要此步骤，直接在下面用id查询就行，之前已经写了此接口，所以不做改动了
+					servicePointName=carService.getServicePointById(servicePointId).getName();
+				}
+				carsByStatus= carService.findByDriverNameAndPlateNumberAndServicePointName(null,plateNumber,servicePointName);
+				
+			}else if(carsStatus.equals("行驶")){
+				for(Car car:allCars){
+					CapcareMessage sm = capcareMap.get(car.getPlateNumber());
+					if(sm != null){
+						System.out.println("sm="+sm);
+						String speed = sm.getSpeed();
+						int status = Integer.parseInt(sm.getStatus());
+						if(status == 1 && !speed.equals("0.0")){
+							carsByStatus.add(car);
+						}
+					}
+				}
+			}else if(carsStatus.equals("静止")){
+				for(Car car:allCars){
+					CapcareMessage sm = capcareMap.get(car.getPlateNumber());
+					if(sm != null){
+						String speed = sm.getSpeed();
+						int status = Integer.parseInt(sm.getStatus());
+						if(status == 1 && speed.equals("0.0")){
+							carsByStatus.add(car);
+						}
+					}
+				}
+			}else{//无网络
+				for(Car car:allCars){
+					CapcareMessage sm = capcareMap.get(car.getPlateNumber());
+					if(sm != null){
+						int status = Integer.parseInt(sm.getStatus());
+						if(status == 2){
+							carsByStatus.add(car);
+						}
 					}
 				}
 			}
-		}else if(carsStatus.equals("静止")){
-			for(Car car:allCars){
-				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
-				if(sm != null){
-					String speed = sm.getSpeed();
-					int status = Integer.parseInt(sm.getStatus());
-					if(status == 1 && speed.equals("0.0")){
-						carsByStatus.add(car);
-					}
-				}
-			}
-		}else{//无网络
-			for(Car car:allCars){
-				CapcareMessage sm = capcareMap.get(car.getPlateNumber());
-				if(sm != null){
-					int status = Integer.parseInt(sm.getStatus());
-					if(status == 2){
-						carsByStatus.add(car);
-					}
-				}
-			}
+		}else{
+			carsByStatus = new ArrayList<Car>(monitorGroupService.getById(monitorGroupIds).getCars());
 		}
+		
 		//转为json数据
 		List<CarVO> carsVO=null;
 		if(carsByStatus.size()!=0){
@@ -190,6 +215,92 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		System.out.println("jsonStr="+jsonStr);
 		this.writeJson(jsonStr);
 		
+	}
+	
+	
+	//监控车辆分组
+	public String monitorGroup(){
+		List<MonitorGroup> monitorGroups = monitorGroupService.getAll();
+		ActionContext.getContext().put("monitorGroups", monitorGroups);
+	
+		return "list";
+	}
+	
+	public String monitorGroupAddUI(){
+		
+		List<Car> carsList = monitorGroupService.sortCarByPlateNumber();
+		ActionContext.getContext().put("carsList", carsList);
+
+		List<Car> selectedList = new ArrayList<Car>();
+		ActionContext.getContext().put("selectedList", selectedList);
+		
+		return "saveUI";
+	}
+	
+	public String monitorGroupAdd(){
+		MonitorGroup mg = new MonitorGroup();
+		mg.setTitle(monitorGroupTitle);
+		//处理分组的车辆
+		List<Car> carsList = new ArrayList<Car>();
+		System.out.println("carString="+carString);
+		if(carString != null && !carString.equals("")){
+			String[] carIds = carString.split(",");
+			for(String id:carIds){
+				Long longId = Long.parseLong(id);
+				carsList.add(carService.getCarById(longId));
+			}
+			mg.setCars(new HashSet<Car>(carsList));
+		}else{
+			mg.setCars(null);
+		}
+		monitorGroupService.save(mg);
+		
+		return monitorGroup();
+	}
+
+	public String monitorGroupEditUI(){
+
+		MonitorGroup mg = monitorGroupService.getById(monitorGroupId);
+		monitorGroupTitle = mg.getTitle();
+		List<Car> carsList = monitorGroupService.sortCarByPlateNumber();
+		List<Car> selectedList = new ArrayList<Car>(mg.getCars());
+		
+		selectedCarIds = new Long[mg.getCars().size()];
+		String selectedCarString = "";
+		int index = 0;
+		for (Car car : mg.getCars()) {
+			carsList.remove(car);
+			selectedCarString =selectedCarString+ car.getId() + ",";
+			selectedCarIds[index++] = car.getId();
+		}
+		carString = selectedCarString;
+
+		ActionContext.getContext().put("carsList", carsList);
+		ActionContext.getContext().put("selectedList", selectedList);
+		
+		return "saveUI";
+	}
+
+	public String monitorGroupEdit(){
+		MonitorGroup mg = monitorGroupService.getById(monitorGroupId);
+		mg.setTitle(monitorGroupTitle);
+		//处理所属的车辆
+		if(carString != null && !carString.equals("")){
+			String[] carIds = carString.split(",");
+			List<Car> carList = new ArrayList<Car>();
+			for(int i=0;i<carIds.length;i++){
+				Long id = Long.parseLong(carIds[i]);
+				carList.add(carService.getCarById(id));
+			}
+			mg.setCars(new HashSet<Car>(carList));
+		}
+		monitorGroupService.update(mg);
+		return monitorGroup();
+	}
+	
+	public String delete(){
+		monitorGroupService.delete(monitorGroupId);
+		return monitorGroup();
 	}
 
 	public Car getModel() {
@@ -226,6 +337,48 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	public void setCarsStatus(String carsStatus) {
 		this.carsStatus = carsStatus;
 	}
+
+	public String getMonitorGroupTitle() {
+		return monitorGroupTitle;
+	}
+
+	public void setMonitorGroupTitle(String monitorGroupTitle) {
+		this.monitorGroupTitle = monitorGroupTitle;
+	}
+
+	public String getCarString() {
+		return carString;
+	}
+
+	public void setCarString(String carString) {
+		this.carString = carString;
+	}
+	
+	public Long getMonitorGroupId() {
+		return monitorGroupId;
+	}
+
+	public void setMonitorGroupId(Long monitorGroupId) {
+		this.monitorGroupId = monitorGroupId;
+	}
+
+	public Long[] getSelectedCarIds() {
+		return selectedCarIds;
+	}
+
+	public void setSelectedCarIds(Long[] selectedCarIds) {
+		this.selectedCarIds = selectedCarIds;
+	}
+
+	public Long getMonitorGroupIds() {
+		return monitorGroupIds;
+	}
+
+	public void setMonitorGroupIds(Long monitorGroupIds) {
+		this.monitorGroupIds = monitorGroupIds;
+	}
+
+
 
 	public String getBaiduKey() {
 		return Configuration.getBaiduKey();

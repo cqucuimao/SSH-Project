@@ -45,8 +45,18 @@
                     <td>
                     <s:select style="width:135px;" name="carsStatus" list="{'全部','行驶' ,'静止' ,'无网络'}" />
                     </td>
+                     <th>分组</th>
+                    <td>
+                    <s:select name="monitorGroupIds" cssClass="SelectStyle"
+                        		list="monitorGroupList" listKey="id" listValue="title"
+                        		headerKey="" headerValue="全部"
+                        		/>
+                    </td>
                     <td>
                     <input class="inputButton" type="button" id="queryBn" value="查询"/>
+                    </td>
+                    <td>
+                    <s:a class="buttonA" action="realtime_monitorGroup">分组管理</s:a>
                     </td>
                     <td>
                     <input class="inputButton" type="button" id="monitorWindowId" value="打开监控屏"/>
@@ -920,26 +930,39 @@
 		 }
 		 
 	} 
-   /*  //清除所有车辆
-    function clearAllCars(){
-    	//在页面上清除所有复选框的勾选状态(单独处理，因为与分页是相分离的)
-		$("input:checkbox").prop("checked",false);
-		//在checkboxStatus数组中清除所有复选框的勾选状态
-		for(var i=0;i<checkboxStatus.length;i++){
-			checkboxStatus[i]=false;
+    
+    //对select中的option进行排序
+    function sortMe(){
+		var ln = $("selectId option").size();
+		var arr = new Array(); // 这是关键部分
+		
+		// 将select中的所有option的value值将保存在Array中
+		for (var i = 0; i < ln; i++)
+		{
+		
+		  // 如果需要对option中的文本排序，可以改为arr[i] = oSel.options[i].text;
+		  arr[i] = oSel.options[i].value;
+		
 		}
-      	//清除allRecordedCars中的车辆记录的选中状态
-  		for(var i=0;i<allRecordedCars.length;i++){
-  			if(allRecordedCars[i]!==undefined)
-  			   allRecordedCars[i][1]=false;
-  		}
-  	    //清除地图上的所有覆盖物,这里需要手动清除，因为flushTrack由于条件限制，不会进行任何操作
-  		map.clearOverlays();
-    }
-    //恢复异常车辆
-    function recoverAbnormalCars(){
-    	clearAllCars();	
-    }  */
+		
+		arr.sort(); // 开始排序
+		
+		// 清空Select中全部Option
+		
+		while (ln--)
+		{
+		  oSel.options[ln] = null;
+		}
+		
+		// 将排序后的数组重新添加到Select中
+		
+		for (i = 0; i < arr.length; i++)
+		{
+		  oSel.add (new Option(arr[i], arr[i]));
+		}
+	}
+    
+    sortMe($("selectId"));
     </script>
 </body>
 </html>

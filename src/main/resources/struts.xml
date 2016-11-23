@@ -326,6 +326,8 @@
 
 		<!-- 车辆实时监控管理 -->
 		<action name="realtime_*" class="realtimeAction" method="{1}">
+			<result name="list">/WEB-INF/view/monitorAction/monitorGroup_list.jsp</result>
+			<result name="saveUI">/WEB-INF/view/monitorAction/monitorGroup_saveUI.jsp</result>
 			<result name="home">/WEB-INF/view/monitorAction/realtime.jsp</result>
 			<result name="mapWindow">/WEB-INF/view/monitorAction/mapWindow.jsp
 			</result>

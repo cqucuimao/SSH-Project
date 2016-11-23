@@ -371,7 +371,6 @@
     
     function getAllCars(){
     	var monitorGroup_id = $("select[name=monitorGroupIds]").val();
-    	//alert(monitorGroup_id);
     	$.get("realtime_list.action?selectId="+monitorGroup_id,$("#queryForm").serializeArray(),function(carsJson){
        	 carData=carsJson;
       		 length=carData.cars.length; 
@@ -483,7 +482,7 @@
    	 }	   
    	 //判断双屏是否开启，如果开启，则对子窗口进行刷新
    	 if(sonWindowFlag){
-   		 sonWindow.flushTrack();
+   		 sonWindow.flushByGroup();
    	 }
    });
    
@@ -672,7 +671,7 @@
    //在地图上添加指定id的一辆车
    function addCarOnMap(id){
 	   
-	   $.ajaxSettings.async=false; 
+	   //$.ajaxSettings.async=false; 
 	   //直接将车辆标识添加到地图
        var addedCar;
        //根据车辆的sn号 查找 相应的gps坐标点
@@ -855,7 +854,7 @@
    	      		     })(carId,carPlateNumber)); 
                }); 
 		   });
- 	  $.ajaxSettings.async=true; 
+ 	  //$.ajaxSettings.async=true; 
    }
    
      	

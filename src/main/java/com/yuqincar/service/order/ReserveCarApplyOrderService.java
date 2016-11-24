@@ -14,4 +14,5 @@ public interface ReserveCarApplyOrderService {
 	public PageBean<ReserveCarApplyOrder> queryReserveCarApplyOrder(int pageNum, QueryHelper helper);
 	public List<ReserveCarApplyOrder> queryAllReserveCarApplyOrder(QueryHelper helper);
 	public List<ReserveCarApplyOrder> getNeedCheckReserveCarApplyOrders();
+	public ReserveCarApplyOrder getById(Long id);
 }

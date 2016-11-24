@@ -51,10 +51,10 @@ public class DiskFileSelectorTags extends TagSupport {
 			options.append(" 'fileTypeExts'   : '*.*;*.jpg;*.gif',");
 			options.append("'multi'          : "+mutilfiles+", ");
 			options.append("'buttonText'     : '文件上传', ");
-			options.append("'fileSizeLimit'  : '500MB', ");
+			options.append("'fileSizeLimit'  : '1MB', ");
 			options.append(" 'fileObjName'    : 'uploadify',");
 			options.append(" 'method'         : 'post',");
-			options.append(" 'removeCompleted' : true,");
+			options.append(" 'removeCompleted' : false,");
 			options.append(" 'onFallback':function(){ ");
 			options.append(" alert(\"您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。\"); },   ");
 			options.append("'onUploadSuccess' : function(file, data, response){ }, ");

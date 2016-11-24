@@ -51,7 +51,7 @@ public class DiskFileSelectorTags extends TagSupport {
 			options.append(" 'fileTypeExts'   : '*.*;*.jpg;*.gif',");
 			options.append("'multi'          : "+mutilfiles+", ");
 			options.append("'buttonText'     : '文件上传', ");
-			options.append("'fileSizeLimit'  : '1MB', ");
+			options.append("'fileSizeLimit'  : '500MB', ");
 			options.append(" 'fileObjName'    : 'uploadify',");
 			options.append(" 'method'         : 'post',");
 			options.append(" 'removeCompleted' : false,");

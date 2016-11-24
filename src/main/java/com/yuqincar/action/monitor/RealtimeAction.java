@@ -61,7 +61,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	
 	private Long[] selectedCarIds;
 	
-	private Long monitorGroupIds;
+	private Long selectId;
 	
 	public String mapWindow(){
 		return "mapWindow";
@@ -147,13 +147,12 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	 * @return
 	 */
 	public void list(){
-		System.out.println("monitorGroupIds="+monitorGroupIds);
 		//对应状态的车辆集合
 		List<Car> carsByStatus = new ArrayList<Car>();
 		//获取所有监控的车辆
 		List<Car> allCars = carService.getCarsForMonitoring();
 		Map<String, CapcareMessage> capcareMap = CapcareMessageUtils.capcareMap;
-		if(monitorGroupIds == null || monitorGroupIds.equals("")){
+		if(selectId == null || selectId.equals("")){
 			//如果是全部，就不做处理
 			if(carsStatus.equals("全部")){
 				String plateNumber=null;
@@ -203,7 +202,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 				}
 			}
 		}else{
-			carsByStatus = new ArrayList<Car>(monitorGroupService.getById(monitorGroupIds).getCars());
+			carsByStatus = new ArrayList<Car>(monitorGroupService.getById(selectId).getCars());
 		}
 		
 		//转为json数据
@@ -228,7 +227,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	
 	public String monitorGroupAddUI(){
 		
-		List<Car> carsList = monitorGroupService.sortCarByPlateNumber();
+		List<Car> carsList = monitorGroupService.sortCarByPlateNumber(carService.getCarsForMonitoring());
 		ActionContext.getContext().put("carsList", carsList);
 
 		List<Car> selectedList = new ArrayList<Car>();
@@ -262,7 +261,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 
 		MonitorGroup mg = monitorGroupService.getById(monitorGroupId);
 		monitorGroupTitle = mg.getTitle();
-		List<Car> carsList = monitorGroupService.sortCarByPlateNumber();
+		List<Car> carsList = monitorGroupService.sortCarByPlateNumber(carService.getCarsForMonitoring());
 		List<Car> selectedList = new ArrayList<Car>(mg.getCars());
 		
 		selectedCarIds = new Long[mg.getCars().size()];
@@ -370,15 +369,13 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		this.selectedCarIds = selectedCarIds;
 	}
 
-	public Long getMonitorGroupIds() {
-		return monitorGroupIds;
+	public Long getSelectId() {
+		return selectId;
 	}
 
-	public void setMonitorGroupIds(Long monitorGroupIds) {
-		this.monitorGroupIds = monitorGroupIds;
+	public void setSelectId(Long selectId) {
+		this.selectId = selectId;
 	}
-
-
 
 	public String getBaiduKey() {
 		return Configuration.getBaiduKey();

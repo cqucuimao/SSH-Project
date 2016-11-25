@@ -1,19 +1,7 @@
 <%@ page import="org.apache.poi.ss.usermodel.Picture"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="skins/main.css" rel="stylesheet" type="text/css" />
-<style>
-    	
-</style>
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -66,7 +54,7 @@
 		                <td colspan="2">
                         		<input name="actionFlag" type="hidden" value="${actionFlag }">    
 		                		<input type="hidden" name="inputRows"/>
-			                	<input type="submit" name="sub" class="inputButton" value="确定" />
+			                	<input type="submit" name="sub" class="inputButton coverOff" value="确定" />
 			                	<a class="p15" href="javascript:history.go(-1);">返回</a>
 		                </td>
 	            	</tr>
@@ -77,13 +65,6 @@
 		</div>
 		
 	</div>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	<script type="text/javascript" src="js/common.js"></script>	
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
-    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
-    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
 	<script type="text/javascript">
 	if($("input[name=actionFlag]").val() == "edit"){
 		$("input[name=superTypeTitle]").attr("readonly",true);
@@ -138,5 +119,4 @@
 	 })
 	 
 	</script>
-</body>
-</html>
+</cqu:border>

@@ -1,20 +1,6 @@
-
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="skins/main.css">
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -100,13 +86,7 @@
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %> 
 			</s:form>
 		</div>
-	</div>
-	<script type="text/javascript" src="<%=basePath%>js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="<%=basePath%>js/DatePicker/WdatePicker.js"></script>
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
-	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>	
+	</div>	
 	<script>
 	</script>
-</body>
-</html>
+</cqu:border>

@@ -1,27 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="skins/main.css">
-	<style>
-	.tdDiv{width:100px;text-align:center;float:left;margin-left:20px}
-    .tdDiv1{width:150px;text-align:center;float:left;margin-left:35px}
-    .tdDiv2{width:120px;text-align:center;float:left;margin-left:33px}
-	.tdInput{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:130px;}
-    .tdInput:focus{ background:#f0fff3;border: 1px solid #65bd77;color: #65bd77;}
-    .tdInput1{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:132px;}
-	</style>
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -147,13 +126,6 @@
 				</s:form>
 		</div>
 	</div>
-    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-    <script type="text/javascript" src="js/common.js"></script>
-    <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
-    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
-    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
 	<script type="text/javascript">
 	function checkEndTime(startTime, endTime) {
 		var start = new Date(startTime.replace("-", "/").replace("-", "/"));
@@ -298,5 +270,4 @@
 	 formatDateField1($("#fromDate"));
 	 formatDateField1($("#toDate"));
 	</script>
-</body>
-</html>
+</cqu:border>

@@ -10,7 +10,7 @@
 			<table>
 				<tr>
 				    <td><s:a action="carExamineAppointment_list"><span>预约车辆年审</span></s:a></td>
-					<td class="on"><a href="#"><span>车辆年审记录</span></a></td>
+					<td class="on"><a href="#" class="coverOff"><span>车辆年审记录</span></a></td>
 				</tr>
 			</table>
 		</div>
@@ -144,7 +144,7 @@
                     <tr>
                         <td colspan="2">
                         	<input name="actionFlag" type="hidden" value="${actionFlag }">       
-                            <input class="inputButton" type="submit" value="确定" />
+                            <input class="inputButton coverOff" type="submit" value="确定" />
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
                     </tr>

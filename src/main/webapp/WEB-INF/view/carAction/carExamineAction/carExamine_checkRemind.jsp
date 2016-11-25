@@ -10,7 +10,7 @@
 			<table>
 				<tr>
 				    <td><s:a action="carExamineAppointment_list"><span>预约车辆年审</span></s:a></td>
-					<td class="on"><a href="#"><span>车辆年审记录</span></a></td>
+					<td class="on"><a href="#" class="coverOff"><span>车辆年审记录</span></a></td>
 				</tr>
 			</table>
 		</div>
@@ -19,7 +19,7 @@
 			<s:form id="pageForm" action="carExamine_queryRemind">
 			<table>
 				<tr>
-					<td><s:a action="carExamine_exportRemind" cssClass="buttonA">导出</s:a>
+					<td><s:a action="carExamine_exportRemind" cssClass="buttonA coverOff">导出</s:a>
 					</td>
 					<td>
 						<s:textfield name="yearMonth" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM'})" />

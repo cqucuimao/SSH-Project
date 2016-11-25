@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.order.ReserveCarApplyOrder;
+import com.yuqincar.domain.order.ReserveCarApplyOrderStatusEnum;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.order.ReserveCarApplyOrderService;
 import com.yuqincar.utils.DateUtils;
@@ -38,6 +39,8 @@ public class StandingGarageCarCheck {
 					car.setTempStandingGarage(false);
 					carService.updateCar(car);
 				}
+				rcao.setStatus(ReserveCarApplyOrderStatusEnum.EXPIRED);
+				reserveCarApplyOrderService.updateReserveCarApplyOrder(rcao);
 		}
 	}
 }

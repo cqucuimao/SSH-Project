@@ -13,7 +13,9 @@ public enum ReserveCarApplyOrderStatusEnum implements BaseEnum {
 	
 	APPROVED(3,"审核通过"),
 	
-	EXPIRED(4,"过期");
+	CONFIGURED(4,"已配置"),
+	
+	EXPIRED(5,"过期");
 	
 	private int id;
 	private String label;

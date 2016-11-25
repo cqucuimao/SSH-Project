@@ -39,7 +39,7 @@ public class ReserveCarApplyOrderServiceImpl implements ReserveCarApplyOrderServ
 
 	public List<ReserveCarApplyOrder> getNeedCheckReserveCarApplyOrders() {
 		QueryHelper queryHelper=new QueryHelper(ReserveCarApplyOrder.class,"rcao");
-		queryHelper.addWhereCondition("rcao.status=?", ReserveCarApplyOrderStatusEnum.APPROVED);
+		queryHelper.addWhereCondition("rcao.status=?", ReserveCarApplyOrderStatusEnum.CONFIGURED);
 		return reserveCarApplyOrderDao.getAllQuerry(queryHelper);
 	}
 	

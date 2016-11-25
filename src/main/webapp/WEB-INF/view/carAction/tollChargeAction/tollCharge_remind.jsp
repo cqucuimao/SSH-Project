@@ -10,7 +10,7 @@
 			<table>
 				<tr>
 					<td>
-						<s:a cssClass="buttonA" action="tollCharge_exportRemind">导出</s:a>
+						<s:a cssClass="buttonA coverOff" action="tollCharge_exportRemind">导出</s:a>
 					</td>
 					<td>
 					<a class="p15" href="javascript:history.go(-1);">返回</a>

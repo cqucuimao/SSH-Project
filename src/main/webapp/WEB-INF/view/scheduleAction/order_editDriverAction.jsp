@@ -1,17 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="<%=basePath %>skins/main.css" rel="stylesheet" type="text/css" />
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
     <div class="space">
         <!-- 标题 -->
         <div class="title" style="">
@@ -107,7 +96,7 @@
                         		<input class="Wdate half" id="actionTime" name="actionTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /><span class="required">*</span>&nbsp;&nbsp;
                         		<input type="hidden" name="orderId" value="${id }">
                         		<s:if test="canAddAcceptAction">                       			
-                        				<input type="submit" id="accept" class="inputButton" value="接受订单"/>                      		
+                        				<input type="submit" id="accept" class="inputButton coverOff" value="接受订单"/>                      		
                         		</s:if>
                         		<s:else>                      			
                         				<input disabled="disabled" type="button" class="inputButton" value="接受订单"/>                      			
@@ -144,13 +133,6 @@
             </table>
           </div>
     </div>
-    <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-    <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
-    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
-    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
     <script type="text/javascript">
     
    	
@@ -159,10 +141,12 @@
    		var actionTime = $("#actionTime").val().replace('-','/').replace('-','/');
    		if(actionTime == ""){
    	   		alert("操作时间不能为空！");
+   	   		coverSwitcherOff();
    	   		return false;
    	   	}
    		if(Date.parse(last)>Date.parse(actionTime)){
    			alert("操作时间不合法！");
+   			coverSwitcherOff();
    	   		return false;
    		}
    	})
@@ -206,5 +190,4 @@
     
 		
 	</script>
-</body>
-</html>
+</cqu:border>

@@ -1,19 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="<%=basePath %>skins/main.css">
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -22,7 +9,7 @@
 		<div class="tab_next style2">
 			<table>
 				<tr>
-					<td class="on"><a href="#"><span>订单列表</span></a></td>
+					<td class="on"><a href="#" class="coverOff"><span>订单列表</span></a></td>
 				    <td><s:a action="order_unAcceptedOrderRemind"><span>还未接受的订单</span></s:a></td>
 				    <td><s:a action="order_protocolOrderRemind"><span>协议订单到期提醒</span></s:a></td>
 				</tr>
@@ -132,10 +119,4 @@
 			</s:form>
 		</div>
 	</div>
-	<script type="text/javascript" src="<%=basePath%>js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="<%=basePath%>js/DatePicker/WdatePicker.js"></script>
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
-	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>
-</body>
-</html>
+</cqu:border>

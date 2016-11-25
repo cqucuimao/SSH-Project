@@ -1,18 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="<%=basePath %>skins/main.css">
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -23,7 +11,7 @@
 				<tr>
 					<td><s:a action="order_orderManager"><span>订单列表</span></s:a></td>					
 				    <td><s:a action="order_unAcceptedOrderRemind"><span>还未接受的订单</span></s:a></td>
-				    <td class="on"><a href="#"><span>协议订单到期提醒</span></a></td>
+				    <td class="on"><a href="#" class="coverOff"><span>协议订单到期提醒</span></a></td>
 				</tr>
 			</table>
 		</div>
@@ -86,6 +74,4 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" src="<%=basePath%>js/jquery-1.7.1.min.js"></script>
-</body>
-</html>
+</cqu:border>

@@ -1,17 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="skins/main.css" rel="stylesheet" type="text/css" />
-<style>
-    	
-    </style>
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
     <div class="space">
         <!-- 标题 -->
         <div class="title">
@@ -43,7 +32,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="2">
-                            <input class="inputButton" type="submit" value="确定" />
+                            <input class="inputButton coverOff" type="submit" value="确定" />
                              <a class="p15" href="javascript:history.go(-1);">返回</a>
                         </td>
                     </tr>
@@ -52,11 +41,6 @@
         </s:form>
         </div>
     </div>
-    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
-    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
-    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
-    <script type="text/javascript" src="js/common.js"></script>	
     <script type="text/javascript">
     	 
 	    $(function(){
@@ -74,5 +58,4 @@
 			});
 		});
     </script>
-</body>
-</html>
+</cqu:border>

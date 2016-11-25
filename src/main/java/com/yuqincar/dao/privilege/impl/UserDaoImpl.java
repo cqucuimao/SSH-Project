@@ -158,4 +158,20 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		crit.add(Restrictions.eq("name", roleName));
 		return (List<User>) crit.list();
 	}
+
+	public User getByName(String name) {
+		if(name == null) 
+			return null;
+		return (User) getSession().createQuery(
+					"FROM User WHERE name=?")
+					.setParameter(0, name)
+					.uniqueResult();
+	}
+
+	public List<User> getAllDrivers() {
+		List<User> users = getSession().createQuery("from User u where u.userType=1")
+				.list();
+		
+		return users;
+	}
 }

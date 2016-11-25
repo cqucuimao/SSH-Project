@@ -57,6 +57,10 @@ public interface UserService extends BaseService{
 	User getByLoginNameAndPassword(String loginName, String password,long companyId);
 
 	User getByLoginName(String loginName, long companyId);
+	
+	User getByName(String name);
+	
+	List<User> getAllDrivers();
 
 	PageBean getPageBean( int pageNum , QueryHelper helper);
 	

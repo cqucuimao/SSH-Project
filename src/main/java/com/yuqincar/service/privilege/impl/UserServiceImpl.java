@@ -254,4 +254,12 @@ public class UserServiceImpl implements UserService{
 			companies.add(user.getCompany());
 		return companies;
 	}
+
+	public User getByName(String name) {
+		return userDao.getByName(name);
+	}
+
+	public List<User> getAllDrivers() {
+		return userDao.getAllDrivers();
+	}
 }

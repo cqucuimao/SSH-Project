@@ -108,6 +108,8 @@ public interface CarService {
 	public List<Car> findByDriverName(String driverName);
 	
 	public List<Car> getAll();
+	
+	public List<Car> getAllCarFromNotStandingGarage();
 
 	public List<TreeNode> getCarTree(String plateNumber,String synchDriver);
 

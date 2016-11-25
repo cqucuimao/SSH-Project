@@ -523,7 +523,16 @@
 			<result name="queryUI">/WEB-INF/view/scheduleAction/order_queryUI.jsp
 			</result>
 		</action>
-
+		
+		<!-- 扩充常备车库申请 -->
+		<action name="reserveCarApplyOrder_*" class="reserveCarApplyOrderAction" method="{1}">
+	    	<result name="list">/WEB-INF/view/scheduleAction/reserveCarApplyOrder_list.jsp</result>
+	    	<result name="saveUI">/WEB-INF/view/scheduleAction/reserveCarApplyOrder_saveUI.jsp</result>
+	    	<result name="saveUI1">/WEB-INF/view/scheduleAction/reserveCarApplyOrder_saveUI1.jsp</result>
+	    	<result name="saveUI2">/WEB-INF/view/scheduleAction/reserveCarApplyOrder_saveUI2.jsp</result>
+	    	<result name="view">/WEB-INF/view/scheduleAction/reserveCarApplyOrder_view.jsp</result>
+	     </action>
+		
 		<!-- 未收款订单管理 -->
 		<action name="unpaidOrder_*" class="unpaidOrderAction" method="{1}">
 	    	<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
@@ -549,7 +558,12 @@
 
 		<!-- 配置功能的管理 -->
 		<action name="businessParameter_*" class="businessParameterAction" method="{1}">
-	    	<result name="employees">/WEB-INF/view/businessParameterAction/BusinessParameterUpdate.jsp</result>
+	    	<result name="employees">/WEB-INF/view/businessParameterAction/businessParameterUpdate.jsp</result>
+	    	<result name="save4SUI">/WEB-INF/view/businessParameterAction/businessParameter_save4SUI.jsp</result>
+	    	<result name="saveCarCareUI">/WEB-INF/view/businessParameterAction/businessParameter_saveCarCareUI.jsp</result>
+	    	
+	    	<result name="list">/WEB-INF/view/businessParameterAction/businessParameter_list.jsp</result>
+	    	<result name="saveUI">/WEB-INF/view/businessParameterAction/businessParameter_saveUI.jsp</result>
 	     </action>
 		
 		<!-- 司机任务管理功能 -->

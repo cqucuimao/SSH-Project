@@ -5,6 +5,8 @@ import java.util.List;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.ReserveCarApplyOrder;
+import com.yuqincar.domain.order.ReserveCarApplyOrderStatusEnum;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.QueryHelper;
 
 public interface ReserveCarApplyOrderService {
@@ -15,4 +17,6 @@ public interface ReserveCarApplyOrderService {
 	public List<ReserveCarApplyOrder> queryAllReserveCarApplyOrder(QueryHelper helper);
 	public List<ReserveCarApplyOrder> getNeedCheckReserveCarApplyOrders();
 	public ReserveCarApplyOrder getById(Long id);
+	public List<User> sortUserByName(List<User> users);
+	public List<ReserveCarApplyOrder> getReserveCarApplyOrderByStatus(ReserveCarApplyOrderStatusEnum status);
 }

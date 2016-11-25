@@ -50,4 +50,6 @@ public interface CarDao extends BaseDao<Car> {
 	List<Car> getAllNormalCars();
 
 	public Car getCarByDeviceSN(String SN);
+	
+	public List<Car> getAllCarFromNotStandingGarage();
 }

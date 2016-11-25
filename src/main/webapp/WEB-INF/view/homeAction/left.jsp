@@ -92,6 +92,12 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/reserveCarApplyOrder_list') ">
+			<dd>
+				<s:a action="reserveCarApplyOrder_list">扩充常备车库申请</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
 		</dl>
 		</s:if>
 		
@@ -329,9 +335,37 @@
 				配置
 				<div class="group-collapsed"></div>
 			</dt>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_employees') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_employeesFor4S') ">
 			<dd>
-				<s:a action="businessParameter_employees">配置</s:a>
+				<s:a action="businessParameter_employeesFor4S">配置4S员工</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_employeesForCarCare') ">
+			<dd>
+				<s:a action="businessParameter_employeesForCarCare">配置保养管理员</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderApplyUser') ">
+			<dd>
+				<s:a action="businessParameter_reserveCarApplyOrderApplyUser">配置申请人</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderCarApproveUser') ">
+			<dd>
+				<s:a action="businessParameter_reserveCarApplyOrderCarApproveUser">配置车辆审批人</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderDriverApproveUser') ">
+			<dd>
+				<s:a action="businessParameter_reserveCarApplyOrderDriverApproveUser">配置司机审批人</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

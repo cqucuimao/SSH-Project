@@ -35,6 +35,24 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	@Text("使用结束日期")
 	private Date toDate;
 	
+	@Text("新建时间")
+	private Date newTime;
+	
+	@Text("提交时间")
+	private Date submittedTime;
+	
+	@Text("被驳回时间")
+	private Date rejectedTime;
+	
+	@Text("审核通过时间")
+	private Date approvedTime;
+	
+	@Text("审核是否通过")
+	private boolean approved;
+	
+	@Text("审核意见")
+	private String approveMemo;
+	
 	@Text("申请状态")
 	@Column(nullable = false)
 	private ReserveCarApplyOrderStatusEnum status;
@@ -101,11 +119,47 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}
+	public Date getNewTime() {
+		return newTime;
+	}
+	public void setNewTime(Date newTime) {
+		this.newTime = newTime;
+	}
+	public Date getSubmittedTime() {
+		return submittedTime;
+	}
+	public void setSubmittedTime(Date submittedTime) {
+		this.submittedTime = submittedTime;
+	}
+	public Date getRejectedTime() {
+		return rejectedTime;
+	}
+	public void setRejectedTime(Date rejectedTime) {
+		this.rejectedTime = rejectedTime;
+	}
+	public Date getApprovedTime() {
+		return approvedTime;
+	}
+	public void setApprovedTime(Date approvedTime) {
+		this.approvedTime = approvedTime;
+	}
 	public ReserveCarApplyOrderStatusEnum getStatus() {
 		return status;
 	}
 	public void setStatus(ReserveCarApplyOrderStatusEnum status) {
 		this.status = status;
+	}
+	public boolean isApproved() {
+		return approved;
+	}
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
+	public String getApproveMemo() {
+		return approveMemo;
+	}
+	public void setApproveMemo(String approveMemo) {
+		this.approveMemo = approveMemo;
 	}
 	public User getCarApproveUser() {
 		return carApproveUser;

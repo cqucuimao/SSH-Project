@@ -16,4 +16,6 @@ public interface UserDao extends BaseDao<User>{
 	public boolean isLoginNameExist(long selfId,String loginName);
 	public List<User> getUsersByRoleName(String roleName);
 	public List<User> getUsersByLoginName(String loginName);
+	public User getByName(String name);
+	public List<User> getAllDrivers();
 } 

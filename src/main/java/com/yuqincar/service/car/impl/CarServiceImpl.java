@@ -293,4 +293,8 @@ public class CarServiceImpl implements CarService {
 		carServiceSuperTypeDao.update(carServiceSuperType);
 	}
 
+	public List<Car> getAllCarFromNotStandingGarage() {
+		return carDao.getAllCarFromNotStandingGarage();
+	}
+
 }

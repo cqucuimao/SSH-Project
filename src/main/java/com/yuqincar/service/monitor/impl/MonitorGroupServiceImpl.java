@@ -41,12 +41,11 @@ public class MonitorGroupServiceImpl implements MonitorGroupService{
 	public MonitorGroup getById(Long id) {
 		return monitorGroupDao.getById(id);
 	}
-	public List<Car> sortCarByPlateNumber() {
+	public List<Car> sortCarByPlateNumber(List<Car> cars) {
 		//排序
-		List<Car> carsList = carService.getCarsForMonitoring();
 		List<Car> sortList = new ArrayList<Car>();
 		List<String> plateNumberList = new ArrayList<String>();
-		for(Car car:carsList){
+		for(Car car:cars){
 			plateNumberList.add(car.getPlateNumber());
 		}
 		Collections.sort(plateNumberList);

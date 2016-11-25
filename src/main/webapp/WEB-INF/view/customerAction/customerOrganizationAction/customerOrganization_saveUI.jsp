@@ -1,20 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="skins/main.css" rel="stylesheet" type="text/css" />
-<style>
-    	
-    </style>
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
     <div class="space">
         <!-- 标题 -->
         <div class="title">
@@ -67,18 +53,6 @@
         </s:form>
         </div>
     </div>
-    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-    <script type="text/javascript" src="js/common.js"></script>
-    
-    
-    <script src="js/jquery-1.7.2.js"></script>
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
-    
-    
-    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
-    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
     <script type="text/javascript">
 	    $(function(){
 			$("#pageForm").validate({
@@ -95,5 +69,4 @@
 			});
 		});
     </script>
-</body>
-</html>
+</cqu:border>

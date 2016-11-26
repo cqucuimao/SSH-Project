@@ -25,6 +25,7 @@ public class DiskFileAction extends ActionSupport {
 	private String uploadDir;//保存上传文件的目录,相对于web应用程序的根路径,在struts.xml文件中配置
 	
 	public String execute(){
+		//System.out.println("i am in diskFileAction****************");
 		ArrayList<File> uploadLists=new ArrayList<File>();
 		String newFileName=null;
 		//得到当前时间开始流逝的毫秒数,将这个毫秒数作为上传文件新的文件名

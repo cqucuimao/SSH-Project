@@ -8,26 +8,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.hibernate.classic.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
-import com.mysql.jdbc.Driver;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
-import com.yuqincar.dao.car.impl.CarWashShopDaoImpl;
 import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarWash;
 import com.yuqincar.domain.car.CarWashShop;
-import com.yuqincar.domain.car.Material;
-import com.yuqincar.domain.car.ServicePoint;
+import com.yuqincar.domain.common.DiskFile;
+import com.yuqincar.domain.common.DiskFiles;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.common.UploadedDiskFiles;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.car.CarWashService;
@@ -67,7 +60,16 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	private CarWashShop carWashShop;
 	
 	private Long carId;
-
+	
+	private UploadedDiskFiles uDiskFiles;
+	
+	
+	public UploadedDiskFiles getuDiskFiles() {
+		return uDiskFiles;
+	}
+	public void setuDiskFiles(UploadedDiskFiles uDiskFiles) {
+		this.uDiskFiles = uDiskFiles;
+	}
 	//头部快速查询
 	public String queryForm(){
 		QueryHelper helper = new QueryHelper("CarWash", "cw");
@@ -269,8 +271,24 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 	}
  
    public String test(){
+	   System.out.println("*************in carwash coming here");
+	   ArrayList<File> uploads=new ArrayList<File>();
+	   if ((ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists")!=null)
+	   {
+		   uploads=(ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists");
+		   for(int i=0;i<uploads.size();i++)
+			   System.out.println(uploads.get(i));
+	   }
+	   if(uDiskFiles!=null)
+		   System.out.println(uDiskFiles.getDiskFiles().size());
+	   
 	  return "test";
    }
+   
+   public String test2(){
+		System.out.println("zys");  
+	    return "success";
+	   }
     
    public CarWash getModel() {
 		return model;

@@ -15,7 +15,8 @@ public class CarSelectorConverter extends StrutsTypeConverter {
 	@Autowired
 	private CarService carService;
 	
-	public Object convertFromString(Map context, String[] values, Class toClass) {  
+	public Object convertFromString(Map context, String[] values, Class toClass) { 
+		System.out.println("in car ****************************88888");
 		if(toClass==Car.class){
 			Long id=Long.valueOf(values[0]);
 			return carService.getCarById(id);

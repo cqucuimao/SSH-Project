@@ -44,7 +44,10 @@
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.proposer')" /><span class="required">*</span></th>
 						<td>
-								<cqu:userSelector name="proposer"/>	
+								<s:select id="proposerId" name="proposerId" cssClass="SelectStyle"
+                        		list="applyUserList" listKey="id" listValue="name"
+                        		headerKey="" headerValue="选择申请人"
+                        		/>	
 						</td>
 					</tr>
 					<tr>
@@ -74,6 +77,15 @@
 						</td>
 					</tr>	
 					<!-- 公司领导审核的内容 -->
+					<tr class="approveTr" style="display:none;">
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveUser')" /><span class="required">*</span></th>
+						<td>
+								<s:select name="approveUserId" cssClass="SelectStyle"
+                        		list="approveUserList" listKey="id" listValue="name"
+                        		headerKey="" headerValue="选择审核人"
+                        		/>	
+						</td>
+					</tr>
 					<tr class="approveTr" style="display:none;">
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveMemo')" /></th>
 						<td>
@@ -134,8 +146,7 @@
 	//审核
 	if(actionFlag == "approve"){
 		//其他项设置为只读
-    	$("#proposerLabel").removeAttr("onclick");
-    	$("#proposerLabel").attr("disabled", true); 
+    	$("#proposerId").attr("disabled", true); 
     	$("#carCount").attr("disabled",true);
     	$("#fromDate").removeAttr("onfocus"); 
 		$("#fromDate").attr("disabled", true); 
@@ -157,12 +168,8 @@
 		$("#pageForm").validate({
 			submitout: function(element) { $(element).valid(); },
 			rules:{
-				proposerLabel:{
+				proposerId:{
 					required:true,
-				},
-				carCount:{
-					required:true,
-					digits:true ,
 				},
 				fromDate:{
 					required:true,
@@ -171,6 +178,13 @@
 					required:true,
 				},
 				reason:{
+					required:true,
+				},
+				carCount:{
+					required:true,
+					digits:true ,
+				},
+				approveUserId:{
 					required:true,
 				},
 			}

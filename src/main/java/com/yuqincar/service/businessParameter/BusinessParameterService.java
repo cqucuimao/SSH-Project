@@ -4,5 +4,6 @@ import com.yuqincar.domain.businessParameter.BusinessParameter;
 
 public interface BusinessParameterService {
 	public BusinessParameter getBusinessParameter();
+	public void updateBusinessParameter(BusinessParameter businessParameter);
 
 }

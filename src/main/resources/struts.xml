@@ -558,10 +558,6 @@
 
 		<!-- 配置功能的管理 -->
 		<action name="businessParameter_*" class="businessParameterAction" method="{1}">
-	    	<result name="employees">/WEB-INF/view/businessParameterAction/businessParameterUpdate.jsp</result>
-	    	<result name="save4SUI">/WEB-INF/view/businessParameterAction/businessParameter_save4SUI.jsp</result>
-	    	<result name="saveCarCareUI">/WEB-INF/view/businessParameterAction/businessParameter_saveCarCareUI.jsp</result>
-	    	
 	    	<result name="list">/WEB-INF/view/businessParameterAction/businessParameter_list.jsp</result>
 	    	<result name="saveUI">/WEB-INF/view/businessParameterAction/businessParameter_saveUI.jsp</result>
 	     </action>

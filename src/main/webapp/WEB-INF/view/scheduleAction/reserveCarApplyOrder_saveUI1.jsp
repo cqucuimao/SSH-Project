@@ -43,15 +43,16 @@
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.proposer')" /><span class="required">*</span></th>
 						<td>
-								<cqu:userSelector name="proposer"/>	
+								<s:select id="proposerId" name="proposerId" cssClass="SelectStyle"
+                        		list="applyUserList" listKey="id" listValue="name"
+                        		headerKey=""
+                        		/>		
 						</td>
 					</tr>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carCount')" /><span class="required">*</span></th>
 						<td>
-
 								<s:textfield cssClass="inputText" id="carCount" name="carCount"/>
-						
 						</td>
 					</tr>
 					<tr>
@@ -73,6 +74,12 @@
 						</td>
 					</tr>	
 					<!-- 公司领导审核的内容 -->
+					<tr>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveUser')" /><span class="required">*</span></th>
+						<td>
+								${approveUser.name }
+						</td>
+					</tr>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveMemo')" /></th>
 						<td>
@@ -106,7 +113,7 @@
 						</td>
 					</tr>
 					</s:if>
-					<!-- 当车辆审批为true时，显示审批车辆 -->
+					<!-- 当司机审批为true时，显示审批司机 -->
 					<s:if test="driverApproved == true">
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.drivers')" /><span class="required">*</span></th>
@@ -120,7 +127,10 @@
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUser')" /><span class="required">*</span></th>
 						<td>
-								<cqu:userSelector name="carApproveUser"/>	
+								<s:select name="carApproveUserId" cssClass="SelectStyle"
+                        		list="carApproveUserList" listKey="id" listValue="name"
+                        		headerKey="" headerValue="选择车辆审批人"
+                        		/>	
 						</td>
 					</tr>
 					<tr>
@@ -189,8 +199,7 @@
 	
 	//审批车辆
 	//其他项设置为只读
-   	$("#proposerLabel").removeAttr("onclick");
-   	$("#proposerLabel").attr("disabled", true); 
+   	$("#proposerId").attr("disabled", true); 
    	$("#carCount").attr("disabled",true);
    	$("#fromDate").removeAttr("onfocus"); 
 	$("#fromDate").attr("disabled", true); 
@@ -223,7 +232,10 @@
 		$("#pageForm").validate({
 			submitout: function(element) { $(element).valid(); },
 			rules:{
-				carApproveUserLabel:{
+				carApproveUserId:{
+					required:true,
+				},
+				selectedIds:{
 					required:true,
 				},
 			}

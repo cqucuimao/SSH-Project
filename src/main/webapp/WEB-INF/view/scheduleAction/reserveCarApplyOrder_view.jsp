@@ -68,16 +68,20 @@
 						</td>
 					</tr>	
 					<tr>
-					<!-- 公司领导审核信息 ，当状态不为新建和已提交审核时就显示该内容-->
-					<s:if test="status.id != 0 && status.id != 1">
+					<!-- 公司领导审核信息-->
+					<s:if test="approveUser != null">
 						<tr>
-							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveMemo')" /></th>
+							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveUser')" />：</th>
+							<td>${approveUser.name }</td>
+						</tr>
+						<tr>
+							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveMemo')" />：</th>
 							<td>
 									<s:textarea class="inputText" style="height:100px" disabled="true" name="approveMemo"></s:textarea>
 							</td>
 						</tr>
 						<tr>
-							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approved')" /></th>
+							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approved')" />：</th>
 							<td>
 								<s:if test="approved == true">是</s:if>
 								<s:else><font color="red">否</font></s:else>
@@ -103,17 +107,17 @@
 					<!-- 车辆审批信息 -->
 					<s:if test="carApproveUser != null">
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUser')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUser')" />：</th>
 						<td>	${carApproveUser.name }</td>
 					</tr>
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUserMemo')" /></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUserMemo')" />：</th>
 						<td>
 								<s:textarea class="inputText" style="height:100px" disabled="true" name="carApproveUserMemo"></s:textarea>
 						</td>
 					</tr>
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproved')" /></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproved')" />：</th>
 						<td>
 							<s:if test="carApproved == true">是</s:if>
 							<s:else>
@@ -125,7 +129,7 @@
 					<!-- 当车辆审批为true时，显示审批车辆 -->
 					<s:if test="carApproved == true">
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.cars')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.cars')" />：</th>
 						<td>
 								<s:iterator value="cars">
                 					${plateNumber}&nbsp;
@@ -136,17 +140,17 @@
 					<!-- 司机审批信息-->
 					<s:if test="driverApproveUser != null">
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUser')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUser')" />：</th>
 						<td>	${driverApproveUser.name }</td>
 					</tr>
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUserMemo')" /></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUserMemo')" />：</th>
 						<td>
 								<s:textarea class="inputText" style="height:100px" disabled="true" name="driverApproveUserMemo"></s:textarea>
 						</td>
 					</tr>
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproved')" /></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproved')" />：</th>
 						<td>
 							<s:if test="driverApproved == true">是</s:if>
 							<s:else><font color="red">否</font></s:else>
@@ -156,11 +160,21 @@
 					<!-- 当车辆审批为true时，显示审批车辆 -->
 					<s:if test="driverApproved == true">
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.drivers')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.drivers')" />：</th>
 						<td>
 								<s:iterator value="drivers">
                 					${name}&nbsp;
                 				</s:iterator></td>
+					</tr>		
+					</s:if>
+					
+					<!-- 显示配置完成时间-->
+					<s:if test="status.id == 5">
+					<tr>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.configuredTime')" />：</th>
+						<td>
+								<s:date name="configuredTime" format="yyyy-MM-dd HH:mm"/>
+						</td>
 					</tr>		
 					</s:if>
 					

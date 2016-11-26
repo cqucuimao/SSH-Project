@@ -47,8 +47,15 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	@Text("审核通过时间")
 	private Date approvedTime;
 	
+	@Text("配置完成时间")
+	private Date configuredTime;
+	
 	@Text("审核是否通过")
 	private boolean approved;
+	
+	@Text("审核人")
+	@OneToOne(fetch=FetchType.LAZY)
+	private User approveUser;
 	
 	@Text("审核意见")
 	private String approveMemo;
@@ -57,33 +64,33 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	@Column(nullable = false)
 	private ReserveCarApplyOrderStatusEnum status;
 	
-	@Text("车辆审批人")
+	@Text("车辆配置人")
 	@OneToOne(fetch=FetchType.LAZY)
 	private User carApproveUser;
 	
-	@Text("车辆审批人意见")
+	@Text("车辆配置人意见")
 	private String carApproveUserMemo;
 	
-	@Text("车辆审批人是否审批通过")
+	@Text("车辆配置人是否审批通过")
 	private boolean carApproved;
 	
-	@Text("审批车辆")
+	@Text("配置车辆")
 	@OneToMany
 	@JoinTable(name = "reserveApply_car", joinColumns = { @JoinColumn(name = "apply_id")},
 		inverseJoinColumns = { @JoinColumn(name = "car_id") })
 	private Set<Car> cars;
 	
-	@Text("司机审批人")
+	@Text("司机配置人")
 	@OneToOne(fetch=FetchType.LAZY)
 	private User driverApproveUser;
 	
-	@Text("司机审批意见")
+	@Text("司机配置意见")
 	private String driverApproveUserMemo;
 	
-	@Text("司机审批人是否审批通过")
+	@Text("司机配置人是否审批通过")
 	private boolean driverApproved;
 	
-	@Text("审批司机")
+	@Text("配置司机")
 	@OneToMany
 	@JoinTable(name = "reserveApply_driver", joinColumns = { @JoinColumn(name = "apply_id")},
 		inverseJoinColumns = { @JoinColumn(name = "driver_id") })
@@ -208,5 +215,18 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	}
 	public void setDrivers(Set<User> drivers) {
 		this.drivers = drivers;
-	}	
+	}
+	public Date getConfiguredTime() {
+		return configuredTime;
+	}
+	public void setConfiguredTime(Date configuredTime) {
+		this.configuredTime = configuredTime;
+	}
+	public User getApproveUser() {
+		return approveUser;
+	}
+	public void setApproveUser(User approveUser) {
+		this.approveUser = approveUser;
+	}
+	
 }

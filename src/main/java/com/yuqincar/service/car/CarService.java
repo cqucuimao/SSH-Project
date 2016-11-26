@@ -109,7 +109,7 @@ public interface CarService {
 	
 	public List<Car> getAll();
 	
-	public List<Car> getAllCarFromNotStandingGarage();
+	public List<Car> getAllCarFromNotStandingAndNotTempStandingGarage();
 
 	public List<TreeNode> getCarTree(String plateNumber,String synchDriver);
 

@@ -26,6 +26,34 @@ public class BusinessParameter extends BaseEntity{
                joinColumns=@JoinColumn(name="businessparameter"),
                inverseJoinColumns=@JoinColumn(name="user"))
 	private List<User> employeesForCarCareAppointmentSMS;
+	
+	@Text("扩充常备车库申请审核人")
+	@OneToMany
+    @JoinTable(name="businessparameter_reserveCarApplyOrderApproveUser",
+               joinColumns=@JoinColumn(name="businessparameter"),
+               inverseJoinColumns=@JoinColumn(name="user"))
+	private List<User> reserveCarApplyOrderApproveUser;
+	
+	@Text("扩充常备车库申请人")
+	@OneToMany
+    @JoinTable(name="businessparameter_reserveCarApplyOrderApplyUser",
+               joinColumns=@JoinColumn(name="businessparameter"),
+               inverseJoinColumns=@JoinColumn(name="user"))
+	private List<User> reserveCarApplyOrderApplyUser;
+	
+	@Text("扩充常备车库车辆配置人")
+	@OneToMany
+    @JoinTable(name="businessparameter_reserveCarApplyOrderCarApproveUser",
+               joinColumns=@JoinColumn(name="businessparameter"),
+               inverseJoinColumns=@JoinColumn(name="user"))
+	private List<User> reserveCarApplyOrderCarApproveUser;
+	
+	@Text("扩充常备车库司机配置人")
+	@OneToMany
+    @JoinTable(name="businessparameter_reserveCarApplyOrderDriverApproveUser",
+               joinColumns=@JoinColumn(name="businessparameter"),
+               inverseJoinColumns=@JoinColumn(name="user"))
+	private List<User> reserveCarApplyOrderDriverApproveUser;
 
 	@Text("保养通知提前里程量")
 	private int mileageForCarCareRemind;
@@ -52,6 +80,38 @@ public class BusinessParameter extends BaseEntity{
 
 	public void setMileageForCarCareRemind(int mileageForCarCareRemind) {
 		this.mileageForCarCareRemind = mileageForCarCareRemind;
+	}
+
+	public List<User> getReserveCarApplyOrderApplyUser() {
+		return reserveCarApplyOrderApplyUser;
+	}
+
+	public void setReserveCarApplyOrderApplyUser(List<User> reserveCarApplyOrderApplyUser) {
+		this.reserveCarApplyOrderApplyUser = reserveCarApplyOrderApplyUser;
+	}
+
+	public List<User> getReserveCarApplyOrderCarApproveUser() {
+		return reserveCarApplyOrderCarApproveUser;
+	}
+
+	public void setReserveCarApplyOrderCarApproveUser(List<User> reserveCarApplyOrderCarApproveUser) {
+		this.reserveCarApplyOrderCarApproveUser = reserveCarApplyOrderCarApproveUser;
+	}
+
+	public List<User> getReserveCarApplyOrderDriverApproveUser() {
+		return reserveCarApplyOrderDriverApproveUser;
+	}
+
+	public void setReserveCarApplyOrderDriverApproveUser(List<User> reserveCarApplyOrderDriverApproveUser) {
+		this.reserveCarApplyOrderDriverApproveUser = reserveCarApplyOrderDriverApproveUser;
+	}
+
+	public List<User> getReserveCarApplyOrderApproveUser() {
+		return reserveCarApplyOrderApproveUser;
+	}
+
+	public void setReserveCarApplyOrderApproveUser(List<User> reserveCarApplyOrderApproveUser) {
+		this.reserveCarApplyOrderApproveUser = reserveCarApplyOrderApproveUser;
 	}
 	
 	

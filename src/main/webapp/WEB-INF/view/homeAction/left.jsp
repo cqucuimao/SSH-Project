@@ -337,35 +337,42 @@
 			</dt>
 			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_employeesFor4S') ">
 			<dd>
-				<s:a action="businessParameter_employeesFor4S">配置4S员工</s:a>
+				<s:a action="businessParameter_employeesFor4S?actionFlag=for4S">配置4S员工</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
 			
 			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_employeesForCarCare') ">
 			<dd>
-				<s:a action="businessParameter_employeesForCarCare">配置保养管理员</s:a>
+				<s:a action="businessParameter_employeesForCarCare?actionFlag=forCarCare">配置保养管理员</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderApproveUser') ">
+			<dd>
+				<s:a action="businessParameter_reserveCarApplyOrderApproveUser?actionFlag=approveUser">配置审核人</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
 			
 			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderApplyUser') ">
 			<dd>
-				<s:a action="businessParameter_reserveCarApplyOrderApplyUser">配置申请人</s:a>
+				<s:a action="businessParameter_reserveCarApplyOrderApplyUser?actionFlag=applyUser">配置常备车库申请人</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
 			
 			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderCarApproveUser') ">
 			<dd>
-				<s:a action="businessParameter_reserveCarApplyOrderCarApproveUser">配置车辆审批人</s:a>
+				<s:a action="businessParameter_reserveCarApplyOrderCarApproveUser?actionFlag=carApproveUser">配置车辆配置人</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
 			
 			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderDriverApproveUser') ">
 			<dd>
-				<s:a action="businessParameter_reserveCarApplyOrderDriverApproveUser">配置司机审批人</s:a>
+				<s:a action="businessParameter_reserveCarApplyOrderDriverApproveUser?actionFlag=driverApproveUser">配置司机配置人</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

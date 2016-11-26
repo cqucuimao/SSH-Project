@@ -58,23 +58,29 @@
         <div class="homeLink2">
           <h1>临时扩充常备车库申请</h1>
         </div>
-        <!-- 提醒申请人 -->
+         <!-- 提醒申请人 -->
         <s:if test="canShowApply">
 	        <p>
 	        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${approveCount}&nbsp;&nbsp;个待审核的申请</s:a>&nbsp;&nbsp;
 	        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${rejectedCount}&nbsp;&nbsp;个被驳回的申请</s:a>
 	        </p>
         </s:if>
+        <!-- 提醒审核人 -->
+        <s:if test="canShowApprove">
+	        <p>
+	        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${approveCount}&nbsp;&nbsp;个待审核的申请</s:a>
+	        </p>
+        </s:if>
         <!-- 提醒车辆配置人 -->
         <s:if test="canShowCarApprove">
         <p>
-        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${carCount}&nbsp;&nbsp;个待配置的申请</s:a>
+        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${configureCarCount}&nbsp;&nbsp;个待配置车辆的申请</s:a>
         </p>
         </s:if>
     	<!-- 提醒司机配置人 -->
         <s:if test="canShowDriverApprove">
         <p>
-        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${warningCount}&nbsp;&nbsp;个待配置的申请</s:a>
+        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${configureDriverCount}&nbsp;&nbsp;个待配置司机的申请</s:a>
         </p>
         </s:if>
       </div>

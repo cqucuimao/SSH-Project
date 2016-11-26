@@ -1,20 +1,5 @@
 ﻿<%@page import="com.yuqincar.domain.privilege.User"%>
-<%-- <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="<%=basePath %>skins/main.css">
-</head>
-
-<body class="minW"> --%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
 <cqu:border>
 <div class="space"> 
@@ -88,10 +73,4 @@
     </s:if>
   </ul>
 </div>
-<%-- <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script> 
-<script type="text/javascript" src="../js/artDialog4.1.7/artDialog.js"></script> 
-<script type="text/javascript" src="../js/artDialog4.1.7/plugins/iframeTools.js"></script> 
-<script type="text/javascript" src="../js/common.js"></script>
-</body>
-</html> --%>
 </cqu:border>

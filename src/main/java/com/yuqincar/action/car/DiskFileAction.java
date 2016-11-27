@@ -24,18 +24,17 @@ public class DiskFileAction extends ActionSupport {
 	private String uploadifyContentType;//上传文件类型
 	private String description;//上传文件的描述
 	private String uploadDir;//保存上传文件的目录,相对于web应用程序的根路径,在struts.xml文件中配置
-	private String first;
-	
-	public String getFirst() {
-		return first;
+	private String diskName;
+	private String sessionName;
+	public String getDiskName() {
+		return diskName;
 	}
-
-	public void setFirst(String first) {
-		this.first = first;
+	public void setDiskName(String diskName) {
+		this.diskName = diskName;
 	}
 
 	public String execute(){
-		//System.out.println("i am in diskFileAction****************");
+		sessionName="diskFile_"+diskName;
 		ArrayList<File> uploadLists=new ArrayList<File>();
 		String newFileName=null;
 		//得到当前时间开始流逝的毫秒数,将这个毫秒数作为上传文件新的文件名
@@ -52,8 +51,8 @@ public class DiskFileAction extends ActionSupport {
 		
 		//判断上传文件是否有扩展名,以时间戳作为新的文件名
 		if (index!=-1) {
-			//newFileName=now+uploadifyFileName.substring(index);
-			newFileName=uploadifyFileName;
+			newFileName=now+uploadifyFileName.substring(index);
+			//newFileName=uploadifyFileName;
 			//System.out.println(uploadifyFileName+"***********");
 		}else {
 			newFileName=Long.toString(now);
@@ -75,29 +74,29 @@ public class DiskFileAction extends ActionSupport {
 			while ((len=bis.read(buf))!=-1) {
 				bos.write(buf,0,len);
 			}
-			//System.out.println("***"+first);
-			if(first.equals("first"))
+			System.out.println("********sessionName in diskFile: "+sessionName);
+			/*if(first.equals("first"))
 			{
 				 //System.out.println("**********000000000: "+first);
-				if((ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists")!=null)
+				if((ArrayList<File>)ActionContext.getContext().getSession().get(sessionName)!=null)
 				{
-					List<File> fileList=(List<File>)ActionContext.getContext().getSession().get("uploadLists"); 
+					List<File> fileList=(List<File>)ActionContext.getContext().getSession().get(sessionName); 
 					for(File filed:fileList)
 						filed.delete();
-					ActionContext.getContext().getSession().remove("uploadLists");
+					ActionContext.getContext().getSession().remove(sessionName);
 					System.out.println("我上次上传 了，但是没有提交！所以要删除了");
 				}
-			}
+			}*/
 			
-			if((ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists")==null)
+			if((ArrayList<File>)ActionContext.getContext().getSession().get(sessionName)==null)
 			{
-				ActionContext.getContext().getSession().put("uploadLists",uploadLists);		
+				ActionContext.getContext().getSession().put(sessionName,uploadLists);		
 			}
-			uploadLists=(ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists");
+			uploadLists=(ArrayList<File>)ActionContext.getContext().getSession().get(sessionName);
 			uploadLists.add(file);
-			ActionContext.getContext().getSession().put("uploadLists",uploadLists);
-			//for(int i=0;i<uploadLists.size();i++)
-				//System.out.println("*******"+uploadLists.get(i));
+			ActionContext.getContext().getSession().put(sessionName,uploadLists);
+			for(int i=0;i<uploadLists.size();i++)
+				System.out.println("*******"+uploadLists.get(i));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

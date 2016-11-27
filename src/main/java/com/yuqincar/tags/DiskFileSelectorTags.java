@@ -8,6 +8,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts2.views.jsp.TagUtils;
+import org.springframework.expression.spel.ast.OpAnd;
 
 import com.opensymphony.xwork2.util.ValueStack;
 import com.yuqincar.domain.common.DiskFile;
@@ -57,17 +58,24 @@ public class DiskFileSelectorTags extends TagSupport {
 			options.append(" 'removeCompleted' : false,");
 			options.append(" 'onFallback':function(){ ");
 			options.append(" alert(\"您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。\"); },   ");
-			options.append("'onUploadSuccess' : function(file, data, response){ }, ");
+			
+			options.append("'onUploadSuccess' : function(file, data, response){ "
+					+ "$(\"#first\").val(\"second\");"
+					+ "}, ");
 			options.append("'onQueueComplete' : function(){ } ,");
+			options.append("'onUploadStart':function(file){ var first;");
+			options.append("first=$('#first').val();");
+			options.append("$('#uploadify').uploadify('settings','formData',{'first':first});},");
+			
 			options.append("'onCancel'           :function(file){ ");
 			options.append(" alert(file.name+\"canceled\");");
 			options.append("	} ");
 			options.append("  });");
 			options.append("}); ");
 			options.append("</script>");
-			
 			options.append(" <input type=\"file\" id=\"uploadify\" name=\"uploadify\">");
 			options.append("<div id=\"fileQueue\"> </div>  ");
+			options.append("<input type=\"hidden\" name=\"first\"  id=\"first\" value=\"first\" />");
 			options.append("<input id=" + name + " multiFiles="+uploadLimit+" name=" + name
 					+ " type=\"hidden\" />");
 			out.println(options);

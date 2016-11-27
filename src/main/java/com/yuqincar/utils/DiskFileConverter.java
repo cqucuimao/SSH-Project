@@ -22,11 +22,22 @@ public class DiskFileConverter extends StrutsTypeConverter {
 	
 	private UploadedDiskFiles diskfiles;
 	
+	private String sessionName;
+	
 	@SuppressWarnings("unchecked")
 	public Object convertFromString(Map context, String[] values, Class toClass) { 
-		   List<File> fileList=(List<File>)ActionContext.getContext().getSession().get("uploadLists"); 
+		   System.out.println("values: "+values[0]);
+		   sessionName="diskFile_"+values[0];
+		   if(ActionContext.getContext().getSession().get(sessionName)==null)
+		   {
+			   System.out.println("sessinoname  in diskFileconverter : "+sessionName);
+			   return diskfiles;  
+		   }
+			   
+		   List<File> fileList=(List<File>)ActionContext.getContext().getSession().get(sessionName); 
 		   List<DiskFile> diskFileList=new ArrayList<DiskFile>(fileList.size());
 		   diskfiles=new UploadedDiskFiles();
+		   
 		   for(File file:fileList){
 			   DiskFile diskfile=null;
 			   try{
@@ -42,8 +53,9 @@ public class DiskFileConverter extends StrutsTypeConverter {
 			    	File file=fileList.get(j);
 			    	file.delete();
 			}
-			ActionContext.getContext().getSession().remove("uploadLists");
-		   return diskfiles;
+			ActionContext.getContext().getSession().remove(sessionName);
+		 
+			return diskfiles;
 		   
     }  
   

@@ -75,7 +75,7 @@ public class DiskFileAction extends ActionSupport {
 			while ((len=bis.read(buf))!=-1) {
 				bos.write(buf,0,len);
 			}
-			System.out.println("***"+first);
+			//System.out.println("***"+first);
 			if(first.equals("first"))
 			{
 				 //System.out.println("**********000000000: "+first);

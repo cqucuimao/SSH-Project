@@ -24,7 +24,6 @@ public class DiskFileConverter extends StrutsTypeConverter {
 	
 	@SuppressWarnings("unchecked")
 	public Object convertFromString(Map context, String[] values, Class toClass) { 
-		   System.out.println("in car ****************************222222");
 		   List<File> fileList=(List<File>)ActionContext.getContext().getSession().get("uploadLists"); 
 		   List<DiskFile> diskFileList=new ArrayList<DiskFile>(fileList.size());
 		   diskfiles=new UploadedDiskFiles();

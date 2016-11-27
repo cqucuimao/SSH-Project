@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,16 @@ public class DiskFileAction extends ActionSupport {
 	private String uploadifyContentType;//上传文件类型
 	private String description;//上传文件的描述
 	private String uploadDir;//保存上传文件的目录,相对于web应用程序的根路径,在struts.xml文件中配置
+	private String first;
 	
+	public String getFirst() {
+		return first;
+	}
+
+	public void setFirst(String first) {
+		this.first = first;
+	}
+
 	public String execute(){
 		//System.out.println("i am in diskFileAction****************");
 		ArrayList<File> uploadLists=new ArrayList<File>();
@@ -65,9 +75,20 @@ public class DiskFileAction extends ActionSupport {
 			while ((len=bis.read(buf))!=-1) {
 				bos.write(buf,0,len);
 			}
+			System.out.println("***"+first);
+			if(first.equals("first"))
+			{
+				 //System.out.println("**********000000000: "+first);
+				if((ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists")!=null)
+				{
+					List<File> fileList=(List<File>)ActionContext.getContext().getSession().get("uploadLists"); 
+					for(File filed:fileList)
+						filed.delete();
+					ActionContext.getContext().getSession().remove("uploadLists");
+					System.out.println("我上次上传 了，但是没有提交！所以要删除了");
+				}
+			}
 			
-			
-			//uploadLists=(ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists");
 			if((ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists")==null)
 			{
 				ActionContext.getContext().getSession().put("uploadLists",uploadLists);		
@@ -75,8 +96,8 @@ public class DiskFileAction extends ActionSupport {
 			uploadLists=(ArrayList<File>)ActionContext.getContext().getSession().get("uploadLists");
 			uploadLists.add(file);
 			ActionContext.getContext().getSession().put("uploadLists",uploadLists);
-			for(int i=0;i<uploadLists.size();i++)
-			System.out.println("*******"+uploadLists.get(i));
+			//for(int i=0;i<uploadLists.size();i++)
+				//System.out.println("*******"+uploadLists.get(i));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

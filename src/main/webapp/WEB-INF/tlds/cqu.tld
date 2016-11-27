@@ -129,6 +129,11 @@
                 <required>false</required>    
                 <rtexprvalue>false</rtexprvalue>    
             </attribute>
+            <attribute>    
+                <name>fileQueue</name>    
+                <required>false</required>    
+                <rtexprvalue>false</rtexprvalue>    
+            </attribute>
             
 </tag>      
 </taglib>  

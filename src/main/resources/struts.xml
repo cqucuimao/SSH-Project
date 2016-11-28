@@ -168,6 +168,7 @@
 			</result>
 		</action>
 		
+		
 		<!-- 车辆保养预约 -->
 		<action name="carCareAppointment_*" class="carCareAppointmentAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/carCareAppointmentAction/carCareAppointment_list.jsp
@@ -312,6 +313,20 @@
 			<result name="excel">/WEB-INF/view/carAction/carWashAction/carWash_excel.jsp
 			</result>
 			<result name="test">/WEB-INF/template/body.jsp
+			</result>  
+			<!-- <result name="test">/WEB-INF/index222.jsp
+			</result>  -->
+			<result name="success">/WEB-INF/template/succ.jsp</result>
+		  </action>
+		
+	    <action name="test_*" class="testAction" method="{1}">
+			<result name="test">/WEB-INF/template/body.jsp
+			</result> 
+		</action>
+		
+		<action name="diskFile_*" class="diskFileAction" method="{1}">
+	    <param name="uploadDir">uploadFiles</param>  
+			<result name="success">/WEB-INF/view/carAction/carWashAction/success.jsp
 			</result>
 		</action>
 		
@@ -393,6 +408,8 @@
 			<result name="query">/WEB-INF/view/queryStatisticsAction/refuelStatisticAction/refuelStatistic_queryList.jsp
 			</result>
 		</action>
+		
+		
 
 		<!-- 保险统计记录 -->
 		<action name="insuranceStatistic_*" class="insuranceStatisticAction"
@@ -568,6 +585,11 @@
 			</result>
 		</action>
 	</package>
+	<!-- <package name="default" namespace="/" extends="struts-default">  
+        <action name="upload" class="com.yuqincar.action.car.DiskFileAction"> 
+            <param name="uploadDir">uploadFiles</param>  
+        </action>  
+    </package>   -->
 
 	<!-- 给App使用 -->
 	<package name="appPackage" extends="struts-default" namespace="/app">

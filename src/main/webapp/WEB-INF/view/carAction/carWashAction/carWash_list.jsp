@@ -1,5 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/template/taglibs.jsp" %>
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 <cqu:overwrite name="content">
 	<div class="space">
 		<!-- 标题 -->
@@ -101,4 +103,5 @@
 	</script>
 	
 </cqu:overwrite>
+</cqu:border>
  <jsp:include page="/WEB-INF/template/JspTemplateBlockName.jsp"></jsp:include>  

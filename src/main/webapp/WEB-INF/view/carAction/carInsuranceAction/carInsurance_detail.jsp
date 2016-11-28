@@ -1,6 +1,14 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
 <cqu:border>
+
+<style>
+	  .tdDiv{width:150px;text-align:left;float:left;margin-left:0px;}
+    .tdDiv1{width:110px;text-align:center;float:left;margin-left:0px;}
+    .tdDiv2{width:110px;text-align:center;float:left;margin-left:33px;}
+    .tdDiv3{width:110px;text-align:center;float:left;margin-left:33px;}
+	</style>
+
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">

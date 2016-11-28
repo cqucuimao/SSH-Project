@@ -1,6 +1,16 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
 <cqu:border>
+
+<style>
+	.tdDiv{width:100px;text-align:center;float:left;margin-left:20px}
+    .tdDiv1{width:150px;text-align:center;float:left;margin-left:35px}
+    .tdDiv2{width:120px;text-align:center;float:left;margin-left:33px}
+	.tdInput{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:130px;}
+    .tdInput:focus{ background:#f0fff3;border: 1px solid #65bd77;color: #65bd77;}
+    .tdInput1{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:132px;}
+	</style>
+
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">

@@ -62,15 +62,19 @@ public class BusinessParameterAction extends BaseAction{
 		}
 		if(actionFlag.equals("approveUser")){
 			showList = userService.getUserByRoleName("公司领导");
+			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderApproveUser());
 		}
 		if(actionFlag.equals("applyUser")){
 			showList = userService.getUserByRoleName("运营科领导");		
+			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser());
 		}
 		if(actionFlag.equals("carApproveUser")){
 			showList = userService.getUserByRoleName("技术保障科领导");
+			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderCarApproveUser());
 		}
 		if(actionFlag.equals("driverApproveUser")){
 			showList = userService.getUserByRoleName("人力资源科领导");
+			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderDriverApproveUser());
 		}
 		ActionContext.getContext().put("showList", showList);
 		ActionContext.getContext().put("selectedList", selectedList);

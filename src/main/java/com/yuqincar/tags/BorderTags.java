@@ -24,35 +24,35 @@ public class BorderTags extends TagSupport   {
 	        options.append("</title>");
 	        options.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""+pageContext.getServletContext().getContextPath()+"/skins/main.css\">");
 	        //options.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""+pageContext.getServletContext().getContextPath()+"/skins/jquery.autocomplete.css\">");
-	        options.append("<style>"
+	        /*options.append("<style>"
 	  +".tdDiv{width:150px;text-align:left;float:left;margin-left:0px;}"
     +".tdDiv1{width:110px;text-align:center;float:left;margin-left:0px;}"
     +".tdDiv2{width:110px;text-align:center;float:left;margin-left:33px;}"
     +".tdDiv3{width:110px;text-align:center;float:left;margin-left:33px;}"
-	+"</style>");
-	        options.append("<style>"
+	+"</style>");*/
+	        /*options.append("<style>"
 	+".tdInput{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:130px;}"
     +".tdInput:focus{ background:#f0fff3;border: 1px solid #65bd77;color: #65bd77;}"
     +".tdInput1{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:132px;}"
     +".tdDiv{width:100px;text-align:center;float:left;margin-left:20px}"
     +".tdDiv1{width:150px;text-align:center;float:left;margin-left:35px}"
     +".tdDiv2{width:120px;text-align:center;float:left;margin-left:33px}"
-	+"</style>");
-	        options.append("<style>"
+	+"</style>");*/
+	        /*options.append("<style>"
 	+".tdDiv{width:100px;text-align:center;float:left;margin-left:20px}"
     +".tdDiv1{width:150px;text-align:center;float:left;margin-left:35px}"
     +".tdDiv2{width:120px;text-align:center;float:left;margin-left:33px}"
 	+".tdInput{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:130px;}"
     +".tdInput:focus{ background:#f0fff3;border: 1px solid #65bd77;color: #65bd77;}"
     +".tdInput1{background: #FFFFFF;border: 1px solid #bbb;height: 33px; line-height: 33px;font-size: 14px;font-weight:normal;padding: 0 4px 0 6px;vertical-align: middle;width:132px;}"
-	+"</style>");
-	        options.append("<style >"
+	+"</style>");*/
+	        /*options.append("<style >"
 	+".ttt tr td:first-child "
    +"{"
         +"border: 1px solid #eaeaea !important;"
     +"}"
 
-+"</style>");
++"</style>");*/
 	        /*options.append("<style type="text/css">"
 		+"body, html,#allmap {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}"
 		+"#BaiduMap{height:500px;width:100%;}"

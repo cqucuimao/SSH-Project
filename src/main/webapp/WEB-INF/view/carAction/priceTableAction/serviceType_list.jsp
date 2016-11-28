@@ -1,6 +1,15 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
 <cqu:border>
+
+<style >
+	.ttt tr td:first-child 
+   {
+        border: 1px solid #eaeaea !important;
+    }
+
+</style>
+
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">

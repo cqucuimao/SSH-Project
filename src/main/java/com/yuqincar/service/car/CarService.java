@@ -32,6 +32,8 @@ public interface CarService {
 	
 	public PageBean<Car> queryCar(int pageNum , QueryHelper helper);
 	
+	public List<Car> queryAllCar(QueryHelper helper);
+	
 	public void saveCarServiceType(CarServiceType serviceType);
 	
 	public void updateCarServiceType(CarServiceType serviceType);

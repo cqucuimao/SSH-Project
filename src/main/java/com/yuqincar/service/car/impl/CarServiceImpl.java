@@ -89,6 +89,10 @@ public class CarServiceImpl implements CarService {
 	public PageBean<Car> queryCar(int pageNum, QueryHelper helper) {
 		return carDao.getPageBean(pageNum, helper);
 	}
+	
+	public List<Car> queryAllCar(QueryHelper helper){
+		return carDao.getAllQuerry(helper);
+	}
 	/*-----------车辆服务类型-----------*/
 	@Transactional
 	public void saveCarServiceType(CarServiceType serviceType) {

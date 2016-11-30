@@ -7,18 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.businessParameter.BusinessParameter;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarStatusEnum;
-import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.businessParameter.BusinessParameterService;
+import com.yuqincar.service.car.CarService;
+import com.yuqincar.service.monitor.MonitorGroupService;
 import com.yuqincar.service.order.ReserveCarApplyOrderService;
 import com.yuqincar.service.privilege.UserService;
-import com.yuqincar.utils.QueryHelper;
 
 @Controller
 @Scope("prototype")
@@ -29,6 +28,12 @@ public class BusinessParameterAction extends BaseAction{
 	
 	@Autowired
 	private ReserveCarApplyOrderService reserveCarApplyOrderService;
+	
+	@Autowired
+	private CarService carService;
+	
+	@Autowired
+	private MonitorGroupService monitorGroupService;
 	
 	@Autowired
 	private UserService userService;
@@ -46,6 +51,8 @@ public class BusinessParameterAction extends BaseAction{
 	private Long approveUserId;
 	
 	private Long applyUserId;
+	
+	private Long standingGarageId;
 	
 	private Long carApproveUserId;
 	
@@ -164,6 +171,46 @@ public class BusinessParameterAction extends BaseAction{
 		businessParameterService.updateBusinessParameter(businessParameter);
 		return reserveCarApplyOrderApproveUser();
 	}
+	
+	/**
+	 * 车库有关
+	 */
+	public String addCarUI(){
+		List<Car> showList = new ArrayList<Car>();
+		List<Car> selectedList = new ArrayList<Car>();
+		if(actionFlag.equals("standingGarage")){
+			showList = monitorGroupService.sortCarByPlateNumber(carService.getAll());
+			for(Car car : showList){
+				if(car.getStatus()==CarStatusEnum.SCRAPPED || car.isBorrowed())
+					continue;
+			}
+			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderStandingGarage());
+		}
+		ActionContext.getContext().put("showList", showList);
+		ActionContext.getContext().put("selectedList", selectedList);
+		return "saveCarUI";
+	}
+	//车列表
+	public String reserveCarApplyOrderStandingGarage(){
+		viewFlag = "常备车库";
+		List<Car> standingGarageList = carService.getAll();
+		ActionContext.getContext().put("standingGarageList", standingGarageList);
+		return "garageList";
+	}
+	//添加车
+	public String addReserveCarApplyOrderStandingGarage(){
+		viewFlag = "常备车库";
+		BusinessParameter businessParameter = businessParameterService.getBusinessParameter();
+			List<Car> carList = businessParameter.getReserveCarApplyOrderStandingGarage();
+			for(Car car : carList){
+				if(car.isStandingGarage() == true)
+					continue;
+			}
+			businessParameter.setReserveCarApplyOrderStandingGarage(carList);
+			businessParameterService.updateBusinessParameter(businessParameter);
+			return reserveCarApplyOrderStandingGarage();
+	}
+	
 	/**
 	 * 申请人相关
 	 */
@@ -293,6 +340,14 @@ public class BusinessParameterAction extends BaseAction{
 			businessParameterService.updateBusinessParameter(businessParameter);
 			return reserveCarApplyOrderCarApproveUser();
 			
+		}else if(actionFlag.equals("standingGarage")){
+			
+			List<Car> cars = businessParameter.getReserveCarApplyOrderStandingGarage();
+			cars.remove(carService.getCarById(standingGarageId));
+			businessParameter.setReserveCarApplyOrderStandingGarage(cars);
+			businessParameterService.updateBusinessParameter(businessParameter);
+			return reserveCarApplyOrderStandingGarage();
+			
 		}else{
 			
 			List<User> users = businessParameter.getReserveCarApplyOrderDriverApproveUser();
@@ -353,6 +408,14 @@ public class BusinessParameterAction extends BaseAction{
 
 	public void setApplyUserId(Long applyUserId) {
 		this.applyUserId = applyUserId;
+	}
+
+	public Long getStandingGarageId() {
+		return standingGarageId;
+	}
+
+	public void setStandingGarageId(Long standingGarageId) {
+		this.standingGarageId = standingGarageId;
 	}
 
 	public Long getCarApproveUserId() {

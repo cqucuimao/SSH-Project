@@ -376,6 +376,14 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
+			
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderStandingGarage') ">
+			<dd>
+				<s:a action="businessParameter_reserveCarApplyOrderStandingGarage?actionFlag=standingGarage">配置常备车库</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			
 		</dl>
 		</s:if>
 	</div>

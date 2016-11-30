@@ -118,9 +118,12 @@
 		</action>
 
 		<!-- 价格表管理管理 -->
-		<action name="priceTable_*" class="priceTableAction"
-			method="{1}">
+		<action name="priceTable_*" class="priceTableAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/priceTableAction/priceTable_list.jsp
+			</result>
+			<result name="detail">/WEB-INF/view/carAction/priceTableAction/priceTable_detail.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/carAction/priceTableAction/priceTable_saveUI.jsp
 			</result>
 			<result name="serviceTypeList">/WEB-INF/view/carAction/priceTableAction/serviceType_list.jsp
 			</result>
@@ -139,8 +142,7 @@
 		</action>
 
 		<!-- 驻车点管理 -->
-		<action name="servicePoint_*" class="servicePointAction"
-			method="{1}">
+		<action name="servicePoint_*" class="servicePointAction" method="{1}">
 			<result name="list">/WEB-INF/view/carAction/servicePointAction/servicePoint_list.jsp
 			</result>
 			<result name="saveUI">/WEB-INF/view/carAction/servicePointAction/servicePoint_saveUI.jsp

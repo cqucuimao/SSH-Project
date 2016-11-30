@@ -1,7 +1,19 @@
 <%@ page import="org.apache.poi.ss.usermodel.Picture"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/view/common/common.jsp" %>
-<cqu:border>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="skins/main.css" rel="stylesheet" type="text/css" />
+<style>
+    	
+</style>
+</head>
+<body class="minW">
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -10,6 +22,7 @@
 		<div class="editBlock detail p30">
 			<s:form action="priceTable_%{id == null ? 'addServiceType' : 'editServiceType'}" id="pageForm" enctype="multipart/form-data" method="post">
 	        <s:hidden name="id"></s:hidden>
+	        <s:textfield type="hidden" name="carServiceSuperTypeId"/>
 			<table> 
 				<colgroup>
 					<col width="80"></col>
@@ -20,26 +33,21 @@
 					<col width="120"></col>
 				</colgroup>
 				<tbody id="tb">
-					<s:if test="id==null">
-						<tr>
-							<th>车类<span class="required">*</span></th>
-							<td>
-									<s:textfield cssClass="inputText" name="superTypeTitle"/>
-							</td>
-						</tr>
-					</s:if>
-					<s:else>
-						<tr>
-							<th>车类</th>
-							<td>
-									<s:textfield cssClass="inputText" name="superTypeTitle" readonly="true"/>
-							</td>
-						</tr>
-					</s:else>
+					<tr>
+						<th>车类<span class="required">*</span></th>
+						<td>
+								<s:textfield cssClass="inputText" name="superTitle"/>
+						</td>
+					</tr>
 					<s:iterator value="carServiceTypes">
 						<tr>
 							<th>车型</th>
-							<td><s:textfield cssClass="inputText" name="title" readonly="true"/></td>
+							<td>
+								<s:textfield cssClass="inputText" name="title" readonly="true"/>
+								<s:if test="canDeleteServiceType">
+									<s:a action="priceTable_deleteCarServiceType?carServiceTypeId=%{id}&carServiceSuperTypeId=%{carServiceSuperTypeId}" onclick="return confirm('确定删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+								</s:if>
+							</td>
 						</tr>
 					</s:iterator>
 					<tr class="trClass">
@@ -54,7 +62,7 @@
 		                <td colspan="2">
                         		<input name="actionFlag" type="hidden" value="${actionFlag }">    
 		                		<input type="hidden" name="inputRows"/>
-			                	<input type="submit" name="sub" class="inputButton coverOff" value="确定" />
+			                	<input type="submit" name="sub" class="inputButton" value="确定" />
 			                	<a class="p15" href="javascript:history.go(-1);">返回</a>
 		                </td>
 	            	</tr>
@@ -65,11 +73,17 @@
 		</div>
 		
 	</div>
+	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>	
+	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
+    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
 	<script type="text/javascript">
 	if($("input[name=actionFlag]").val() == "edit"){
-		$("input[name=superTypeTitle]").attr("readonly",true);
+		$("input[name=superTitle]").attr("readonly",true);
 	}
-	$("input[name=date]").attr("readonly",true);
 	 $(function(){    	
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },
@@ -81,23 +95,15 @@
 					typeTitle:{
 						required:true,
 					},
-					pricePerKM:{
-						required:true,
-						number:true,
-						min:1
-					},
-					pricePerDay:{
-						required:true,
-						number:true,
-						min:1				
-					},
 				}
 			});
 		});
+	 
+	 
 	 //点击新增按钮
 	 $("#btn").click(function(){
 		 var row = $("#tb").find('tr').length - 1;
-		 $($('#tb').find('tr')[row]).after('<tr class="trClass"><th>车型</th><td><s:textfield cssClass="inputText" name="typeTitle" />'+
+		 $($('#tb').find('tr')[row]).after('<tr class="trClass"><th></th><td><s:textfield cssClass="inputText" name="typeTitle" />'+
 						'&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTr"><i class="icon-operate-delete" title="删除"></i></a></td></tr>');
 		 
 		//点击删除一条
@@ -107,6 +113,14 @@
 	 })
 	 
 	 $("input[name=sub]").click(function(){
+		 
+		 $("input[name=typeTitle]").each(function(){
+			 var value =$(this).val();
+			 if(value==""){
+					 alert("请输入车型！");
+					 result=false;
+				 }
+		 }); 
 		 
 		//获取车型条数，方便在action中处理数据
 		 var inputRows = 0;
@@ -119,4 +133,5 @@
 	 })
 	 
 	</script>
-</cqu:border>
+</body>
+</html>

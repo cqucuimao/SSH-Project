@@ -50,7 +50,20 @@ public class PriceServiceImpl implements PriceService {
 	}
 
 	@Transactional
-	public void updatePriceTable(PriceTable priceTable) {
+	public void addPriceTable(PriceTable priceTable,Price price) {
+		priceDao.save(price);
+		priceTableDao.update(priceTable);
+	}
+	
+	@Transactional
+	public void updatePriceTable(PriceTable priceTable,Price price) {
+		priceDao.update(price);
+		priceTableDao.update(priceTable);
+	}
+	
+	@Transactional
+	public void deletePrice(PriceTable priceTable,long carServiceTypeId) {
+		priceDao.delete(carServiceTypeId);
 		priceTableDao.update(priceTable);
 	}
 

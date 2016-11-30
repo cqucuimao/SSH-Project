@@ -21,7 +21,7 @@
 				<table>
 					<thead>
 						<tr>
-							<th>名称<%-- <s:property value="tr.getText('customerOrganization.PriceTable.title')" /> --%></th>
+							<th>名称</th>
 							<th class="alignCenter">操作</th>
 						</tr>
 					</thead>
@@ -30,7 +30,7 @@
 						<tr>
 							<td>${title}</td>
 							<td class="alignCenter">
-							<s:a action="carServiceType_editUI?id=%{id}" ><i class="icon-operate-edit" title="修改"></i></s:a>
+							<s:a action="priceTable_detail?priceTableId=%{id}" ><i class="icon-operate-edit" title="编辑"></i></s:a>
 							</td>
 						</tr>
 						</s:iterator> 

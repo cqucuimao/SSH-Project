@@ -18,7 +18,7 @@
 							<th style="text-align:center">选择</th>
 							<th style="text-align:center">车型</th>
 							<th style="text-align:center">8小时<br/>（100公里内）</th>
-							<th style="text-align:center">4小时<br/>（50公里内</th>
+							<th style="text-align:center">4小时<br/>（50公里内）</th>
 							<th style="text-align:center">超公里<br/>（每公里）</th>
 							<th style="text-align:center">超时<br/>（每小时）</th>
 							<th style="text-align:center">机场接送机<br/>（50公里/2小时）</th>

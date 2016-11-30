@@ -14,18 +14,18 @@ import com.yuqincar.utils.Text;
 @Entity
 public class CarServiceSuperType extends BaseEntity {
 	@Text("名称")
-	private String title;
+	private String superTitle;
 	
 	@Text("车型")
 	@OneToMany(mappedBy="superType")
 	private List<CarServiceType> types;
 
-	public String getTitle() {
-		return title;
+	public String getSuperTitle() {
+		return superTitle;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setSuperTitle(String superTitle) {
+		this.superTitle = superTitle;
 	}
 
 	public List<CarServiceType> getTypes() {

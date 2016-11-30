@@ -290,15 +290,33 @@ public class CarServiceImpl implements CarService {
 	public void updateCarServiceSuperType(CarServiceSuperType carServiceSuperType,int inputRows) {
 		
 		List<CarServiceType> carServiceTypes = carServiceSuperType.getTypes();
-		for(int i=carServiceTypes.size()-1;i>inputRows;i--){
-			carServiceSuperType.getTypes().get(i).setSuperType(carServiceSuperType);
-			carServiceTypeDao.save(carServiceSuperType.getTypes().get(i));
+		if(inputRows != 0){
+			for(int i=carServiceTypes.size()-1;i>carServiceTypes.size()-inputRows-1;i--){
+				carServiceSuperType.getTypes().get(i).setSuperType(carServiceSuperType);
+				carServiceTypeDao.save(carServiceSuperType.getTypes().get(i));
+			}
 		}
 		carServiceSuperTypeDao.update(carServiceSuperType);
 	}
 
 	public List<Car> getAllCarFromNotStandingAndNotTempStandingGarage() {
 		return carDao.getAllCarFromNotStandingAndNotTempStandingGarage();
+	}
+
+	public boolean canDeleteCarServiceSuperType(long id) {
+		return carServiceSuperTypeDao.canDeleteCarServiceSuperType(id);
+	}
+
+	public CarServiceSuperType getCarServiceSuperTypeById(long id) {
+		return carServiceSuperTypeDao.getById(id);
+	}
+
+	public CarServiceType getCarServiceTypeByTitle(String title) {
+		return carServiceTypeDao.getCarServiceTypeByTitle(title);
+	}
+	@Transactional
+	public void deleteCarServiceSuperType(long id) {
+		carServiceSuperTypeDao.delete(id);
 	}
 
 }

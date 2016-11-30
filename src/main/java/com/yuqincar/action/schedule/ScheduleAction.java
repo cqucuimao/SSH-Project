@@ -679,7 +679,7 @@ public class ScheduleAction extends BaseAction {
     	priceTable=priceSerivce.getDefaultPriceTable();
     	priceMap=priceTable.getCarServiceType();
     	for (int i = 0; i < listSuper.size(); i++) 
-    		mapListResults.put(listSuper.get(i).getTitle(), new ArrayList<List<String>>());
+    		mapListResults.put(listSuper.get(i).getSuperTitle(), new ArrayList<List<String>>());
         for (CarServiceType key : priceMap.keySet()) 
     	 {
     	        //System.out.println("key= " + key.getId() + " and value= " + priceMap.get(key).getId());
@@ -699,7 +699,7 @@ public class ScheduleAction extends BaseAction {
 				}
 	      		list.add(priceMap.get(key).getPerHourAfterLimit().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
 	      		list.add(priceMap.get(key).getPerPlaneTime().setScale(0,BigDecimal.ROUND_HALF_UP).toString());
-	      		mapListResults.get(key.getSuperType().getTitle()).add(list);
+	      		mapListResults.get(key.getSuperType().getSuperTitle()).add(list);
     	    }
      	ActionContext.getContext().getSession().put("mapList", mapListResults);
      	return "popup";

@@ -10,7 +10,9 @@ public interface PriceService {
 	
 	public PriceTable copyPriceTable(String title, PriceTable originPriceTable);
 	
-	public void updatePriceTable(PriceTable priceTable);
+	public void updatePriceTable(PriceTable priceTable,Price price);
+	
+	public void addPriceTable(PriceTable priceTable,Price price);
 	
 	public boolean canDeletePriceTable(Long id);
 	
@@ -21,4 +23,6 @@ public interface PriceService {
 	public PriceTable getDefaultPriceTable();
 	
 	public void updatePrice(Price price);
+	
+	public void deletePrice(PriceTable priceTable,long carServiceTypeId);
 }

@@ -54,6 +54,8 @@ public interface CarService {
 	 */
 	public boolean canDeleteCarServiceType(long id);
 	
+	public boolean canDeleteCarServiceSuperType(long id);
+	
 	public void deleteCarServiceType(long id);
 	
 	public List<CarServiceType> getAllCarServiceType();
@@ -152,4 +154,10 @@ public interface CarService {
 	public boolean isEngineSNExist(long selfId, String plateNumber);
 	
 	public List<Car> getCarsByDriver(User driver);
+	
+	public CarServiceSuperType getCarServiceSuperTypeById(long id);
+	
+	public CarServiceType getCarServiceTypeByTitle(String title);
+	
+	public void deleteCarServiceSuperType(long id);
 }

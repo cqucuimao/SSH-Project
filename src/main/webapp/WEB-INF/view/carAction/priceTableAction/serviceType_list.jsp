@@ -1,6 +1,19 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/view/common/common.jsp" %>
-<cqu:border>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="skins/main.css">
+</head>
+<body class="minW">
 
 <style >
 	.ttt tr td:first-child 
@@ -26,17 +39,28 @@
 		</div>
 		<div class="dataGrid">
 			<div class="tableWrap">
-			
-				<table class="ttt">
+				<table>
 					<thead>
 						<tr>
-							<th>车类</th>
+							<th width="150px">车类</th>
 							<th>车型</th>
-							<th class="alignCenter" colspan="2">操作</th>
+							<th class="alignCenter" width="150px">操作</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
-						<s:iterator value="#session.mapList" id="column">
+						<s:iterator value="carServiceSuperTypes">
+							<tr>
+								<td>${superTitle }</td>
+								<td><s:iterator value="types">${title }&nbsp;&nbsp;&nbsp;&nbsp;</s:iterator></td>
+								<td class="alignCenter">
+								<s:a action="priceTable_editServiceTypeUI?carServiceSuperTypeId=%{id}&actionFlag=edit" ><i class="icon-operate-edit" title="编辑"></i></s:a>
+									<s:if test="canDeleteCarServiceSuperType">
+										<s:a action="priceTable_deleteCarServiceSuperType?carServiceSuperTypeId=%{id}" onclick="return confirm('确定删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+									</s:if>
+								</td>
+							</tr>
+						</s:iterator>
+						<%-- <s:iterator value="#session.mapList" id="column">
 						<s:set name="total" value="#column.value.size"/> 
 						<s:iterator value="#column.value" status="s" id="list">
 						<tr>
@@ -52,19 +76,25 @@
 							<s:if test="#s.first">
 							<td class="alignCenter" rowspan="${total }">
 								<a href="priceTable_editServiceTypeUI.action?actionFlag=edit&superTypeTitle=<s:property value="#column.key"/>" ><i class="icon-operate-edit" title="编辑"></i></a>
-								<s:if test="canDeleteSuperServiceType">
+								<s:if test="canDeleteCarServiceSuperType">
 									<s:a action="priceTable_editServiceTypeUI" ><i class="icon-operate-delete" title="删除"></i></s:a>
 								</s:if>
 							</td>
 							</s:if>
 						</tr>
 						</s:iterator>
-						</s:iterator> 
+						</s:iterator>  --%>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
+	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
+	<script type="text/javascript" src="js/common.js"></script>	
 	<script type="text/javascript">
 	</script>
-</cqu:border>
+</body>
+</html>

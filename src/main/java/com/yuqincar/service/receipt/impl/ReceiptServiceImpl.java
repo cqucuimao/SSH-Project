@@ -308,7 +308,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 		 OrderStatement orderStatement=orderStatementDao.getOrderStatementByName(orderStatementName);
 	     List<Order> orders=orderStatement.getOrders();
 	     for(Order order:orders){
-	         order.setStatus(OrderStatusEnum.PAYED);
+	         order.setStatus(OrderStatusEnum.PAID);
 	     }
 	     orderStatement.setStatus(OrderStatementStatusEnum.PAID);
 	}

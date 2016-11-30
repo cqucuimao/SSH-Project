@@ -565,10 +565,12 @@ public class OrderAction extends BaseAction {
 	 */
 	public String info() {
 		Date date = DateUtils.getYMD2(orderDate);
+		System.out.println("in info, carId="+carId+",driverId="+driverId);
 		if(carId>0 && driverId==0)
 			ActionContext.getContext().put("orderList",orderService.getCarTask(carService.getCarById(carId), date,date).get(0));
 		else if(driverId>0 && carId==0)
 			ActionContext.getContext().put("orderList",orderService.getDriverTask(userService.getById(driverId), date,date).get(0));
+		System.out.println(ActionContext.getContext().get("orderList"));
 		return "info";
 	}
 	
@@ -616,7 +618,7 @@ public class OrderAction extends BaseAction {
 	
 	public String getActualMileString(){
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
-		if(order.getStatus()==OrderStatusEnum.END || order.getStatus()==OrderStatusEnum.PAYED)
+		if(order.getStatus()==OrderStatusEnum.END || order.getStatus()==OrderStatusEnum.PAID)
 			return String.valueOf(order.getEndMile()-order.getBeginMile());
 		else
 			return "0";
@@ -640,7 +642,7 @@ public class OrderAction extends BaseAction {
 		} else if (status.equals("已结束")) {
 			return OrderStatusEnum.END;
 		} else if (status.equals("已付费")) {
-			return OrderStatusEnum.PAYED;
+			return OrderStatusEnum.PAID;
 		} else if (status.equals("已取消")) {
 			return OrderStatusEnum.CANCELLED;
 		}

@@ -101,7 +101,7 @@ public class DriverAction extends BaseAction {
 	     	}
 	        LineTitleVO ltvo=new LineTitleVO();
 	        ltvo.setType("driver");
-	        ltvo.setCarId(c.getId());
+	        ltvo.setCarId(c.getDriver().getId());  //用carId这个域来存放driverId，后期应该将carId这个名称改一改。
 	        if(c.isCareExpired() || c.isExamineExpired() || c.isInsuranceExpired() || c.isTollChargeExpired())
 	        	ltvo.setAvailable(false);
 	        else

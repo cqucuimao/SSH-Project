@@ -1,18 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="<%=basePath %>skins/main.css" rel="stylesheet" type="text/css" />
-</head>
-${order }
-<body class="p20 pt5">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border bodyClass="p20 pt5">
     <div class="editBlock detailM">
     	<s:iterator  value="orderList" status="iteratorStatus">
         <table>
@@ -100,12 +88,9 @@ ${order }
             </tfoot>
         </table>
     </div>
-    <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
     <script type="text/javascript">
         $(function(){
             
         })
     </script>
-</body>
-</html>
+</cqu:border>

@@ -153,6 +153,8 @@ public interface OrderService extends BaseService {
 	 */
 	public PageBean<Order> queryOrder(int pageNum, QueryHelper helper);
 	
+	public List<Order> queryAllOrder(QueryHelper helper);
+	
 	/**
 	 * 是否可以延后订单。
 	 * 

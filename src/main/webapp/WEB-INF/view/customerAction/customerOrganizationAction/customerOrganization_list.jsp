@@ -47,7 +47,7 @@
 								<s:a action="customerOrganization_addFinancial?id=%{id}"><i class="icon-operate-detail" title="财务要求"></i></s:a>
                     			<s:a action="customer_checkPeople?customerOrganizationId=%{id}"><i class="icon-operate-copy" title="查看人员"></i></s:a>
 								<s:if test="canDelete">
-                    			<s:a action="customerOrganization_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="customerOrganization_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			</s:if>
                     			<s:else></s:else>
                 			</td>

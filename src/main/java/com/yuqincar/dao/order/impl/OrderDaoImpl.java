@@ -98,6 +98,9 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 	
 
     public List<List<Order>> getDriverTask(User driver, Date fromDate, Date toDate){
+		System.out.println("in getDriverTask, fromDate="+fromDate);
+		System.out.println("in getDriverTask, toDate="+toDate);
+		System.out.println("in getDriverTask, driver="+driver.getName());
 		List<List<Order>> list = new ArrayList<List<Order>>();
 		String hql = null;
 		int days = DateUtils.elapseDays(fromDate, toDate, true, true);
@@ -105,6 +108,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		for (int i = 0; i < days; i++) {
 			List<Order> dayList=null;
 			Date date = DateUtils.getOffsetDate(fromDate, i);
+			System.out.println("date="+date);
 			// Order 预订用车或者实际在用车都算
 			hql = "from order_ as o where o.status<>? and o.driver=? and (((o.chargeMode=? or o.chargeMode=?) and TO_DAYS(o.planBeginDate)=TO_DAYS(?)) or ((o.chargeMode=? or o.chargeMode=?) and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate)))";
 			List<Order> orderList = (List<Order>) getSession().createQuery(hql)
@@ -112,6 +116,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(2, ChargeModeEnum.MILE).setParameter(3, ChargeModeEnum.PLANE).setParameter(4, date)
 					.setParameter(5, ChargeModeEnum.DAY).setParameter(6, ChargeModeEnum.PROTOCOL).setParameter(7, date)
 					.setParameter(8, date).list();
+			System.out.println("in getDriverTask, orderList.size="+orderList.size());
 			if(orderList!=null && orderList.size()>0){
 				if(dayList==null)
 					dayList=new ArrayList<Order>();
@@ -120,6 +125,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			
 			list.add(dayList);
 		}
+		System.out.println("in getDriverTask, list.size="+list.size());
 		return list;
     }
 
@@ -247,13 +253,13 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(0, CarStatusEnum.SCRAPPED).setParameter(1, serviceType).setParameter(2,false)
 					.setParameter(3, ChargeModeEnum.DAY).setParameter(4, ChargeModeEnum.PROTOCOL)
 					.setParameter(5, OrderStatusEnum.CANCELLED).setParameter(6, OrderStatusEnum.END)
-					.setParameter(7, OrderStatusEnum.PAYED).setParameter(8, planBeginDate)
+					.setParameter(7, OrderStatusEnum.PAID).setParameter(8, planBeginDate)
 					.setParameter(9, planBeginDate).setParameter(10, false)
 					.setParameter(11, false).setParameter(12, false)
 					
 					.setParameter(13, ChargeModeEnum.DAY).setParameter(14, ChargeModeEnum.PROTOCOL)
 					.setParameter(15, OrderStatusEnum.CANCELLED).setParameter(16, OrderStatusEnum.END)
-					.setParameter(17, OrderStatusEnum.PAYED).setParameter(18, planBeginDate)
+					.setParameter(17, OrderStatusEnum.PAID).setParameter(18, planBeginDate)
 					.setParameter(19, planBeginDate).setParameter(20, false)
 					.setParameter(21, false).setParameter(22, false)
 			
@@ -283,13 +289,13 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			tempCarList=getSession().createQuery(hql)
 					.setParameter(0, CarStatusEnum.SCRAPPED).setParameter(1, serviceType).setParameter(2, false)
 					
-					.setParameter(3, OrderStatusEnum.CANCELLED).setParameter(4, OrderStatusEnum.END).setParameter(5, OrderStatusEnum.PAYED)
+					.setParameter(3, OrderStatusEnum.CANCELLED).setParameter(4, OrderStatusEnum.END).setParameter(5, OrderStatusEnum.PAID)
 					.setParameter(6, planBeginDate).setParameter(7, planEndDate)
 					.setParameter(8, planBeginDate).setParameter(9, planEndDate)
 					.setParameter(10, planBeginDate).setParameter(11,planEndDate)
 					.setParameter(12, false).setParameter(13, false).setParameter(14, false)
 					
-					.setParameter(15, OrderStatusEnum.CANCELLED).setParameter(16, OrderStatusEnum.END).setParameter(17, OrderStatusEnum.PAYED)
+					.setParameter(15, OrderStatusEnum.CANCELLED).setParameter(16, OrderStatusEnum.END).setParameter(17, OrderStatusEnum.PAID)
 					.setParameter(18, planBeginDate).setParameter(19, planEndDate)
 					.setParameter(20, planBeginDate).setParameter(21, planEndDate)
 					.setParameter(22, planBeginDate).setParameter(23,planEndDate)
@@ -412,14 +418,14 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				hql = hql + " and id<>?";	//如果order有id值，说明是修改订单，那么需要将order排除在外。
 				list=getSession().createQuery(hql)
 						.setParameter(0, OrderStatusEnum.CANCELLED).setParameter(1, OrderStatusEnum.END)
-						.setParameter(2, OrderStatusEnum.PAYED).setParameter(3, car)
+						.setParameter(2, OrderStatusEnum.PAID).setParameter(3, car)
 						.setParameter(4, ChargeModeEnum.DAY).setParameter(5,ChargeModeEnum.PROTOCOL)
 						.setParameter(6, order.getPlanBeginDate()).setParameter(7, order.getPlanBeginDate())
 						.setParameter(8, order.getId()).list();
 			}else{
 				list=getSession().createQuery(hql)
 						.setParameter(0, OrderStatusEnum.CANCELLED).setParameter(1, OrderStatusEnum.END)
-						.setParameter(2, OrderStatusEnum.PAYED).setParameter(3, car)
+						.setParameter(2, OrderStatusEnum.PAID).setParameter(3, car)
 						.setParameter(4, ChargeModeEnum.DAY).setParameter(5,ChargeModeEnum.PROTOCOL)
 						.setParameter(6, order.getPlanBeginDate()).setParameter(7, order.getPlanBeginDate()).list();
 			}
@@ -432,14 +438,14 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				hql = hql + " and id<>?";	//如果order有id值，说明是修改订单，那么需要将order排除在外。
 				list=getSession().createQuery(hql)
 						.setParameter(0, OrderStatusEnum.CANCELLED).setParameter(1, OrderStatusEnum.END)
-						.setParameter(2, OrderStatusEnum.PAYED).setParameter(3, driver)
+						.setParameter(2, OrderStatusEnum.PAID).setParameter(3, driver)
 						.setParameter(4, ChargeModeEnum.DAY).setParameter(5,ChargeModeEnum.PROTOCOL)
 						.setParameter(6, order.getPlanBeginDate()).setParameter(7, order.getPlanBeginDate())
 						.setParameter(8, order.getId()).list();
 			}else{
 				list=getSession().createQuery(hql)
 						.setParameter(0, OrderStatusEnum.CANCELLED).setParameter(1, OrderStatusEnum.END)
-						.setParameter(2, OrderStatusEnum.PAYED).setParameter(3, driver)
+						.setParameter(2, OrderStatusEnum.PAID).setParameter(3, driver)
 						.setParameter(4, ChargeModeEnum.DAY).setParameter(5,ChargeModeEnum.PROTOCOL)
 						.setParameter(6, order.getPlanBeginDate()).setParameter(7, order.getPlanBeginDate()).list();
 			}
@@ -462,7 +468,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					list = getSession().createQuery(hql)
 							.setParameter(0, OrderStatusEnum.CANCELLED)
 							.setParameter(1, OrderStatusEnum.END)
-							.setParameter(2, OrderStatusEnum.PAYED)
+							.setParameter(2, OrderStatusEnum.PAID)
 							.setParameter(3, car)
 							.setParameter(4, order.getPlanBeginDate())
 							.setParameter(5, order.getPlanEndDate())
@@ -475,7 +481,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					list = getSession().createQuery(hql)
 							.setParameter(0, OrderStatusEnum.CANCELLED)
 							.setParameter(1, OrderStatusEnum.END)
-							.setParameter(2, OrderStatusEnum.PAYED)
+							.setParameter(2, OrderStatusEnum.PAID)
 							.setParameter(3, car)
 							.setParameter(4, order.getPlanBeginDate())
 							.setParameter(5, order.getPlanEndDate())
@@ -504,7 +510,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					list = getSession().createQuery(hql)
 							.setParameter(0, OrderStatusEnum.CANCELLED)
 							.setParameter(1, OrderStatusEnum.END)
-							.setParameter(2, OrderStatusEnum.PAYED)
+							.setParameter(2, OrderStatusEnum.PAID)
 							.setParameter(3, driver)
 							.setParameter(4, order.getPlanBeginDate())
 							.setParameter(5, order.getPlanEndDate())
@@ -517,7 +523,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					list = getSession().createQuery(hql)
 							.setParameter(0, OrderStatusEnum.CANCELLED)
 							.setParameter(1, OrderStatusEnum.END)
-							.setParameter(2, OrderStatusEnum.PAYED)
+							.setParameter(2, OrderStatusEnum.PAID)
 							.setParameter(3, driver)
 							.setParameter(4, order.getPlanBeginDate())
 							.setParameter(5, order.getPlanEndDate())

@@ -20,7 +20,7 @@ public enum OrderStatusEnum implements BaseEnum {
 	@Text("已结束")
 	END(6,"已结束"),	//已结束
 	@Text("已付费")
-	PAYED(7,"已付费"),	//已付费
+	PAID(7,"已付费"),	//已付费
 	@Text("已取消")
 	CANCELLED(8,"已取消");	//已取消
 	

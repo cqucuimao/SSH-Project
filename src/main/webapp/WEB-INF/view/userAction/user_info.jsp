@@ -1,14 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="skins/main.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border bodyClass="null">
     <div class="tab_next">
         <table>
             <tr>
@@ -149,6 +141,5 @@
 		});
 	    
     </script>
-</body>
-</html>
+</cqu:border>
 

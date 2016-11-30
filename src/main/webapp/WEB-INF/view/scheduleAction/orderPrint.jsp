@@ -1,14 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border bodyStyle="width:100%">
 <style>
 	@media print 
 	{
@@ -22,10 +14,6 @@
 	float:left;margin-left:5px;width:95px;height:30px;
 	}
 </style>
-<title></title>
-<link href="<%=basePath %>skins/main.css" rel="stylesheet" type="text/css" />
-</head>
-<body class="" style="width:100%">
     <div class="space">
         <div class="">
 		<table id="tableId" style="border-color:black;width:100%;" border="1" >
@@ -199,9 +187,6 @@
 		</table>
         </div>
     </div>
-    <script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-    <script type="text/javascript" src="<%=basePath %>js/common.js"></script>
     <script type="text/javascript">
     $(function(){
 		 
@@ -236,5 +221,4 @@
     	
     });
     </script>
-</body>
-</html>
+</cqu:border>

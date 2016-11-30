@@ -32,7 +32,7 @@
 						<s:a cssClass="buttonA" action="carRefuel_excel">导入加油信息</s:a>
 					</td>
 					<td>
-					<s:a action="carRefuel_outPutOil_time" href="#" class="modify" onclick="modify()">
+					<s:a action="carRefuel_outPutOil_time" href="#" class="modify" onclick="modify();coverHidden();">
 					    <input class="inputButton" id="outPutOil" type="button" value="导出加油信息月报表"/>
 					</s:a>
 					<s:if test="carId!=null">
@@ -71,7 +71,7 @@
 							<s:if test="outSource"><td>是</td></s:if>
 							<s:else><td>否</td></s:else>
 							<td>
-                    			<s:a action="carRefuel_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="carRefuel_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:a action="carRefuel_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
           					</td> 
 						</tr>

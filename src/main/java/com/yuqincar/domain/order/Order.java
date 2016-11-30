@@ -194,6 +194,25 @@ public class Order extends BaseEntity {
 	
 	@Text("税费")
 	private BigDecimal tax; 
+	
+	@Text("协议订单付款周期")
+	private ProtocolOrderPayPeriodEnum payPeriod; 
+	
+	@Text("协议订单首次付款日期")	
+	private Date firstPayDate;
+		
+	@Text("协议订单每次付款金额")
+	private BigDecimal moneyForPeriodPay;
+	
+	@Text("协议订单上次付款日期")
+	private Date lastPayDate;
+	
+	@Text("协议订单下次付款日期")
+	private Date nextPayDate;
+	
+	@Text("周期收款单")
+	@OneToMany(mappedBy = "order", fetch=FetchType.LAZY)
+	private List<ProtocolOrderPayOrder> payorders;
 
 	public OrderStatement getOrderStatement() {
 		return orderStatement;
@@ -594,5 +613,53 @@ public class Order extends BaseEntity {
 
 	public void setTax(BigDecimal tax) {
 		this.tax = tax;
+	}
+
+	public ProtocolOrderPayPeriodEnum getPayPeriod() {
+		return payPeriod;
+	}
+
+	public void setPayPeriod(ProtocolOrderPayPeriodEnum payPeriod) {
+		this.payPeriod = payPeriod;
+	}
+
+	public Date getFirstPayDate() {
+		return firstPayDate;
+	}
+
+	public void setFirstPayDate(Date firstPayDate) {
+		this.firstPayDate = firstPayDate;
+	}
+
+	public BigDecimal getMoneyForPeriodPay() {
+		return moneyForPeriodPay;
+	}
+
+	public void setMoneyForPeriodPay(BigDecimal moneyForPeriodPay) {
+		this.moneyForPeriodPay = moneyForPeriodPay;
+	}
+
+	public Date getLastPayDate() {
+		return lastPayDate;
+	}
+
+	public void setLastPayDate(Date lastPayDate) {
+		this.lastPayDate = lastPayDate;
+	}
+
+	public Date getNextPayDate() {
+		return nextPayDate;
+	}
+
+	public void setNextPayDate(Date nextPayDate) {
+		this.nextPayDate = nextPayDate;
+	}
+
+	public List<ProtocolOrderPayOrder> getPayorders() {
+		return payorders;
+	}
+
+	public void setPayorders(List<ProtocolOrderPayOrder> payorders) {
+		this.payorders = payorders;
 	}	
 }

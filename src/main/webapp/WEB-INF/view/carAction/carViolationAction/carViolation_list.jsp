@@ -79,7 +79,7 @@
 							</td>
 							<td ><s:date name="dealtDate" format="yyyy-MM-dd"/></td>
 							<td>
-                    			<s:a action="carViolation_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="carViolation_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:if test="canUpdateCarViolation">
                     			<s:a action="carViolation_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
                     			</s:if>

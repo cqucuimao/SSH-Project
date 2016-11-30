@@ -24,7 +24,8 @@ import com.yuqincar.utils.DateUtils;
 public class Test {
 
 	public static void main(String[] args) {
-		System.out.println(DigestUtils.md5Hex("813583"));
+		System.out.println(DateUtils.getYMDHMS("2016-11-25 10:05:29").getTime());
+		System.out.println(DateUtils.getYMDHMS("2016-11-25 12:17:53").getTime());
 	}
 	
 	private static void testURLEncode(){

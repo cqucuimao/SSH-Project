@@ -61,6 +61,10 @@ public class OrderStatement extends BaseEntity {
 	@OneToMany(mappedBy="orderStatement")
 	private List<Order> orders = new ArrayList<Order>();
 	
+	@Text("协议订单收款单")
+	@OneToMany(mappedBy="orderStatement")
+	private List<ProtocolOrderPayOrder> popos = new ArrayList<ProtocolOrderPayOrder>();
+	
 	@Text("对账单状态")
 	@Column(nullable=false)
 	private OrderStatementStatusEnum status;
@@ -152,5 +156,11 @@ public class OrderStatement extends BaseEntity {
 	}
 	public void setGatherList(List<MoneyGatherInfo> gatherList) {
 		this.gatherList = gatherList;
+	}
+	public List<ProtocolOrderPayOrder> getPopos() {
+		return popos;
+	}
+	public void setPopos(List<ProtocolOrderPayOrder> popos) {
+		this.popos = popos;
 	}	
 }

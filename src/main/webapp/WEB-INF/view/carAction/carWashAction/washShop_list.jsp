@@ -33,7 +33,7 @@
 							<td class="alignCenter">${name}</td>
 							<td class="alignCenter">									
 							<s:if test="canDeleteCarWashShop">
-								<s:a action="carWashShop_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+								<s:a action="carWashShop_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
 							</s:if>
 							<s:else>
 							</s:else>

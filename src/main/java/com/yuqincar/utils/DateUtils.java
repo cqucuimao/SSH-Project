@@ -40,6 +40,12 @@ public class DateUtils {
 	private static final SimpleDateFormat HMS = new SimpleDateFormat("HH:mm:ss");
 
 	private static final SimpleDateFormat HM = new SimpleDateFormat("HH:mm");
+	
+	public static final int PERIOD_MONTH=0;
+	
+	public static final int PERIOD_QUARTER=1;
+	
+	public static final int PERIOD_YEAR=2;
 
 	/**
 	 * 将形如"yyyy-MM-dd"的字符串转换为Date
@@ -632,5 +638,26 @@ public class DateUtils {
    public static float elapseHours(Date begin, Date end){
 	   long step=end.getTime()-begin.getTime();
 	   return step/(1000*60*60.0f);
+   }
+   
+   public static Date getPeriodDate(Date date,int period){
+	   Calendar cal=Calendar.getInstance();
+	   cal.setTime(date);
+	   Date r=null;
+	   switch(period){
+	   case PERIOD_MONTH:
+		   cal.add(Calendar.MONTH, 1);
+		   r=cal.getTime();
+		   break;
+	   case PERIOD_QUARTER:
+		   cal.add(Calendar.MONTH, 3);
+		   r=cal.getTime();
+		   break;
+	   case PERIOD_YEAR:
+		   cal.add(Calendar.YEAR, 1);
+		   r=cal.getTime();
+		   break;
+	   }
+	   return r;
    }
 }

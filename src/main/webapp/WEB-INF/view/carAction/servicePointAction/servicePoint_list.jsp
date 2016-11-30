@@ -31,7 +31,7 @@
 							<td class="alignCenter">								
 								<s:a action="servicePoint_editUI?id=%{id}" ><i class="icon-operate-edit" title="修改"></i></s:a>	
 							<s:if test="canDeleteServicePoint">
-								<s:a action="servicePoint_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+								<s:a action="servicePoint_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
 							</s:if>
 							<s:else>
 							</s:else>

@@ -1,22 +1,7 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
-<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-	<link rel="stylesheet" type="text/css" href="<%=basePath%>skins/main.css">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<link rel="stylesheet" type="text/css" href="<%=basePath%>skins/jquery.autocomplete.css">
-</head>
-<body class="minW">
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -218,14 +203,8 @@
 		</form>
 	</div>
 	<div id="allmap" style="display: none"></div>
-	<script type="text/javascript" src="<%=basePath%>js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="<%=basePath%>js/DatePicker/WdatePicker.js"></script>
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
-	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>
 	<script type="text/javascript" src="<%=basePath%>js/jquery.autocomplete.js"></script>
-	<script type="text/javascript">
-		
+	<script type="text/javascript">		
 		function initFromQueue(){
 			if("filter_mileage"=="${chargeMode}"){
 				$("input[type=radio][value=mileage]").attr("checked", "checked");
@@ -310,6 +289,7 @@
 	
 		function taskClick(orderDate,carId){
 			popup("订单详情","order_info.action?carId="+carId+"&orderDate="+orderDate,650,460,"orderDetail");
+			coverHidden();
 		}
 		function checkEndTime(startTime, endTime) {
 			var start = new Date(startTime.replace("-", "/").replace("-", "/"));
@@ -617,8 +597,10 @@
 					});
 			$(".inputButton[value=进入队列]").click(
 					function() {
-						if (checkMain())
+						if (checkMain()){
+							coverShow();
 							$("#myForm").attr("action","schedule_inQueue.action").submit();
+						}
 					});
 			$(".inputButton[value=重置]").click(
 					function() {
@@ -654,6 +636,7 @@
 								dataType : 'json',
 								success : function(data) {
 									if (data.result == 0) {
+										coverShow();
 										$("#myForm").attr("action","schedule_startSchedule.action").submit();
 									} else if (data.result == 1) {
 										alert("订单已经被调度");
@@ -835,5 +818,4 @@
 			$("#otherSMSTD").hide();
 		})
 	</script>
-</body>
-</html>
+</cqu:border>

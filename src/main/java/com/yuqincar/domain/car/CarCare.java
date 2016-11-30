@@ -36,7 +36,7 @@ public class CarCare extends BaseEntity {
 	@Text("保养里程")
 	private int careMiles;	//保养里程数
 	
-	@Text("保养花费")
+	@Text("保养金额")
 	private BigDecimal money;	//保养花费
 	
 	@Text("保养内容")

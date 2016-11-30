@@ -1,22 +1,10 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<style type="text/css">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
+	<style type="text/css">
 		body, html,#allmap {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
 		#BaiduMap{height:500px;width:100%;}
-</style>
-<link rel="stylesheet" type="text/css" href="skins/main.css">
-</head>
-<body class="minW">
+	</style>
     <div class="space">
         <div class="title subtract">
             <h1>实时监控</h1>
@@ -929,9 +917,8 @@
     			$("#last").attr("src","skins/images/page/page_last_a.gif"); 
     		 }
 		 }
-		 
+		 coverHidden();		 
 	} 
 
     </script>
-</body>
-</html>
+</cqu:border>

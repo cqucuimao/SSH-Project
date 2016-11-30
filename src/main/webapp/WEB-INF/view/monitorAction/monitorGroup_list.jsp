@@ -1,19 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="skins/main.css">
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -47,7 +34,7 @@
 							<td>${title }</td>
 							<td>
 								<s:a action="realtime_monitorGroupEditUI?monitorGroupId=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
-                    			<s:a action="realtime_delete?monitorGroupId=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="realtime_delete?monitorGroupId=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
                 			</td>
 						</tr>
 						</s:iterator> 
@@ -66,5 +53,4 @@
 		$(function(){
 	    })
 	</script>
-</body>
-</html>
+</cqu:border>

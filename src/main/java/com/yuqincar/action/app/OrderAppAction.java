@@ -500,7 +500,7 @@ public class OrderAppAction extends BaseAction{
 			odvo.setOrderStatus("服务中");
 			break;
 		case END:
-		case PAYED:
+		case PAID:
 			odvo.setOrderStatus("服务结束");
 			break;
 		case CANCELLED:

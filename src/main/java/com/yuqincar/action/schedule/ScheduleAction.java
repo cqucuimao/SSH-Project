@@ -443,12 +443,8 @@ public class ScheduleAction extends BaseAction {
 		if(scheduleMode==null || scheduleMode.isEmpty())
 			order=new Order();
 		else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_QUEUE)){
-			System.out.println("scheduleMode="+scheduleMode);
-			System.out.println("scheduleFromQueueOrderId="+scheduleFromQueueOrderId);
 			order=orderService.getOrderById(scheduleFromQueueOrderId);
 		}else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE)){
-			System.out.println("scheduleMode="+scheduleMode);
-			System.out.println("scheduleFromUpdateOrderId="+scheduleFromUpdateOrderId);
 			order=orderService.getOrderById(scheduleFromUpdateOrderId);
 			toUpdateOrder=new Order();
 			toUpdateOrder.setCustomerOrganization(order.getCustomerOrganization());

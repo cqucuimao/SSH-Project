@@ -1,20 +1,6 @@
-<%@page import="com.itextpdf.text.log.SysoLogger"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="skins/main.css" rel="stylesheet" type="text/css" />
-<script src="js/jquery-1.7.2.js"></script>
-<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
-<script type="text/javascript" src="<%=basePath%>js/common.js"></script>
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 <style >
  tr td:first-child 
    {
@@ -22,8 +8,6 @@
     }
 
 </style>
-</head>
-<body>
  <div class="space">
     <div class="dataGrid">
 			<div class="tableWrap">
@@ -122,5 +106,5 @@
             }) 
         })
     </script>
-</body>
-</html>
+</div>
+</cqu:border>

@@ -41,6 +41,9 @@
         </s:form>
         </div>
     </div>
+    <script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>	
     <script type="text/javascript">
     	 
 	    $(function(){

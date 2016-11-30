@@ -73,7 +73,7 @@
 			                    <s:a action="car_editUI?id=%{id}&actionFlag=edit"><i class="icon-operate-edit" title="修改"></i></s:a>
 			                    <s:a action="car_detail?id=%{id}"><i class="icon-operate-detail" title="GPS定位器"></i></s:a>	 
 			                    <s:if test="canDeleteCar">
-			                	<s:a action="car_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+			                	<s:a action="car_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
 			                	</s:if>
 			                	<s:else></s:else>            
 			                </td>

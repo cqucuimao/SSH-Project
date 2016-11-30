@@ -196,5 +196,6 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 				query.setParameter(i, parameters.get(i));
 			}
 		}
-		return query.list();	}
+		return query.list();	
+	}
 }

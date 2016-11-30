@@ -1,18 +1,6 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title></title>
-    <link href="<%=basePath %>skins/main.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border bodyClass="null">
     <div id="msg" >
         <!--成功提示-->
         <div class="msgSuccess" >
@@ -44,5 +32,4 @@
         mm--;
     }
 </script>
-</body>
-</html>
+</cqu:border>

@@ -25,8 +25,10 @@ function registerClick(){
 	var fun = function(old) {
         return function() {
         	coverShow();
+        	var result=true;
         	if(old)
-        		old.apply(this, arguments);
+        		result=old.apply(this, arguments);
+        	return result;
         };
     };
 

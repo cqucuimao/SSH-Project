@@ -1,22 +1,17 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<html>
-<head>
-<title>角色列表</title>
-<%@ include file="/WEB-INF/view/public/header.jspf"%>
-
-<style>
-.SelectStyle {
-	width: 250px;
-	BORDER-TOP: #91c0e3 1px solid;
-	BORDER-BOTTOM: #91c0e3 1px solid;
-	BORDER-LEFT: #91c0e3 1px solid;
-	BORDER-RIGHT: #91c0e3 1px solid;
-	color: #004779;
-	font-family: "Tahoma";
-}
-</style>
-</head>
-<body>
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
+	<style>
+	.SelectStyle {
+		width: 250px;
+		BORDER-TOP: #91c0e3 1px solid;
+		BORDER-BOTTOM: #91c0e3 1px solid;
+		BORDER-LEFT: #91c0e3 1px solid;
+		BORDER-RIGHT: #91c0e3 1px solid;
+		color: #004779;
+		font-family: "Tahoma";
+	}
+	</style>
 	<h2>设置角色权限</h2>
 	<hr />
 	<s:form action="role_setPrivilege">
@@ -33,5 +28,4 @@
 			<a href="javascript:history.go(-1);">返回</a>
 		</div>
 	</s:form>
-</body>
-</html>
+</cqu:border>

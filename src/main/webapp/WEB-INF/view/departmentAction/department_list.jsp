@@ -41,7 +41,7 @@
 							<td>
 							    <s:a action="department_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
 							    <s:if test="canDeleteDepartment">
-			                		<s:a action="department_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+			                		<s:a action="department_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
 			                	</s:if>
 			                </td>
 						</tr>

@@ -1,18 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="skins/main.css">
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -56,7 +44,7 @@
 							<s:a action="reserveCarApplyOrder_view?id=%{id}"><i class="icon-operate-detail" title="查看"></i></s:a>
 							<!-- 新建的可以删除，被驳回的可以删除-->
 							<s:if test="status.id == 0 || status.id == 2">	
-								<s:a action="reserveCarApplyOrder_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+								<s:a action="reserveCarApplyOrder_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
 							</s:if>	
 							<!-- 新建状态的才能修改，已经提交的不能修改-->
 							<s:if test="status.id == 0">		
@@ -85,12 +73,4 @@
 			</s:form>
 		</div>
 	</div>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	<script type="text/javascript" src="js/common.js"></script>	
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
-	<script type="text/javascript">
-	</script>
-</body>
-</html>
+</cqu:border>

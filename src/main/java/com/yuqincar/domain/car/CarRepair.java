@@ -39,7 +39,7 @@ public class CarRepair extends BaseEntity {
 	@Text("结束时间")
 	private Date toDate;	//截止时间
 
-	@Text("维修花费")
+	@Text("维修金额")
 	private BigDecimal money;	//维修花费
 	
 	@Text("未赔付金额")

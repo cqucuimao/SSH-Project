@@ -1,20 +1,7 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="<%=basePath %>skins/main.css">
-</head>
-<body class="minW">
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -125,18 +112,13 @@
 			</s:form>
 		</div>
 	</div>
-	<script type="text/javascript" src="<%=basePath%>js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="<%=basePath%>js/DatePicker/WdatePicker.js"></script>
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
-	<script type="text/javascript" src="<%=basePath%>js/common.js"></script>	
 	<script type="text/javascript">
 		function taskClick(type,id,orderDate){
 			if("car"==type)
 				popup("订单详情","order_info.action?carId="+id+"&orderDate="+orderDate,650,500,"orderDetail");
 			else if("driver==type")
 				popup("订单详情","order_info.action?driverId="+id+"&orderDate="+orderDate,650,500,"orderDetail");
+			coverHidden();
 		}
 	</script>
-</body>
-</html>
+</cqu:border>

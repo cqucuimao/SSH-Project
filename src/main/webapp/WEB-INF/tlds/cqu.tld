@@ -41,7 +41,17 @@
                 <name>exceptJquery</name>    
                 <required>false</required>    
                 <rtexprvalue>true</rtexprvalue>    
-     </attribute>            
+     </attribute>  
+     <attribute>    
+                <name>bodyClass</name>    
+                <required>false</required>    
+                <rtexprvalue>false</rtexprvalue>    
+     </attribute>    
+     <attribute>    
+                <name>bodyStyle</name>    
+                <required>false</required>    
+                <rtexprvalue>false</rtexprvalue>    
+     </attribute>           
 </tag>  
 <tag>  
  <name>serviceTypeSelector</name>                            

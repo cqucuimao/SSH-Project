@@ -45,6 +45,7 @@ import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
 import com.yuqincar.domain.order.Price;
+import com.yuqincar.domain.order.ProtocolOrderPayPeriodEnum;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.app.APPMessageService;
 import com.yuqincar.service.app.DriverAPPService;
@@ -289,8 +290,45 @@ public class OrderServiceImpl implements OrderService {
 										
 					smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, param);
 				}
-			}else
+			}else{
 				checkUpdateData(order,toUpdateOrder,user);
+				if(toUpdateOrder.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getChargeMode()!=ChargeModeEnum.PROTOCOL){
+					order.setPayPeriod(null);
+					order.setFirstPayDate(null);
+					order.setMoneyForPeriodPay(null);
+					order.setLastPayDate(null);
+					order.setNextPayDate(null);
+					orderDao.update(order);
+				}
+			}
+			//针对协议订单，设置定期收款相关属性
+			if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){		//无论是新建还是修改的order，都用相同的方法设置下次收款时间。
+				if(order.getLastPayDate()==null)
+					order.setLastPayDate(order.getPlanBeginDate());
+				if(order.getPayPeriod()==ProtocolOrderPayPeriodEnum.ONCE)
+					order.setNextPayDate(order.getFirstPayDate());
+				else{
+					Date now=DateUtils.getMinDate(new Date());
+					Date nextPayDate=order.getFirstPayDate();
+					while(nextPayDate.before(now)){
+						int period=0;
+						switch(order.getPayPeriod()){
+						case MONTH:
+							period=DateUtils.PERIOD_MONTH;
+							break;
+						case QUARTER:
+							period=DateUtils.PERIOD_QUARTER;
+							break;
+						case YEAR:
+							period=DateUtils.PERIOD_YEAR;
+							break;
+						}
+						nextPayDate=DateUtils.getPeriodDate(nextPayDate, period);
+					}
+					order.setNextPayDate(nextPayDate);
+				}
+				orderDao.update(order);
+			}
 		}
 		return result;
 	}
@@ -390,6 +428,25 @@ public class OrderServiceImpl implements OrderService {
 			sb.append("(").append(++n).append(")").append("司机由：")
 				.append(toUpdateOrder.getDriver()!=null ? toUpdateOrder.getDriver().getName() : "<空>")
 				.append(" 改为 ").append(order.getDriver()!=null ? order.getDriver().getName() : "<空>").append("；");
+		
+		if((order.getPayPeriod()!=null && order.getPayPeriod()!=toUpdateOrder.getPayPeriod()) || 
+				(order.getPayPeriod()==null && toUpdateOrder.getPayPeriod()!=null))
+			sb.append("(").append(++n).append(")").append("协议订单付款周期由：")
+				.append(toUpdateOrder.getPayPeriod()!=null ? toUpdateOrder.getPayPeriod().getLabel() : "<空>")
+				.append(" 改为 ").append(order.getPayPeriod()!=null ? order.getPayPeriod().getLabel() : "<空>").append("；");
+		
+		if((order.getFirstPayDate()!=null && !order.getFirstPayDate().equals(toUpdateOrder.getFirstPayDate())) || 
+				(order.getFirstPayDate()==null && toUpdateOrder.getFirstPayDate()!=null))
+			sb.append("(").append(++n).append(")").append("协议订单首次付款日期由：")
+				.append(toUpdateOrder.getFirstPayDate()!=null ? DateUtils.getYMDString(toUpdateOrder.getFirstPayDate()) : "<空>")
+				.append(" 改为 ").append(order.getFirstPayDate()!=null ? DateUtils.getYMDString(order.getFirstPayDate()) : "<空>").append("；");
+		
+		if((order.getMoneyForPeriodPay()!=null && !order.getMoneyForPeriodPay().equals(toUpdateOrder.getMoneyForPeriodPay())) || 
+				(order.getMoneyForPeriodPay()==null && toUpdateOrder.getMoneyForPeriodPay()!=null))
+			sb.append("(").append(++n).append(")").append("协议订单每次付款金额由：")
+				.append(toUpdateOrder.getMoneyForPeriodPay()!=null ? toUpdateOrder.getMoneyForPeriodPay().toString() : "<空>")
+				.append(" 改为 ").append(order.getMoneyForPeriodPay()!=null ? order.getMoneyForPeriodPay().toString() : "<空>").append("；");
+		
 		
 		if(n>0){
 			OrderOperationRecord orderOperation = new OrderOperationRecord();
@@ -577,6 +634,10 @@ public class OrderServiceImpl implements OrderService {
 
 	public PageBean<Order> queryOrder(int pageNum, QueryHelper helper) {
 		return orderDao.getPageBean(pageNum, helper);
+	}
+	
+	public List<Order> queryAllOrder(QueryHelper helper){
+		return orderDao.getAllQuerry(helper);
 	}
 
 	public Order getOrderById(long id) {
@@ -1128,7 +1189,7 @@ public class OrderServiceImpl implements OrderService {
 		List<DriverActionVO> actionList=new LinkedList<DriverActionVO>();
 		switch(order.getStatus()){
 		case CANCELLED:
-		case PAYED:
+		case PAID:
 			break;
 		case END:
 			DriverActionVO davo=new DriverActionVO();

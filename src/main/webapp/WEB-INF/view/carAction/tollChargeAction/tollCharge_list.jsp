@@ -1,6 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>  
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
-<cqu:border exceptJMin="jquery">
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
@@ -65,7 +65,7 @@
 							<td style="text-align:right"><fmt:formatNumber value="${moneyForCardReplace}" pattern="#0"/></td>
 							<td style="text-align:right"><s:date name="nextPayDate" format="yyyy-MM-dd"/></td>
 							<td>
-                    			<s:a action="tollCharge_delete?id=%{id}" onclick="return confirm('确认要删除吗？');"><i class="icon-operate-delete" title="删除"></i></s:a>
+                    			<s:a action="tollCharge_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
                     			<s:a action="tollCharge_editUI?id=%{id}"><i class="icon-operate-edit" title="修改"></i></s:a>
           					</td>
 						</tr>

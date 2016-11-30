@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.Text;
@@ -40,6 +41,13 @@ public class BusinessParameter extends BaseEntity{
                joinColumns=@JoinColumn(name="businessparameter"),
                inverseJoinColumns=@JoinColumn(name="user"))
 	private List<User> reserveCarApplyOrderApplyUser;
+	
+	@Text("配置常备车库")
+	@OneToMany
+    @JoinTable(name="businessparameter_reserveCarApplyOrderStandingGarage",
+               joinColumns=@JoinColumn(name="businessparameter"),
+               inverseJoinColumns=@JoinColumn(name="car"))
+	private List<Car> reserveCarApplyOrderStandingGarage;
 	
 	@Text("扩充常备车库车辆配置人")
 	@OneToMany
@@ -113,6 +121,13 @@ public class BusinessParameter extends BaseEntity{
 	public void setReserveCarApplyOrderApproveUser(List<User> reserveCarApplyOrderApproveUser) {
 		this.reserveCarApplyOrderApproveUser = reserveCarApplyOrderApproveUser;
 	}
-	
+
+	public List<Car> getReserveCarApplyOrderStandingGarage() {
+		return reserveCarApplyOrderStandingGarage;
+	}
+
+	public void setReserveCarApplyOrderStandingGarage(List<Car> reserveCarApplyOrderStandingGarage) {
+		this.reserveCarApplyOrderStandingGarage = reserveCarApplyOrderStandingGarage;
+	}
 	
 }

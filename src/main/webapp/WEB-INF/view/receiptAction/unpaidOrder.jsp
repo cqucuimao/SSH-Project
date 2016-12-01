@@ -114,46 +114,64 @@
 	</div>
 	<script type="text/javascript">
 	
-	     //选中的订单的总价格
-	     var selectedTotalPrice=0;
-	     $(document).ready(function(){
-	       //为所有复选框绑定总价格计算事件
- 		   $(".checkboxItems").click(function(){
- 			 //显示订单总价格
- 			 $("#totalMoneyDiv").show();
- 			 if($(this).is(":checked")){
-			    //获取当前复选框选中的order的金额 
-			    var moneyTd=$(this).parent().parent().find("td:last");
-			    //获取订单金额
-			    selectedTotalPrice+=parseFloat(moneyTd.text());
-			 }else{
-				//获取当前复选框选中的order的金额 
-				var moneyTd=$(this).parent().parent().find("td:last");
-				//获取订单金额
-				selectedTotalPrice-=parseFloat(moneyTd.text());
-			 }
- 			 $("#selectedTotalPrice").html(selectedTotalPrice);
- 		   }); 
-	       
-	       //为全选按钮绑定总价格计算事件
-	       $("#allChecked").click(function(){
-	    	   //显示订单总价格
-	 		   $("#totalMoneyDiv").show();
-	    	   //选中的订单的总价格
-	  	       selectedTotalPrice=0;
-	    	   if($(this).is(":checked")){
-	    		    $(".checkboxItems").each(function(){
-	    		      //获取当前复选框选中的order的金额 
-				      var moneyTd=$(this).parent().parent().find("td:last");
-				      //获取订单金额
-				      selectedTotalPrice+=parseFloat(moneyTd.text());
-	    		    });
-	    		    $("#selectedTotalPrice").html(selectedTotalPrice);
-	    	   }else{
-	    		   $("#selectedTotalPrice").html(0);
-	    	 }
-	       });
-	     });
+    //选中的订单的总价格
+    var selectedTotalPrice=0;
+    //存放选中的订单价格的数组
+    var selectedPrices=new Array();
+    $(document).ready(function(){
+      //为所有复选框绑定总价格计算事件
+	   $(".checkboxItems").click(function(){
+		 //显示订单总价格
+		 $("#totalMoneyDiv").show();
+		 selectedTotalPrice=0;
+		 if($(this).is(":checked")){
+		    //将当前复选框选中的order的金额加到数组中 
+		    var moneyTd=$(this).parent().parent().find("td:last");
+		    selectedPrices.push(moneyTd.text());
+		 }else{
+			//将取消选中的订单金额从数组中移除
+			for(var i=0;i<selectedPrices.length;i++){
+				if(selectedPrices[i]==$(this).parent().parent().find("td:last").text())
+					{
+						selectedPrices.splice(i,1);
+				    	break;
+					}
+				}
+		 }
+		//计算数组中的总金额
+		    for(var i=0;i<selectedPrices.length;i++)
+		    	{
+		    	selectedTotalPrice+=parseFloat(selectedPrices[i]);
+		    	}
+		 $("#selectedTotalPrice").html(selectedTotalPrice);
+	   }); 
+      
+      
+      //为全选按钮绑定总价格计算事件
+      $("#allChecked").click(function(){
+   	   //显示订单总价格
+		   $("#totalMoneyDiv").show();
+   	   //选中的订单的总价格
+ 	      selectedTotalPrice=0;
+   	   //先清空数组
+ 	      selectedPrices.splice(0,selectedPrices.length);
+   	   if($(this).is(":checked")){
+   		    
+   		    $(".checkboxItems").each(function(){
+   		      //将当前复选框选中的order的金额 添加到数组
+			      var moneyTd=$(this).parent().parent().find("td:last");
+   		    	selectedPrices.push(moneyTd.text());
+   		    });
+   		    //计算数组中的总金额
+   		    for(var i=0;i<selectedPrices.length;i++)
+			    	  selectedTotalPrice+=parseFloat(selectedPrices[i]);
+   		    $("#selectedTotalPrice").html(selectedTotalPrice);
+   	   }else{
+   		   $("#selectedTotalPrice").html(0);
+   	 }
+      });
+    });
+    
 	     
 	     //用于记录选中的复选框的对应的order的id
 	     var orderIds;

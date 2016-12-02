@@ -170,7 +170,7 @@
         </div>
         
         <!-- 警报信息弹出框 -->
-        <div id="alarmMessageDetail" class="dataGrid" style="display:none;width:800px;height:400px;">
+        <div id="alarmMessageDetail" class="dataGrid" style="display:none;width:800px;height:400px;OVERFLOW-Y: auto;">
 			<div  class="tableWrap">
 				<table id="warningMessages">
 					<thead>

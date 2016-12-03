@@ -171,4 +171,8 @@ public class CarDaoImpl extends BaseDaoImpl<Car> implements CarDao {
 	public List<Car> getAllCarFromNotStandingAndNotTempStandingGarage() {
 		return getSession().createQuery("FROM Car c WHERE c.standingGarage=0 and c.tempStandingGarage=0").list();
 	}
+	
+	public List<Car> getAllStandingGarageCar(){
+		return getSession().createQuery("FROM Car c WHERE c.standingGarage=?").setParameter(0, true).list();
+	}
 }

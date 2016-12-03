@@ -36,7 +36,7 @@ public class CarExamine extends BaseEntity {
 	@Text("下次年审日期")
 	private Date nextExamineDate;	//下次年审日期
 
-	@Text("年审花费")
+	@Text("年审金额")
 	private BigDecimal money;	//年审花费
 
 	@Text("其他费用")

@@ -114,12 +114,6 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/priceTable_list') ">
-			<dd>
-				<s:a action="priceTable_list">价格表管理</s:a>
-				<i class="icon-menu-arrow"></i>
-			</dd>
-			</s:if>
 			<s:if test=" #session.user.hasPrivilegeByUrl('/carViolation_list') ">
 			<dd>
 				<s:a action="carViolation_list">违章信息</s:a>
@@ -356,13 +350,6 @@
 			</dd>
 			</s:if>
 			
-			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderApplyUser') ">
-			<dd>
-				<s:a action="businessParameter_reserveCarApplyOrderApplyUser?actionFlag=applyUser">配置常备车库申请人</s:a>
-				<i class="icon-menu-arrow"></i>
-			</dd>
-			</s:if>
-			
 			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderCarApproveUser') ">
 			<dd>
 				<s:a action="businessParameter_reserveCarApplyOrderCarApproveUser?actionFlag=carApproveUser">配置车辆配置人</s:a>
@@ -377,13 +364,19 @@
 			</dd>
 			</s:if>
 			
-			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_reserveCarApplyOrderStandingGarage') ">
+			<s:if test=" #session.user.hasPrivilegeByUrl('/businessParameter_standingGarageUpdateUI') ">
 			<dd>
-				<s:a action="businessParameter_reserveCarApplyOrderStandingGarage?actionFlag=standingGarage">配置常备车库</s:a>
+				<s:a action="businessParameter_standingGarageUpdateUI">配置常备车库</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
 			
+			<s:if test=" #session.user.hasPrivilegeByUrl('/priceTable_list') ">
+			<dd>
+				<s:a action="priceTable_list">价格表管理</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
 		</dl>
 		</s:if>
 	</div>

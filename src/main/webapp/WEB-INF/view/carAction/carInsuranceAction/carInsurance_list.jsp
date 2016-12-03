@@ -83,7 +83,8 @@
 	</div>
 	<script type="text/javascript">
 		$(function(){
-	    formatDateField2($("#date1"));
-		formatDateField2($("#date2"));
+			formatDateField2($("#date1"));
+			formatDateField2($("#date2"));
+	    })
 	</script>
 </cqu:border>

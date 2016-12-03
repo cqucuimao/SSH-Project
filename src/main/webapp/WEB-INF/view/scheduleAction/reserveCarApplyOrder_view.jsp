@@ -16,7 +16,15 @@
 					<col></col>
 					<col width="120"></col>
 				</colgroup>
-				<tbody>
+				<tbody>	
+					<tr>
+						<td colspan="2">		
+							<div class="title">
+             					<br/>
+            					<h2>申请信息</h2>
+        					</div>
+        				</td>
+        			</tr>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.proposer')" />：</th>
 						<td>${proposer.name }</td>
@@ -41,6 +49,12 @@
 								<s:date name="newTime" format="yyyy-MM-dd HH:mm"/>
 						</td>
 					</tr>
+					<tr>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.status')" />：</th>
+						<td>
+								${status.label}
+						</td>
+					</tr>
 					<s:if test="status.id != 0">
 						<tr>
 							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.submittedTime')" />：</th>
@@ -58,15 +72,18 @@
 					<tr>
 					<!-- 公司领导审核信息-->
 					<s:if test="approveUser != null">
+					<tr>
+						<td colspan="2">		
+							<div class="title">
+             					<br/>
+             					<br/>
+            					<h2>审核信息</h2>
+        					</div>
+        				</td>
+        			</tr>
 						<tr>
 							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveUser')" />：</th>
 							<td>${approveUser.name }</td>
-						</tr>
-						<tr>
-							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveMemo')" />：</th>
-							<td>
-									<s:textarea class="inputText" style="height:100px" disabled="true" name="approveMemo"></s:textarea>
-							</td>
 						</tr>
 						<tr>
 							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approved')" />：</th>
@@ -75,34 +92,33 @@
 								<s:else><font color="red">否</font></s:else>
 							</td>
 						</tr>
-						<s:if test="approved == true">
-							<tr>
-								<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approvedTime')" />：</th>
-								<td>
-										<s:date name="approvedTime" format="yyyy-MM-dd HH:mm"/>
-								</td>
-							</tr>
-						</s:if>
-						<s:else>
-							<tr>
-								<th><s:property value="tr.getText('order.ReserveCarApplyOrder.rejectedTime')" />：</th>
-								<td>
-										<s:date name="rejectedTime" format="yyyy-MM-dd HH:mm"/>
-								</td>
-							</tr>
-						</s:else>
-					</s:if>
-					<!-- 车辆审批信息 -->
-					<s:if test="carApproveUser != null">
+						<tr>
+							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveMemo')" />：</th>
+							<td>
+									<s:textarea class="inputText" style="height:100px" disabled="true" name="approveMemo"></s:textarea>
+							</td>
+						</tr>
+						<tr>
+							<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approvedTime')" />：</th>
+							<td>
+								<s:date name="approvedTime" format="yyyy-MM-dd HH:mm"/>
+							</td>
+						</tr>
+					</s:if>	
+					<!-- 车辆审批信息 -->					
+					<s:if test="carApproveUser != null">									
+					<tr>
+						<td colspan="2">		
+							<div class="title">
+             					<br/>
+             					<br/>
+            					<h2>车辆配置信息</h2>
+        					</div>
+        				</td>
+        			</tr>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUser')" />：</th>
 						<td>	${carApproveUser.name }</td>
-					</tr>
-					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUserMemo')" />：</th>
-						<td>
-								<s:textarea class="inputText" style="height:100px" disabled="true" name="carApproveUserMemo"></s:textarea>
-						</td>
 					</tr>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproved')" />：</th>
@@ -113,29 +129,32 @@
 							</s:else>
 						</td>
 					</tr>
-					</s:if>
-					<!-- 当车辆审批为true时，显示审批车辆 -->
-					<s:if test="carApproved == true">
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.cars')" />：</th>
 						<td>
-								<s:iterator value="cars">
-                					${plateNumber}&nbsp;
-                				</s:iterator></td>
-					</tr>		
-					</s:if>
-					
-					<!-- 司机审批信息-->
-					<s:if test="driverApproveUser != null">
+							<s:select name="cars" multiple="true" cssClass="SelectStyle" list="cars" listKey="id" listValue="plateNumber" style="height:100px"/>
+                		</td>	
+					</tr>
+					<tr>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUserMemo')" />：</th>
+						<td>
+								<s:textarea class="inputText" style="height:100px" disabled="true" name="carApproveUserMemo"></s:textarea>
+						</td>
+					</tr>	
+					</s:if>	
+					<s:if test="driverApproveUser != null">								
+					<tr>
+						<td colspan="2">		
+							<div class="title">
+             					<br/>
+             					<br/>
+            					<h2>司机配置信息</h2>
+        					</div>
+        				</td>
+        			</tr>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUser')" />：</th>
 						<td>	${driverApproveUser.name }</td>
-					</tr>
-					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUserMemo')" />：</th>
-						<td>
-								<s:textarea class="inputText" style="height:100px" disabled="true" name="driverApproveUserMemo"></s:textarea>
-						</td>
 					</tr>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproved')" />：</th>
@@ -144,34 +163,24 @@
 							<s:else><font color="red">否</font></s:else>
 						</td>
 					</tr>
-					</s:if>
-					<!-- 当车辆审批为true时，显示审批车辆 -->
-					<s:if test="driverApproved == true">
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.drivers')" />：</th>
 						<td>
-								<s:iterator value="drivers">
-                					${name}&nbsp;
-                				</s:iterator></td>
-					</tr>		
-					</s:if>
-					
-					<!-- 显示配置完成时间-->
-					<s:if test="status.id == 5">
+							<s:select name="drivers" multiple="true" cssClass="SelectStyle" list="drivers" listKey="id" listValue="name" style="height:100px"/>
+                		</td>
+					</tr>
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.configuredTime')" />：</th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUserMemo')" />：</th>
 						<td>
-								<s:date name="configuredTime" format="yyyy-MM-dd HH:mm"/>
+								<s:textarea class="inputText" style="height:100px" disabled="true" name="driverApproveUserMemo"></s:textarea>
 						</td>
-					</tr>		
+					</tr>
 					</s:if>
-					
-	                <td colspan="2">	    
+	                	<td colspan="2">	    
 	                		<input name="actionFlag" type="hidden" value="${actionFlag }">     
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a>
-		                
-	                </td>
-	            </tr>
+		                </td>
+	            	</tr>
 				</tbody>
 			</table>
 		</div>

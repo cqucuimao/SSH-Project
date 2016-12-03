@@ -70,7 +70,6 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 			baseEntity.setLastUpdateTime(new Date());
 			
 		}
-		System.out.println("getSession().save()");
 		getSession().save(entity);
 	}
 

@@ -30,12 +30,7 @@
 				<tbody>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.proposer')" /><span class="required">*</span></th>
-						<td>
-								<s:select id="proposerId" name="proposerId" cssClass="SelectStyle"
-                        		list="applyUserList" listKey="id" listValue="name"
-                        		headerKey=""
-                        		/>		
-						</td>
+						<td>${proposer.name}</td>
 					</tr>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carCount')" /><span class="required">*</span></th>
@@ -60,7 +55,16 @@
 						<td>
 								<s:textarea class="inputText" style="height:100px" id="reason" name="reason"></s:textarea>
 						</td>
-					</tr>	
+					</tr>										
+					<tr>
+						<td colspan="2">		
+							<div class="title">
+             					<br/>
+             					<br/>
+            					<h2>审核信息</h2>
+        					</div>
+        				</td>
+        			</tr>
 					<!-- 公司领导审核的内容 -->
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveUser')" /><span class="required">*</span></th>
@@ -80,60 +84,18 @@
 								<s:if test="approved == true">是</s:if>
 								<s:else><font color="red">否</font></s:else>
 						</td>
-					</tr>
-					<!-- 司机审批信息-->
-					<s:if test="driverApproveUser != null">
+					</tr>									
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUser')" /><span class="required">*</span></th>
-						<td>	${driverApproveUser.name }</td>
-					</tr>
-					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproveUserMemo')" /></th>
-						<td>
-								<s:textarea class="inputText" style="height:100px" disabled="true" name="driverApproveUserMemo"></s:textarea>
-						</td>
-					</tr>
-					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.driverApproved')" /></th>
-						<td>
-							<s:if test="driverApproved == true">是</s:if>
-							<s:else><font color="red">否</font></s:else>
-						</td>
-					</tr>
-					</s:if>
-					<!-- 当司机审批为true时，显示审批司机 -->
-					<s:if test="driverApproved == true">
-					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.drivers')" /><span class="required">*</span></th>
-						<td>
-								<s:iterator value="drivers">
-                					${name}&nbsp;
-                				</s:iterator></td>
-					</tr>		
-					</s:if>
+						<td colspan="2">		
+							<div class="title">
+             					<br/>
+             					<br/>
+            					<h2>车辆配置信息</h2>
+        					</div>
+        				</td>
+        			</tr>
 					<!-- 车辆审批人的内容 -->
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUser')" /><span class="required">*</span></th>
-						<td>
-								<s:select name="carApproveUserId" cssClass="SelectStyle"
-                        		list="carApproveUserList" listKey="id" listValue="name"
-                        		headerKey="" headerValue="选择车辆审批人"
-                        		/>	
-						</td>
-					</tr>
-					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUserMemo')" /></th>
-						<td>
-								<s:textarea class="inputText" style="height:100px" id="carApproveUserMemo" name="carApproveUserMemo"></s:textarea>
-						</td>
-					</tr>
-					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproved')" /></th>
-						<td>
-							<s:checkbox class="m10" id="carApproved" name="carApproved" onclick="showInfo()"/>
-						</td>
-					</tr>
-					<tr class="carApproveTr" style="display:none;">
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.cars')" /><span class="required">*</span></th>
 						<!-- 车辆多选  start-->
 						<td style="background-color:;width:350px">
@@ -160,9 +122,14 @@
           				<!-- 车辆多选  end-->
 					</tr>
 					<tr>
-	                <td colspan="2">	    
-		                	<input type="submit" id="btn" class="inputButton" value="保存"/>
-		                	<input type="button" id="sub" class="inputButton" value="提交"/>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carApproveUserMemo')" /></th>
+						<td>
+								<s:textarea class="inputText" style="height:100px" id="carApproveUserMemo" name="carApproveUserMemo"></s:textarea>
+						</td>
+					</tr>
+					<tr>
+	                <td colspan="2">
+		                	<input type="button" id="sub" class="inputButton" value="提交配置"/>
 		                	<a class="p15" href="javascript:history.go(-1);">返回</a>
 		                
 	                </td>
@@ -180,33 +147,17 @@
 	
 	//审批车辆
 	//其他项设置为只读
-   	$("#proposerId").attr("disabled", true); 
    	$("#carCount").attr("disabled",true);
    	$("#fromDate").removeAttr("onfocus"); 
 	$("#fromDate").attr("disabled", true); 
 	$("#toDate").removeAttr("onfocus"); 
 	$("#toDate").attr("disabled", true); 
    	$("#reason").attr("disabled",true);
-   	//保存按钮不显示
-   	$("#btn").hide();
-   	//显示是否审核通过,且置为只读
-   	$("#approveMemo").attr("disabled",true);
-   	//显示多选车辆
-   	if($("#carApproved").is(":checked")){
-   		$(".carApproveTr").show();
-   	}
    	//提交车辆审批
 	$("#sub").click(function(){
+		coverShow();
 		$('#pageForm').attr("action", "reserveCarApplyOrder_approveCar.action").submit();
 	});
-
-	function showInfo(){
-		if($("#carApproved").is(":checked")){
-    		$(".carApproveTr").show();
-    	}else{
-    		$(".carApproveTr").hide();
-    	}
-	}
 		
 	// 配置具体的验证规则
 	$(function(){    	
@@ -219,6 +170,9 @@
 				selectedIds:{
 					required:true,
 				},
+			},
+			invalidHandler: function(form, validator){
+				 coverHidden();
 			}
 	  });
 	});

@@ -44,9 +44,8 @@
           <h1>临时扩充常备车库申请</h1>
         </div>
          <!-- 提醒申请人 -->
-        <s:if test="canShowApply">
+        <s:if test="canShowRejected">
 	        <p>
-	        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${approveCount}&nbsp;&nbsp;个待审核的申请</s:a>&nbsp;&nbsp;
 	        	  <s:a action="reserveCarApplyOrder_list">目前有&nbsp;&nbsp;${rejectedCount}&nbsp;&nbsp;个被驳回的申请</s:a>
 	        </p>
         </s:if>

@@ -179,6 +179,13 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 		if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL)
 			orderService.orderCheckout(order);
 		
+		Map<String,String> params=new HashMap<String,String>();
+		params.put("sn", order.getSn());
+		params.put("customerOrganization", order.getCustomerOrganization().getName());
+		params.put("plateNumber", order.getCar().getPlateNumber());
+		params.put("driver", order.getDriver().getName());
+		smsService.sendTemplateSMS(order.getScheduler().getName(), SMSService.SMS_TEMPLATE_ORDER_END, params);
+		
 		return 0;
 	}
 	

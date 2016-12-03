@@ -74,90 +74,56 @@ public class HomeAction extends ActionSupport {
 	 * 扩充常备车库的申请提醒
 	 */
 	public boolean isCanShowReserveCarApplyOrderBlock(){
-		
 		User user = ((User)ActionContext.getContext().getSession().get("user"));
-		List<User> approveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApproveUser();
-		List<User> applyUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser();
-		List<User> carApproveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderCarApproveUser();
-		List<User> driverApproveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderDriverApproveUser();
-		
-		if( approveUserList.contains(user) || applyUserList.contains(user) || carApproveUserList.contains(user) || driverApproveUserList.contains(user)){
+		if(reserveCarApplyOrderService.getRejects(user).size()==0
+				&& reserveCarApplyOrderService.getNeedApprove(user).size()==0
+				&& reserveCarApplyOrderService.getNeedConfigureCar(user).size()==0
+				&& reserveCarApplyOrderService.getNeedConfigureDriver(user).size()==0)
+			return false;
+		else
 			return true;
-		}
-		return false;
 	}
 	
-	public boolean isCanShowApply(){
+	public boolean isCanShowRejected(){
 		User user = ((User)ActionContext.getContext().getSession().get("user"));
-		List<User> applyUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser();
-		
-		if(applyUserList.contains(user)){
-			return true;
-		}
-		return false;
+		return reserveCarApplyOrderService.getRejects(user).size()>0;
 	}
 	
 	public boolean isCanShowApprove(){
 		User user = ((User)ActionContext.getContext().getSession().get("user"));
-		List<User> approveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApproveUser();
-		
-		if(approveUserList.contains(user)){
-			return true;
-		}
-		return false;
+		return reserveCarApplyOrderService.getNeedApprove(user).size()>0;
 	}
 	
 	public boolean isCanShowCarApprove(){
 		User user = ((User)ActionContext.getContext().getSession().get("user"));
-		List<User> carApproveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderCarApproveUser();
-		if(carApproveUserList.contains(user)){
-			return true;
-		}
-		return false;
+		return reserveCarApplyOrderService.getNeedConfigureCar(user).size()>0;
 	}
 	
 	public boolean isCanShowDriverApprove(){
 		User user = ((User)ActionContext.getContext().getSession().get("user"));
-		List<User> driverApproveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderDriverApproveUser();
-		
-		if(driverApproveUserList.contains(user)){
-			return true;
-		}
-		return false;
+		return reserveCarApplyOrderService.getNeedConfigureDriver(user).size()>0;
 	}
 	
 	/**
 	 * 获取提醒数量
 	 */
 	public int getApproveCount(){
-		
-		return reserveCarApplyOrderService.getReserveCarApplyOrderByStatus(ReserveCarApplyOrderStatusEnum.SUBMITTED).size();
+		User user = ((User)ActionContext.getContext().getSession().get("user"));	
+		return reserveCarApplyOrderService.getNeedApprove(user).size();
 	}
 	
-	public int getRejectedCount(){
-		
-		return reserveCarApplyOrderService.getReserveCarApplyOrderByStatus(ReserveCarApplyOrderStatusEnum.REJECTED).size();
+	public int getRejectedCount(){	
+		User user = ((User)ActionContext.getContext().getSession().get("user"));	
+		return reserveCarApplyOrderService.getRejects(user).size();
 	}
 	
 	public int getConfigureCarCount(){
-		int count = 0;
-		List<ReserveCarApplyOrder> rcaos = reserveCarApplyOrderService.getReserveCarApplyOrderByStatus(ReserveCarApplyOrderStatusEnum.APPROVED);
-		for(ReserveCarApplyOrder rcao:rcaos){
-			if(rcao.getCarApproveUser() == null){
-				count++;
-			}
-		}
-		return count;
+		User user = ((User)ActionContext.getContext().getSession().get("user"));	
+		return reserveCarApplyOrderService.getNeedConfigureCar(user).size();
 	}
 	
 	public int getConfigureDriverCount(){
-		int count = 0;
-		List<ReserveCarApplyOrder> rcaos = reserveCarApplyOrderService.getReserveCarApplyOrderByStatus(ReserveCarApplyOrderStatusEnum.APPROVED);
-		for(ReserveCarApplyOrder rcao:rcaos){
-			if(rcao.getDriverApproveUser() == null){
-				count++;
-			}
-		}
-		return count;
+		User user = ((User)ActionContext.getContext().getSession().get("user"));	
+		return reserveCarApplyOrderService.getNeedConfigureDriver(user).size();
 	}
 }

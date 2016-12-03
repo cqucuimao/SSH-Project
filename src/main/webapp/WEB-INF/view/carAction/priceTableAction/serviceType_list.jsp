@@ -1,19 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="skins/main.css">
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 
 <style >
 	.ttt tr td:first-child 
@@ -32,8 +19,11 @@
 			<table style="border:none">
 				<tr>
 					<td>
-						<s:a cssClass="buttonA" action="priceTable_addServiceTypeUI">新增车类</s:a>
-					</td>					
+						<s:a cssClass="buttonA" action="priceTable_addServiceTypeUI">新增车类和车型</s:a>
+					</td>
+					<td>
+						<a class="p15" href="javascript:history.go(-1);">返回</a>					
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -89,12 +79,4 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
-	<script type="text/javascript" src="js/common.js"></script>	
-	<script type="text/javascript">
-	</script>
-</body>
-</html>
+</cqu:border>

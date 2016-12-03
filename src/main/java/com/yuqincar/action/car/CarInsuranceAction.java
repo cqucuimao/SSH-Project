@@ -75,12 +75,12 @@ public class CarInsuranceAction extends BaseAction implements ModelDriven<CarIns
 			helper.addWhereCondition("ci.car=?", model.getCar());
 		
 		if(date1!=null && date2!=null)
-			helper.addWhereCondition("(TO_DAYS(ci.payDate)-TO_DAYS(?))>=0 and (TO_DAYS(?)-TO_DAYS(ci.payDate))>=0", 
-					date1 ,date2);
+			helper.addWhereCondition("TO_DAYS(?)>=TO_DAYS(ci.fromDate) and (TO_DAYS(ci.toDate)>=TO_DAYS(?)))", 
+					date2 ,date1);
 		else if(date1==null && date2!=null)
-			helper.addWhereCondition("(TO_DAYS(?)-TO_DAYS(ci.payDate))>=0", date2);
+			helper.addWhereCondition("(TO_DAYS(?)>=TO_DAYS(ci.fromDate))", date2);
 		else if(date1!=null && date2==null)
-			helper.addWhereCondition("(TO_DAYS(ci.payDate)-TO_DAYS(?))>=0", date1);
+			helper.addWhereCondition("(TO_DAYS(ci.toDate)>=TO_DAYS(?))", date1);
 		
 		helper.addOrderByProperty("ci.id", false);		
 		PageBean pageBean = carInsuranceService.queryCarInsurance(pageNum, helper);

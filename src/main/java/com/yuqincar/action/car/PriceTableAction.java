@@ -174,7 +174,7 @@ public class PriceTableAction extends BaseAction{
 		CarServiceType carServiceType = carService.getCarServiceTypeByTitle(serviceTypeTitle);
 		Price price = priceTable.getCarServiceType().get(carServiceType);
 		Map<CarServiceType, Price> map = priceTable.getCarServiceType();
-		map.remove(carServiceType,price);
+		map.remove(carServiceType);
 		priceTable.setCarServiceType(map);
 		
 		priceService.deletePrice(priceTable, price.getId());

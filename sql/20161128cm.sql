@@ -1,4 +1,5 @@
-alter table carservicesupertype change title superTitle varchar(255);
+update carservicesupertype set superTitle=title;
+alter table carservicesupertype drop column title;
 insert into privilege(id,name,url,parent_id) values(435,'','/priceTable_deleteCarServiceSuperType',360);
 insert into privilege(id,name,url,parent_id) values(436,'','/priceTable_deleteCarServiceType',360);
 insert into privilege(id,name,url,parent_id) values(437,'','/priceTable_detail',360);

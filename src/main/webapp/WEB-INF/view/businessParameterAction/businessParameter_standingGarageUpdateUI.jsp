@@ -1,22 +1,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
-
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<link href="skins/main.css" rel="stylesheet" type="text/css" />
-<style>
-    	
-    </style>
-</head>
-<body class="minW">
+<%@ include file="/WEB-INF/view/common/common.jsp" %>
+<cqu:border>
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
-			<h1>配置${viewFlag }信息</h1>
+			<h1>配置常备车库</h1>
 			<p style="color: red">
 				<s:if test="hasFieldErrors()">
 					<s:iterator value="fieldErrors">
@@ -34,7 +22,6 @@
 			<table> 
 				<tbody>
 					<tr>
-						<th>配置${viewFlag }</th>
 						<!-- 多选  start-->
 						<td style="background-color:;width:350px">
 	                        <s:select name="listIds" multiple="true" cssClass="SelectStyle" 
@@ -60,10 +47,8 @@
           				<!-- 多选  end-->
 					</tr>
 					<tr>
-	                <td colspan="2">
-	        				<input name="actionFlag" type="hidden" value="${actionFlag }">  	    
+	                <td colspan="2"> 	    
 		                	<input type="button" id="sub" class="inputButton" value="确定"/>
-		                	<a class="p15" href="javascript:history.go(-1);">返回</a>
 	                </td>
 	            </tr>
 				</tbody>
@@ -72,34 +57,12 @@
 		</div>
 		
 	</div>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>	
-	<script type="text/javascript" src="js/DatePicker/WdatePicker.js"></script>
-	<script type="text/javascript" src="js/common.js"></script>	
-	<script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>
-    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
-    <script type="text/javascript" src="js/validate/messages_cn.js"></script>
 	<script type="text/javascript">
-	
-	// 配置具体的验证规则
-	$(function(){    	
-		$("#pageForm").validate({
-			submitout: function(element) { $(element).valid(); },
-			rules:{
-				selectedIds:{
-					required:true,
-				},
-			}
-	  });
-	});
-	
-	var actionFlag = $("input[name=actionFlag]").val();
+		
 	//通过js为提交操作指定action
-	if (actionFlag == "standingGarage"){
-		$("#sub").click(function(){
-			$('#pageForm').attr("action", "businessParameter_addReserveCarApplyOrderStandingGarage.action").submit();
-		});
-	}
+	$("#sub").click(function(){
+		$('#pageForm').attr("action", "businessParameter_standingGarageUpdate.action").submit();
+	});
 	<!--操作全部-->
     function moveAllOption(e1, e2){ 
 	      var fromObjOptions=e1.options; 
@@ -145,5 +108,4 @@
     } 
 	
 	</script>
-</body>
-</html>
+</cqu:border>

@@ -41,10 +41,7 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	@Text("提交时间")
 	private Date submittedTime;
 	
-	@Text("被驳回时间")
-	private Date rejectedTime;
-	
-	@Text("审核通过时间")
+	@Text("审核时间")
 	private Date approvedTime;
 	
 	@Text("配置完成时间")
@@ -71,7 +68,7 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	@Text("车辆配置人意见")
 	private String carApproveUserMemo;
 	
-	@Text("车辆配置人是否审批通过")
+	@Text("车辆配置是否完成")
 	private boolean carApproved;
 	
 	@Text("配置车辆")
@@ -87,7 +84,7 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	@Text("司机配置意见")
 	private String driverApproveUserMemo;
 	
-	@Text("司机配置人是否审批通过")
+	@Text("司机配置是否完成")
 	private boolean driverApproved;
 	
 	@Text("配置司机")
@@ -137,12 +134,6 @@ public class ReserveCarApplyOrder extends BaseEntity {
 	}
 	public void setSubmittedTime(Date submittedTime) {
 		this.submittedTime = submittedTime;
-	}
-	public Date getRejectedTime() {
-		return rejectedTime;
-	}
-	public void setRejectedTime(Date rejectedTime) {
-		this.rejectedTime = rejectedTime;
 	}
 	public Date getApprovedTime() {
 		return approvedTime;

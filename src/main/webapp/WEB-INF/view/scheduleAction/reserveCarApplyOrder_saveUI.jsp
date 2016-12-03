@@ -28,16 +28,12 @@
 					<col width="120"></col>
 				</colgroup>
 				<tbody>
-					<!-- 新建时填写的内容 -->
+					<s:if test="proposer!=null">					
 					<tr>
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.proposer')" /><span class="required">*</span></th>
-						<td>
-								<s:select id="proposerId" name="proposerId" cssClass="SelectStyle"
-                        		list="applyUserList" listKey="id" listValue="name"
-                        		headerKey="" headerValue="选择申请人"
-                        		/>	
-						</td>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.proposer')" /></th>
+						<td>${proposer.name}</td>
 					</tr>
+					</s:if>
 					<tr>
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.carCount')" /><span class="required">*</span></th>
 						<td>
@@ -66,24 +62,16 @@
 					</tr>	
 					<!-- 公司领导审核的内容 -->
 					<tr class="approveTr" style="display:none;">
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveUser')" /><span class="required">*</span></th>
+						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveMemo')" /><span class="required">*</span></th>
 						<td>
-								<s:select name="approveUserId" cssClass="SelectStyle"
-                        		list="approveUserList" listKey="id" listValue="name"
-                        		headerKey="" headerValue="选择审核人"
-                        		/>	
-						</td>
-					</tr>
-					<tr class="approveTr" style="display:none;">
-						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approveMemo')" /></th>
-						<td>
-								<s:textarea class="inputText" style="height:100px" id="approveMemo" name="approveMemo"></s:textarea>
+								<s:textarea class="inputText" style="height:100px" id="approveMemo" name="approveMemo" value="审核通过。"></s:textarea>
 						</td>
 					</tr>
 					<tr class="approveTr" style="display:none;">
 						<th><s:property value="tr.getText('order.ReserveCarApplyOrder.approved')" /></th>
 						<td>
-							<s:checkbox class="m10" id="approved" name="approved"/>
+							<s:radio name="approved" list="%{#{'true':'通过','false':'驳回'}}" value="true"></s:radio>
+							<!--<s:checkbox class="m10" id="approved" name="approved"/>-->
 						</td>
 					</tr>
 					<tr>
@@ -115,11 +103,13 @@
 	//通过js为提交操作指定action
 	if (actionFlag == "add"){				//新建
 		$("#sub").click(function(){
+			coverShow();
 			$('#pageForm').attr("action", "reserveCarApplyOrder_submitForNew.action").submit();
 		});
 	}
 	if (actionFlag == "edit"){				//修改
 		$("#sub").click(function(){
+			coverShow();
 			$('#pageForm').attr("action", "reserveCarApplyOrder_submitForEdit.action").submit();
 		});
 	}
@@ -140,7 +130,8 @@
 		$(".approveTr").show();
     	//提交审核
 		$("#sub").click(function(){
-			$('#pageForm').attr("action", "reserveCarApplyOrder_approve.action").submit();
+			coverShow();
+			var str=$('#pageForm').attr("action", "reserveCarApplyOrder_approve.action").submit();
 		});
 	}
 
@@ -149,9 +140,6 @@
 		$("#pageForm").validate({
 			submitout: function(element) { $(element).valid(); },
 			rules:{
-				proposerId:{
-					required:true,
-				},
 				fromDate:{
 					required:true,
 				},
@@ -168,6 +156,12 @@
 				approveUserId:{
 					required:true,
 				},
+				approveMemo:{
+					required:true,
+				}
+			},
+			invalidHandler: function(form, validator){
+				 coverHidden();
 			}
 	  });
 			

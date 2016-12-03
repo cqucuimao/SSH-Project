@@ -172,6 +172,7 @@ public class CarViolationServiceImpl implements CarViolationService {
 			          carValation.setPenaltyMoney(money);
 			          carValation.setDealt(false);
 			          carValation.setImported(true);
+			          carValation.setCompany(c.getCompany());
 			          carViolationDao.save(carValation);
 		    }
 		}

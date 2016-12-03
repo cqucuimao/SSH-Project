@@ -203,9 +203,7 @@ public class CarCareAction extends BaseAction implements ModelDriven<CarCare> {
 			addFieldError("date", "你输入的保养日期不能晚于今天！");
 			return "saveUI";
 		}
-		System.out.println("******in CarCare");
 		carCareService.saveCarCare(model);
-		System.out.println("******in CarCare2");
 		model=null;
 		ActionContext.getContext().getValueStack().push(getModel());
 		return freshList();

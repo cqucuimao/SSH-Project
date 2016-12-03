@@ -35,20 +35,6 @@ public class BusinessParameter extends BaseEntity{
                inverseJoinColumns=@JoinColumn(name="user"))
 	private List<User> reserveCarApplyOrderApproveUser;
 	
-	@Text("扩充常备车库申请人")
-	@OneToMany
-    @JoinTable(name="businessparameter_reserveCarApplyOrderApplyUser",
-               joinColumns=@JoinColumn(name="businessparameter"),
-               inverseJoinColumns=@JoinColumn(name="user"))
-	private List<User> reserveCarApplyOrderApplyUser;
-	
-	@Text("配置常备车库")
-	@OneToMany
-    @JoinTable(name="businessparameter_reserveCarApplyOrderStandingGarage",
-               joinColumns=@JoinColumn(name="businessparameter"),
-               inverseJoinColumns=@JoinColumn(name="car"))
-	private List<Car> reserveCarApplyOrderStandingGarage;
-	
 	@Text("扩充常备车库车辆配置人")
 	@OneToMany
     @JoinTable(name="businessparameter_reserveCarApplyOrderCarApproveUser",
@@ -90,14 +76,6 @@ public class BusinessParameter extends BaseEntity{
 		this.mileageForCarCareRemind = mileageForCarCareRemind;
 	}
 
-	public List<User> getReserveCarApplyOrderApplyUser() {
-		return reserveCarApplyOrderApplyUser;
-	}
-
-	public void setReserveCarApplyOrderApplyUser(List<User> reserveCarApplyOrderApplyUser) {
-		this.reserveCarApplyOrderApplyUser = reserveCarApplyOrderApplyUser;
-	}
-
 	public List<User> getReserveCarApplyOrderCarApproveUser() {
 		return reserveCarApplyOrderCarApproveUser;
 	}
@@ -120,14 +98,6 @@ public class BusinessParameter extends BaseEntity{
 
 	public void setReserveCarApplyOrderApproveUser(List<User> reserveCarApplyOrderApproveUser) {
 		this.reserveCarApplyOrderApproveUser = reserveCarApplyOrderApproveUser;
-	}
-
-	public List<Car> getReserveCarApplyOrderStandingGarage() {
-		return reserveCarApplyOrderStandingGarage;
-	}
-
-	public void setReserveCarApplyOrderStandingGarage(List<Car> reserveCarApplyOrderStandingGarage) {
-		this.reserveCarApplyOrderStandingGarage = reserveCarApplyOrderStandingGarage;
 	}
 	
 }

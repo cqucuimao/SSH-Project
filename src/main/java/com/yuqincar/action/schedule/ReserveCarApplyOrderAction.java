@@ -62,17 +62,13 @@ public class ReserveCarApplyOrderAction extends BaseAction implements ModelDrive
 	
 	private Long driverApproveUserId;
 	
-	public String queryList(){
-		QueryHelper helper = new QueryHelper("ReserveCarApplyOrder", "rcao");
-		helper.addOrderByProperty("rcao.id", false);
-		PageBean<ReserveCarApplyOrder> pageBean = reserveCarApplyOrderService.queryReserveCarApplyOrder(pageNum, helper);	
-		ActionContext.getContext().getValueStack().push(pageBean);
-		ActionContext.getContext().getSession().put("rcaoHelper", helper);
-		return "list";
-	}
-	
 	public String list(){
+		User user=(User)ActionContext.getContext().getSession().get("user");
 		QueryHelper helper = new QueryHelper("ReserveCarApplyOrder", "rcao");
+		//提交之后，才给实体赋值approveUser/carApproveUser/driverApproveUser，所以有下面的逻辑。
+		//这有点复杂，只是权宜之计，根本解决之道是将List页面分开。
+		helper.addWhereCondition("rcao.proposer=? or rcao.approveUser=? or (rcao.status>=? and (rcao.carApproveUser=? or rcao.driverApproveUser=?))", 
+				user,user,ReserveCarApplyOrderStatusEnum.APPROVED,user,user);
 		helper.addOrderByProperty("rcao.id", false);
 		PageBean<ReserveCarApplyOrder> pageBean = reserveCarApplyOrderService.queryReserveCarApplyOrder(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -88,75 +84,47 @@ public class ReserveCarApplyOrderAction extends BaseAction implements ModelDrive
 	}
 	
 	public String addUI(){
-		List<User> approveUserList = new ArrayList<User>();
-		List<User> applyUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser();
-		ActionContext.getContext().put("applyUserList", applyUserList);
-		ActionContext.getContext().put("approveUserList", approveUserList);
 		return "saveUI";
 	}
 	
 	public String add(){
-		model.setProposer(userService.getById(proposerId));
-		//设置状态为新建
-		model.setStatus(ReserveCarApplyOrderStatusEnum.getByLabel("新建"));
-		//设置新建时间为当前时间
-		model.setNewTime(new Date());
-		reserveCarApplyOrderService.saveReserveCarApplyOrder(model);
-		ActionContext.getContext().getValueStack().push(new ReserveCarApplyOrder());
+		model.setProposer((User)ActionContext.getContext().getSession().get("user"));
+		reserveCarApplyOrderService.save(model);
 		return freshList();
 	}
 	//新建时提交
 	public String submitForNew(){
-		model.setProposer(userService.getById(proposerId));
-		//设置状态为提交
-		model.setStatus(ReserveCarApplyOrderStatusEnum.getByLabel("已提交审核"));
-		//设置新建时间和提交时间为当前时间
-		model.setNewTime(new Date());
-		model.setSubmittedTime(new Date());
-		reserveCarApplyOrderService.saveReserveCarApplyOrder(model);
-		ActionContext.getContext().getValueStack().push(new ReserveCarApplyOrder());
+		model.setProposer((User)ActionContext.getContext().getSession().get("user"));
+		reserveCarApplyOrderService.saveAndSubmit(model);
 		return freshList();
 	}
 	
 	public String editUI(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		proposerId = rcao.getProposer().getId();
-		List<User> applyUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser();
-		List<User> approveUserList = new ArrayList<User>();
-		ActionContext.getContext().put("approveUserList", approveUserList);
-		ActionContext.getContext().put("applyUserList", applyUserList);
 		ActionContext.getContext().getValueStack().push(rcao);
 		return "saveUI";
 	}
 	
 	public String edit(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		rcao.setProposer(userService.getById(proposerId));
 		rcao.setCarCount(model.getCarCount());
 		rcao.setFromDate(model.getFromDate());
 		rcao.setToDate(model.getToDate());
 		rcao.setReason(model.getReason());
-		//更改新建时间
-		rcao.setNewTime(new Date());
-		reserveCarApplyOrderService.updateReserveCarApplyOrder(rcao);
-		ActionContext.getContext().getValueStack().push(new ReserveCarApplyOrder());
+		reserveCarApplyOrderService.update(rcao);
 		return freshList();
 	}
 	
 	//修改时提交
 	public String submitForEdit(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		rcao.setProposer(userService.getById(proposerId));
 		//设置状态为提交
-		rcao.setStatus(ReserveCarApplyOrderStatusEnum.getByLabel("已提交审核"));
 		rcao.setCarCount(model.getCarCount());
 		rcao.setFromDate(model.getFromDate());
 		rcao.setToDate(model.getToDate());
 		rcao.setReason(model.getReason());
-		//设置提交时间为当前时间
-		rcao.setSubmittedTime(new Date());
-		reserveCarApplyOrderService.updateReserveCarApplyOrder(rcao);
-		ActionContext.getContext().getValueStack().push(new ReserveCarApplyOrder());
+		reserveCarApplyOrderService.submit(rcao);
+		//ActionContext.getContext().getValueStack().push(new ReserveCarApplyOrder());
 		return freshList();
 	}
 	
@@ -166,48 +134,54 @@ public class ReserveCarApplyOrderAction extends BaseAction implements ModelDrive
 		return "view";
 	}
 	
+	public boolean isCanDelete(){
+		ReserveCarApplyOrder rcao=(ReserveCarApplyOrder)ActionContext.getContext().getValueStack().peek();
+		return reserveCarApplyOrderService.canDelete(rcao,(User) ActionContext.getContext().getSession().get("user"));
+	}
+	
+	public boolean isCanUpdate(){
+		ReserveCarApplyOrder rcao=(ReserveCarApplyOrder)ActionContext.getContext().getValueStack().peek();
+		return reserveCarApplyOrderService.canUpdate(rcao,(User) ActionContext.getContext().getSession().get("user"));
+	}
+	
+	public boolean isCanApprove(){
+		ReserveCarApplyOrder rcao=(ReserveCarApplyOrder)ActionContext.getContext().getValueStack().peek();
+		return reserveCarApplyOrderService.canApprove(rcao,(User) ActionContext.getContext().getSession().get("user"));
+	}
+	
+	public boolean isCanConfigCar(){
+		ReserveCarApplyOrder rcao=(ReserveCarApplyOrder)ActionContext.getContext().getValueStack().peek();
+		return reserveCarApplyOrderService.canConfigCar(rcao,(User) ActionContext.getContext().getSession().get("user"));
+	}
+	
+	public boolean isCanConfigDriver(){
+		ReserveCarApplyOrder rcao=(ReserveCarApplyOrder)ActionContext.getContext().getValueStack().peek();
+		return reserveCarApplyOrderService.canConfigDriver(rcao,(User) ActionContext.getContext().getSession().get("user"));
+	}
+	
 	public String delete(){
-		reserveCarApplyOrderService.deleteReserveCarApplyOrder(model.getId());
+		reserveCarApplyOrderService.delete(model.getId());
 		return freshList();
 	}
 	//审核
 	public String approveUI(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		List<User> applyUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser();
-		List<User> approveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApproveUser();
-		ActionContext.getContext().put("applyUserList", applyUserList);
-		ActionContext.getContext().put("approveUserList", approveUserList);
-		proposerId = rcao.getProposer().getId();
 		ActionContext.getContext().getValueStack().push(rcao);
 		return "saveUI";
 	}
 	public String approve(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		System.out.println("审核人="+userService.getById(approveUserId).getName());
-		rcao.setApproveUser(userService.getById(approveUserId));
-		rcao.setApproved(model.isApproved());
 		rcao.setApproveMemo(model.getApproveMemo());
-		//审核通过
-		if(model.isApproved()){
-
-			rcao.setApprovedTime(new Date());
-			rcao.setStatus(ReserveCarApplyOrderStatusEnum.getByLabel("审核通过"));
-		}else{//被驳回
-
-			rcao.setRejectedTime(new Date());
-			rcao.setStatus(ReserveCarApplyOrderStatusEnum.getByLabel("被驳回"));
-		}
-		reserveCarApplyOrderService.updateReserveCarApplyOrder(rcao);
+		
+		if(model.isApproved())
+			reserveCarApplyOrderService.approve(rcao);
+		else
+			reserveCarApplyOrderService.reject(rcao);
 		return freshList();
 	}
 	//审批车辆
 	public String approveCarUI(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		proposerId = rcao.getProposer().getId();
-		List<User> applyUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser();
-		ActionContext.getContext().put("applyUserList", applyUserList);
-		List<User> carApproveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderCarApproveUser();
-		ActionContext.getContext().put("carApproveUserList", carApproveUserList);
 		//从非常备车库选取车辆
 		List<Car> carList = monitorGroupService.sortCarByPlateNumber(carService.getAllCarFromNotStandingAndNotTempStandingGarage());
 		List<Car> selectedList = new ArrayList<Car>();
@@ -218,44 +192,25 @@ public class ReserveCarApplyOrderAction extends BaseAction implements ModelDrive
 	}
 	public String approveCar(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		rcao.setCarApproveUser(userService.getById(carApproveUserId));
 		rcao.setCarApproveUserMemo(model.getCarApproveUserMemo());
-		rcao.setCarApproved(model.isCarApproved());
-		if(model.isCarApproved()){
-			String[] ids = idString.split(",");
-			Set<Car> carSet = new HashSet<Car>();
-			for(String id:ids){
-				Long lId = Long.parseLong(id);
-				Car car = carService.getCarById(lId);
-				//把车辆置为临时常备车
-				car.setTempStandingGarage(true);
-				carService.saveCar(car);
-				carSet.add(car);
-			}
-			rcao.setCars(carSet);
-		}else{
-			rcao.setCars(null);
+		
+		String[] ids = idString.split(",");
+		Set<Car> carSet = new HashSet<Car>();
+		for(String id:ids){
+			Long lId = Long.parseLong(id);
+			Car car = carService.getCarById(lId);
+			carSet.add(car);
 		}
-		//审批车辆时，判断司机审批是否通过
-		if(rcao.isDriverApproved() && model.isCarApproved()){
-			//申请状态设为已配置
-			rcao.setStatus(ReserveCarApplyOrderStatusEnum.getByLabel("已配置"));
-			rcao.setConfiguredTime(new Date());
-		}
-		reserveCarApplyOrderService.updateReserveCarApplyOrder(rcao);
+		rcao.setCars(carSet);
+		
+		reserveCarApplyOrderService.configCar(rcao);
 		
 		return freshList();
 	}
 	//审批司机
 	public String approveDriverUI(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		proposerId = rcao.getProposer().getId();
-		List<User> applyUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser();
-		ActionContext.getContext().put("applyUserList", applyUserList);
-		List<User> driverApproveUserList = businessParameterService.getBusinessParameter().getReserveCarApplyOrderDriverApproveUser();
-		ActionContext.getContext().put("driverApproveUserList", driverApproveUserList);
 		List<User> driverList = reserveCarApplyOrderService.sortUserByName(userService.getAllDrivers());
-		//TODO
 		List<User> selectedList = new ArrayList<User>();
 		ActionContext.getContext().put("userList", driverList);
 		ActionContext.getContext().put("selectedList", selectedList);
@@ -264,27 +219,17 @@ public class ReserveCarApplyOrderAction extends BaseAction implements ModelDrive
 	}
 	public String approveDriver(){
 		ReserveCarApplyOrder rcao = reserveCarApplyOrderService.getById(model.getId());
-		rcao.setDriverApproveUser(userService.getById(driverApproveUserId));
 		rcao.setDriverApproveUserMemo(model.getDriverApproveUserMemo());
-		rcao.setDriverApproved(model.isDriverApproved());
-		if(model.isDriverApproved()){
-			String[] ids = idString.split(",");
-			Set<User> driverSet = new HashSet<User>();
-			for(String id:ids){
-				Long lId = Long.parseLong(id);
-				driverSet.add(userService.getById(lId));
-			}
-			rcao.setDrivers(driverSet);
-		}else{
-			rcao.setDrivers(null);
+		
+		String[] ids = idString.split(",");
+		Set<User> driverSet = new HashSet<User>();
+		for(String id:ids){
+			Long lId = Long.parseLong(id);
+			driverSet.add(userService.getById(lId));
 		}
-		//审批司机时，判断车辆审批是否通过
-		if(model.isDriverApproved() && rcao.isCarApproved()){
-			//申请状态设为已配置
-			rcao.setStatus(ReserveCarApplyOrderStatusEnum.getByLabel("已配置"));
-			rcao.setConfiguredTime(new Date());
-		}
-		reserveCarApplyOrderService.updateReserveCarApplyOrder(rcao);
+		rcao.setDrivers(driverSet);
+		
+		reserveCarApplyOrderService.configDriver(rcao);
 		return freshList();
 	}
 	

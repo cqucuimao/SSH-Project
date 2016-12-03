@@ -43,23 +43,23 @@
 							<td>
 							<s:a action="reserveCarApplyOrder_view?id=%{id}"><i class="icon-operate-detail" title="查看"></i></s:a>
 							<!-- 新建的可以删除，被驳回的可以删除-->
-							<s:if test="status.id == 0 || status.id == 2">	
+							<s:if test="canDelete">	
 								<s:a action="reserveCarApplyOrder_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
 							</s:if>	
 							<!-- 新建状态的才能修改，已经提交的不能修改-->
-							<s:if test="status.id == 0">		
+							<s:if test="canUpdate">		
 								<s:a action="reserveCarApplyOrder_editUI?id=%{id}&actionFlag=edit"><i class="icon-operate-edit" title="修改"></i></s:a>
 							</s:if>
 							<!-- 已提交审核的才能审核 -->
-							<s:if test="status.id == 1">	
+							<s:if test="canApprove">	
 								<s:a action="reserveCarApplyOrder_approveUI?id=%{id}&actionFlag=approve"><i class="icon-operate-password" title="审核"></i></s:a>
 							</s:if>
-							<!-- 审核通过的才能审批车辆 -->
-							<s:if test="status.id == 3 && carApproveUser == null">			
+							<!-- 审核通过的才能配置车辆 -->
+							<s:if test="canConfigCar">			
 								<s:a action="reserveCarApplyOrder_approveCarUI?id=%{id}&actionFlag=approveCar"><i class="icon-operate-password" title="审批车辆"></i></s:a>
 							</s:if>
-							<!-- 审核通过的才能审批司机 -->
-							<s:if test="status.id == 3 && driverApproveUser == null">							
+							<!-- 审核通过的才能配置司机 -->
+							<s:if test="canConfigDriver">							
 								<s:a action="reserveCarApplyOrder_approveDriverUI?id=%{id}"><i class="icon-operate-password" title="审批司机"></i></s:a>
 							</s:if>	
 			                </td>

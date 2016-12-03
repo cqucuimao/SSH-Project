@@ -40,6 +40,7 @@ public class ProtocolPayOrderGenerate {
 				popo.setToDate(order.getNextPayDate());
 				popo.setMoney(order.getMoneyForPeriodPay());
 				popo.setPaid(false);
+				popo.setCompany(order.getCompany());
 				popoService.saveProtocolOrderPayOrder(popo);
 				
 				int period=0;

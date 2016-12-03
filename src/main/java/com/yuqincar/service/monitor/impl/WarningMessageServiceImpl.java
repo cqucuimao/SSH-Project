@@ -38,6 +38,7 @@ public class WarningMessageServiceImpl implements WarningMessageService {
 		message.setType(WarningMessageTypeEnum.PULLEDOUT);
 		message.setDate(date);
 		message.setDealed(false);
+		message.setCompany(message.getCar().getCompany());
 		warningMessageDao.save(message);
 	}
 

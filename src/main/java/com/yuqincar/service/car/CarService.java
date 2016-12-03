@@ -114,6 +114,8 @@ public interface CarService {
 	public List<Car> getAll();
 	
 	public List<Car> getAllCarFromNotStandingAndNotTempStandingGarage();
+	
+	public List<Car> getAllStandingGarageCar();
 
 	public List<TreeNode> getCarTree(String plateNumber,String synchDriver);
 

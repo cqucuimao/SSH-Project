@@ -261,7 +261,6 @@ public class OrderAction extends BaseAction {
 
 			dayDetails=order.getDayDetails();
 			List<DayOrderDetail> nullDayDetails = new ArrayList<DayOrderDetail>();
-			System.out.println("list.size="+dayDetails.size());
 			if(dayDetails.size()<8){
 				int n=8-dayDetails.size();
 				for(int i=1;i<=n;i++){			
@@ -304,7 +303,6 @@ public class OrderAction extends BaseAction {
 			order.setOrderMoney(orderMoney);
 			order.setGrade(grade);
 			order.setOptions(options);
-			System.out.println("tax="+tax);
 			order.setTax(tax);
 			
 			orderService.editOrderBill(order, user);
@@ -326,10 +324,6 @@ public class OrderAction extends BaseAction {
 	 * 订单详情页,非弹出框
 	 */
 	public String view() {
-		System.out.println("in view of OrderAction");
-		System.out.println("orderId="+orderId);
-		System.out.println(ActionContext.getContext().getValueStack().peek().getClass().toString());
-		System.out.println("orderForView="+ActionContext.getContext().get("orderForView"));
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);
@@ -346,7 +340,6 @@ public class OrderAction extends BaseAction {
 			ActionContext.getContext().getValueStack().push(order);
 			
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
-			System.out.println("List="+driverActionVOList);
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
 		}
 		return "operate";
@@ -416,13 +409,10 @@ public class OrderAction extends BaseAction {
 	public String addEndAction(){
 
 		User user = (User)ActionContext.getContext().getSession().get("user");
-		System.out.println("user="+user);
-		System.out.println("actionTime="+actionTime);
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);		
 			orderService.addEndAction(order, user, actionTime);	
-			System.out.println("order="+order);
 			
 			List<DriverActionVO> driverActionVOList = orderService.getDriverActions(order);
 			ActionContext.getContext().put("driverActionVOList", driverActionVOList);
@@ -482,8 +472,6 @@ public class OrderAction extends BaseAction {
 	}
 	
 	public String cancelDo(){
-		System.out.println("cancelDo");
-		System.out.println("orderId="+orderId);
 		Order order=orderService.getOrderById(orderId);
 		int result=orderService.cancelOrder(order, (User)ActionContext.getContext().getSession().get("user"), cancelReason);
 		ActionContext.getContext().getValueStack().push(order);
@@ -532,9 +520,6 @@ public class OrderAction extends BaseAction {
 	}
 	
 	public String postponeDo(){
-		System.out.println("postponeDo");
-		System.out.println("orderId="+orderId);
-		System.out.println("postponeDate="+postponeDate);
 		Order order=orderService.getOrderById(orderId);
 		ActionContext.getContext().getValueStack().push(order);
 		if(postponeDate.before(order.getPlanEndDate())){
@@ -565,12 +550,10 @@ public class OrderAction extends BaseAction {
 	 */
 	public String info() {
 		Date date = DateUtils.getYMD2(orderDate);
-		System.out.println("in info, carId="+carId+",driverId="+driverId);
 		if(carId>0 && driverId==0)
 			ActionContext.getContext().put("orderList",orderService.getCarTask(carService.getCarById(carId), date,date).get(0));
 		else if(driverId>0 && carId==0)
 			ActionContext.getContext().put("orderList",orderService.getDriverTask(userService.getById(driverId), date,date).get(0));
-		System.out.println(ActionContext.getContext().get("orderList"));
 		return "info";
 	}
 	
@@ -654,13 +637,11 @@ public class OrderAction extends BaseAction {
 	}
 	
 	public String protocolOrderRemind(){
-		System.out.println("in protocolOrderRemind");
 		ActionContext.getContext().put("recordList", orderService.getNeedRemindProtocolOrder());
 		return "protocolOrderRemind";
 	}
 	
 	public String unAcceptedOrderRemind(){
-		System.out.println("in protocolOrderRemind");
 		QueryHelper helper = new QueryHelper("order_", "o");
 		helper.addWhereCondition("o.status=?", OrderStatusEnum.SCHEDULED);
 		helper.addWhereCondition("o.chargeMode<>?",ChargeModeEnum.PROTOCOL);
@@ -711,7 +692,6 @@ public class OrderAction extends BaseAction {
 	}
 
 	public String orderManager() {
-		System.out.println("orderManager");
 		QueryHelper helper=getInitHelper();
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -720,7 +700,6 @@ public class OrderAction extends BaseAction {
 	}
 	
 	public String list(){
-		System.out.println("in list");
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("orderManagerHelper");
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);

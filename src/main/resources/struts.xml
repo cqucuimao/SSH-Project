@@ -579,8 +579,7 @@
 		<action name="businessParameter_*" class="businessParameterAction" method="{1}">
 	    	<result name="list">/WEB-INF/view/businessParameterAction/businessParameter_list.jsp</result>
 	    	<result name="saveUI">/WEB-INF/view/businessParameterAction/businessParameter_saveUI.jsp</result>
-	    	<result name="garageList">/WEB-INF/view/businessParameterAction/businessParameter_garageList.jsp</result>
-	    	<result name="saveCarUI">/WEB-INF/view/businessParameterAction/businessParameter_garage.jsp</result>
+	    	<result name="standingGarageUpdateUI">/WEB-INF/view/businessParameterAction/businessParameter_standingGarageUpdateUI.jsp</result>
 	     </action>
 		
 		<!-- 司机任务管理功能 -->

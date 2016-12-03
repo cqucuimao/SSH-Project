@@ -71,10 +71,6 @@ public class BusinessParameterAction extends BaseAction{
 			showList = userService.getUserByRoleName("公司领导");
 			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderApproveUser());
 		}
-		if(actionFlag.equals("applyUser")){
-			showList = userService.getUserByRoleName("运营科领导");		
-			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderApplyUser());
-		}
 		if(actionFlag.equals("carApproveUser")){
 			showList = userService.getUserByRoleName("技术保障科领导");
 			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderCarApproveUser());
@@ -175,69 +171,42 @@ public class BusinessParameterAction extends BaseAction{
 	/**
 	 * 车库有关
 	 */
-	public String addCarUI(){
+	public String standingGarageUpdateUI(){
 		List<Car> showList = new ArrayList<Car>();
-		List<Car> selectedList = new ArrayList<Car>();
-		if(actionFlag.equals("standingGarage")){
-			showList = monitorGroupService.sortCarByPlateNumber(carService.getAll());
-			for(Car car : showList){
-				if(car.getStatus()==CarStatusEnum.SCRAPPED || car.isBorrowed())
-					continue;
-			}
-			showList.removeAll(businessParameterService.getBusinessParameter().getReserveCarApplyOrderStandingGarage());
-		}
+		List<Car> selectedList = carService.getAllStandingGarageCar();
+		selectedList=monitorGroupService.sortCarByPlateNumber(selectedList);
+		showList=carService.getAll();
+		for(int i=showList.size()-1;i>=0;i--)
+			if(showList.get(i).getStatus()==CarStatusEnum.SCRAPPED || showList.get(i).isBorrowed())
+				showList.remove(i);
+		showList.removeAll(selectedList);
+		showList = monitorGroupService.sortCarByPlateNumber(showList);
 		ActionContext.getContext().put("showList", showList);
 		ActionContext.getContext().put("selectedList", selectedList);
-		return "saveCarUI";
-	}
-	//车列表
-	public String reserveCarApplyOrderStandingGarage(){
-		viewFlag = "常备车库";
-		List<Car> standingGarageList = carService.getAll();
-		ActionContext.getContext().put("standingGarageList", standingGarageList);
-		return "garageList";
+		return "standingGarageUpdateUI";
 	}
 	//添加车
-	public String addReserveCarApplyOrderStandingGarage(){
-		viewFlag = "常备车库";
+	public String standingGarageUpdate(){
 		BusinessParameter businessParameter = businessParameterService.getBusinessParameter();
-			List<Car> carList = businessParameter.getReserveCarApplyOrderStandingGarage();
-			for(Car car : carList){
-				if(car.isStandingGarage() == true)
-					continue;
-			}
-			businessParameter.setReserveCarApplyOrderStandingGarage(carList);
-			businessParameterService.updateBusinessParameter(businessParameter);
-			return reserveCarApplyOrderStandingGarage();
-	}
-	
-	/**
-	 * 申请人相关
-	 */
-	//申请人列表
-	public String reserveCarApplyOrderApplyUser(){
-		viewFlag = "常备车库申请人";
-		BusinessParameter businessParameter = businessParameterService.getBusinessParameter();
-		List<User> applyUserList = businessParameter.getReserveCarApplyOrderApplyUser();
-		ActionContext.getContext().put("applyUserList", applyUserList);
-		return "list";
-	}
-	//添加申请人
-	public String addReserveCarApplyOrderApplyUser(){
-		viewFlag = "常备车库申请人";
-		BusinessParameter businessParameter = businessParameterService.getBusinessParameter();
+		List<Car> selectedCars=new ArrayList<Car>();
 		if(idString != null && !idString.equals("")){
 			String[] ids = idString.split(",");
-			List<User> userList = businessParameter.getReserveCarApplyOrderApplyUser();
-			for(String id : ids){
-				Long lid = Long.parseLong(id);
-				userList.add(userService.getById(lid));
-			}
-			businessParameter.setReserveCarApplyOrderApplyUser(userList);
+			for(String id : ids)
+				selectedCars.add(carService.getCarById(Long.parseLong(id)));
 		}
-		businessParameterService.updateBusinessParameter(businessParameter);
-		return reserveCarApplyOrderApplyUser();
+		List<Car> old=carService.getAllStandingGarageCar();
+		for(Car car:old)
+			if(!selectedCars.contains(car)){
+				car.setStandingGarage(false);
+				carService.updateCar(car);
+			}
+		for(Car car:selectedCars){
+			car.setStandingGarage(true);
+			carService.updateCar(car);
+		}
+		return standingGarageUpdateUI();
 	}
+	
 	/**
 	 * 车辆审批相关
 	 */
@@ -324,14 +293,6 @@ public class BusinessParameterAction extends BaseAction{
 			businessParameterService.updateBusinessParameter(businessParameter);
 			return reserveCarApplyOrderApproveUser();
 			
-		}else if(actionFlag.equals("applyUser")){
-			
-			List<User> users = businessParameter.getReserveCarApplyOrderApplyUser();
-			users.remove(userService.getById(applyUserId));
-			businessParameter.setReserveCarApplyOrderApplyUser(users);
-			businessParameterService.updateBusinessParameter(businessParameter);
-			return reserveCarApplyOrderApplyUser();
-			
 		}else if(actionFlag.equals("carApproveUser")){
 			
 			List<User> users = businessParameter.getReserveCarApplyOrderCarApproveUser();
@@ -340,23 +301,14 @@ public class BusinessParameterAction extends BaseAction{
 			businessParameterService.updateBusinessParameter(businessParameter);
 			return reserveCarApplyOrderCarApproveUser();
 			
-		}else if(actionFlag.equals("standingGarage")){
-			
-			List<Car> cars = businessParameter.getReserveCarApplyOrderStandingGarage();
-			cars.remove(carService.getCarById(standingGarageId));
-			businessParameter.setReserveCarApplyOrderStandingGarage(cars);
-			businessParameterService.updateBusinessParameter(businessParameter);
-			return reserveCarApplyOrderStandingGarage();
-			
-		}else{
-			
+		}else if(actionFlag.equals("driverApproveUser")){			
 			List<User> users = businessParameter.getReserveCarApplyOrderDriverApproveUser();
 			users.remove(userService.getById(driverApproveUserId));
 			businessParameter.setReserveCarApplyOrderDriverApproveUser(users);
 			businessParameterService.updateBusinessParameter(businessParameter);
-			return reserveCarApplyOrderDriverApproveUser();
-			
+			return reserveCarApplyOrderDriverApproveUser();			
 		}
+		return "list";
 	}
 	
 	public String getActionFlag() {

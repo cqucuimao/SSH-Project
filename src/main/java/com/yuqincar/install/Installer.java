@@ -722,7 +722,7 @@ public class Installer {
 			CarServiceSuperType superType=carServiceSuperTypeDao.getCarServiceSuperTypeByTitle(line.get(0));
 			if(superType==null){
 				superType=new CarServiceSuperType();
-				superType.setTitle(line.get(0));
+				superType.setSuperTitle(line.get(0));
 				carServiceSuperTypeDao.save(superType);
 			}
 			

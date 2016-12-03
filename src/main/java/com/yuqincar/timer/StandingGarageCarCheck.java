@@ -29,18 +29,14 @@ public class StandingGarageCarCheck {
 			Date from=DateUtils.getMinDate(rcao.getFromDate());
 			Date to=DateUtils.getMaxDate(rcao.getToDate());
 			Date now=new Date();
-			if(from.before(now) && now.before(to))
-				for(Car car:rcao.getCars()){
-					car.setTempStandingGarage(true);
-					carService.updateCar(car);
-				}
-			else if(to.before(now))
+			if(to.before(now)){
 				for(Car car:rcao.getCars()){
 					car.setTempStandingGarage(false);
 					carService.updateCar(car);
 				}
 				rcao.setStatus(ReserveCarApplyOrderStatusEnum.EXPIRED);
-				reserveCarApplyOrderService.updateReserveCarApplyOrder(rcao);
+				reserveCarApplyOrderService.update(rcao);
+			}
 		}
 	}
 }

@@ -302,6 +302,10 @@ public class CarServiceImpl implements CarService {
 	public List<Car> getAllCarFromNotStandingAndNotTempStandingGarage() {
 		return carDao.getAllCarFromNotStandingAndNotTempStandingGarage();
 	}
+	
+	public List<Car> getAllStandingGarageCar(){
+		return carDao.getAllStandingGarageCar();
+	}
 
 	public boolean canDeleteCarServiceSuperType(long id) {
 		return carServiceSuperTypeDao.canDeleteCarServiceSuperType(id);

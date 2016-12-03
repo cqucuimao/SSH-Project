@@ -18,7 +18,7 @@ insert into role(id,name) values(22,'运营科领导');
 insert into role(id,name) values(23,'技术保障科领导');
 insert into role(id,name) values(24,'人力资源科领导');
 
-insert into role_privilege(roles_id,privileges_id) values(17,405),(17,413),(17,415),17,418);
+insert into role_privilege(roles_id,privileges_id) values(17,405),(17,413),(17,415),(17,418);
 insert into role_privilege(roles_id,privileges_id) values(22,405),(22,406),(22,407),(22,408),
 							 (22,409),(22,411),(22,412),(22,413),(22,414);
 insert into role_privilege(roles_id,privileges_id) values(23,405),(23,413),(23,416),(23,419);

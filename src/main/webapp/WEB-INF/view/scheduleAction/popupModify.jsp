@@ -56,7 +56,7 @@
 			formatDateField4($("#timeId"));
 		}
 		var actionId = $("input[name=actionId]").val();
-		var id = actionId.substr(2,1);	
+		var id = actionId.split("-")[1];	
 		
 		if(id == 0){
 			$(".driverAction").text("在队列");

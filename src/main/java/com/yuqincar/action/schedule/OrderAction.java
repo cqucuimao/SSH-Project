@@ -423,10 +423,9 @@ public class OrderAction extends BaseAction {
 	
 	//删除司机操作
 	public String deleteDriverAction() throws Exception{
-		
 		User user = (User)ActionContext.getContext().getSession().get("user");
 		orderService.deleteDriverAction(actionId, user);
-		orderId = Long.parseLong(actionId.substring(0, 1));
+		orderId = Long.parseLong(actionId.split("-")[0]);
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);		
@@ -454,7 +453,7 @@ public class OrderAction extends BaseAction {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = sdf.parse(time);
 		orderService.EditDriverAction(actionId, date, user);
-		orderId = Long.parseLong(actionId.substring(0, 1));
+		orderId = Long.parseLong(actionId.split("-")[0]);
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(order);		

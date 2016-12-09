@@ -233,6 +233,12 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/protocolOrderPayOrder_list') ">
+			<dd>
+				<s:a action="protocolOrderPayOrder_list">协议订单收款单</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
 			<s:if test=" #session.user.hasPrivilegeByUrl('/orderStatement_newList') ">
 			<dd>
 				<s:a action="orderStatement_newList">对账单</s:a>

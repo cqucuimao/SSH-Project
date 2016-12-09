@@ -151,6 +151,15 @@ public interface OrderService extends BaseService {
 	 * @param helper
 	 * @return
 	 */
+	
+	public boolean canAddProtocolOrderPayOrder(Order order);
+
+	/**
+	 * 该账单是否为协议订单。用于判断列表中是否显示“添加分期收款单”按钮
+	 * @param pageNum
+	 * @param helper
+	 * @return
+	 */
 	public PageBean<Order> queryOrder(int pageNum, QueryHelper helper);
 	
 	public List<Order> queryAllOrder(QueryHelper helper);

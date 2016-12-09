@@ -557,6 +557,20 @@
 	    	<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
 	    	<result name="list">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
 	     </action>
+	     
+	     <!-- 协议订单分期收款单管理 -->
+		<action name="protocolOrderPayOrder_*" class="protocolOrderPayOrderAction" method="{1}">
+	    	<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
+	    	<result name="list">/WEB-INF/view/receiptAction/protocolOrderPayOrderList.jsp</result>
+	    	<result name="saveUI">/WEB-INF/view/receiptAction/protocolOrderPayOrder_saveUI.jsp</result>
+	     </action>
+	     
+	      <!-- 协议订单分期收款单添加到对账单 -->
+		<action name="popoAddStatement_*" class="popoAddStatementAction" method="{1}">
+	    	<result name="home">/WEB-INF/view/receiptAction/unpaidOrder.jsp</result>
+	    	<result name="list">/WEB-INF/view/receiptAction/popoAddStatement.jsp</result>
+	     </action>
+	     
 	     <!-- 对账单管理 -->
 	     <action name="orderStatement_*" class="orderStatementAction" method="{1}">
 	    	<result name="newList">/WEB-INF/view/receiptAction/orderStatementNewList.jsp</result>

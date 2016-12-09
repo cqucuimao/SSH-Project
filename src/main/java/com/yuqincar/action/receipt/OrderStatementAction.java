@@ -37,8 +37,10 @@ import com.yuqincar.domain.order.MoneyGatherInfo;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatement;
 import com.yuqincar.domain.order.OrderStatementStatusEnum;
+import com.yuqincar.domain.order.ProtocolOrderPayOrder;
 import com.yuqincar.service.common.DiskFileService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.order.ProtocolOrderPayOrderService;
 import com.yuqincar.service.receipt.ReceiptService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
@@ -48,13 +50,17 @@ import com.yuqincar.utils.QueryHelper;
 public class OrderStatementAction extends BaseAction implements ModelDriven<OrderStatement> {
 	
 	private OrderStatement model=new OrderStatement();
-	//获取新增orderStatement的相应订单的id序列
+	//获取新增orderStatement的相应订单(协议订单收款单)的id序列
+	private String popoIds;
 	private String orderIds;
 	//新增的orderStatement的名称
 	private String orderStatementName;
 
 	@Autowired
 	ReceiptService receiptService;
+	
+	@Autowired
+	ProtocolOrderPayOrderService protocolOrderPayOrderService;
 	
 	@Autowired
 	OrderService orderService;
@@ -134,6 +140,11 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   List<Order> orderList=orderStatement.getOrders();
 		   ActionContext.getContext().put("orderList", orderList);
 		   ActionContext.getContext().put("orderStatement", orderStatement);
+		   
+		   List<ProtocolOrderPayOrder> popoList=orderStatement.getPopos();
+		   ActionContext.getContext().put("popoList", popoList);
+		   ActionContext.getContext().put("orderStatement", orderStatement);
+		   
 		   return "newDetail";
 		}else{
 			//如果该对账单中所有订单都被排除，则该对账单被取消，返回到对账单列表页面
@@ -249,7 +260,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		
 	}
 	
-	//新增对账单
+	//新增订单的对账单
 	public void newOrderStatement(){
 		String[] idStrArray=orderIds.split(",");
 		Long[] ids=new Long[idStrArray.length];
@@ -260,7 +271,22 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		this.writeJson("{\"status\":\"1\"}");
 	}
 	
-	//添加对账单
+	//新增协议订单收款的对账单
+	public void newPopoStatement(){
+		System.out.println("popoIds="+popoIds);
+		String[] idStrArray=popoIds.split(",");
+		System.out.println("idStrArray="+idStrArray[0]);
+		Long[] ids=new Long[idStrArray.length];
+		for(int i=0;i<idStrArray.length;i++){
+			ids[i]=Long.parseLong(idStrArray[i]);
+		}
+		System.out.println("orderStatementName="+orderStatementName);
+		protocolOrderPayOrderService.newOrderStatementByPopoIds(orderStatementName,ids);
+		
+		this.writeJson("{\"status\":\"1\"}");
+	}
+	
+	//添加对账单中的订单
 	public void addOrderStatement(){
 		String[] idStrArray=orderIds.split(",");
 		Long[] ids=new Long[idStrArray.length];
@@ -270,6 +296,17 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		receiptService.addOrderStatementByOrderIds(orderStatementName,ids);
 		this.writeJson("{\"status\":\"1\"}");
 	}
+	
+	//添加对账单的popo
+		public void addPopoStatement(){
+			String[] idStrArray=orderIds.split(",");
+			Long[] ids=new Long[idStrArray.length];
+			for(int i=0;i<idStrArray.length;i++){
+				ids[i]=Long.parseLong(idStrArray[i]);
+			}
+			protocolOrderPayOrderService.addOrderStatementByPopoIds(orderStatementName,ids);
+			this.writeJson("{\"status\":\"1\"}");
+		}
 	//导出对账单 生成PDF
 	public String generatePDF() throws Exception{
 		
@@ -682,4 +719,14 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	public void setInfoMemo(String infoMemo) {
 		this.infoMemo = infoMemo;
 	}
+
+	public String getPopoIds() {
+		return popoIds;
+	}
+
+	public void setPopoIds(String popoIds) {
+		this.popoIds = popoIds;
+	}
+	
+	
 }

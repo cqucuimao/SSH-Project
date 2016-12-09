@@ -534,6 +534,15 @@ public class OrderServiceImpl implements OrderService {
 				&& (order.getStatus()==OrderStatusEnum.BEGIN || order.getStatus()==OrderStatusEnum.GETON
 					|| order.getStatus()==OrderStatusEnum.GETOFF);
 	}
+	
+	public boolean canAddProtocolOrderPayOrder(Order order) {
+		if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL)
+			return false;
+		if(order.getStatus()==OrderStatusEnum.INQUEUE || order.getStatus()==OrderStatusEnum.END || 
+				order.getStatus()==OrderStatusEnum.PAID || order.getStatus()==OrderStatusEnum.CANCELLED)
+			return false;
+		return true;
+	}
 
 	@Transactional
 	public int orderEndPostpone(Order order, Date endDate, String description,

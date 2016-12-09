@@ -199,6 +199,10 @@ public class OrderAction extends BaseAction {
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
 		return orderService.canEditOrderBill(order);
 	}
+	public boolean isCanAddProtocolOrderPayOrder(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		return orderService.canAddProtocolOrderPayOrder(order);
+	}
 	public void getDriverJson() {
 
 		QueryHelper helper = new QueryHelper(User.class, "u");

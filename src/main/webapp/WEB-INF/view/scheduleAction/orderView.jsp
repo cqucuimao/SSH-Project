@@ -181,6 +181,11 @@
                         		</s:if>
                         </td>
                         <td>
+                        		<s:if test="canAddProtocolOrderPayOrder">
+                        			<s:a cssClass="buttonB" action="protocolOrderPayOrder_addFromAddUI?orderId=%{id}">添加分期收款单</s:a>
+                        		</s:if>
+                        </td>
+                        <td>
                             	<a class="p15" href="javascript:history.go(-1);">返回</a>
                            
                         </td>

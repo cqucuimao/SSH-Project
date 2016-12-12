@@ -20,5 +20,7 @@ public interface CapcareMessageService extends BaseService{
 	public List<CapcareMessage> getAllCapcareMessage();
 	
 	public void getCapcareMessagePerTenSecondFromCapcare();
+	
+	public void removeCapcareMessage();
 
 }

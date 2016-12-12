@@ -116,7 +116,21 @@
 										<td>
 											<s:textfield class="inputText" type="text" name="protocolMoney" id="protocolMoney" />
 										</td>
-									</tr>							
+									</tr>			
+									<tr class="filter_protocol">
+										<th>收款周期</th>
+										<td>
+											<s:select class="SelectStyle" name="payPeriodId" list="#{'0':'每月','1':'每季度' ,'2':'每年' ,'3':'一次性'}" style="width:84px;"/>
+											&nbsp;首次收款日期<span class="required">*</span>
+											<s:textfield class="Wdate half" type="text" name="firstPayDate" id="firstPayDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+										</td>
+									</tr>	
+									<tr class="filter_protocol">
+										<th>收款金额<span class="required">*</span></th>
+										<td>
+											<s:textfield class="inputText" type="text" name="moneyForPeriodPay" id="moneyForPeriodPay" />
+										</td>
+									</tr>					
 									<tr>
 										<th>业务员</th>
 										<td><cqu:userSelector name="saler" departments="运营科;技术保障科"/></td>
@@ -240,6 +254,7 @@
 			if("filter_days"=="${chargeMode}" || "filter_protocol"=="${chargeMode}"){
 				formatDateField1($("#planBeginDate"));
 				formatDateField1($("#planEndDate"));
+				formatDateField1($("#firstPayDate"));
 			}
 			
 			$("input[type=button][value=进入队列]").hide();
@@ -283,6 +298,7 @@
 			if("filter_days"=="${chargeMode}" || "filter_protocol"=="${chargeMode}"){
 				formatDateField1($("#planBeginDate"));
 				formatDateField1($("#planEndDate"));
+				formatDateField1($("#firstPayDate"));
 			}
 		}
 	
@@ -370,6 +386,17 @@
 					return false;
 				}else if(isNaN($("#protocolMoney").val())){
 					alert("协议价格填写错误！");
+					return false;
+				}
+				if($("#firstPayDate").val() == ""){
+					alert("第一次收款日期不能为空！");
+					return false;
+				}
+				if ($("#moneyForPeriodPay").val() == "") {
+					alert("收款金额不能为空！");
+					return false;
+				}else if(isNaN($("#moneyForPeriodPay").val())){
+					alert("收款金额填写错误！");
 					return false;
 				}
 			}

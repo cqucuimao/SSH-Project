@@ -19,6 +19,5 @@ public class CapcareData {
 	@Transactional
 	public void update(){
 		capcareMessageService.getCapcareMessagePerTenSecondFromCapcare();
-		//CapcareMessageUtils.getCapcareMessage();
 	}
 }

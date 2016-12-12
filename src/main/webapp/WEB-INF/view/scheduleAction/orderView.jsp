@@ -114,11 +114,27 @@
                         <th><s:property value="tr.getText('order.Order.actualMoney')" />：</th>
                         <td>${actualMoney}元</td>
                     </tr>
+                   <s:if test="chargeMode.id == 2">
+	                    <tr>
+	                        <th><s:property value="tr.getText('order.Order.payPeriod')" />：</th>
+	                        <td>${payPeriod.label}</td>
+	                        <th><s:property value="tr.getText('order.Order.firstPayDate')" />：</th>
+	                        <td><s:date name="firstPayDate" format="yyyy-MM-dd"/></td>
+	                    </tr>
+                   </s:if>
                     <tr>
-                        <th><s:property value="tr.getText('order.Order.memo')" />：</th>
-                        <td>${memo}</td>
-                        <th></th>
-                        <td></td>
+                        <s:if test="chargeMode.id == 2">
+	                        <th><s:property value="tr.getText('order.Order.moneyForPeriodPay')" />：</th>
+	                        <td>${moneyForPeriodPay }元</td>
+                        	<th><s:property value="tr.getText('order.Order.memo')" />：</th>
+	                        <td>${memo}</td>
+                        </s:if>
+                        <s:else>
+                        	<th><s:property value="tr.getText('order.Order.memo')" />：</th>
+	                        <td>${memo}</td>
+	                        <th></th>
+	                        <td></td>
+                        </s:else>
                     </tr>
                 </tbody>
              </table>

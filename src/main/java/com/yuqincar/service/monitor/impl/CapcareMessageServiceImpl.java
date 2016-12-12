@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -186,7 +187,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 			String lat = devices.getJSONObject(i).getJSONObject("position").get("lat").toString();
 			String mode = devices.getJSONObject(i).getJSONObject("position").get("mode").toString();
 			//过滤掉坐标是0以及mode不是A的信息
-			if(! lng.equals("0.0") && ! lat.equals("0.0") && !mode.equals("A")){
+			if(! lng.equals("0.0") && ! lat.equals("0.0") && mode.equals("A")){
 				notNullDevices.add(devices.getJSONObject(i));
 			}
 		}
@@ -194,6 +195,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		int groups = positionNum/limitLen + 1;//组数
 		int lastGroupNum = positionNum%limitLen;//最后一组的个数
 		//请求百度API进行坐标转换,因为坐标转换每次最多100个，所以需要分组
+		
 		for(int i=0;i<groups;i++){
 			String positionStr = "";
 			if(i != groups-1){						//不是最后一组
@@ -257,6 +259,38 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 					capcareMap.put(plateNumber, capcareMessage);
 			}
 		}
+	}
+
+	/**
+	 * 那些由于车牌变更，或者在凯步关爱中取消注册的车辆，会依然占据数据库和内存map。
+	 * 所以需要写一个定时任务，每晚0点运行。
+	 * 反向来查：如果在map中，但是不在凯步平台返回数据中的车牌位置信息，就要从map和数据库中删除掉
+	 */
+	@Transactional
+	public void removeCapcareMessage() {
+		
+		//获取凯步返回的所有车辆的车牌号
+		GetCapcareMsg gcm = new GetCapcareMsg();
+		String capcareMessageString = gcm.excute();
+		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
+		JSONArray devices = jsonObject.getJSONArray("devices");
+		List<String> plateNumberList = new ArrayList<String>();
+		for(int i=0;i<devices.size();i++){
+			String plateNumber = devices.getJSONObject(i).get("name").toString();
+			plateNumberList.add(plateNumber);
+		}
+		
+		List<String> keyList = new ArrayList<String>(capcareMap.keySet());
+		
+		for(String plateNumber : keyList){
+			if( !plateNumberList.contains(plateNumber)){
+				System.out.println("执行删除车辆:"+plateNumber);
+				capcareMap.remove(plateNumber);
+				capcareMessageDao.delete(capcareMessageDao.getCapcareMessageByPlateNumber(plateNumber).getId());
+			}
+		}
+		
+		
 	}		
 
 }

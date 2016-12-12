@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.service.monitor.CapcareMessageService;
-import com.yuqincar.utils.CapcareMessageUtils;
 
 @Component
 public class CapcareData {

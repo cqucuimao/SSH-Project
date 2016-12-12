@@ -248,6 +248,8 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 						capcareMessage.setSpeed(speed);
 						capcareMessage.setStatus(status);
 						capcareMessage.setDirection(direction);
+						Car car=carService.getCarByPlateNumber(plateNumber);
+						capcareMessage.setCompany(car.getCompany());
 						capcareMessageDao.save(capcareMessage);
 					}
 				

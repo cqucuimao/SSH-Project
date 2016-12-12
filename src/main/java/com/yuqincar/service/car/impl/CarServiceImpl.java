@@ -248,7 +248,7 @@ public class CarServiceImpl implements CarService {
 	public List<Car> getCarsForMonitoringBySuperType(String superType) {
 		QueryHelper queryHelper=new QueryHelper(Car.class,"c");
 		queryHelper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
-		queryHelper.addWhereCondition("c.serviceType.superType.title=?", superType);
+		queryHelper.addWhereCondition("c.serviceType.superType.superTitle=?", superType);
 		queryHelper.addWhereCondition("c.device is not null");
 		queryHelper.addWhereCondition("c.borrowed=?", false);
 		return carDao.getAllQuerry(queryHelper);

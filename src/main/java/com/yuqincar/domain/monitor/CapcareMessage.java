@@ -2,23 +2,29 @@ package com.yuqincar.domain.monitor;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+
+import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.utils.Text;
+
 /**
- * 凯步获取的数据，不需要保存到数据库
+ * 凯步获取的数据，持久化到数据库
  * @author cocoa
  *
  */
-public class CapcareMessage {
-	//车牌号
+@Entity
+public class CapcareMessage extends BaseEntity {
+	@Text("车牌号")
 	private String plateNumber;
-	//经度
+	@Text("经度")
 	private String longitude;
-	//纬度
+	@Text("纬度")
 	private String latitude;
-	//速度
+	@Text("速度")
 	private String speed;
-	//状态
+	@Text("状态")
 	private String status;
-	//方向
+	@Text("方向")
 	private String direction;
 	
 	public String getPlateNumber() {

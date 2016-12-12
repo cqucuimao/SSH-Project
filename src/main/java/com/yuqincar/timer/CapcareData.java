@@ -21,8 +21,7 @@ public class CapcareData {
 		capcareMessageService.getCapcareMessagePerTenSecondFromCapcare();
 	}
 	
-	//@Scheduled(cron = "0 0 1 * * ?")
-	@Scheduled(cron = "0/10 * * * * ? ") 
+	@Scheduled(cron = "0 0 1 * * ?")
 	@Transactional
 	public void remove(){
 		capcareMessageService.removeCapcareMessage();

@@ -29,7 +29,6 @@ import com.yuqincar.service.monitor.CapcareMessageService;
 import com.yuqincar.service.monitor.MonitorGroupService;
 import com.yuqincar.service.monitor.impl.CapcareMessageServiceImpl;
 import com.yuqincar.service.order.OrderService;
-import com.yuqincar.utils.CapcareMessageUtils;
 import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.Text;

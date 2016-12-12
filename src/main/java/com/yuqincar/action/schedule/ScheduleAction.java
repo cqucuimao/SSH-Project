@@ -41,6 +41,7 @@ import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.order.OtherPassenger;
 import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.order.PriceTable;
+import com.yuqincar.domain.order.ProtocolOrderPayPeriodEnum;
 import com.yuqincar.domain.order.WatchKeeper;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
@@ -101,7 +102,9 @@ public class ScheduleAction extends BaseAction {
 	private String callForOtherSendSMS;
 	private User saler;
 	private BigDecimal protocolMoney;
-	
+	private int payPeriodId;
+	private String firstPayDate;
+	private BigDecimal moneyForPeriodPay;
 	
 	public void getCar() {
 		QueryHelper helper = new QueryHelper(Car.class, "c");
@@ -373,8 +376,12 @@ public class ScheduleAction extends BaseAction {
 			toAddress=order.getToAddress();
 		if(order.getSaler()!=null)
 			saler=order.getSaler();
-		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			protocolMoney=order.getOrderMoney();
+			payPeriodId = order.getPayPeriod().getId();
+			firstPayDate = DateUtils.getYMDHMString(order.getFirstPayDate());
+			moneyForPeriodPay = order.getMoneyForPeriodPay();
+		}
 		serviceType=order.getServiceType();
 		memo=order.getMemo();
 	}
@@ -485,6 +492,12 @@ public class ScheduleAction extends BaseAction {
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
 			order.setActualMoney(protocolMoney);
+			System.out.println("payPeriodId="+payPeriodId);
+			System.out.println("firstPayDate="+firstPayDate);
+			System.out.println("moneyForPeriodPay="+moneyForPeriodPay);
+			order.setPayPeriod(ProtocolOrderPayPeriodEnum.getById(payPeriodId));
+			order.setFirstPayDate(DateUtils.getYMD(firstPayDate));
+			order.setMoneyForPeriodPay(moneyForPeriodPay);
 		}else{
 			if(order.getOrderMoney()==null)
 				order.setOrderMoney(new BigDecimal(0));
@@ -936,6 +949,30 @@ public class ScheduleAction extends BaseAction {
 
 	public void setProtocolMoney(BigDecimal protocolMoney) {
 		this.protocolMoney = protocolMoney;
+	}
+
+	public int getPayPeriodId() {
+		return payPeriodId;
+	}
+
+	public void setPayPeriodId(int payPeriodId) {
+		this.payPeriodId = payPeriodId;
+	}
+
+	public String getFirstPayDate() {
+		return firstPayDate;
+	}
+
+	public void setFirstPayDate(String firstPayDate) {
+		this.firstPayDate = firstPayDate;
+	}
+
+	public BigDecimal getMoneyForPeriodPay() {
+		return moneyForPeriodPay;
+	}
+
+	public void setMoneyForPeriodPay(BigDecimal moneyForPeriodPay) {
+		this.moneyForPeriodPay = moneyForPeriodPay;
 	}
 
 	/**

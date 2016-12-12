@@ -25,11 +25,14 @@ import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.service.car.CarService;
+import com.yuqincar.service.monitor.CapcareMessageService;
 import com.yuqincar.service.monitor.MonitorGroupService;
+import com.yuqincar.service.monitor.impl.CapcareMessageServiceImpl;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.utils.CapcareMessageUtils;
 import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
+import com.yuqincar.utils.Text;
 
 import net.sf.json.JSONObject;
 
@@ -49,6 +52,8 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	private OrderService orderService;
 	@Autowired
 	private MonitorGroupService monitorGroupService;
+	@Autowired
+	private CapcareMessageService capcareMessageService;
 	
 	private Car car;
 	
@@ -151,7 +156,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		List<Car> carsByStatus = new ArrayList<Car>();
 		//获取所有监控的车辆
 		List<Car> allCars = carService.getCarsForMonitoring();
-		Map<String, CapcareMessage> capcareMap = CapcareMessageUtils.capcareMap;
+		Map<String, CapcareMessage> capcareMap = CapcareMessageServiceImpl.capcareMap;
 		if(selectId == null || selectId.equals("")){
 			//如果是全部，就不做处理
 			if(carsStatus.equals("全部")){
@@ -438,12 +443,72 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	//获取凯步数据
 	public void getCapcareData(){
 		System.out.println("车牌号="+carPlateNumber);
-		Map<String, CapcareMessage> capcareMap = CapcareMessageUtils.capcareMap;
-		JSONObject jsonObject = JSONObject.fromObject(capcareMap.get(carPlateNumber));
-		String jsonString = jsonObject.toString();
+		Map<String, CapcareMessage> capcareMap = CapcareMessageServiceImpl.capcareMap;
+		System.out.println("capcareMap="+capcareMap.get(carPlateNumber));
+		CapcareMessageVO cmvo = new CapcareMessageVO();
+		cmvo.setPlateNumber(capcareMap.get(carPlateNumber).getPlateNumber());
+		cmvo.setLongitude(capcareMap.get(carPlateNumber).getLongitude());
+		cmvo.setLatitude(capcareMap.get(carPlateNumber).getLatitude());
+		cmvo.setSpeed(capcareMap.get(carPlateNumber).getSpeed());
+		cmvo.setStatus(capcareMap.get(carPlateNumber).getStatus());
+		cmvo.setDirection(capcareMap.get(carPlateNumber).getDirection());
+		
+		String jsonString = JSON.toJSONString(cmvo);
 		String added = "\"carId\""+":"+"\""+carId+"\",";
 		String json = "{"+added+jsonString.substring(1);
 		this.writeJson(json);
+	}
+	
+	class CapcareMessageVO{
+		private String plateNumber;
+		private String longitude;
+		private String latitude;
+		private String speed;
+		private String status;
+		private String direction;
+		public String getPlateNumber() {
+			return plateNumber;
+		}
+		public void setPlateNumber(String plateNumber) {
+			this.plateNumber = plateNumber;
+		}
+		public String getLongitude() {
+			return longitude;
+		}
+		public void setLongitude(String longitude) {
+			this.longitude = longitude;
+		}
+		public String getLatitude() {
+			return latitude;
+		}
+		public void setLatitude(String latitude) {
+			this.latitude = latitude;
+		}
+		public String getSpeed() {
+			return speed;
+		}
+		public void setSpeed(String speed) {
+			this.speed = speed;
+		}
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
+		public String getDirection() {
+			return direction;
+		}
+		public void setDirection(String direction) {
+			this.direction = direction;
+		}
+		
+		
+	}
+	
+	//初始化车辆位置
+	public void initCapcareMessage(){
+		capcareMessageService.initCapcareMessages();
 	}
 	
 	public Car getCar() {

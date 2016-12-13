@@ -36,4 +36,6 @@ public interface ProtocolOrderPayOrderService {
 	 * @param ids
 	 */
 	void addOrderStatementByPopoIds(String orderStatementName, Long[] ids);
+	
+	public List<ProtocolOrderPayOrder> getAllPopos();
 }

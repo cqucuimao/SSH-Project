@@ -176,4 +176,8 @@ public class ProtocolOrderPayOrderServiceImpl implements
 	    //设置最晚日期
 	    orderStatement.setToDate(toDate);
 	}
+
+	public List<ProtocolOrderPayOrder> getAllPopos() {
+		return popoDao.getAll();
+	}
 }

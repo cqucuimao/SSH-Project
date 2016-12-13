@@ -11,12 +11,14 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatusEnum;
+import com.yuqincar.domain.order.ProtocolOrderPayOrder;
 import com.yuqincar.domain.order.ReserveCarApplyOrder;
 import com.yuqincar.domain.order.ReserveCarApplyOrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.businessParameter.BusinessParameterService;
 import com.yuqincar.service.monitor.WarningMessageService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.order.ProtocolOrderPayOrderService;
 import com.yuqincar.service.order.ReserveCarApplyOrderService;
 import com.yuqincar.utils.QueryHelper;
 
@@ -34,6 +36,9 @@ public class HomeAction extends ActionSupport {
 	
 	@Autowired
 	private ReserveCarApplyOrderService reserveCarApplyOrderService;
+	
+	@Autowired
+	private ProtocolOrderPayOrderService protocolOrderPayOrderService;
 	
 	public String index() {
 		return "index";
@@ -125,5 +130,23 @@ public class HomeAction extends ActionSupport {
 	public int getConfigureDriverCount(){
 		User user = ((User)ActionContext.getContext().getSession().get("user"));	
 		return reserveCarApplyOrderService.getNeedConfigureDriver(user).size();
+	}
+	
+	//协议订单收款单提醒事项
+	public boolean isCanShowUnpaidPopo(){
+		System.out.println("4444");
+		return ((User)ActionContext.getContext().getSession().get("user")).hasPrivilegeByUrl("/protocolOrderPayOrder_list");
+	}
+	
+	public int getUnpaidPopoCount(){
+		System.out.println("5555");
+		int count = 0;
+		List<ProtocolOrderPayOrder> popos = protocolOrderPayOrderService.getAllPopos();
+		for(ProtocolOrderPayOrder popo:popos){
+			if(popo.getOrderStatement() == null){
+				count++;
+			}
+		}
+		return count;
 	}
 }

@@ -70,6 +70,17 @@
       </div>
     </li>
     </s:if>
+    
+    <s:if test="canShowUnpaidPopo">
+	    <li>
+	      <div class="inside">
+	        <div class="homeLink1">
+	          <h1>协议订单收款单</h1>
+	        </div>
+	        <p><s:a action="protocolOrderPayOrder_list">目前有&nbsp;&nbsp;${unpaidPopoCount}&nbsp;&nbsp;条协议订单收款单没有处理</s:a></p>
+	      </div>
+	    </li>
+    </s:if>
   </ul>
 </div>
 </cqu:border>

@@ -138,10 +138,8 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		//排除订单后，该对账单已经被删除，所以为null
 		if(orderStatement!=null){
 		   List<Order> orderList=orderStatement.getOrders();
-		   ActionContext.getContext().put("orderList", orderList);
-		   ActionContext.getContext().put("orderStatement", orderStatement);
-		   
 		   List<ProtocolOrderPayOrder> popoList=orderStatement.getPopos();
+		   ActionContext.getContext().put("orderList", orderList);
 		   ActionContext.getContext().put("popoList", popoList);
 		   ActionContext.getContext().put("orderStatement", orderStatement);
 		   
@@ -173,12 +171,46 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	 * 取消对账单上的若干订单
 	 */
 	public void cancelOrders(){
-		String[] idStrArray=orderIds.split(",");
-		Long[] ids=new Long[idStrArray.length];
-		for(int i=0;i<idStrArray.length;i++){
-			ids[i]=Long.parseLong(idStrArray[i]);
+		System.out.println("popoIds="+popoIds);
+		System.out.println("orderIds="+orderIds);
+		Long[] ids = null;
+		Long[] idsOfPopo = null;
+		//取消非协议订单
+		if(!orderIds.equals("") && popoIds.equals("")){
+			String[] idStrArray=orderIds.split(",");
+			ids=new Long[idStrArray.length];
+			for(int i=0;i<idStrArray.length;i++){
+				ids[i]=Long.parseLong(idStrArray[i]);
+			}
+
+			receiptService.excludeOrdersAndPoposFromOrderStatement(orderStatementId,ids,null);
 		}
-		receiptService.excludeOrdersFromOrderStatement(orderStatementId,ids);
+		//取消协议订单
+		if(orderIds.equals("") && !popoIds.equals("")){
+			String[] idStrArray=popoIds.split(",");
+			idsOfPopo=new Long[idStrArray.length];
+			for(int i=0;i<idStrArray.length;i++){
+				idsOfPopo[i]=Long.parseLong(idStrArray[i]);
+			}
+			
+			receiptService.excludeOrdersAndPoposFromOrderStatement(orderStatementId, null,idsOfPopo);
+		}
+		//取消非协议订单和协议订单
+		if(!orderIds.equals("") && !popoIds.equals("")){
+			String[] idStrArray=orderIds.split(",");
+			ids=new Long[idStrArray.length];
+			for(int i=0;i<idStrArray.length;i++){
+				ids[i]=Long.parseLong(idStrArray[i]);
+			}
+			
+			String[] idStrArrayOfPopo=popoIds.split(",");
+			idsOfPopo=new Long[idStrArrayOfPopo.length];
+			for(int i=0;i<idStrArrayOfPopo.length;i++){
+				idsOfPopo[i]=Long.parseLong(idStrArrayOfPopo[i]);
+			}
+			
+			receiptService.excludeOrdersAndPoposFromOrderStatement(orderStatementId,ids,idsOfPopo);
+		}
 		this.writeJson("{\"status\":\"1\"}");
 	}
 	
@@ -312,6 +344,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		
 	   OrderStatement orderStatement = receiptService.getOrderStatementById(model.getId());
 	   List<Order> orders = receiptService.getOrderStatementById(model.getId()).getOrders();
+	   List<ProtocolOrderPayOrder> popos = receiptService.getOrderStatementById(model.getId()).getPopos();
 	   SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");//时间格式
 	   SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");//时间格式
 	   DecimalFormat df = new DecimalFormat("###");//浮点数显示格式
@@ -363,6 +396,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	   Paragraph orderDate = new Paragraph("订单生成日期："+date,titleFont);
 	   orderDate.setIndentationLeft(60);
 	   doc.add(orderDate);
+	   //这里打印对账单中的非协议订单
 	   for(int k=0;k<orders.size();k++)
 	   {
 		   //设置派车单标题
@@ -388,7 +422,7 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   cell = new PdfPCell(new Paragraph ("用车单位",font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
-		   cell = new PdfPCell (new Paragraph (orders.get(k).getCustomerOrganization().getAbbreviation(),font));
+		   cell = new PdfPCell (new Paragraph (orders.get(k).getCustomerOrganization().getName(),font));
 		   cell.setColspan(2);
 		   table.addCell (cell);
 		   cell = new PdfPCell(new Paragraph ("联系电话",font));
@@ -638,6 +672,189 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 		   }		   
 		   doc.add (table);	   
 	   }
+	   
+	   //这里打印对账单中的协议订单
+	   for(int k=0;k<popos.size();k++){
+		   //设置派车单标题
+		   doc.newPage();
+		   Paragraph titleParagragh = new Paragraph("重庆市渝勤汽车服务有限公司派车单\n\n",titleFont);
+		   titleParagragh.setAlignment(titleParagragh.ALIGN_CENTER);
+		   doc.add(titleParagragh);
+		   /*****生成8列的表格*****/
+		   //表格第0行
+		   PdfPTable table = new PdfPTable (8);
+		   table.setTotalWidth(670f);
+		   table.setWidths(new float[]{90f,80f,100f,70f,100f,70f,80f,80f});
+		   
+		   PdfPCell cell = new PdfPCell ();
+		   cell.setBorder(0);
+		   cell.setColspan (6);
+		   table.addCell (cell);		   
+		   cell = new PdfPCell (new Paragraph ("渝勤运"+popos.get(k).getOrder().getSn(),font));
+		   cell.setColspan(2);
+		   cell.setBorder(0);
+		   table.addCell (cell);
+		   //表格第1行
+		   cell = new PdfPCell(new Paragraph ("用车单位",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (popos.get(k).getOrder().getCustomerOrganization().getName(),font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell(new Paragraph ("联系电话",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (popos.get(k).getOrder().getCustomer().getName()+"："+popos.get(k).getOrder().getPhone(),font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   //表格第2行
+		   cell = new PdfPCell(new Paragraph ("定车时间",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   String scheduleTime = sdf1.format(popos.get(k).getOrder().getScheduleTime());
+		   cell = new PdfPCell (new Paragraph (scheduleTime,font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell(new Paragraph ("上车地点",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (popos.get(k).getOrder().getFromAddress(),font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   //表格第3行
+		   cell = new PdfPCell(new Paragraph ("车型",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (popos.get(k).getOrder().getServiceType().getTitle(),font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell(new Paragraph ("车牌号",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (popos.get(k).getOrder().getCar().getPlateNumber(),font));
+		   cell.setColspan(2);
+		   table.addCell (cell);		   
+		   //表格第4行
+		   cell = new PdfPCell(new Paragraph ("联系人/电话",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   if(popos.get(k).getOrder().getDriver()!=null)
+			   cell = new PdfPCell (new Paragraph (popos.get(k).getOrder().getDriver().getName()+"："+popos.get(k).getOrder().getDriver().getPhoneNumber(),font));
+		   else
+			   cell = new PdfPCell (new Paragraph ("",font));
+		   cell.setColspan (6);
+		   table.addCell (cell);
+		   //表格第5行
+		   cell = new PdfPCell(new Paragraph ("计费开始时间",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (DateUtils.getYMDString(popos.get(k).getFromDate()),font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell(new Paragraph ("计费结束时间",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (DateUtils.getYMDString(popos.get(k).getToDate()),font));
+		   cell.setColspan(2);
+		   table.addCell (cell);	
+		   //表格第6行
+		   cell = new PdfPCell(new Paragraph ("收款金额",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   cell = new PdfPCell (new Paragraph (popos.get(k).getMoney()+"",font));
+		   cell.setColspan(6);
+		   table.addCell (cell);
+		   
+		   //表格第7行
+		   cell = new PdfPCell(new Paragraph ("请为本次服务评价：",font));
+		   cell.setColspan(2);
+		   table.addCell(cell);
+		   String gradeString = null;
+		   int grade = popos.get(k).getOrder().getGrade();
+		   if(grade == 0){
+			   gradeString = " ";
+		   }if(grade == 1){
+			   gradeString = "不满意";
+		   }if(grade == 2){
+			   gradeString = "一般满意";
+		   }if(grade == 3){
+			   gradeString = "满意";
+		   }if(grade == 4){
+			   gradeString = "非常满意";
+		   }
+		   cell = new PdfPCell(new Paragraph(gradeString,font));
+		   cell.setColspan(6);
+		   table.addCell(cell);
+		   //表格第8行
+		   table.addCell (new Paragraph ("驾驶员签字",font));
+		   cell = new PdfPCell ();
+		   cell.setColspan(2);
+		   table.addCell (cell);		   
+		   cell = new PdfPCell (new Paragraph ("用车人签字及电话",font));
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   if(popos.get(k).getOrder().getSignature() != null){
+			   InputStream fileStream = diskFileService.getInputStream(popos.get(k).getOrder().getSignature());
+			   int count = (int) fileStream.available();
+		       byte[] bt = new byte[count];  
+		       fileStream.read(bt, 0, count);
+			   Image image = Image.getInstance(bt);
+			   image.setWidthPercentage(50);
+			   image.setAlignment(Image.MIDDLE);
+			   cell.setColspan(3);
+			   cell.addElement(image);
+			   table.addCell (cell);
+		   }else{
+			   cell.setColspan(3);
+			   table.addCell (cell);
+			   cell = new PdfPCell();
+		   }
+		   //表格第9行
+		   table.addCell (new Paragraph ("意见及建议",font));
+		   if(popos.get(k).getOrder().getOptions() != null){
+			   cell = new PdfPCell (new Paragraph(popos.get(k).getOrder().getOptions()+"",font));
+		   }else{
+			   cell = new PdfPCell (new Paragraph(" ",font));
+		   }	   
+		   cell.setColspan(7);
+		   table.addCell (cell);
+		   //表格第10行
+		   cell = new PdfPCell (new Paragraph ("",font));
+		   cell.setBorder(0);
+		   table.addCell (cell);
+		   
+		   Calendar c=Calendar.getInstance();
+		   int months = c.get(Calendar.MONTH)+1;
+		   String today = c.get(Calendar.YEAR)+"年"+months+"月"+c.get(Calendar.DATE)+"日";
+		   cell = new PdfPCell (new Paragraph (today,font));
+		   cell.setColspan(2);
+		   cell.setBorder(0);
+		   table.addCell (cell);
+		   
+		   cell = new PdfPCell (new Paragraph ("",font));
+		   cell.setColspan(3);
+		   cell.setBorder(0);
+		   table.addCell (cell);
+		   
+		   if(popos.get(k).getOrder().getScheduler() != null)
+			   cell = new PdfPCell (new Paragraph ("派车人:"+popos.get(k).getOrder().getScheduler().getName(),font));
+		   else
+			   cell = new PdfPCell (new Paragraph ("派车人:",font));
+		   cell.setBorder(0);
+		   cell.setColspan(2);
+		   table.addCell (cell);
+		   //单元格填充度
+		   for(PdfPRow row:(ArrayList<PdfPRow>)table.getRows()){
+			   for(PdfPCell cells:row.getCells()){
+				   if( cells!=null)
+					   cells.setPadding(4.0f);
+			   }
+		   }		   
+		   doc.add (table);	   
+		   
+	   }
+	   
+	   //打印结束，关闭
 	   doc.close ();
 	   this.pdfStream = new ByteArrayInputStream(buffer.toByteArray());
 	   buffer.close(); 

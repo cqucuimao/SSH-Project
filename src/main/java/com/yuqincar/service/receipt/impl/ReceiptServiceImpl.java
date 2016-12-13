@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysql.jdbc.Statement;
 import com.yuqincar.dao.orderStatement.MoneyGatherInfoDao;
 import com.yuqincar.dao.orderStatement.OrderStatementDao;
 import com.yuqincar.domain.common.PageBean;
@@ -19,6 +20,7 @@ import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.order.OrderStatement;
 import com.yuqincar.domain.order.OrderStatementStatusEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
+import com.yuqincar.domain.order.ProtocolOrderPayOrder;
 import com.yuqincar.service.CustomerOrganization.CustomerOrganizationService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.receipt.ReceiptService;
@@ -223,66 +225,6 @@ public class ReceiptServiceImpl implements ReceiptService {
 		return orderStatementDao.getOrderStatementByName(orderStatementName);
 	}
 
-	/**
-	 * 根据对账单名称和订单id，从对账单中除去相应的订单
-	 * @param orderStatementName
-	 * @param ids
-	 */
-	@Transactional
-	public void excludeOrdersFromOrderStatement(Long orderStatementId, Long[] ids) {
-		//查找相应的对账单
-		OrderStatement orderStatement=orderStatementDao.getById(orderStatementId);
-		List<Order> orders=orderStatement.getOrders();
-		List<Long> idList=Arrays.asList(ids);
-		//判断取消的订单数是否等于订单总数，如果等于订单总数，则删除该对账单
-		if(orders.size()==ids.length){
-		   cancelOrderStatement(orderStatementId);
-		}else{
-		   //根据订单id修改相应订单的orderStatement状态
-		   for(Order order:orders){
-			   if(idList.contains(order.getId())){
-				   order.setOrderStatement(null);
-			   }
-		   }
-		   //获得排除相应订单之后orderStatement的order集合
-		   for(int i=0;i<ids.length;i++){
-			   for(int j=0;j<orders.size();j++){
-				   if(orders.get(j).getId().longValue()==ids[i].longValue())
-					  orders.remove(j);
-			   }
-		   }
-		   //重置对账单的订单集合
-		   orderStatement.setOrders(orders);
-		   //将对账单的起止时间初始化为第一个订单的起止时间
-		   Date fromDate=orders.get(0).getActualBeginDate();
-		   Date toDate=orders.get(0).getActualEndDate();
-		   //找到所有订单的最早开始时间
-		   for(int i=0;i<orders.size();i++){
-		       if(orders.get(i).getActualBeginDate().before(fromDate))
-		          fromDate=orders.get(i).getActualBeginDate();
-		   }
-		   //找到所有订单的最晚截止时间
-		   for(int i=0;i<orders.size();i++){
-		       if(orders.get(i).getActualEndDate().after(toDate))
-		          toDate=orders.get(i).getActualEndDate();
-		   }
-		   //设置最早日期
-		   orderStatement.setFromDate(fromDate);
-		   //设置最晚日期
-	       orderStatement.setToDate(toDate);
-	       //设置对账单中的订单数量
-	       orderStatement.setOrderNum(orders.size());
-		   //所包含的订单总金额
-		   BigDecimal totalMoney=new BigDecimal(0);
-		   for(int i=0;i<orders.size();i++){
-		       totalMoney=totalMoney.add(orders.get(i).getActualMoney());
-		   }
-		   //设置总金额
-		   orderStatement.setTotalMoney(totalMoney);
-		   System.out.println("======执行排除操作了=====");
-		}
-	}
-
     /** 
 	 * 根据对账单的名称取消相应的对账单
      * 包括两个步骤:(1)重置该对账单对应的order的orderStatement为null,(2)删除该对账单
@@ -292,8 +234,12 @@ public class ReceiptServiceImpl implements ReceiptService {
 	public void cancelOrderStatement(Long orderStatementId) {
 	     OrderStatement orderStatement=orderStatementDao.getById(orderStatementId);
 	     List<Order> orders=orderStatement.getOrders();
+	     List<ProtocolOrderPayOrder> popos = orderStatement.getPopos();
 	     for(Order order:orders){
 	         order.setOrderStatement(null);
+	     }
+	     for(ProtocolOrderPayOrder popo:popos){
+	         popo.setOrderStatement(null);
 	     }
 	     orderStatementDao.delete(orderStatement.getId());
 	}
@@ -332,6 +278,341 @@ public class ReceiptServiceImpl implements ReceiptService {
 	public void moneyGatherComplete(OrderStatement orderStatement){
 		orderStatement.setStatus(OrderStatementStatusEnum.PAID);
 		orderStatementDao.update(orderStatement);
+	}
+	@Transactional
+	public void resetOrderStatement(OrderStatement orderStatement,List<Long> idsList,List<Long> idsOfPopoList){
+		List<Order> orders=orderStatement.getOrders();
+		List<ProtocolOrderPayOrder> popos=orderStatement.getPopos();
+
+		if(idsOfPopoList == null){
+			if(popos.size() == 0){
+				//判断取消的订单数是否等于订单总数，如果等于订单总数，则删除该对账单
+				if(orders.size()==idsList.size()){
+				   cancelOrderStatement(orderStatement.getId());
+				}else{
+					   //根据订单id修改相应订单的orderStatement状态
+					   for(Order order:orders){
+						   if(idsList.contains(order.getId())){
+							   order.setOrderStatement(null);
+						   }
+					   }
+					   //获得排除相应订单之后orderStatement的order集合
+					   for(int i=0;i<idsList.size();i++){
+						   for(int j=0;j<orders.size();j++){
+							   if(orders.get(j).getId().longValue()==idsList.get(i))
+								  orders.remove(j);
+						   }
+					   }
+					   //重置对账单的订单集合
+					   orderStatement.setOrders(orders);
+					   //将对账单的起止时间初始化为第一个订单的起止时间
+					   Date fromDate=orders.get(0).getActualBeginDate();
+					   Date toDate=orders.get(0).getActualEndDate();
+					   //找到所有订单的最早开始时间
+					   for(int i=0;i<orders.size();i++){
+					       if(orders.get(i).getActualBeginDate().before(fromDate))
+					          fromDate=orders.get(i).getActualBeginDate();
+					   }
+					   //找到所有订单的最晚截止时间
+					   for(int i=0;i<orders.size();i++){
+					       if(orders.get(i).getActualEndDate().after(toDate))
+					          toDate=orders.get(i).getActualEndDate();
+					   }
+					   //设置最早日期
+					   orderStatement.setFromDate(fromDate);
+					   //设置最晚日期
+				       orderStatement.setToDate(toDate);
+				       //设置对账单中的订单数量
+				       orderStatement.setOrderNum(orders.size());
+					   //所包含的订单总金额
+					   BigDecimal totalMoney=new BigDecimal(0);
+					   for(int i=0;i<orders.size();i++){
+					       totalMoney=totalMoney.add(orders.get(i).getActualMoney());
+					   }
+					   //设置总金额
+					   orderStatement.setTotalMoney(totalMoney);
+				}
+			}else{
+				 	//根据订单id修改相应订单的orderStatement状态
+				   for(Order order:orders){
+					   if(idsList.contains(order.getId())){
+						   order.setOrderStatement(null);
+					   }
+				   }
+				   //获得排除相应订单之后orderStatement的order集合
+				   for(int i=0;i<idsList.size();i++){
+					   for(int j=0;j<orders.size();j++){
+						   if(orders.get(j).getId().longValue()==idsList.get(i))
+							  orders.remove(j);
+					   }
+				   }
+				   //重置对账单的订单集合
+				   orderStatement.setOrders(orders);
+				   
+				   //将对账单的起止时间初始化为第一个popo的起止时间
+				   Date fromDate=popos.get(0).getFromDate();
+				   Date toDate=popos.get(0).getToDate();
+				   Date fromDateOfPopo=popos.get(0).getFromDate();
+				   Date toDateOfPopo=popos.get(0).getToDate();
+				   //找到所有订单的最早开始时间
+				   for(int i=0;i<orders.size();i++){
+				       if(orders.get(i).getActualBeginDate().before(fromDate))
+				          fromDate=orders.get(i).getActualBeginDate();
+				   }
+				   //找到所有订单的最晚截止时间
+				   for(int i=0;i<orders.size();i++){
+				       if(orders.get(i).getActualEndDate().after(toDate))
+				          toDate=orders.get(i).getActualEndDate();
+				   }
+				   
+				   //找到所有popo的最早开始时间
+				   for(int i=0;i<popos.size();i++){
+				       if(popos.get(i).getFromDate().before(fromDate))
+				          fromDateOfPopo=popos.get(i).getFromDate();
+				   }
+				   //找到所有popo的最晚截止时间
+				   for(int i=0;i<popos.size();i++){
+				       if(popos.get(i).getToDate().after(toDate))
+				          toDateOfPopo=popos.get(i).getToDate();
+				   }
+				   //设置最早日期
+				   orderStatement.setFromDate(fromDate.before(fromDateOfPopo) ? fromDate : fromDateOfPopo);
+				   //设置最晚日期
+			       orderStatement.setToDate(toDate.after(toDateOfPopo) ? toDate : toDateOfPopo);
+			       //设置对账单中的订单数量
+			       orderStatement.setOrderNum(orders.size()+popos.size());
+				   //所包含的订单总金额
+				   BigDecimal totalMoney=new BigDecimal(0);
+				   BigDecimal totalMoneyOfPopo=new BigDecimal(0);
+				   for(int i=0;i<orders.size();i++){
+				       totalMoney=totalMoney.add(orders.get(i).getActualMoney());
+				   }
+				   for(int i=0;i<popos.size();i++){
+				       totalMoneyOfPopo=totalMoneyOfPopo.add(popos.get(i).getMoney());
+				   }
+				   //设置总金额
+				   orderStatement.setTotalMoney(totalMoney.add(totalMoneyOfPopo));
+			}
+		}
+		
+		if(idsList == null){
+			if(orders.size() == 0){
+				//判断取消的popo数是否等于对账单中的订单总数
+				if(popos.size()==idsOfPopoList.size()){
+				   cancelOrderStatement(orderStatement.getId());
+				}else{
+					   //根据popo的id修改相应订单的orderStatement状态
+					   for(ProtocolOrderPayOrder popo:popos){
+						   if(idsOfPopoList.contains(popo.getId())){
+							   popo.setOrderStatement(null);
+						   }
+					   }
+					   //获得排除相应订单之后orderStatement的popo集合
+					   for(int i=0;i<idsOfPopoList.size();i++){
+						   for(int j=0;j<popos.size();j++){
+							   if(popos.get(j).getId().longValue()==idsOfPopoList.get(i))
+								  popos.remove(j);
+						   }
+					   }
+					   //重置对账单的订单集合
+					   orderStatement.setPopos(popos);
+					   //将对账单的起止时间初始化为第一个popo的起止时间
+					   Date fromDate=popos.get(0).getFromDate();
+					   Date toDate=popos.get(0).getToDate();
+					   //找到所有popo的最早开始时间
+					   for(int i=0;i<popos.size();i++){
+					       if(popos.get(i).getFromDate().before(fromDate))
+					          fromDate=popos.get(i).getFromDate();
+					   }
+					   //找到所有popo的最晚截止时间
+					   for(int i=0;i<popos.size();i++){
+					       if(popos.get(i).getToDate().after(toDate))
+					          toDate=popos.get(i).getToDate();
+					   }
+					   //设置最早日期
+					   orderStatement.setFromDate(fromDate);
+					   //设置最晚日期
+				       orderStatement.setToDate(toDate);
+				       //设置对账单中的popo数量
+				       orderStatement.setOrderNum(popos.size());
+					   //所包含的订单总金额
+					   BigDecimal totalMoney=new BigDecimal(0);
+					   for(int i=0;i<popos.size();i++){
+					       totalMoney=totalMoney.add(popos.get(i).getMoney());
+					   }
+					   //设置总金额
+					   orderStatement.setTotalMoney(totalMoney);
+				}
+			}else{
+				 	//根据popo的id修改相应订单的orderStatement状态
+				   for(ProtocolOrderPayOrder popo:popos){
+					   if(idsOfPopoList.contains(popo.getId())){
+						   popo.setOrderStatement(null);
+					   }
+				   }
+				   //获得排除相应popo之后orderStatement的order集合
+				   for(int i=0;i<idsOfPopoList.size();i++){
+					   for(int j=0;j<popos.size();j++){
+						   if(popos.get(j).getId().longValue()==idsOfPopoList.get(i))
+							  popos.remove(j);
+					   }
+				   }
+				   //重置对账单的订单集合
+				   orderStatement.setPopos(popos);
+				   
+				   //将对账单的起止时间初始化为第一个订单的起止时间
+				   Date fromDate=orders.get(0).getActualBeginDate();
+				   Date toDate=orders.get(0).getActualEndDate();
+				   
+				   Date fromDateOfPopo=orders.get(0).getActualBeginDate();
+				   Date toDateOfPopo=orders.get(0).getActualEndDate();
+				   //找到所有订单的最早开始时间
+				   for(int i=0;i<orders.size();i++){
+				       if(orders.get(i).getActualBeginDate().before(fromDate))
+				          fromDate=orders.get(i).getActualBeginDate();
+				   }
+				   //找到所有订单的最晚截止时间
+				   for(int i=0;i<orders.size();i++){
+				       if(orders.get(i).getActualEndDate().after(toDate))
+				          toDate=orders.get(i).getActualEndDate();
+				   }
+				   
+				   //找到所有popo的最早开始时间
+				   for(int i=0;i<popos.size();i++){
+				       if(popos.get(i).getFromDate().before(fromDate))
+				          fromDateOfPopo=popos.get(i).getFromDate();
+				   }
+				   //找到所有popo的最晚截止时间
+				   for(int i=0;i<popos.size();i++){
+				       if(popos.get(i).getToDate().after(toDate))
+				          toDateOfPopo=popos.get(i).getToDate();
+				   }
+				   //设置最早日期
+				   orderStatement.setFromDate(fromDate.before(fromDateOfPopo) ? fromDate : fromDateOfPopo);
+				   //设置最晚日期
+			       orderStatement.setToDate(toDate.after(toDateOfPopo) ? toDate : toDateOfPopo);
+			       //设置对账单中的订单数量
+			       orderStatement.setOrderNum(orders.size()+popos.size());
+				   //所包含的订单总金额
+				   BigDecimal totalMoney=new BigDecimal(0);
+				   BigDecimal totalMoneyOfPopo=new BigDecimal(0);
+				   for(int i=0;i<orders.size();i++){
+				       totalMoney=totalMoney.add(orders.get(i).getActualMoney());
+				   }
+				   for(int i=0;i<popos.size();i++){
+				       totalMoneyOfPopo=totalMoneyOfPopo.add(popos.get(i).getMoney());
+				   }
+				   //设置总金额
+				   orderStatement.setTotalMoney(totalMoney.add(totalMoneyOfPopo));
+			}
+		}
+		
+		if(idsList != null && idsOfPopoList != null){
+			if(popos.size() == idsOfPopoList.size() && idsList.size() == orders.size()){
+				cancelOrderStatement(orderStatement.getId());
+			}else{
+					//根据订单id修改相应订单的orderStatement状态
+				   for(Order order:orders){
+					   if(idsList.contains(order.getId())){
+						   order.setOrderStatement(null);
+					   }
+				   }
+				   //获得排除相应订单之后orderStatement的order集合
+				   for(int i=0;i<idsList.size();i++){
+					   for(int j=0;j<orders.size();j++){
+						   if(orders.get(j).getId().longValue()==idsList.get(i))
+							  orders.remove(j);
+					   }
+				   }
+				   //重置对账单的订单集合
+				   orderStatement.setOrders(orders);
+				
+				   //根据popo的id修改相应订单的orderStatement状态
+				   for(ProtocolOrderPayOrder popo:popos){
+					   if(idsOfPopoList.contains(popo.getId())){
+						   popo.setOrderStatement(null);
+					   }
+				   }
+				   //获得排除相应popo之后orderStatement的order集合
+				   for(int i=0;i<idsOfPopoList.size();i++){
+					   for(int j=0;j<popos.size();j++){
+						   if(popos.get(j).getId().longValue()==idsOfPopoList.get(i))
+							  popos.remove(j);
+					   }
+				   }
+				   //重置对账单的订单集合
+				   orderStatement.setPopos(popos);
+				   
+				   //将对账单的起止时间初始化为第一个订单的起止时间
+				   Date fromDate=orders.get(0).getActualBeginDate();
+				   Date toDate=orders.get(0).getActualEndDate();
+				   
+				   Date fromDateOfPopo=orders.get(0).getActualBeginDate();
+				   Date toDateOfPopo=orders.get(0).getActualEndDate();
+				   //找到所有订单的最早开始时间
+				   for(int i=0;i<orders.size();i++){
+				       if(orders.get(i).getActualBeginDate().before(fromDate))
+				          fromDate=orders.get(i).getActualBeginDate();
+				   }
+				   //找到所有订单的最晚截止时间
+				   for(int i=0;i<orders.size();i++){
+				       if(orders.get(i).getActualEndDate().after(toDate))
+				          toDate=orders.get(i).getActualEndDate();
+				   }
+				   
+				   //找到所有popo的最早开始时间
+				   for(int i=0;i<popos.size();i++){
+				       if(popos.get(i).getFromDate().before(fromDate))
+				          fromDateOfPopo=popos.get(i).getFromDate();
+				   }
+				   //找到所有popo的最晚截止时间
+				   for(int i=0;i<popos.size();i++){
+				       if(popos.get(i).getToDate().after(toDate))
+				          toDateOfPopo=popos.get(i).getToDate();
+				   }
+				   //设置最早日期
+				   orderStatement.setFromDate(fromDate.before(fromDateOfPopo) ? fromDate : fromDateOfPopo);
+				   //设置最晚日期
+			       orderStatement.setToDate(toDate.after(toDateOfPopo) ? toDate : toDateOfPopo);
+			       //设置对账单中的订单数量
+			       orderStatement.setOrderNum(orders.size()+popos.size());
+				   //所包含的订单总金额
+				   BigDecimal totalMoney=new BigDecimal(0);
+				   BigDecimal totalMoneyOfPopo=new BigDecimal(0);
+				   for(int i=0;i<orders.size();i++){
+				       totalMoney=totalMoney.add(orders.get(i).getActualMoney());
+				   }
+				   for(int i=0;i<popos.size();i++){
+				       totalMoneyOfPopo=totalMoneyOfPopo.add(popos.get(i).getMoney());
+				   }
+				   //设置总金额
+				   orderStatement.setTotalMoney(totalMoney.add(totalMoneyOfPopo));
+			}
+		}
+		
+		
+	}
+
+	@Transactional
+	public void excludeOrdersAndPoposFromOrderStatement(Long orderStatementId, Long[] ids, Long[] idsOfPopo) {
+		//查找相应的对账单
+		OrderStatement orderStatement=orderStatementDao.getById(orderStatementId);
+		//只取消非协议订单
+		if(ids != null && idsOfPopo == null){
+			List<Long> idsList=Arrays.asList(ids);
+			this.resetOrderStatement(orderStatement, idsList, null);
+		}
+		//只取消协议订单
+		if(ids == null && idsOfPopo != null){
+			List<Long> idsOfPopoList=Arrays.asList(idsOfPopo);
+			this.resetOrderStatement(orderStatement, null, idsOfPopoList);
+		}
+		//取消非协议订单和协议订单
+		if(ids != null && idsOfPopo != null){
+			List<Long> idsList=Arrays.asList(ids);
+			List<Long> idsOfPopoList=Arrays.asList(idsOfPopo);
+			this.resetOrderStatement(orderStatement, idsList, idsOfPopoList);
+		}
 	}
 	
 }

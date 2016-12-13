@@ -91,7 +91,8 @@ public interface ReceiptService {
 	 * @param orderStatementName
 	 * @param ids
 	 */
-	void excludeOrdersFromOrderStatement(Long orderStatementId, Long[] ids);
+	
+	void excludeOrdersAndPoposFromOrderStatement(Long orderStatementId, Long[] ids,Long[] idsOfPopo);
 	
 	/**
 	 * 根据对账单的名称取消相应的对账单

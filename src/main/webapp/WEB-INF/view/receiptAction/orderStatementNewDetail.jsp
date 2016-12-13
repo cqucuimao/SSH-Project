@@ -24,20 +24,46 @@
 		      <span style="color:red;font-size:18px;"> 元</span>
 		</div>
 		<div class="dataGrid">
+				非协议订单<br/><br/>
 			<div class="tableWrap">
-				<table id="dataTable">
-					<colgroup>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-					</colgroup>
+				<!-- 非协议订单 -->
+					<table id="dataTable">
+						<thead>
+							<tr>
+								<th><input type="checkbox" id="allChecked"/>全选</th>
+								<th>单位</th>
+								<th>乘车人</th>
+								<th>计费方式</th>
+								<th>车型</th>
+								<th>起止时间</th>
+								<th>起止地点</th>
+								<th>里程(KM)</th>
+								<th>天数(天)</th>
+								<th>金额(元)</th>
+							</tr>
+						</thead>
+						<tbody class="tableHover">
+						 <s:iterator value="orderList">
+							<tr>
+							    <td><input type="checkbox" id="${id}" class="checkboxItems"/></td>
+								<td>${customerOrganization.name}</td>
+								<td>${customer.name}</td>
+	                			<td>${status.label}</td>
+								<td>${serviceType.title}</td>
+								<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
+								<td>${fromAddress}-${fromAddress}</td>
+								<td>${actualMile}</td>
+	                			<td>${actualDay}</td>
+								<td><fmt:formatNumber value="${actualMoney}" pattern="#.0"/></td>
+							</tr>
+						</s:iterator> 
+						</tbody>
+					</table>
+				</div>
+				<br/><br/>协议订单<br/><br/>
+			<div class="tableWrap">
+				<!-- 协议订单 -->
+				<table id="dataTable2">
 					<thead>
 						<tr>
 							<th><input type="checkbox" id="allChecked"/>全选</th>
@@ -45,27 +71,23 @@
 							<th>乘车人</th>
 							<th>计费方式</th>
 							<th>车型</th>
-							<th>起止时间</th>
-							<th>起止地点</th>
-							<th>里程(KM)</th>
-							<th>天数(天)</th>
+							<th>计费起始日期</th>
+							<th>计费结束日期</th>
 							<th>金额(元)</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover">
-					 <s:iterator value="orderList">
-						<tr>
-						    <td><input type="checkbox" id="${id}" class="checkboxItems"/></td>
-							<td>${customerOrganization.name}</td>
-							<td>${customer.name}</td>
-                			<td>${status.label}</td>
-							<td>${carServiceType.title}</td>
-							<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
-							<td>${fromAddress}-${fromAddress}</td>
-							<td>${actualMile}</td>
-                			<td>${actualDay}</td>
-							<td><fmt:formatNumber value="${actualMoney}" pattern="#.0"/></td>
-						</tr>
+						<s:iterator value="popoList">
+							<tr>
+							    <td><input type="checkbox" id="${id}" class="checkboxItems"/></td>
+								<td>${order.customerOrganization.name}</td>
+								<td>${order.customer.name}</td>
+	                			<td>${order.status.label}</td>
+								<td>${order.serviceType.title}</td>
+								<td><s:date name="fromDate" format="yyyy-MM-dd"/></td>
+	                			<td><s:date name="toDate" format="yyyy-MM-dd"/></td>
+								<td><fmt:formatNumber value="${money}" pattern="#.0"/></td>
+							</tr>
 						</s:iterator> 
 					</tbody>
 				</table>
@@ -92,7 +114,12 @@
 	 	    //用于记录选中的复选框的对应的order的id
 	    	var orderIds=new Array();
 	    	var index=0;
-	    	//获取表格数据中的所有复选框对象
+	    	
+	    	 //用于记录选中的复选框的对应的popo的id
+	    	var popoIds=new Array();
+	    	var indexOfPopo=0;
+	    	
+	    	//获取order表格数据中的所有复选框对象
 	    	var checkboxes=$("#dataTable").find("tr").find("td").find("input");
 	    	checkboxes.each(function() {      // 每一个复选框
 	           if($(this).is(":checked")){
@@ -100,31 +127,50 @@
 	 	          orderIds[index++]=$(this).prop("id"); 
 	    	   }
 	    	});
-	    	if(index==0){
+	    	
+	    	//获取popo表格数据中的所有复选框对象
+	    	var checkboxesOfPopo=$("#dataTable2").find("tr").find("td").find("input");
+	    	checkboxesOfPopo.each(function() {      // 每一个复选框
+	           if($(this).is(":checked")){
+	    		  //获取被选中复选框的对应的order的id
+	 	          popoIds[indexOfPopo++]=$(this).prop("id"); 
+	    	   }
+	    	});
+	    	
+	    	if(index==0 && indexOfPopo == 0){
 	    	   alert("未选择任何订单");
 	    	   return false;
 	    	}   
 	    	if($("#allChecked").is(":checked")){
 	    		if(confirm("选中了对账单中的所有订单，排除所有订单会导致该对账单被取消，确定排除？")){
-	    			excludeOrder(orderIds,orderStatementName);
+	    			excludeOrder(orderIds,popoIds,orderStatementName);
 	    		}
 	    	}else{
 	    		if(confirm("确定排除该订单？")){
-	    		   excludeOrder(orderIds,orderStatementName);
+	    		   excludeOrder(orderIds,popoIds,orderStatementName);
 	    		}
 	    	}
     	 });
 	     
 	     //排除订单
-	     function excludeOrder(orderIds,orderStatementName){
-    	    	//将选中的订单记录的id序列发动到服务器端，用于后台生成相应的对账单
+	     function excludeOrder(orderIds,popoIds,orderStatementName){
+    	    	//将选中的order记录的id序列发动到服务器端，用于后台生成相应的对账单
     	        var idStr="";
     	 	    for(var i=0;i<orderIds.length;i++){
     	 	    	idStr+=orderIds[i]+",";
     	 	    }
     	 	    //去掉最后一个多余的","
     	 	    idStr=idStr.substring(0,idStr.length-1);
-    	 	    $.get("orderStatement_cancelOrders.action?orderIds="+idStr+"&orderStatementId="+${orderStatement.id}+"&timestamp="+new Date().getTime(),function(json){
+    	 	    
+    	 	 	//将选中的popo记录的id序列发动到服务器端，用于后台生成相应的对账单
+    	        var idStrOfPopo="";
+    	 	    for(var i=0;i<popoIds.length;i++){
+    	 	    	idStrOfPopo+=popoIds[i]+",";
+    	 	    }
+    	 	    //去掉最后一个多余的","
+    	 	    idStrOfPopo=idStrOfPopo.substring(0,idStrOfPopo.length-1);
+    	 	    
+    	 	    $.get("orderStatement_cancelOrders.action?orderIds="+idStr+"&popoIds="+idStrOfPopo+"&orderStatementId="+${orderStatement.id}+"&timestamp="+new Date().getTime(),function(json){
     	 	          if(json.status==1){
     	 	             window.location = "orderStatement_newDetail.action?orderStatementId="+${orderStatement.id};
     	 	          }

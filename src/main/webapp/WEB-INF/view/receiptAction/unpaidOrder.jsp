@@ -77,7 +77,7 @@
 							<td>${customerOrganization.name}</td>
 							<td>${customer.name}</td>
                 			<td>${status.label}</td>
-							<td>${carServiceType.title}</td>
+							<td>${serviceType.title}</td>
 							<td><s:date name="actualBeginDate" format="yyyy-MM-dd HH:mm"/>&nbsp;&nbsp;-&nbsp;&nbsp;<s:date name="actualEndDate" format="yyyy-MM-dd HH:mm"/></td>
 							<td>${fromAddress}-${fromAddress}</td>
 							<td>${actualMile}</td>

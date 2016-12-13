@@ -193,7 +193,7 @@ public class CarServiceImpl implements CarService {
 			
 			TreeNode child = new TreeNode();
 			
-			child.setName(c.getPlateNumber());
+			child.setName(c.getPlateNumber()+"（"+c.getServiceType().getTitle()+"）");
 			child.setId(c.getId());
 			if(!StringUtils.isEmpty(synchDriver)){
 				if(c.getDriver()!=null){

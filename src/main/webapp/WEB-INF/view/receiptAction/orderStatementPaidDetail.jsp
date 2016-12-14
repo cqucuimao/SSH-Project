@@ -16,19 +16,9 @@
 		      <span style="color:red;font-size:18px;">${totalMoney} 元</span>
 		</div>
 		<div class="dataGrid">
+				非协议订单<br/><br/>
 			<div class="tableWrap">
 				<table id="dataTable">
-					<colgroup>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-						<col></col>
-					</colgroup>
 					<thead>
 						<tr>
 							<th>单位</th>
@@ -55,6 +45,36 @@
                 			<td>${actualDay}</td>
 							<td><fmt:formatNumber value="${actualMoney}" pattern="#.0"/></td>
 						</tr>
+						</s:iterator> 
+					</tbody>
+				</table>
+				</div>
+				<br/><br/>协议订单<br/><br/>
+			<div class="tableWrap">
+				<!-- 协议订单 -->
+				<table id="dataTable2">
+					<thead>
+						<tr>
+							<th>单位</th>
+							<th>乘车人</th>
+							<th>计费方式</th>
+							<th>车型</th>
+							<th>计费起始日期</th>
+							<th>计费结束日期</th>
+							<th>金额(元)</th>
+						</tr>
+					</thead>
+					<tbody class="tableHover">
+						<s:iterator value="popoList">
+							<tr>
+								<td>${order.customerOrganization.name}</td>
+								<td>${order.customer.name}</td>
+	                			<td>${order.status.label}</td>
+								<td>${order.serviceType.title}</td>
+								<td><s:date name="fromDate" format="yyyy-MM-dd"/></td>
+	                			<td><s:date name="toDate" format="yyyy-MM-dd"/></td>
+								<td><fmt:formatNumber value="${money}" pattern="#.0"/></td>
+							</tr>
 						</s:iterator> 
 					</tbody>
 				</table>

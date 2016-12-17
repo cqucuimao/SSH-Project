@@ -12,6 +12,10 @@
 				<tr>
 					<th><s:property value="tr.getText('privilege.User.name')" /></th>
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
+					 <th><s:property value="tr.getText('privilege.User.status')" /></th>
+                    <td>
+                    <s:select style="width:135px;" name="userStatus" list="{'全部','正常' ,'已锁定'}" />
+                    </td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" />
 					</td>

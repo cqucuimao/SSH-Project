@@ -65,6 +65,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private int userTypeId;
 	private int statusId;
 
+	private String userStatus;
 	
 	/** 查询 */
 	public String queryList(){
@@ -77,6 +78,9 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		helper.addWhereCondition("u.loginName <> ?", "admin");
 		helper.addOrderByProperty("u.id", false);
 		helper.addOrderByProperty("u.name", true);
+		//用户状态查询
+		if(!"全部".equals(userStatus))
+			helper.addWhereCondition("u.status = ?", UserStatusEnum.getByLabel(userStatus));
 		PageBean pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("userHelper", helper);
@@ -518,6 +522,14 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	public void setRoleString(String roleString) {
 		this.roleString = roleString;
+	}
+
+	public String getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
 	}
 
 }

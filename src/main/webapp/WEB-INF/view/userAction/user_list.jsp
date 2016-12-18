@@ -37,8 +37,7 @@
                 			<th><s:property value="tr.getText('privilege.Department.name')" /></th>
                 			<th><s:property value="tr.getText('privilege.User.roles')" /></th>
                 			<th><s:property value="tr.getText('privilege.User.phoneNumber')" /></th>
-                			<th><s:property value="tr.getText('privilege.User.email')" /></th>
-			                <th><s:property value="tr.getText('privilege.User.description')" /></th>
+			                <th><s:property value="tr.getText('privilege.User.status')" /></th>
 			                <th>相关操作</th>
 						</tr>
 					</thead>
@@ -54,8 +53,7 @@
                 				</s:iterator>
                 			</td>
                 			<td>${phoneNumber}</td>
-							<td>${email}</td>
-							<td>${description}&nbsp;</td>
+							<td>${status.label}&nbsp;</td>
 							<td>
 								<s:a action="user_editUI?id=%{id}&actionFlag=edit"><i class="icon-operate-edit" title="修改"></i></s:a>
 			                </td>

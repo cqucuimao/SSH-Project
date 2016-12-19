@@ -88,9 +88,8 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 			
 			String url = beginUrl+"device_sn="+sn+"&timestamp="+String.valueOf(longDateOfNow)+endUrl;
 			//访问凯步关爱
-			System.out.println(url);
+			//System.out.println(url);
 			String capcareData = HttpMethod.get(url);
-			System.out.println("capcareData="+capcareData);
 			JSONObject jsonObject = JSONObject.fromObject(capcareData);
 			JSONObject device = jsonObject.getJSONObject("device");
 			JSONObject position = device.getJSONObject("position");

@@ -49,6 +49,9 @@
                     <td>
                     <input class="inputButton" type="button" id="monitorWindowId" value="打开监控屏"/>
                     </td>
+                    <td>
+                    	<s:a class="buttonA" action="realtime_exportCapcareMessage">导出车辆位置</s:a>
+                    </td>
                 </tr>
             </table>
             </s:form>

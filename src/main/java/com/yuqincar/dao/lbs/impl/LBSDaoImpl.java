@@ -265,7 +265,8 @@ public class LBSDaoImpl implements LBSDao{
 	 */
 	private float getStepMileByEnhancedTrack(Car car, Date beginDate, Date endDate){
 		
-		float sumDistance = 0;
+		float distanceOfTrack = 0;
+		float betweenTrackDistance = 0;
 		
 		String url = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="+car.getDevice().getSN()
 								+"&begin="+beginDate.getTime()+"&end="+endDate.getTime()+"&token="+Configuration.getCapcareToken()
@@ -279,11 +280,12 @@ public class LBSDaoImpl implements LBSDao{
 		
 		//得到的轨迹序列是倒序的，先进行倒序排列
 		for(int i=tracksOfJson.size()-1;i>=0;i--){
+			distanceOfTrack += Float.parseFloat(tracksOfJson.getJSONObject(i).getString("distance"));
 			tracks.add(tracksOfJson.getJSONObject(i));
 		}
-		//如果轨迹段数小于2，返回0
+		//如果轨迹段数小于2，返回distanceOfTrack
 		if(tracks.size() < 2){
-			return 0;
+			return distanceOfTrack;
 		}else{
 			//计算前一段轨迹的结束点到下一段轨迹的开始点的距离
 			for(int i=0;i<tracks.size()-1;i++){
@@ -291,9 +293,9 @@ public class LBSDaoImpl implements LBSDao{
 				JSONArray nextStates = tracks.getJSONObject(i+1).getJSONArray("states");
 				String origins = states.getJSONObject(0).getString("lat")+","+states.getJSONObject(0).getString("lng");
 				String destinations = nextStates.getJSONObject(1).getString("lat")+","+nextStates.getJSONObject(1).getString("lng");
-				sumDistance += calculatePathDistance(origins,destinations);
+				betweenTrackDistance += calculatePathDistance(origins,destinations);
 			}
-			return sumDistance;
+			return betweenTrackDistance+distanceOfTrack;
 		}
 	}
 	/**

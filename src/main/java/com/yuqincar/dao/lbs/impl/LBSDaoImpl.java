@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
@@ -87,9 +86,9 @@ public class LBSDaoImpl implements LBSDao{
 		}
 	}
 		
-	public float getMileOnTime(Car car,Date date){
+	private MileInfo getMileOnTime(Car car,Date date){
 		if(car.getDevice()==null)
-			return -1;
+			return null;
 		
 		//如果没有返回这个时间点的数据，那么就向两个方向扩展，获取最近的数据。
 		
@@ -100,12 +99,12 @@ public class LBSDaoImpl implements LBSDao{
 		
 		miles=getMile(car,d,d+minute);
 		if(miles!=null && miles.size()>0){
-			System.out.println("here:"+miles.get(0).getTime()+"-"+miles.get(0).getMile()+"-"+(d-miles.get(0).getTime()));
-			return miles.get(0).getMile();
+//			System.out.println("here:"+miles.get(0).getTime()+"-"+miles.get(0).getMile()+"-"+(d-miles.get(0).getTime()));
+			return miles.get(0);
 		}else{
 			long floorLimit=1481731200000L; //总里程数从2016-12-15 00:00:00（1481731200000）这个时间才开始存储
 			long upperLimit=new Date().getTime();
-			float mile=-1;
+			MileInfo mile=null;
 			long leftFrom,leftTo,rightFrom,rightTo;
 			leftFrom=d-hour;
 			leftTo=d;
@@ -140,22 +139,22 @@ public class LBSDaoImpl implements LBSDao{
 						rightMile=miles.get(0);
 				}
 				
-				if(leftMile!=null)
-					System.out.println("left:"+leftMile.getTime()+"-"+leftMile.getMile()+"-"+(d-leftMile.getTime()));
-				if(rightMile!=null)
-					System.out.println("right:"+rightMile.getTime()+"-"+rightMile.getMile()+"-"+(rightMile.getTime()-d));
+//				if(leftMile!=null)
+//					System.out.println("left:"+leftMile.getTime()+"-"+leftMile.getMile()+"-"+(d-leftMile.getTime()));
+//				if(rightMile!=null)
+//					System.out.println("right:"+rightMile.getTime()+"-"+rightMile.getMile()+"-"+(rightMile.getTime()-d));
 				
 				if(leftMile!=null && rightMile!=null){
 					if(d-leftMile.getTime()<rightMile.getTime()-d)
-						mile=leftMile.getMile();
+						mile=leftMile;
 					else
-						mile=rightMile.getMile();
+						mile=rightMile;
 				}else if(leftMile!=null)
-					mile=leftMile.getMile();
+					mile=leftMile;
 				else if(rightMile!=null)
-					mile=rightMile.getMile();
+					mile=rightMile;
 				
-				if(mile>0)
+				if(mile!=null)
 					break;
 				
 				leftTo=leftTo-hour;
@@ -171,40 +170,100 @@ public class LBSDaoImpl implements LBSDao{
 	public float getStepMile(Car car, Date beginTime, Date endTime) {
 		if(car.getDevice()==null)
 			return -1;
-		
-		float from=getMileOnTime(car,beginTime);
-		float to=getMileOnTime(car,endTime);
-		if(from>0 && to>0)
-			return to-from;
+		float mile1=getStepMileByMeter(car,beginTime,endTime);
+		float mile2=getStepMileByEnhancedMeter(car,beginTime,endTime);
+		float mile3=getStepMileByTrack(car,beginTime,endTime);
+		float mile4=getStepMileByEnhancedTrack(car,beginTime,endTime);
+		System.out.println("mile1="+mile1);
+		System.out.println("mile2="+mile2);
+		System.out.println("mile3="+mile3);
+		System.out.println("mile4="+mile4);
+		if(mile2>mile4)
+			return mile2;
+		else
+			return mile4;
+	}
+	
+	private float getStepMileByMeter(Car car, Date beginTime, Date endTime){
+		MileInfo from=getMileOnTime(car,beginTime);
+		MileInfo to=getMileOnTime(car,endTime);
+		if(from!=null && to!=null)
+			return new BigDecimal((to.getMile()-from.getMile())/1000).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
 		else
 			return -1;
 	}
 	
-	class MileInfo{
-		private float mile;
-		private long time;
-		public float getMile() {
-			return mile;
-		}
-		public void setMile(float mile) {
-			this.mile = mile;
-		}
-		public long getTime() {
-			return time;
-		}
-		public void setTime(long time) {
-			this.time = time;
-		}		
+	private float getStepMileByEnhancedMeter(Car car, Date beginTime, Date endTime){
+		MileInfo from=getMileOnTime(car,beginTime);
+		MileInfo to=getMileOnTime(car,endTime);
+		if(from!=null && to!=null){
+			long step=2*60*60*1000;	//每次查两小时。因为接口限制了不能超过两小时。
+			long begin=from.getTime();
+			long end=to.getTime();
+			float offsetMile=0;
+			while(true){
+				if(begin>=to.getTime())
+					break;
+				if(end>=to.getTime())
+					end=to.getTime();
+				List<MileInfo> miles=getMile(car,begin,end);
+				if(miles!=null && miles.size()>1)
+					for(int i=1;i<miles.size();i++){
+						if(miles.get(i).getMile()==0)
+							continue;
+						float lastMile=0;
+						for(int j=i-1;j>=0;j--){
+							lastMile=miles.get(j).getMile();
+							if(lastMile>0)
+								break;
+						}
+						if(lastMile==0)
+							continue;
+						if(miles.get(i).getMile()<lastMile){
+							offsetMile=offsetMile+(lastMile-miles.get(i).getMile());
+							System.out.println("offsetMile="+offsetMile);
+						}
+					}
+				begin=begin+step;
+				end=begin+step;
+			}
+			return new BigDecimal((to.getMile()-from.getMile()+offsetMile)/1000).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
+		}else
+			return -1;
 	}
 	
-	/**
+	private float getStepMileByTrack(Car car, Date beginTime, Date endTime) {
+		try{
+			if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
+				return 0;
+			String api = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="
+					+car.getDevice().getSN()+"&begin="+beginTime.getTime()+"&end="+endTime.getTime()
+					+"&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()
+					+"&app_name="+Configuration.getCapcareAppName()+"&language=zh_CN&_=1450765172310";
+			String json = HttpMethod.get(api);
+			JSONObject data = (JSONObject) JSON.parse(json);
+			JSONArray track = (JSONArray) data.get("track");
+			float distance = 0;
+			for(int i=0;i<track.size();i++){
+				JSONObject obj = (JSONObject) track.get(i);
+				distance += obj.getFloatValue("distance");
+			}
+			return distance;
+		}catch(Exception e){
+			e.printStackTrace();
+			return 0;
+		}
+	
+	}
+
+/**
 	 * 利用车辆轨迹计算两个时间点之间的行驶里程数，单位KM
 	 * @param car
 	 * @param beginDate
 	 * @param endDate
 	 * @return
 	 */
-	private float getMilesUsingTrack(Car car, Date beginDate, Date endDate){
+	private float getStepMileByEnhancedTrack(Car car, Date beginDate, Date endDate){
 		
 		float sumDistance = 0;
 		
@@ -255,21 +314,38 @@ public class LBSDaoImpl implements LBSDao{
 		return distance;
 	}
 	
+	class MileInfo{
+		private float mile;
+		private long time;
+		public float getMile() {
+			return mile;
+		}
+		public void setMile(float mile) {
+			this.mile = mile;
+		}
+		public long getTime() {
+			return time;
+		}
+		public void setTime(long time) {
+			this.time = time;
+		}		
+	}
+	
 	public static void main(String[] args) {
 		LBSDao lbsDao = new LBSDaoImpl();
-		LBSDaoImpl lbsDaoImpl = new LBSDaoImpl();
 		Car car=new Car();
 		Device device=new Device();
-		device.setSN("892626060703348");
+		device.setSN("892626060702647");
 		car.setDevice(device);
-		Date date1=DateUtils.getYMDHMS("2016-12-14 19:45:59");
+		Date date1=DateUtils.getYMDHMS("2016-12-19 00:00:00");
 		System.out.println(date1.getTime());
-		Date date2=DateUtils.getYMDHMS("2016-12-17 08:55:17");
+		Date date2=DateUtils.getYMDHMS("2016-12-19 14:28:38");
 		System.out.println(date2.getTime());
-		
-		//float mile = lbsDao.getStepMile(car, date1, date2);
-		//System.out.println("mile="+mile);
-		System.out.println(lbsDaoImpl.getMilesUsingTrack(car,date1,date2));
+//		Date date1=DateUtils.getYMDHM("2016-09-06 09:00");
+//		Date date2=DateUtils.getYMDHM("2016-09-07 09:00");
+//		System.out.println(lbsDao.getStepMile(car,date1,date2));
+		float mile = lbsDao.getStepMile(car, date1, date2);
+		System.out.println("mile="+mile);
 	}
 
 }

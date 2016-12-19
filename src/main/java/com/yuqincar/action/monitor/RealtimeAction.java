@@ -1,7 +1,9 @@
 package com.yuqincar.action.monitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,12 +27,14 @@ import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Order;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.service.car.CarService;
+import com.yuqincar.service.common.ExportService;
 import com.yuqincar.service.monitor.CapcareMessageService;
 import com.yuqincar.service.monitor.MonitorGroupService;
 import com.yuqincar.service.monitor.impl.CapcareMessageServiceImpl;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
+import com.yuqincar.utils.HttpMethod;
 import com.yuqincar.utils.Text;
 
 import net.sf.json.JSONObject;
@@ -53,6 +57,8 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	private MonitorGroupService monitorGroupService;
 	@Autowired
 	private CapcareMessageService capcareMessageService;
+	@Autowired
+	private ExportService exportservice;
 	
 	private Car car;
 	
@@ -299,6 +305,46 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		}
 		monitorGroupService.update(mg);
 		return monitorGroup();
+	}
+	
+	/**
+	 * 导出车辆的位置信息
+	 * @return 
+	 * @throws IOException 
+	 * http://api.map.baidu.com/geocoder/v2/?ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd&callback=renderReverse&location=
+	 * 29.567579280043,106.58876103448&output=json
+	 */
+	public void exportCapcareMessage() throws IOException{
+		String beginUrl = "http://api.map.baidu.com/geocoder/v2/?ak="+Configuration.getBaiduKey()+"&callback=renderReverse&location=";
+		String endUrl = "8&output=json";
+		
+		List<List<String>> listAll = new ArrayList<List<String>>();
+		
+		List<CapcareMessage> capcareMessages = capcareMessageService.getAllCapcareMessage();
+		
+		
+		for(CapcareMessage cm:capcareMessages){
+			List<String> capcareMessageString = new ArrayList<String>();
+			capcareMessageString.add(cm.getPlateNumber());
+			//获取到的坐标点要去百度获得位置信息
+			String json = HttpMethod.get(beginUrl+cm.getLatitude()+","+cm.getLongitude()+endUrl);
+			int prefix="renderReverse&&renderReverse(".length();
+			String realJson=json.substring(prefix, json.length()-1);
+			JSONObject jsonObject = JSONObject.fromObject(realJson);
+			JSONObject result = jsonObject.getJSONObject("result");
+			String address = result.get("formatted_address").toString();
+			capcareMessageString.add(address);
+			
+			listAll.add(capcareMessageString);
+		}
+		
+		List<String> title=new ArrayList<String>();
+	    title.add("车牌号");
+		title.add("位置");
+		Date date = new Date();
+		String report_name="重庆渝勤公司车辆位置表"+" "+DateUtils.getChineseYMDString(date);
+ 		System.out.println("report_name="+report_name);
+ 		exportservice.exportExcel(report_name, title, listAll, response);
 	}
 	
 	public String delete(){

@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService{
 		// 默认密码是123456
 		String md5 = DigestUtils.md5Hex("123456"); // 密码要使用MD5摘要
 		user.setPassword(md5);
+		user.setVisible(true);
 		if(user.getUserType()==UserTypeEnum.DRIVER){
 			DriverLicense driverLicense = user.getDriverLicense();
 			driverLicenseDao.save(driverLicense);
@@ -126,6 +127,7 @@ public class UserServiceImpl implements UserService{
 		user.setName(name);
 		user.setPhoneNumber(phoneNumber);
 		user.setStatus(UserStatusEnum.NORMAL);
+		user.setVisible(true);
 		
 		userDao.save(user);
 	}

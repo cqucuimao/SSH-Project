@@ -453,7 +453,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		cmvo.setDirection(capcareMap.get(carPlateNumber).getDirection());
 		
 		String jsonString = JSON.toJSONString(cmvo);
-		String added = "\"carId\""+":"+"\""+carId+"\",";
+		String added = "\"carId\""+                 ":"+"\""+carId+"\",";
 		String json = "{"+added+jsonString.substring(1);
 		this.writeJson(json);
 	}
@@ -506,9 +506,9 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	}
 	
 	//初始化车辆位置
-	public void initCapcareMessage(){
-		capcareMessageService.initCapcareMessages();
-	}
+//	public void initCapcareMessage(){
+//		capcareMessageService.initCapcareMessages();
+//	}
 	
 	public Car getCar() {
 		return car;

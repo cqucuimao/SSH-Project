@@ -62,7 +62,8 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	public void save(T entity) {
 		if(entity instanceof BaseEntity) {			
 			BaseEntity baseEntity = (BaseEntity)entity;
-			baseEntity.setCompany(getCurrentOperatorCompany());
+			if(baseEntity.getCompany()==null)
+				baseEntity.setCompany(getCurrentOperatorCompany());
 			User user = getCurrentUser();
 			baseEntity.setCreator(user);
 			baseEntity.setLastUpdator(user);

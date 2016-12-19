@@ -303,8 +303,6 @@ public class OrderServiceImpl implements OrderService {
 			}
 			//针对协议订单，设置定期收款相关属性
 			if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){		//无论是新建还是修改的order，都用相同的方法设置下次收款时间。
-				if(order.getLastPayDate()==null)
-					order.setLastPayDate(order.getPlanBeginDate());
 				if(order.getPayPeriod()==ProtocolOrderPayPeriodEnum.ONCE)
 					order.setNextPayDate(order.getFirstPayDate());
 				else{

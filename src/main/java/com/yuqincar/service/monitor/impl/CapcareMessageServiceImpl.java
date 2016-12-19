@@ -76,8 +76,10 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		}
 		
 		//根据设备号和时间戳，获取每辆车的位置信息。如果返回信息的mode不是A，时间倒退一周再查询一次。如果倒退到2016-9-1还没找到mode为A的位置信息，就把当前的位置作为初始化位置。
+		int n=0;
 		for(String sn : deviceSn){
-			
+			n++;
+			System.out.println("n="+n);
 			String dateStr = "2016-9-1 00:00";  
 			long longDateOf20160901 = DateUtils.getYMDHM(dateStr).getTime();
 			

@@ -473,6 +473,9 @@ public class ScheduleAction extends BaseAction {
 				toUpdateOrder.setCallForOtherSendSMS(order.isCallForOtherSendSMS());
 			}else
 				toUpdateOrder.setCallForOther(false);
+			toUpdateOrder.setPayPeriod(order.getPayPeriod());
+			toUpdateOrder.setFirstPayDate(order.getFirstPayDate());
+			toUpdateOrder.setMoneyForPeriodPay(order.getMoneyForPeriodPay());
 		}
 		ChargeModeEnum chargeModeEnum = null;
 		chargeModeEnum = getChargeMode(chargeMode);
@@ -492,9 +495,6 @@ public class ScheduleAction extends BaseAction {
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
 			order.setActualMoney(protocolMoney);
-			System.out.println("payPeriodId="+payPeriodId);
-			System.out.println("firstPayDate="+firstPayDate);
-			System.out.println("moneyForPeriodPay="+moneyForPeriodPay);
 			order.setPayPeriod(ProtocolOrderPayPeriodEnum.getById(payPeriodId));
 			order.setFirstPayDate(DateUtils.getYMD(firstPayDate));
 			order.setMoneyForPeriodPay(moneyForPeriodPay);

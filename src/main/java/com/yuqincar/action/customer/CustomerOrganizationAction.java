@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -47,6 +48,8 @@ public class CustomerOrganizationAction extends BaseAction implements
 	
 	private CustomerOrganization customerOrganization;
 	
+	private String customerOrganizationName;
+	
 	
 	/** 查询*/
 	public String queryList() throws Exception {
@@ -77,7 +80,9 @@ public class CustomerOrganizationAction extends BaseAction implements
 	}
 	
     public String popup() {  
-    	QueryHelper helper = new QueryHelper(CustomerOrganization.class, "c");		
+    	QueryHelper helper = new QueryHelper(CustomerOrganization.class, "c");
+    	if(!StringUtils.isEmpty(customerOrganizationName))
+    		helper.addWhereCondition("c.name like ?", "%"+customerOrganizationName+"%");
 		PageBean<CustomerOrganization> pageBean = customerOrganizationService.getPageBean(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "popup";
@@ -186,6 +191,12 @@ public class CustomerOrganizationAction extends BaseAction implements
 	}
 	public void setCustomerOrganization(CustomerOrganization customerOrganization) {
 		this.customerOrganization = customerOrganization;
+	}
+	public String getCustomerOrganizationName() {
+		return customerOrganizationName;
+	}
+	public void setCustomerOrganizationName(String customerOrganizationName) {
+		this.customerOrganizationName = customerOrganizationName;
 	}
 
 }

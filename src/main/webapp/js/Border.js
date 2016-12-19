@@ -28,6 +28,7 @@ function registerClick(){
         	var result=true;
         	if(old)
         		result=old.apply(this, arguments);
+        	//coverHidden();
         	return result;
         };
     };

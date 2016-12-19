@@ -1,6 +1,7 @@
 package com.yuqincar.timer;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,19 +25,24 @@ public class ProtocolPayOrderGenerate {
 	@Autowired
 	public ProtocolOrderPayOrderService popoService;
 	
-	@Scheduled(cron = "0 0 0 * * ?")
+	@Scheduled(cron = "30 12 14 * * ?")
 	@Transactional
 	public void generateProtocolPayOrder(){
-		QueryHelper helper=new QueryHelper(Order.class,"o");
-		helper.addWhereCondition("o.chargeMode=? && (o.status=? || o.status=? || o.status=? || o.status=? || o.status=?)", 
+		QueryHelper helper=new QueryHelper("order_","o");
+		helper.addWhereCondition("o.chargeMode=? and (o.status=? or o.status=? or o.status=? or o.status=? or o.status=?)", 
 				ChargeModeEnum.PROTOCOL,OrderStatusEnum.SCHEDULED,OrderStatusEnum.ACCEPTED,OrderStatusEnum.BEGIN,OrderStatusEnum.GETON,OrderStatusEnum.GETOFF);
-		for(Order order:orderService.queryAllOrder(helper)){
-			if(order.getPlanEndDate().before(order.getLastPayDate()))
+		List<Order> orders=orderService.queryAllOrder(helper);
+		for(Order order:orders){
+			if(order.getPayPeriod()==null || order.getFirstPayDate()==null || 
+					order.getMoneyForPeriodPay()==null || order.getNextPayDate()==null)  //排除历史数据中没有设置周期收款信息的订单
 				continue;
-			if(DateUtils.getYMDString(order.getNextPayDate()).equals(DateUtils.getYMDString(new Date()))){
+			if(order.getLastPayDate()!=null && order.getPlanEndDate().before(order.getLastPayDate()))
+				continue;
+			System.out.println("SN="+order.getSn());
+			if(DateUtils.getMinDate(order.getNextPayDate()).before(DateUtils.getMaxDate(new Date()))){
 				ProtocolOrderPayOrder popo=new ProtocolOrderPayOrder();
 				popo.setOrder(order);
-				popo.setFromDate(order.getLastPayDate());
+				popo.setFromDate(order.getLastPayDate()!=null ? order.getLastPayDate() : order.getPlanBeginDate());
 				popo.setToDate(order.getNextPayDate());
 				popo.setMoney(order.getMoneyForPeriodPay());
 				popo.setPaid(false);

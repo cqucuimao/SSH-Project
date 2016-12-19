@@ -73,9 +73,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		if(model.getName()!=null && !"".equals(model.getName()))
 			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
 		helper.addWhereCondition("u.department.name <> ?", "外派");
-		//测试员 是给APP上架审查员使用的。不出现在员工选择框和员工管理功能中
-		helper.addWhereCondition("u.name not like ?", "测试%");
-		helper.addWhereCondition("u.loginName <> ?", "admin");
+		helper.addWhereCondition("u.visible=1");
 		helper.addOrderByProperty("u.id", false);
 		helper.addOrderByProperty("u.name", true);
 		//用户状态查询
@@ -91,9 +89,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	public String list(){
 		QueryHelper helper = new QueryHelper("User", "u");
 		helper.addWhereCondition("u.department.name <> ?", "外派");
-		//测试员 是给APP上架审查员使用的。不出现在员工选择框和员工管理功能中
-		helper.addWhereCondition("u.name not like ?", "测试%");
-		helper.addWhereCondition("u.loginName <> ?", "admin");
+		helper.addWhereCondition("u.visible=1");
 		helper.addOrderByProperty("u.id", false);
 		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -118,7 +114,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	/** 删除 */
 	public String delete() throws Exception {
-		userService.delete(model.getId());
+		if(model.isVisible())//不能删除不可见的用户
+			userService.delete(model.getId());
 		return freshList();
 	}
 
@@ -177,7 +174,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备回显的数据
 		User user = userService.getById(model.getId());
-		if(user.getLoginName().equals("admin"))
+		if(!user.isVisible())
 			return null;
 		if(user.getUserType() == UserTypeEnum.DRIVER){
 			System.out.println("licenseID="+licenseID);
@@ -308,6 +305,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
 		if(model.getPhoneNumber()!=null && !"".equals(model.getPhoneNumber()))
 			helper.addWhereCondition("u.phoneNumber like ?", "%"+model.getPhoneNumber()+"%");
+		helper.addWhereCondition("u.visible=1");
 		helper.addOrderByProperty("u.id", false);
 		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -316,10 +314,10 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		return "dispatchList";
 	}
 	
-	public String dispatchUserList(){
-		
+	public String dispatchUserList(){		
 		QueryHelper helper = new QueryHelper("User", "u");
 		helper.addWhereCondition("u.department.name = ?", "外派");
+		helper.addWhereCondition("u.visible=1");
 		helper.addOrderByProperty("u.id", false);
 		PageBean<User> pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);

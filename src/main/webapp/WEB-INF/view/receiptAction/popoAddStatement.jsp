@@ -252,7 +252,6 @@
          	    	  for(var i=0;i<orderIds.length;i++){
          	    		  idStr+=orderIds[i]+",";
          	    	  }
-         	    	 alert(idStr);
          	    	  //去掉最后一个多余的","
          	    	  idStr=idStr.substring(0,idStr.length-1);
          	    	  //请求中的中文参数需要encodeURI函数转码

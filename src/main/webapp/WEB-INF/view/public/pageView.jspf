@@ -12,7 +12,7 @@
    		<a href="javascript: gotoPage(1)" title="首页" ><img src="skins/images/page/page_first_a.gif" alt="first page" /></a>
 	</s:if>
 	<s:else>
-   		<a  title="首页" ><img src="skins/images/page/page_first_b.gif" alt="first page" /></a>
+   		<img src="skins/images/page/page_first_b.gif" alt="first page" />
 	</s:else>
 	
 	<s:if test=" 1 != currentPage && 0 != currentPage"><%-- 非首页 --%>
@@ -26,14 +26,14 @@
    		<a href="javascript: gotoPage(${currentPage+1})"><img src="skins/images/page/page_next_a.gif" alt="next page"/></a>
    	</s:if>
    	<s:else>
-   		<a><img src="skins/images/page/page_next_b.gif" alt="next page"/></a>
+   		<img src="skins/images/page/page_next_b.gif" alt="next page"/>
    	</s:else>
    	
    	<s:if test=" pageCount != currentPage "><%-- 非尾页 --%>
    	<a href="javascript: gotoPage(${pageCount})" title="尾页"><img src="skins/images/page/page_last_a.gif" alt="last page"/></a>
    	</s:if>
    	<s:else>
-   	<a title="尾页"><img src="skins/images/page/page_last_b.gif" alt="last page"/></a>
+   		<img src="skins/images/page/page_last_b.gif" alt="last page"/>
    	</s:else>
    	
    	转到： <select id="pageNum" onchange="gotoPage(this.value)">

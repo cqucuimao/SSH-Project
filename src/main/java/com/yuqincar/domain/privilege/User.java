@@ -82,6 +82,9 @@ public class User extends BaseEntity implements Serializable {
 	
 	@Text("APP标识Token")
 	private String appDeviceToken;
+	
+	@Text("可见性")//admin、测试员、测试司机、未知外派员工的可见性为false，使得它们不能在权限管理和员工选择框中出现。
+	private boolean visible;
 
 	@Transient
 	private static Set<String> BASE_PRIVILEGE_URLS;
@@ -247,6 +250,14 @@ public class User extends BaseEntity implements Serializable {
 
 	public void setAppDeviceToken(String appDeviceToken) {
 		this.appDeviceToken = appDeviceToken;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 }

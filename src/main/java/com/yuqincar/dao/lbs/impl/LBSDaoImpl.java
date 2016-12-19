@@ -198,7 +198,7 @@ public class LBSDaoImpl implements LBSDao{
 	}
 	
 	/**
-	 * 获取两个时间点之间丢失轨迹的距离，单位KM
+	 * 利用车辆轨迹计算两个时间点之间的行驶里程数，单位KM
 	 * @param car
 	 * @param beginDate
 	 * @param endDate

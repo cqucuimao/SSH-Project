@@ -198,7 +198,7 @@ public class LBSDaoImpl implements LBSDao{
 	}
 	
 	/**
-	 * 获取两个时间点之间的行驶里程数
+	 * 获取两个时间点之间丢失轨迹的距离，单位KM
 	 * @param car
 	 * @param beginDate
 	 * @param endDate
@@ -240,7 +240,8 @@ public class LBSDaoImpl implements LBSDao{
 		}
 	}
 	/**
-	 * 百度地图接口计算两坐标两之间的距离
+	 * 百度地图接口计算两坐标两之间的距离,单位KM
+	 * 这里进行了测试，当两坐标点距离很近或者完全相同时，百度也会有返回值，并且返回值基本在0.2KM以内
 	 * @param origins
 	 * @param destinations
 	 * @return

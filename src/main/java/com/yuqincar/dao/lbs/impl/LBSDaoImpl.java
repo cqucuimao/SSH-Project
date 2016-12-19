@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
@@ -196,21 +197,80 @@ public class LBSDaoImpl implements LBSDao{
 		}		
 	}
 	
+	/**
+	 * 获取两个时间点之间的行驶里程数
+	 * @param car
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 * http://api.capcare.com.cn:1045/api/get.part.do?device_sn=892626060703066&begin=1482076800000&end=1482117153000
+	 * &token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD
+	 */
+	private float getMilesUsingTrack(Car car, Date beginDate, Date endDate){
+		
+		float sumDistance = 0;
+		
+		String url = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="+car.getDevice().getSN()
+								+"&begin="+beginDate.getTime()+"&end="+endDate.getTime()+"&token="+Configuration.getCapcareToken()
+								+"&user_id="+Configuration.getCapcareUserId()+"&app_name="+Configuration.getCapcareAppName();
+		
+		String json = HttpMethod.get(url);
+		JSONObject jsonObject = (JSONObject) JSON.parse(json);
+
+		JSONArray tracksOfJson = jsonObject.getJSONArray("track");
+		JSONArray tracks = new JSONArray();
+		
+		//得到的轨迹序列是倒序的，先进行倒序排列
+		for(int i=tracksOfJson.size()-1;i>=0;i--){
+			tracks.add(tracksOfJson.getJSONObject(i));
+		}
+		//如果轨迹段数小于2，返回0
+		if(tracks.size() < 2){
+			return 0;
+		}else{
+			//计算前一段轨迹的结束点到下一段轨迹的开始点的距离
+			for(int i=0;i<tracks.size()-1;i++){
+				JSONArray states = tracks.getJSONObject(i).getJSONArray("states");
+				JSONArray nextStates = tracks.getJSONObject(i+1).getJSONArray("states");
+				String origins = states.getJSONObject(0).get("lat").toString()+","+states.getJSONObject(0).get("lng").toString();
+				String destinations = nextStates.getJSONObject(1).get("lat").toString()+","+nextStates.getJSONObject(1).get("lng").toString();
+				sumDistance += calculatePathDistance(origins,destinations);
+			}
+			return sumDistance;
+		}
+	}
+	/**
+	 * 百度地图接口计算两坐标两之间的距离
+	 * @param origins
+	 * @param destinations
+	 * @return
+	 */
+	private float calculatePathDistance(String origins, String destinations) {
+        //这里使用的百度ak是徐伟良师兄注册的，我们系统目前的ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd，暂时还不能使用这个接口
+		String url = "http://api.map.baidu.com/direction/v1/routematrix?output=json&origins="
+						+origins+"&destinations="+destinations+"&ak=XNcVScWmj4gRZeSvzIyWQ5TZ";
+		String json = HttpMethod.get(url);
+		        JSONObject distanceObj=(JSONObject) JSON.parseObject(json).getJSONObject("result").getJSONArray("elements").get(0);
+		        String value=distanceObj.getJSONObject("distance").getString("value");
+		float distance=Float.parseFloat(value)/1000;
+		return distance;
+	}
+	
 	public static void main(String[] args) {
 		LBSDao lbsDao = new LBSDaoImpl();
+		LBSDaoImpl lbsDaoImpl = new LBSDaoImpl();
 		Car car=new Car();
 		Device device=new Device();
 		device.setSN("892626060703348");
 		car.setDevice(device);
-		Date date1=DateUtils.getYMDHMS("2016-12-15 13:33:00");
+		Date date1=DateUtils.getYMDHMS("2016-12-14 19:45:59");
 		System.out.println(date1.getTime());
-		Date date2=DateUtils.getYMDHMS("2016-12-15 15:46:00");
+		Date date2=DateUtils.getYMDHMS("2016-12-17 08:55:17");
 		System.out.println(date2.getTime());
-//		Date date1=DateUtils.getYMDHM("2016-09-06 09:00");
-//		Date date2=DateUtils.getYMDHM("2016-09-07 09:00");
-//		System.out.println(lbsDao.getStepMile(car,date1,date2));
-		float mile = lbsDao.getStepMile(car, date1, date2);
-		System.out.println("mile="+mile);
+		
+		//float mile = lbsDao.getStepMile(car, date1, date2);
+		//System.out.println("mile="+mile);
+		System.out.println(lbsDaoImpl.getMilesUsingTrack(car,date1,date2));
 	}
 
 }

@@ -203,8 +203,6 @@ public class LBSDaoImpl implements LBSDao{
 	 * @param beginDate
 	 * @param endDate
 	 * @return
-	 * http://api.capcare.com.cn:1045/api/get.part.do?device_sn=892626060703066&begin=1482076800000&end=1482117153000
-	 * &token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD
 	 */
 	private float getMilesUsingTrack(Car car, Date beginDate, Date endDate){
 		
@@ -232,8 +230,8 @@ public class LBSDaoImpl implements LBSDao{
 			for(int i=0;i<tracks.size()-1;i++){
 				JSONArray states = tracks.getJSONObject(i).getJSONArray("states");
 				JSONArray nextStates = tracks.getJSONObject(i+1).getJSONArray("states");
-				String origins = states.getJSONObject(0).get("lat").toString()+","+states.getJSONObject(0).get("lng").toString();
-				String destinations = nextStates.getJSONObject(1).get("lat").toString()+","+nextStates.getJSONObject(1).get("lng").toString();
+				String origins = states.getJSONObject(0).getString("lat")+","+states.getJSONObject(0).getString("lng");
+				String destinations = nextStates.getJSONObject(1).getString("lat")+","+nextStates.getJSONObject(1).getString("lng");
 				sumDistance += calculatePathDistance(origins,destinations);
 			}
 			return sumDistance;

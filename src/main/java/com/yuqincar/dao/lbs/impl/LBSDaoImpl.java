@@ -247,7 +247,7 @@ public class LBSDaoImpl implements LBSDao{
 	 * @return
 	 */
 	private float calculatePathDistance(String origins, String destinations) {
-        //这里使用的百度ak是徐伟良师兄注册的，我们系统目前的ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd，暂时还不能使用这个接口
+        //这里使用的百度ak是徐伟良师兄注册的，系统目前的ak=wzq3sn49ZUQuOFRvdoS4HaQnpZLBFBMd，暂时还不能使用这个百度API，已经修改百度开发者的功能，估计等一段时间就可以了。
 		String url = "http://api.map.baidu.com/direction/v1/routematrix?output=json&origins="
 						+origins+"&destinations="+destinations+"&ak=XNcVScWmj4gRZeSvzIyWQ5TZ";
 		String json = HttpMethod.get(url);

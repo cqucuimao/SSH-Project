@@ -552,10 +552,10 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	}
 	
 	//初始化车辆位置
-//	public void initCapcareMessage(){
-//		capcareMessageService.initCapcareMessages();
-//	}
-	
+	public void initCapcareMessages(){
+		capcareMessageService.initCapcareMessages();
+	}
+
 	public Car getCar() {
 		return car;
 	}

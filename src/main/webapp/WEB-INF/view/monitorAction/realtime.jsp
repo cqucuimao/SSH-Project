@@ -52,6 +52,9 @@
                     <td>
                     	<s:a class="buttonA" action="realtime_exportCapcareMessage">导出车辆位置</s:a>
                     </td>
+                       <td>
+                    	<s:a class="buttonA" action="realtime_initCapcareMessage">初始化车辆位置</s:a>
+                    </td>
                 </tr>
             </table>
             </s:form>
@@ -697,19 +700,19 @@
    	      		     if(addedCar[5]==0){
    	      		        //判断车辆具体处于什么状态：无网络(status:2) 行驶(status:1,speed!=0) 停留(status:1,speed=0)
        	      		    if(carStatus==2){
-       	      		       imagePath="images/car5.png";
+       	      		       imagePath="images/auto4.png";
        	      		    }else{
        	      		       if(carSpeed==0)
-       	      		    	  imagePath="images/car1.png";
+       	      		    	  imagePath="images/auto1.png";
        	      		       else
-       	      		    	  imagePath="images/car4.png"; 
+       	      		    	  imagePath="images/auto3.png"; 
        	      		    }
    	      		     }else if(addedCar[5]==1){
    	      		    	 //当前状态为异常行驶
-   	      		    	 imagePath="images/car3.png";
+   	      		    	 imagePath="images/auto2.png";
    	      		     }else{
    	      		         //当前状态为设备拔出
-   	      		    	 imagePath="images/car2.png";
+   	      		    	 imagePath="images/auto5.png";
    	      		     }
    	      		     
    	      		     /* //清除地图上当前车辆标识
@@ -724,10 +727,10 @@
     			     } */
    	      		     
    	      		     //自定义车辆图标
-   	      		     var myIcon = new BMap.Icon(imagePath, new BMap.Size(40,30));
+   	      		     var myIcon = new BMap.Icon(imagePath, new BMap.Size(40,50));
    	      		     marker = new BMap.Marker(point,{icon:myIcon});// 创建标注
    	      		     //增加车牌信息  label的offset属性能够调整基于中心点的偏移位置
-   	      		     var label = new BMap.Label(carPlateNumber,{offset:new BMap.Size(-16,-17)});
+   	      		     var label = new BMap.Label(carPlateNumber,{offset:new BMap.Size(-18,-17)});
 	      		     marker.setLabel(label);
    	      		    
 	      		     map.addOverlay(marker);             // 将标注添加到地图中

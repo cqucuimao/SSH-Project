@@ -487,9 +487,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	
 	//获取凯步数据
 	public void getCapcareData(){
-		System.out.println("车牌号="+carPlateNumber);
 		Map<String, CapcareMessage> capcareMap = CapcareMessageServiceImpl.capcareMap;
-		System.out.println("capcareMap="+capcareMap.get(carPlateNumber));
 		CapcareMessageVO cmvo = new CapcareMessageVO();
 		cmvo.setPlateNumber(capcareMap.get(carPlateNumber).getPlateNumber());
 		cmvo.setLongitude(capcareMap.get(carPlateNumber).getLongitude());
@@ -552,9 +550,9 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	}
 	
 	//初始化车辆位置
-	public void initCapcareMessages(){
-		capcareMessageService.initCapcareMessages();
-	}
+//	public void initCapcareMessage(){
+//		capcareMessageService.initCapcareMessages();
+//	}
 
 	public Car getCar() {
 		return car;

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.yuqincar.action.lbs.GetBaiduMsg;
 import com.yuqincar.action.lbs.GetCapcareMsg;
 import com.yuqincar.dao.monitor.CapcareMessageDao;
@@ -61,11 +62,12 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		//按照一定时间间隔，倒退的顺序去capcare平台获取每辆车的位置信息。
 		//然后将这一次轨迹的最后一个mode为A的位置点数据的位置信息作为这个车辆的初始化数据。
 		//每次查询一辆车位置信息的url： http://api.capcare.com.cn:1045/api/device.get.do?device_sn=892626060704080&timestamp=1481097540000&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD
-		
+		//http://api.capcare.com.cn:1045/api/get.part.do?device_sn=892616060701392&begin=1472659200000&end=1482163200000&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD
 		String beginUrl = "http://api.capcare.com.cn:1045/api/device.get.do?";
-		
 		String endUrl = "&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";
 		
+		String beginUrlPart = "http://api.capcare.com.cn:1045/api/get.part.do?";
+		String endUrlPart = "&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";
 		//获取所有监控车辆
 		List<Car> allMonitorCar = carService.getCarsForMonitoring();
 		
@@ -76,11 +78,18 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		}
 		
 		//根据设备号和时间戳，获取每辆车的位置信息。如果返回信息的mode不是A，时间倒退一周再查询一次。如果倒退到2016-9-1还没找到mode为A的位置信息，就把当前的位置作为初始化位置。
-		int n=0;
-		for(String sn : deviceSn){
-			n++;
-			System.out.println("n="+n);
+		int n=10;
+		for(int i=10;i<deviceSn.size();i++){
+			String sn=deviceSn.get(i);
+			if(n==0)
+				break;
+			n--;
+			System.out.println("i="+i);
 			String dateStr = "2016-9-1 00:00";  
+			if(i==13 || i==14){
+				dateStr = "2016-12-1 00:00";  
+			}
+			
 			long longDateOf20160901 = DateUtils.getYMDHM(dateStr).getTime();
 			
 			Date now = new Date();
@@ -101,22 +110,22 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 			String direction = position.get("direction").toString();
 			
 			GetBaiduMsg gbm = new GetBaiduMsg();
-			//如果mode不是A，时间倒退一周再查询一次
-			while(!position.get("mode").toString().equals("A") && longDateOfNow > longDateOf20160901){
-				longDateOfNow  = longDateOfNow - 604800;
-				System.out.println(longDateOfNow);
-				url = beginUrl+"device_sn="+sn+"&timestamp="+String.valueOf(longDateOfNow)+endUrl;
-				
-				jsonObject = JSONObject.fromObject(capcareData);
-				device = jsonObject.getJSONObject("device");
-				position = device.getJSONObject("position");
-				
-				plateNumber = device.get("name").toString();
-				longitude = position.get("lng").toString();
-				latitude = position.get("lat").toString();
-				speed = position.get("speed").toString();
-				status = position.get("status").toString();
-				direction = position.get("direction").toString();
+			//如果mode不是A，就查询轨迹，获取轨迹中的最新位置
+			while(!position.get("mode").toString().equals("A")){
+				String begin = "";
+				String end = "";
+				String urlPart = beginUrlPart+"device_sn="+sn+"&begin="+longDateOf20160901+"&end="+String.valueOf(longDateOfNow)+endUrlPart;
+				String json = HttpMethod.get(urlPart);
+				JSONObject jsonObjectPart = JSONObject.fromObject(json);
+				if(!jsonObjectPart.getString("ret").equals(2)){
+
+					JSONArray tracks = jsonObjectPart.getJSONArray("track");
+					
+					JSONArray states = tracks.getJSONObject(0).getJSONArray("states");
+					
+					latitude = states.getJSONObject(0).getString("lat");
+					longitude = states.getJSONObject(0).getString("lng");
+				}
 			}
 			//到百度去进行坐标转换，坐标为0时，初始化位置为出厂位置。并且数据初始化到数据库
 			if(! longitude.equals("0.0") && ! latitude.equals("0.0")){

@@ -61,7 +61,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 	public void initCapcareMessages() {
 		//按照一定时间间隔，倒退的顺序去capcare平台获取每辆车的位置信息。
 		//然后将这一次轨迹的最后一个mode为A的位置点数据的位置信息作为这个车辆的初始化数据。
-		//每次查询一辆车位置信息的url： http://api.capcare.com.cn:1045/api/device.get.do?device_sn=892626060704080&timestamp=1481097540000&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD
+		//每次查询一辆车位置信息的url： http://api.capcare.com.cn:1045/api/device.get.do?device_sn=892626060704080&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD
 		//http://api.capcare.com.cn:1045/api/get.part.do?device_sn=892616060701392&begin=1472659200000&end=1482163200000&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD
 		String beginUrl = "http://api.capcare.com.cn:1045/api/device.get.do?";
 		String endUrl = "&token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD";
@@ -79,25 +79,16 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		
 		//根据设备号和时间戳，获取每辆车的位置信息。如果返回信息的mode不是A，时间倒退一周再查询一次。如果倒退到2016-9-1还没找到mode为A的位置信息，就把当前的位置作为初始化位置。
 		int n=10;
-		for(int i=10;i<deviceSn.size();i++){
+		for(int i=120;i<deviceSn.size();i++){
+			
 			String sn=deviceSn.get(i);
 			if(n==0)
 				break;
 			n--;
-			System.out.println("i="+i);
-			String dateStr = "2016-9-1 00:00";  
-			if(i==13 || i==14){
-				dateStr = "2016-12-1 00:00";  
-			}
-			
-			long longDateOf20160901 = DateUtils.getYMDHM(dateStr).getTime();
-			
-			Date now = new Date();
-			long longDateOfNow = now.getTime();
-			
-			String url = beginUrl+"device_sn="+sn+"&timestamp="+String.valueOf(longDateOfNow)+endUrl;
+
+			System.out.println("i="+i+":"+sn);
+			String url = beginUrl+"device_sn="+sn+endUrl;
 			//访问凯步关爱
-			//System.out.println(url);
 			String capcareData = HttpMethod.get(url);
 			JSONObject jsonObject = JSONObject.fromObject(capcareData);
 			JSONObject device = jsonObject.getJSONObject("device");
@@ -109,25 +100,42 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 			String status = position.get("status").toString();
 			String direction = position.get("direction").toString();
 			
-			GetBaiduMsg gbm = new GetBaiduMsg();
-			//如果mode不是A，就查询轨迹，获取轨迹中的最新位置
-			while(!position.get("mode").toString().equals("A")){
-				String begin = "";
-				String end = "";
-				String urlPart = beginUrlPart+"device_sn="+sn+"&begin="+longDateOf20160901+"&end="+String.valueOf(longDateOfNow)+endUrlPart;
+			String dateStr = "2016-9-1 00:00"; 
+			long dateOf20160901 = DateUtils.getYMDHM(dateStr).getTime();
+			
+			Date now = new Date();
+			long dateOfNow = now.getTime();
+			long begin = dateOfNow - 604800000;
+			long end = dateOfNow;
+			
+			//如果mode不是A，就查询轨迹，获取轨迹中的最新位置。如果获取不到，倒退一周再查询，一直倒退到2016-09-01
+			while(!position.get("mode").toString().equals("A") &&  begin > dateOf20160901){
+				String urlPart = beginUrlPart+"device_sn="+sn+"&begin="+begin+"&end="+end+endUrlPart;
+				System.out.println(urlPart);
 				String json = HttpMethod.get(urlPart);
+				//开始时间和结束时间都倒退一周
+				begin = begin - 604800000;
+				end = end - 604800000;
 				JSONObject jsonObjectPart = JSONObject.fromObject(json);
-				if(!jsonObjectPart.getString("ret").equals(2)){
-
+				if(jsonObjectPart.getString("ret").equals("1") ){
 					JSONArray tracks = jsonObjectPart.getJSONArray("track");
-					
-					JSONArray states = tracks.getJSONObject(0).getJSONArray("states");
-					
-					latitude = states.getJSONObject(0).getString("lat");
-					longitude = states.getJSONObject(0).getString("lng");
+					if(tracks.size()>0){
+						JSONArray states = tracks.getJSONObject(0).getJSONArray("states");
+						latitude = states.getJSONObject(0).getString("lat");
+						longitude = states.getJSONObject(0).getString("lng");
+						break;
+					}else{
+						latitude = "0.0";
+						longitude = "0.0";
+					}
+				}else{
+					latitude = "0.0";
+					longitude = "0.0";
+					break;
 				}
 			}
 			//到百度去进行坐标转换，坐标为0时，初始化位置为出厂位置。并且数据初始化到数据库
+			GetBaiduMsg gbm = new GetBaiduMsg();
 			if(! longitude.equals("0.0") && ! latitude.equals("0.0")){
 
 				String pointStr = longitude+","+latitude;

@@ -1,10 +1,23 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/view/common/common.jsp" %>
-<cqu:border>
-	<style type="text/css">
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<style type="text/css">
 		body, html,#allmap {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
 		#BaiduMap{height:500px;width:100%;}
-	</style>
+</style>
+<link href="js/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="skins/main.css">
+</head>
+<body class="minW">
     <div class="space">
         <div class="title subtract">
             <h1>轨迹回放</h1>
@@ -971,4 +984,5 @@
          } 
  
     </script>
-</cqu:border>
+</body>
+</html>

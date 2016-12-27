@@ -25,7 +25,7 @@ public class ProtocolPayOrderGenerate {
 	@Autowired
 	public ProtocolOrderPayOrderService popoService;
 	
-	@Scheduled(cron = "30 12 14 * * ?")
+	@Scheduled(cron = "0 5 0 * * ?")
 	@Transactional
 	public void generateProtocolPayOrder(){
 		QueryHelper helper=new QueryHelper("order_","o");

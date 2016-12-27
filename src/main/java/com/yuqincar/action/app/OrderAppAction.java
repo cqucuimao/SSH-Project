@@ -125,28 +125,20 @@ public class OrderAppAction extends BaseAction{
 	private CompanyService companyService;
 	
 	private boolean checkPrivilege(){
-		System.out.println("in checkPrivilege,phoneNumber="+phoneNumber+",validationCode="+validationCode);
 		if(phoneNumber==null || phoneNumber.length()==0 || !StringUtils.isNumeric(phoneNumber) ||
 				validationCode==null || validationCode.length()==0)
 			return false;
-		System.out.println("1");
 		VerificationCode sendCode = verificationCodeService.getByPhoneNumber(phoneNumber);
 		if(sendCode ==null ||  !sendCode.getCode().equals(validationCode)){
-			System.out.println("2");
 			return false;
 		}else{
-			System.out.println("3");
 			if(StringUtils.isEmpty(companyId)){
-				System.out.println("4");
 				return false;
 			}else{
-				System.out.println("5");
 				Company company=companyService.getCompanyById(Long.valueOf(companyId));
 				if(company==null){
-					System.out.println("6");					
 					return false;
 				}else{
-					System.out.println("7");
 					ActionContext.getContext().getSession().put("company", company);
 					return true;
 				}

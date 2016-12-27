@@ -13,7 +13,7 @@ public class AsynchronizeSendSMS {
 	@Autowired
 	public SMSService sMSService;
 
-	@Scheduled(cron = "20 * * * * ?") // 每分钟（第20秒）执行一次
+	@Scheduled(cron = "5 * * * * ?") // 每分钟（第5秒）执行一次
 	@Transactional
 	public void send() {
 		System.out.println("in AsynchronizeSendSMS");

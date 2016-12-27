@@ -12,9 +12,6 @@ public interface LBSDao {
 	//得到汽车当前里程数读OBD
 	public float getCurrentMile(Car car);
 	
-	//得到汽车某个时间点里程数读OBD
-	public float getMileOnTime(Car car,Date date);
-	
 	//得到beginTime和endTime之间的里程数。
 	public float getStepMile(Car car, Date beginTime, Date endTime);
 

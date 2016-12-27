@@ -1047,9 +1047,10 @@ public class OrderServiceImpl implements OrderService {
 						chargeMile=50;
 						chargeMoney=price.getPerHalfDay().floatValue();
 						if(hours>4){
-							if(hours-4>3)
-								chargeMoney+=price.getPerHalfDay().floatValue();
-							else
+							if(hours-4>3){
+								chargeMile=100;
+								chargeMoney=price.getPerDay().floatValue();
+							}else
 								chargeMoney+=(hours-4)*price.getPerHourAfterLimit().floatValue();
 						}
 					}else if(mile<=100){

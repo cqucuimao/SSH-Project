@@ -18,7 +18,7 @@ public class TollChargeExpired {
 	@Autowired
 	public CarService carService;
 
-	@Scheduled(cron = "0 10 0 * * ?")
+	@Scheduled(cron = "0 15 0 * * ?")
 	@Transactional
 	public void update() {
 		List<Car> cars = carService.getAll();

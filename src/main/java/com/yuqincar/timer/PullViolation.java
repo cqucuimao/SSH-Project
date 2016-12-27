@@ -22,7 +22,7 @@ public class PullViolation {
 	@Autowired
 	CarViolationService carViolationService;
 
-	@Scheduled(cron = "0 30 02 5 * ? ") 
+	@Scheduled(cron = "0 10 0 5 * ? ") 
 	@Transactional
 	public void update() throws UnsupportedEncodingException, ParseException {
 		if("on".equals(Configuration.getPullViolationSwitch())){

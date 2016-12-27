@@ -19,6 +19,7 @@ import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.order.OrderCheckQueue;
 import com.yuqincar.domain.order.OrderOperationRecord;
 import com.yuqincar.domain.order.OrderOperationTypeEnum;
 import com.yuqincar.domain.order.OrderSourceEnum;
@@ -26,6 +27,7 @@ import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.app.APPMessageService;
 import com.yuqincar.service.app.DriverAPPService;
+import com.yuqincar.service.order.OrderCheckQueueService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.DateUtils;
@@ -50,6 +52,8 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 	private OrderOperationRecordDao orderOperationRecordDao;
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private OrderCheckQueueService orderCheckQueueService;
 	
 	/**
 	 * 获取某个待执行的订单
@@ -176,8 +180,13 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			orderOperationRecordDao.save(oor);
 		}
 		
-		if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL)
-			orderService.orderCheckout(order);
+		if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL){	
+			//插入结算队列
+			OrderCheckQueue ocq=new OrderCheckQueue();
+			ocq.setOrder(order);
+			ocq.setCounter(0);
+			orderCheckQueueService.save(ocq);
+		}
 		
 		Map<String,String> params=new HashMap<String,String>();
 		params.put("sn", order.getSn());

@@ -28,6 +28,7 @@ public class CapcareMessage extends BaseEntity {
 	private String direction;
 	@Text("最后在线时间")
 	private String lastTime;
+	
 	public String getPlateNumber() {
 		return plateNumber;
 	}

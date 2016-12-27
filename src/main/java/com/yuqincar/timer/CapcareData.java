@@ -1,7 +1,6 @@
 package com.yuqincar.timer;
 
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,6 +23,7 @@ public class CapcareData {
 	@Scheduled(cron = "0 0 1 * * ?")
 	@Transactional
 	public void remove(){
+		System.out.println("remove in CapcareData is running, date="+new Date());
 		capcareMessageService.removeCapcareMessage();
 	}
 }

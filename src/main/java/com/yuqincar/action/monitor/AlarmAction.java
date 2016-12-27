@@ -90,6 +90,7 @@ public class AlarmAction extends BaseAction{
 	 	if (endDate != null) {
 	 		helper.addWhereCondition("w.date<=?", endDate);
 	 	}
+	 	helper.addOrderByProperty("w.date", false);
 	    PageBean<OrderStatement> pageBean = warningMessageService.getPageBean(pageNum, helper);
 	    ActionContext.getContext().getValueStack().push(pageBean);
 		

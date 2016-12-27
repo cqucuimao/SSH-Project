@@ -39,51 +39,42 @@ public class LBSDaoImpl implements LBSDao{
 	}	
 
 	public float getCurrentMile(Car car) {		
-		try{
-			if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
-				return 0;
-			String api = "http://api2.capcare.com.cn:1045/api/device.get.do?device_sn="
-					+car.getDevice().getSN()+"&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()+"&app_name="
-					+Configuration.getCapcareAppName()+"&language=zh_CN";
-			String json = HttpMethod.get(api);
-			JSONObject data = (JSONObject) JSON.parse(json);
-			JSONObject device = (JSONObject) data.get("device");
-			JSONObject position = (JSONObject) device.get("position");
-			String mileStr=position.getString("altitude");
-			if(!StringUtils.isEmpty(mileStr))
-				return new BigDecimal(mileStr).divide(new BigDecimal(1000)).intValue();
-			else
-				return 0;
-		}catch(Exception e){
-			e.printStackTrace();
+		if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
 			return 0;
-		}
+		String api = "http://api2.capcare.com.cn:1045/api/device.get.do?device_sn="
+				+car.getDevice().getSN()+"&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()+"&app_name="
+				+Configuration.getCapcareAppName()+"&language=zh_CN";
+		String json = HttpMethod.get(api);
+		JSONObject data = (JSONObject) JSON.parse(json);
+		JSONObject device = (JSONObject) data.get("device");
+		JSONObject position = (JSONObject) device.get("position");
+		String mileStr=position.getString("altitude");
+		if(!StringUtils.isEmpty(mileStr))
+			return new BigDecimal(mileStr).divide(new BigDecimal(1000)).intValue();
+		else
+			return 0;
 	}
 	
 	private List<MileInfo> getMile(Car car, long from, long to){
-		try{			
-			String api="http://api2.capcare.com.cn:1045/api/findDeviceSport.do?deviceSn="+car.getDevice().getSN()
-					+"&begin=%s&end=%s&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()
-					+"&app_name="+Configuration.getCapcareAppName()+"&language=zh_CN";
+		String api="http://api2.capcare.com.cn:1045/api/findDeviceSport.do?deviceSn="+car.getDevice().getSN()
+				+"&begin=%s&end=%s&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()
+				+"&app_name="+Configuration.getCapcareAppName()+"&language=zh_CN";
 			
-			String json=HttpMethod.get(String.format(api, from,to));
-			JSONObject data = (JSONObject) JSON.parse(json);
-			JSONArray spots = (JSONArray) data.get("spots");
-			if(spots.size()>0){
-				List<MileInfo> miles=new ArrayList<MileInfo>(spots.size());
-				for(int i=spots.size()-1;i>=0;i--){
-					JSONObject spot=(JSONObject)spots.get(i);
-					MileInfo mi=new MileInfo();
-					mi.setMile(spot.getFloatValue("altitude"));
-					mi.setTime(spot.getLongValue("receive"));
-					miles.add(mi);
-				}
-				return miles;
-			}else
-				return null;
-		}catch(Exception e){
+		String json=HttpMethod.get(String.format(api, from,to));
+		JSONObject data = (JSONObject) JSON.parse(json);
+		JSONArray spots = (JSONArray) data.get("spots");
+		if(spots!=null && spots.size()>0){
+			List<MileInfo> miles=new ArrayList<MileInfo>(spots.size());
+			for(int i=spots.size()-1;i>=0;i--){
+				JSONObject spot=(JSONObject)spots.get(i);
+				MileInfo mi=new MileInfo();
+				mi.setMile(spot.getFloatValue("altitude"));
+				mi.setTime(spot.getLongValue("receive"));
+				miles.add(mi);
+			}
+			return miles;
+		}else
 			return null;
-		}
 	}
 		
 	private MileInfo getMileOnTime(Car car,Date date){
@@ -100,83 +91,83 @@ public class LBSDaoImpl implements LBSDao{
 		miles=getMile(car,d,d+minute);
 		if(miles!=null && miles.size()>0){
 //			System.out.println("here:"+miles.get(0).getTime()+"-"+miles.get(0).getMile()+"-"+(d-miles.get(0).getTime()));
-			return miles.get(0);
-		}else{
-			long floorLimit=1481731200000L; //总里程数从2016-12-15 00:00:00（1481731200000）这个时间才开始存储
-			long upperLimit=new Date().getTime();
-			MileInfo mile=null;
-			long leftFrom,leftTo,rightFrom,rightTo;
-			leftFrom=d-hour;
-			leftTo=d;
-			rightFrom=d;
-			rightTo=d+hour;
-			while(true){
-				boolean lowerThanFloor=false;
-				boolean higherThanUpper=false;
-				MileInfo leftMile=null,rightMile=null;
-				if(leftTo<floorLimit)
-					lowerThanFloor=true;
-				else if(leftFrom<floorLimit)
-					leftFrom=floorLimit;
-				
-				if(rightFrom>upperLimit)
-					higherThanUpper=true;
-				else if(rightTo>upperLimit)
-					rightTo=upperLimit;
-				
-				if(lowerThanFloor && higherThanUpper)
-					break;
-				
-				if(!lowerThanFloor){
-					miles=getMile(car,leftFrom,leftTo);
-					if(miles!=null && miles.size()>0)
-						leftMile=miles.get(miles.size()-1);
-				}
-				
-				if(!higherThanUpper){
-					miles=getMile(car,rightFrom,rightTo);
-					if(miles!=null && miles.size()>0)
-						rightMile=miles.get(0);
-				}
-				
-//				if(leftMile!=null)
-//					System.out.println("left:"+leftMile.getTime()+"-"+leftMile.getMile()+"-"+(d-leftMile.getTime()));
-//				if(rightMile!=null)
-//					System.out.println("right:"+rightMile.getTime()+"-"+rightMile.getMile()+"-"+(rightMile.getTime()-d));
-				
-				if(leftMile!=null && rightMile!=null){
-					if(d-leftMile.getTime()<rightMile.getTime()-d)
-						mile=leftMile;
-					else
-						mile=rightMile;
-				}else if(leftMile!=null)
-					mile=leftMile;
-				else if(rightMile!=null)
-					mile=rightMile;
-				
-				if(mile!=null)
-					break;
-				
-				leftTo=leftTo-hour;
-				leftFrom=leftTo-hour;
-				rightFrom=rightFrom+hour;
-				rightTo=rightFrom+hour;
-			}
-			return mile;
+			for(int i=0;i<miles.size();i++)
+				if(miles.get(i).getMile()>0)
+					return miles.get(i);
 		}
+			
+		long floorLimit=1481731200000L; //总里程数从2016-12-15 00:00:00（1481731200000）这个时间才开始存储
+		long upperLimit=new Date().getTime();
+		MileInfo mile=null;
+		long leftFrom,leftTo,rightFrom,rightTo;
+		leftFrom=d-hour;
+		leftTo=d;
+		rightFrom=d;
+		rightTo=d+hour;
+		while(true){
+			boolean lowerThanFloor=false;
+			boolean higherThanUpper=false;
+			MileInfo leftMile=null,rightMile=null;
+			if(leftTo<floorLimit)
+				lowerThanFloor=true;
+			else if(leftFrom<floorLimit)
+				leftFrom=floorLimit;
+				
+			if(rightFrom>upperLimit)
+				higherThanUpper=true;
+			else if(rightTo>upperLimit)
+				rightTo=upperLimit;
+				
+			if(lowerThanFloor && higherThanUpper)
+				break;
+				
+			if(!lowerThanFloor){
+				miles=getMile(car,leftFrom,leftTo);
+				if(miles!=null && miles.size()>0)
+					leftMile=miles.get(miles.size()-1);
+			}
+				
+			if(!higherThanUpper){
+				miles=getMile(car,rightFrom,rightTo);
+				if(miles!=null && miles.size()>0)
+					rightMile=miles.get(0);
+			}
+				
+//			if(leftMile!=null)
+//				System.out.println("left:"+leftMile.getTime()+"-"+leftMile.getMile()+"-"+(d-leftMile.getTime()));
+//			if(rightMile!=null)
+//				System.out.println("right:"+rightMile.getTime()+"-"+rightMile.getMile()+"-"+(rightMile.getTime()-d));
+				
+			if(leftMile!=null && rightMile!=null){
+				if(d-leftMile.getTime()<rightMile.getTime()-d)
+					mile=leftMile;
+				else
+					mile=rightMile;
+			}else if(leftMile!=null)
+				mile=leftMile;
+			else if(rightMile!=null)
+				mile=rightMile;
+				
+			if(mile!=null && mile.getMile()>0)
+				break;
+				
+			leftTo=leftTo-hour;
+			leftFrom=leftTo-hour;
+			rightFrom=rightFrom+hour;
+			rightTo=rightFrom+hour;
+		}
+		return mile;
 	}
 	
 	
 	public float getStepMile(Car car, Date beginTime, Date endTime) {
 		if(car.getDevice()==null)
 			return -1;
-		float mile1=getStepMileByMeter(car,beginTime,endTime);
+//		float mile1=getStepMileByMeter(car,beginTime,endTime);
 		float mile2=getStepMileByEnhancedMeter(car,beginTime,endTime);
-		float mile3=getStepMileByTrack(car,beginTime,endTime);
+//		float mile3=getStepMileByTrack(car,beginTime,endTime);
 		float mile4=getStepMileByEnhancedTrack(car,beginTime,endTime);
-		System.out.println("mile1="+mile1);
 		System.out.println("mile2="+mile2);
-		System.out.println("mile3="+mile3);
 		System.out.println("mile4="+mile4);
 		if(mile2>mile4)
 			return mile2;
@@ -196,6 +187,8 @@ public class LBSDaoImpl implements LBSDao{
 	private float getStepMileByEnhancedMeter(Car car, Date beginTime, Date endTime){
 		MileInfo from=getMileOnTime(car,beginTime);
 		MileInfo to=getMileOnTime(car,endTime);
+//		System.out.println("from:"+from.getMile());
+//		System.out.println("to:"+to.getMile());
 		if(from!=null && to!=null){
 			long step=2*60*60*1000;	//每次查两小时。因为接口限制了不能超过两小时。
 			long begin=from.getTime();
@@ -207,8 +200,10 @@ public class LBSDaoImpl implements LBSDao{
 				if(end>=to.getTime())
 					end=to.getTime();
 				List<MileInfo> miles=getMile(car,begin,end);
-				if(miles!=null && miles.size()>1)
+				if(miles!=null && miles.size()>1){
+//					System.out.println("0:"+miles.get(0).getMile());
 					for(int i=1;i<miles.size();i++){
+//						System.out.println(i+":"+miles.get(i).getMile());
 						if(miles.get(i).getMile()==0)
 							continue;
 						float lastMile=0;
@@ -221,9 +216,10 @@ public class LBSDaoImpl implements LBSDao{
 							continue;
 						if(miles.get(i).getMile()<lastMile){
 							offsetMile=offsetMile+(lastMile-miles.get(i).getMile());
-							System.out.println("offsetMile="+offsetMile);
+//							System.out.println("offsetMile="+offsetMile);
 						}
 					}
+				}
 				begin=begin+step;
 				end=begin+step;
 			}
@@ -233,27 +229,21 @@ public class LBSDaoImpl implements LBSDao{
 	}
 	
 	private float getStepMileByTrack(Car car, Date beginTime, Date endTime) {
-		try{
-			if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
-				return 0;
-			String api = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="
-					+car.getDevice().getSN()+"&begin="+beginTime.getTime()+"&end="+endTime.getTime()
-					+"&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()
-					+"&app_name="+Configuration.getCapcareAppName()+"&language=zh_CN&_=1450765172310";
-			String json = HttpMethod.get(api);
-			JSONObject data = (JSONObject) JSON.parse(json);
-			JSONArray track = (JSONArray) data.get("track");
-			float distance = 0;
-			for(int i=0;i<track.size();i++){
-				JSONObject obj = (JSONObject) track.get(i);
-				distance += obj.getFloatValue("distance");
-			}
-			return distance;
-		}catch(Exception e){
-			e.printStackTrace();
+		if(car.getDevice()==null || StringUtils.isEmpty(car.getDevice().getSN()))
 			return 0;
+		String api = "http://api.capcare.com.cn:1045/api/get.part.do?device_sn="
+				+car.getDevice().getSN()+"&begin="+beginTime.getTime()+"&end="+endTime.getTime()
+				+"&token="+Configuration.getCapcareToken()+"&user_id="+Configuration.getCapcareUserId()
+				+"&app_name="+Configuration.getCapcareAppName()+"&language=zh_CN&_=1450765172310";
+		String json = HttpMethod.get(api);
+		JSONObject data = (JSONObject) JSON.parse(json);
+		JSONArray track = (JSONArray) data.get("track");
+		float distance = 0;
+		for(int i=0;i<track.size();i++){
+			JSONObject obj = (JSONObject) track.get(i);
+			distance += obj.getFloatValue("distance");
 		}
-	
+		return distance;	
 	}
 
 /**
@@ -295,7 +285,7 @@ public class LBSDaoImpl implements LBSDao{
 				String destinations = nextStates.getJSONObject(1).getString("lat")+","+nextStates.getJSONObject(1).getString("lng");
 				betweenTrackDistance += calculatePathDistance(origins,destinations);
 			}
-			return betweenTrackDistance+distanceOfTrack;
+			return new BigDecimal(betweenTrackDistance+distanceOfTrack).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
 		}
 	}
 	/**
@@ -337,11 +327,11 @@ public class LBSDaoImpl implements LBSDao{
 		LBSDao lbsDao = new LBSDaoImpl();
 		Car car=new Car();
 		Device device=new Device();
-		device.setSN("892626060702647");
+		device.setSN("892626060702225");
 		car.setDevice(device);
 		Date date1=DateUtils.getYMDHMS("2016-12-19 00:00:00");
 		System.out.println(date1.getTime());
-		Date date2=DateUtils.getYMDHMS("2016-12-19 14:28:38");
+		Date date2=DateUtils.getYMDHMS("2016-12-19 20:06:36");
 		System.out.println(date2.getTime());
 //		Date date1=DateUtils.getYMDHM("2016-09-06 09:00");
 //		Date date2=DateUtils.getYMDHM("2016-09-07 09:00");

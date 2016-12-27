@@ -34,7 +34,7 @@ public class WarningCheck {
 	@Autowired
 	public OrderService orderService;
 	
-	@Scheduled(cron = "10 * * * * ?")  //每分钟（第10秒）执行一次
+	@Scheduled(cron = "20 * * * * ?")  //每分钟（第20秒）执行一次
 	@Transactional
 	public void checkPullOutWarning(){
 		if("on".equals(Configuration.getPullWarningSwitch())){

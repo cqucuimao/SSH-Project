@@ -22,7 +22,7 @@ public class StandingGarageCarCheck {
 	CarService carService;
 	
 	
-	@Scheduled(cron = "1 0 0 * * ?")
+	@Scheduled(cron = "0 10 0 * * ?")
 	@Transactional
 	public void update(){
 		for(ReserveCarApplyOrder rcao:reserveCarApplyOrderService.getNeedCheckReserveCarApplyOrders()){

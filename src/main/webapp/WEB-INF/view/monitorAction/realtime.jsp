@@ -670,10 +670,17 @@
  	   addedCar[0]=allRecordedCars[id][0].number;
  	   addedCar[2]=id;
  	   addedCar[5]=allRecordedCars[id][2];
- 	   $.get("apiReplay.action?device.get.do?device_sn="+device_sn+"&timestamp="+new Date().getTime(),function(gpsData){
-             addedCar[1]=gpsData.device.position.lng+","+gpsData.device.position.lat;
+ 	  // $.get("apiReplay.action?device.get.do?device_sn="+device_sn+"&timestamp="+new Date().getTime(),function(gpsData){
+ 	   $.get("realtime_getCapcareData.action?carPlateNumber="+encodeURI(addedCar[0])+"&carId="+addedCar[2],function(gpsData){
+   
+ 		   
+            /*  addedCar[1]=gpsData.device.position.lng+","+gpsData.device.position.lat;
              addedCar[3]=gpsData.device.position.status;
-             addedCar[4]=gpsData.device.position.speed;
+             addedCar[4]=gpsData.device.position.speed; */
+             
+             addedCar[1]=gpsData.longitude+","+gpsData.latitude;
+             addedCar[3]=gpsData.status;
+             addedCar[4]=gpsData.speed;
              
              var reqUrl=head+addedCar[1];
              //向Baidu地图gps坐标转Baidu坐标接口发送请求，返回转换后的Baidu坐标

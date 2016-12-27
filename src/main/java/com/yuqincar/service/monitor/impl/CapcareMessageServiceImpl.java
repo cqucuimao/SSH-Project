@@ -197,16 +197,36 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
 		JSONArray devices = jsonObject.getJSONArray("devices");
 		JSONArray notNullDevices = new JSONArray();
-		//需要访问百度API进行坐标转换，每次最多100个坐标
 		int sum = devices.size();
+		CapcareMessage capcareMessage;
 		//去除其中坐标为0的元素  && 去除mode不为A的元素
 		for(int i=0;i<sum;i++){
+			String sn = devices.getJSONObject(i).getString("sn");
+			String plateNumberFromCapcare = carService.getCarByDeviceSN(sn).getPlateNumber();
 			String lng = devices.getJSONObject(i).getJSONObject("position").get("lng").toString();
 			String lat = devices.getJSONObject(i).getJSONObject("position").get("lat").toString();
 			String mode = devices.getJSONObject(i).getJSONObject("position").get("mode").toString();
+			String time = devices.getJSONObject(i).getJSONObject("position").get("receive").toString();
 			//过滤掉坐标是0以及mode不是A的信息
 			if(! lng.equals("0.0") && ! lat.equals("0.0") && mode.equals("A")){
 				notNullDevices.add(devices.getJSONObject(i));
+			}else{
+				//如果是新加的车辆，而且mode为E或者位置为0，那就把它初始化为出厂位置并保存到数据库
+				if(!capcareMap.containsKey(plateNumberFromCapcare)){
+					capcareMessage = new CapcareMessage();
+					capcareMessage.setPlateNumber(plateNumberFromCapcare);
+					capcareMessage.setLongitude("113.932132");
+					capcareMessage.setLatitude("22.637883");
+					capcareMessage.setSpeed("0");
+					capcareMessage.setStatus("2");
+					capcareMessage.setDirection("0");
+					capcareMessage.setLastTime(time);
+					Car car=carService.getCarByPlateNumber(plateNumberFromCapcare);
+					capcareMessage.setCompany(car.getCompany());
+					capcareMessageDao.save(capcareMessage);
+
+					capcareMap.put(plateNumberFromCapcare, capcareMessage);
+				}
 			}
 		}
 		int positionNum = notNullDevices.size(); 
@@ -241,24 +261,30 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 			//再对每一组数据进行处理
 			for(int k=0;k<len;k++){
 					//这是凯步以及经过坐标转换后返回的数据
-					String plateNumber = notNullDevices.getJSONObject(i*len+k).get("name").toString();
+					String plateNumber = carService.getCarByDeviceSN(notNullDevices.getJSONObject(i*len+k).getString("sn")).getPlateNumber();
 					String longitude = baiduPositionArray.getJSONObject(k).get("x").toString();
 					String latitude = baiduPositionArray.getJSONObject(k).get("y").toString();
 					String status = notNullDevices.getJSONObject(i*len+k).getJSONObject("position").get("status").toString();
 					String speed = notNullDevices.getJSONObject(i*len+k).getJSONObject("position").get("speed").toString();
 					String direction = notNullDevices.getJSONObject(i*len+k).getJSONObject("position").get("direction").toString();
-					CapcareMessage capcareMessage;
+					String lastTime = notNullDevices.getJSONObject(i*len+k).getJSONObject("position").getString("receive");
 					//如果凯步平台返回的plateNumber在capcareMap中，更新数据库中的值
 					if(capcareMap.containsKey(plateNumber)){
-						
 						capcareMessage = capcareMessageDao.getCapcareMessageByPlateNumber(plateNumber);
-						capcareMessage.setPlateNumber(plateNumber);
-						capcareMessage.setLongitude(longitude);
-						capcareMessage.setLatitude(latitude);
-						capcareMessage.setSpeed(speed);
-						capcareMessage.setStatus(status);
-						capcareMessage.setDirection(direction);
-						capcareMessageDao.update(capcareMessage);
+						if(Long.parseLong(lastTime) >= Long.parseLong(capcareMessage.getLastTime())){
+							capcareMessage.setPlateNumber(plateNumber);
+							capcareMessage.setLongitude(longitude);
+							capcareMessage.setLatitude(latitude);
+							capcareMessage.setSpeed(speed);
+							capcareMessage.setStatus(status);
+							capcareMessage.setDirection(direction);
+							capcareMessage.setLastTime(lastTime);
+							capcareMessageDao.update(capcareMessage);
+
+							//更新capcareMap的值
+							capcareMap.put(plateNumber, capcareMessage);
+						}
+						
 					
 					}else{//如果凯步平台返回的plateNumber不在capcareMap中，将数据插入到数据库中	
 						capcareMessage = new CapcareMessage();
@@ -268,13 +294,15 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 						capcareMessage.setSpeed(speed);
 						capcareMessage.setStatus(status);
 						capcareMessage.setDirection(direction);
+						capcareMessage.setLastTime(lastTime);
 						Car car=carService.getCarByPlateNumber(plateNumber);
 						capcareMessage.setCompany(car.getCompany());
 						capcareMessageDao.save(capcareMessage);
+
+						//更新capcareMap的值
+						capcareMap.put(plateNumber, capcareMessage);
 					}
 				
-					//更新capcareMap的值
-					capcareMap.put(plateNumber, capcareMessage);
 			}
 		}
 	}
@@ -294,7 +322,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		JSONArray devices = jsonObject.getJSONArray("devices");
 		List<String> plateNumberList = new ArrayList<String>();
 		for(int i=0;i<devices.size();i++){
-			String plateNumber = devices.getJSONObject(i).get("name").toString();
+			String plateNumber = carService.getCarByDeviceSN(devices.getJSONObject(i).getString("sn")).getPlateNumber();
 			plateNumberList.add(plateNumber);
 		}
 		

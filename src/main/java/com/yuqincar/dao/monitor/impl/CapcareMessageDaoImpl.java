@@ -10,7 +10,6 @@ import com.yuqincar.domain.monitor.CapcareMessage;
 public class CapcareMessageDaoImpl extends BaseDaoImpl<CapcareMessage> implements CapcareMessageDao{
 
 	public CapcareMessage getCapcareMessageByPlateNumber(String plateNumber) {
-		
 		return (CapcareMessage) getSession().createQuery(
 				"FROM CapcareMessage cm WHERE cm.plateNumber=?")
 				.setParameter(0, plateNumber)

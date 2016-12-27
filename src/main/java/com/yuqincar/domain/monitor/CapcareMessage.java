@@ -26,7 +26,8 @@ public class CapcareMessage extends BaseEntity {
 	private String status;
 	@Text("方向")
 	private String direction;
-	
+	@Text("最后在线时间")
+	private String lastTime;
 	public String getPlateNumber() {
 		return plateNumber;
 	}
@@ -62,6 +63,12 @@ public class CapcareMessage extends BaseEntity {
 	}
 	public void setDirection(String direction) {
 		this.direction = direction;
+	}
+	public String getLastTime() {
+		return lastTime;
+	}
+	public void setLastTime(String lastTime) {
+		this.lastTime = lastTime;
 	}
 	
 	

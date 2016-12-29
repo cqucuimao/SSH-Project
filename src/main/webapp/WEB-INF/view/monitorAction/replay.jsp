@@ -13,7 +13,14 @@
 <style type="text/css">
 		body, html,#allmap {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
 		#BaiduMap{height:500px;width:100%;}
-</style>
+		
+	    .cover {       
+	            position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;     
+	            z-index: 9; left: 0px;     
+	            opacity:0.5; -moz-opacity:0.5;     
+	            display:table;overflow:hidden;
+	        }     
+</style>    
 <link href="js/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="skins/main.css">
 </head>
@@ -25,6 +32,35 @@
         </div>
         <!-- 查询条件 -->
         <div class="editBlock search subtract">
+        	<!-- 遮罩层 begin -->
+	        <div id="mask" style="left:0px;top:0px;position:fixed;height:100%;width:100%;overflow:hidden;z-index:10;display:none">
+		        <table style="WIDTH:100%; BORDER:0;CELLSPACING:0;CELLPADDING:0" >
+		       		<tr height="360">
+		        		<td>&nbsp;</td>
+		        	</tr>
+		        	<tr>
+		        		<td width="30%"></td>
+		        		<td style="text-align:center">
+		        			<table style="width:100%; text-align:center; CELLSPACING:0;CELLPADDING:0" >
+		        				<tr>
+		        						<td style="text-align:center">
+		        							<img style="text-align:center" src="skins/images/cover.png"/>
+		        						</td>
+			       				</tr>
+			       			</table>
+		        		</td>
+		       			<td style="width:30%;"></td>
+		        	</tr>
+		      </table>
+	       </div>
+	        <div id="cover" style="background:#cdd0cf;filter:alpha(opacity=10);opacity:.7;left:0px;top:0px;position:fixed;height:100%;width:100%;overflow:hidden;z-index:9;display:none">
+		        <table style="WIDTH:100%; height:100%; BORDER:0; CELLSPACING:0; CELLPADDING:0">
+		        	<tr>
+		        		<td align="center"></td>
+		        	</tr>
+		        </table>
+	        </div>
+	        <!-- 遮罩层 end -->
         <s:form id="queryForm">
             <table id="queryInfoTB">
                 <tr>
@@ -111,6 +147,19 @@
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript">
     
+    	//显示遮罩层
+    	function showMask(){   
+    		$("#cover").css("height",$(document).height());     
+            $("#cover").css("width",$(document).width());     
+            $("#cover").show();   
+        	$("#mask").show();     
+	    }  
+	    //隐藏遮罩层  
+	    function hideMask(){     
+	    	$("#cover").hide();   
+	        $("#mask").hide();     
+	    }  
+    
         //从实时监控页面跳转过来后，需要填充时间
         //获取查询条件中车牌号的值
         var plateNumberValue=$("#queryInfoTB").find("tr").find("td").find("#carLabel").val();
@@ -178,7 +227,7 @@
         
         
         $("#queryBn").click(function(){
-        	
+        	showMask();
         	//每次执行查询操作之后，地图重新清空
       		map.clearOverlays();   
         	//点击查询之后，清空列表
@@ -187,10 +236,14 @@
         	$("#playBar").hide();
       		//查询相应车辆的设备编号即device_sn
       	    $.get("replay_list.action",$("#queryForm").serializeArray(),function(snsData){
+      	    	  
       	    	  console.log("查询得到的设备数据信息");
       	    	  console.log(snsData);
       	    	  //获取返回信息的长度
       	    	  var snNum=snsData.sns.length;
+      	    	  if(snNum == 0){
+           		   		hideMask();
+      	    	  } 
       	    	  //如果设备device_sn信息不为空，取当前查询得到的sn数组的第一条记录(如果输入的是司机名称，出现多个同名司机，目前也只取第一个司机的车辆的sn号)
       	    	  if(!((snNum==1)&&(snsData.sns[0]==null))){
                      device_sn=snsData.sns[0].sn;
@@ -214,11 +267,19 @@
                    
                      //通过服务器接口，查询轨迹列表
                      $.get(reqUrl,function(json){
+                    	   if(json.ret != 1){
+                    		   hideMask();
+                	    	   alert("请求出错，请重试！");
+                	       }
                 	       //由于获得的轨迹数据是反向序列，所以首先进行先将序列进行反向
                 	       trackPartsData=json;
                 	       //获取轨迹列表长度
                 	       length=trackPartsData.track.length;
-                	       console.log("length="+length);
+                	       if(length==0){
+                    	       hideMask();
+                	    	   alert("该时间段内没有轨迹！");
+                	       }
+                	       hideMask();
                 	       //用于存储解析后的百度地图上要显示的轨迹数据
                 	       tracksData=new Array(length);
                 	       //用于存储解析后的百度地图上要显示的轨迹路径
@@ -389,7 +450,6 @@
     			 reSetPlayTimeEnd();
     	      	 //显示播放条
              	 $("#playBar").show();
-    			   
     		    }else{
     		     //因为取消了一个，所以全选按钮的状态失效
      			 $("#checkAll").prop("checked", false);

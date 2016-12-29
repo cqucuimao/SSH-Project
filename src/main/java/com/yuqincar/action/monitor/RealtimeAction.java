@@ -45,6 +45,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	
 	private Car model=new Car();
 	private String carId;
+	private String isCarNormal;
 	private String baiduKey;
 	private String carPlateNumber;//防止和car属性中的plateNumber重名
 	private String superType;
@@ -427,6 +428,15 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		this.selectId = selectId;
 	}
 
+	
+	public String getIsCarNormal() {
+		return isCarNormal;
+	}
+
+	public void setIsCarNormal(String isCarNormal) {
+		this.isCarNormal = isCarNormal;
+	}
+
 	public String getBaiduKey() {
 		return Configuration.getBaiduKey();
 	}
@@ -497,8 +507,9 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 		cmvo.setDirection(capcareMap.get(carPlateNumber).getDirection());
 		
 		String jsonString = JSON.toJSONString(cmvo);
-		String added = "\"carId\""+                 ":"+"\""+carId+"\",";
-		String json = "{"+added+jsonString.substring(1);
+		String added = "\"carId\""+":"+"\""+carId+"\",";
+		String added2 = "\"isCarNormal\""+":"+"\""+isCarNormal+"\",";
+		String json = "{"+added+added2+jsonString.substring(1);
 		this.writeJson(json);
 	}
 	

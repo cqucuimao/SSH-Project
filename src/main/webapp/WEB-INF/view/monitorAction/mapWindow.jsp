@@ -177,13 +177,14 @@
 	     		 for(var i=0;i<allSelectedCars.length;i++){
 	     			  var plateNumber=allSelectedCars[i][0];
 	     			  var car_id=allSelectedCars[i][1];
-	     			  var isCarNormal = allSelectedCars[i][2];
+	     			  var is_CarNormal = allSelectedCars[i][2];
 		       		  console.log("++++发送请求URL,车牌号="+plateNumber+"++++");
-		       		  $.get("realtime_getCapcareData.action?carPlateNumber="+encodeURI(plateNumber)+"&carId="+car_id,function(capcareData){
+		       		  $.get("realtime_getCapcareData.action?carPlateNumber="+encodeURI(plateNumber)+"&carId="+car_id+"&isCarNormal="+is_CarNormal,function(capcareData){
 		       				 console.log("++++请求返回的数据++++");
 		       				 console.log(capcareData);
 		       				 var carPlateNumber = capcareData.plateNumber;
 		       				 var carId = capcareData.carId;
+		       				 var isCarNormal = capcareData.isCarNormal;
 		       				 var carDirection = capcareData.direction;
 		       				 var point;      //选中的记录的经纬度坐标点
 	       	  	             var marker;     //地图上的标识物

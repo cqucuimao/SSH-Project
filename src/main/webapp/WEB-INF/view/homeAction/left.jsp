@@ -385,6 +385,41 @@
 			</s:if>
 		</dl>
 		</s:if>
+		
+		<!-- 公文审批 -->
+		<s:if test=" #session.user.hasPrivilegeByUrl('/document') ">
+		<dl>
+			<dt>
+				<i class="icon-menu-customer"></i>
+				公文审批
+				<div class="group-collapsed"></div>
+			</dt>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/document_category') ">
+			<dd>
+				<s:a action="document_category">公文类别管理</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/customer_list') ">
+			<dd>
+				<s:a action="customer_list">发起公文</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/customer_list') ">
+			<dd>
+				<s:a action="customer_list">公文审批</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/customer_list') ">
+			<dd>
+				<s:a action="customer_list">查阅公文</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			</s:if>
+		</dl>
+		</s:if>
 	</div>
 	<script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="<%=basePath %>js/left.js"></script>

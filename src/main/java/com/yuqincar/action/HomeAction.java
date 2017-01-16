@@ -134,7 +134,6 @@ public class HomeAction extends ActionSupport {
 	
 	//协议订单收款单提醒事项
 	public boolean isCanShowUnpaidPopo(){
-		System.out.println("4444");
 		return ((User)ActionContext.getContext().getSession().get("user")).hasPrivilegeByUrl("/protocolOrderPayOrder_list");
 	}
 	

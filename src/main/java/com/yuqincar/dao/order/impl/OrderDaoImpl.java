@@ -42,7 +42,7 @@ import com.yuqincar.utils.QueryHelper;
 @Repository
 public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 	
-
+ 
 	@SuppressWarnings("unchecked")
 	public List<CarServiceType> getAllCarServiceType() {
 		return getSession().createQuery("from CarServiceType").list();

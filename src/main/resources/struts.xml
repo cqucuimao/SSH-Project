@@ -597,6 +597,11 @@
 	    	<result name="saveUI">/WEB-INF/view/businessParameterAction/businessParameter_saveUI.jsp</result>
 	    	<result name="standingGarageUpdateUI">/WEB-INF/view/businessParameterAction/businessParameter_standingGarageUpdateUI.jsp</result>
 	     </action>
+	     
+	     <!-- 公文管理 -->
+		<action name="document_*" class="documentAction" method="{1}">
+	    	<result name="category">/WEB-INF/view/documentAction/document_category.jsp</result>
+	     </action>
 		
 		<!-- 司机任务管理功能 -->
 		<action name="driver_*" class="driverAction" method="{1}">

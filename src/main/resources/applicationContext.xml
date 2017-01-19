@@ -97,4 +97,34 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 	<!-- 注解方式配置事物 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	
+	
+	<!-- spring负责创建流程引擎的配置文件 -->
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<!-- 数据源 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 配置事务管理器，统一事务 -->
+		<property name="transactionManager" ref="transactionManager" />
+		<!-- 设置建表策略，如果没有表，自动创建表 -->
+		<property name="databaseSchemaUpdate" value="true" />
+	</bean>
+	<!-- 创建流程引擎对象 -->
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration" />
+	</bean>
+	
+	<bean id="repositoryService" factory-bean="processEngine"
+         factory-method="getRepositoryService" />
+         
+    <bean id="runtimeService" factory-bean="processEngine"
+         factory-method="getRuntimeService" />
+         
+    <bean id="taskService" factory-bean="processEngine"
+         factory-method="getTaskService" />
+         
+    <bean id="historyService" factory-bean="processEngine"
+         factory-method="getHistoryService" />
+         
+    <bean id="managementService" factory-bean="processEngine"
+         factory-method="getManagementService" />
+	
 </beans>

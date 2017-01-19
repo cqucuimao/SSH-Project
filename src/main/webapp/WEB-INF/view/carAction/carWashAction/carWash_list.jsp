@@ -68,7 +68,6 @@
 					</thead>
 					<tbody class="tableHover">
 				        <s:iterator value="recordList">
-				        
 						<tr>
 							<td><cqu:carDetailList id="${car.id}" /> </td>
 							<td>${driver.name}</td>

@@ -38,11 +38,11 @@ public class DiskFileSelectorTags extends TagSupport {
 			 }
 		}
 		ActionContext.getContext().getSession().remove(sessionName);
-		//System.out.println("sessionNmae in selector: "+sessionName);
+		System.out.println("sessionNmae in selector: "+sessionName);
 		
 		StringBuffer options = new StringBuffer();
 		JspWriter out = pageContext.getOut();
-		//System.out.println("mutifiles: "+uploadLimit);
+		System.out.println("mutifiles: "+uploadLimit);
 		
 		if(uploadLimit.equals("true"))
 		{

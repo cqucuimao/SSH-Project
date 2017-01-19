@@ -121,6 +121,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	/** 添加页面 */
 	public String addUI() throws Exception {
+		System.out.println(actionFlag);
 		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备数据：departmentList
 		ActionContext.getContext().put("departmentList", departmentService.getAll());

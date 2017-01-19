@@ -385,6 +385,28 @@
 			</s:if>
 		</dl>
 		</s:if>
+		
+		<s:if test=" #session.user.hasPrivilegeByUrl('/personnelManagment')">
+		<dl>
+			<dt>
+				<i class="icon-menu-customer"></i>
+				人事管理
+				<div class="group-collapsed"></div>
+			</dt>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/contract_list')">
+			<dd>
+				<s:a action="contract_list">合同管理</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/driverLicense_list') ">
+			<dd>
+				<s:a action="driverLicense_list">驾照管理</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			</s:if>
+		</dl>
+		</s:if>
 	</div>
 	<script type="text/javascript" src="<%=basePath %>js/jquery-1.7.1.min.js"></script>	
 	<script type="text/javascript" src="<%=basePath %>js/left.js"></script>

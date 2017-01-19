@@ -603,6 +603,26 @@
 			<result name="taskList">/WEB-INF/view/scheduleAction/schedule_taskList.jsp
 			</result>
 		</action>
+		
+		<!-- 人事管理 -->
+		<action name="contract_*" class="contractAction" method="{1}">
+			<result name="list">/WEB-INF/view/personnelManagementAction/contract_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/personnelManagementAction/contract_saveUI.jsp
+			</result>
+			<result name="alertUI">/WEB-INF/view/personnelManagementAction/contract_alertList.jsp
+			</result>
+		</action>
+		
+		<!-- 驾照管理 -->
+		<action name="driverLicense_*" class="driverLicenseAction" method="{1}">
+			<result name="list">/WEB-INF/view/personnelManagementAction/driverLicense_list.jsp
+			</result>
+			<result name="saveUI">/WEB-INF/view/personnelManagementAction/driverLicense_saveUI.jsp
+			</result>
+			<result name="alertUI">/WEB-INF/view/personnelManagementAction/contract_alertList.jsp
+			</result>
+		</action>
 	</package>
 	<!-- <package name="default" namespace="/" extends="struts-default">  
         <action name="upload" class="com.yuqincar.action.car.DiskFileAction"> 

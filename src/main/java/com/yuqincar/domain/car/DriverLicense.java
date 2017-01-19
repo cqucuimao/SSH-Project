@@ -4,8 +4,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.privilege.User;
 import com.yuqincar.utils.Text;
 
 @Entity
@@ -34,6 +36,4 @@ public class DriverLicense extends BaseEntity {
 	public void setExpireDate(Date expireDate) {
 		this.expireDate = expireDate;
 	}
-	
-	
 }

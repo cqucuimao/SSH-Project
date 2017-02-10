@@ -1,7 +1,10 @@
 package com.yuqincar.domain.common;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
+import com.yuqincar.domain.privilege.Contract;
 import com.yuqincar.utils.Text;
 
 
@@ -24,6 +27,10 @@ public class DiskFile extends BaseEntity {
 
 	@Text("字节数")
 	private long size;	//字节数
+	
+	@Text("所属的合同")
+	@ManyToOne(fetch=FetchType.LAZY )
+	private Contract contract;//作为扫描件时
 	
 	public String getFileName() {
 		return fileName;
@@ -56,4 +63,12 @@ public class DiskFile extends BaseEntity {
 	public void setSize(long size) {
 		this.size = size;
 	}
+
+	public Contract getContract() {
+		return contract;
+	}
+
+	public void setContract(Contract contract) {
+		this.contract = contract;
+	}  
 }

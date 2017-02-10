@@ -214,6 +214,7 @@ public class DiskFileServiceImpl implements DiskFileService {
 			response.setHeader("Content-Disposition", "attachment;filename="
 					+ downLoadFileName);
 			response.setHeader("Content-Type",getContentType(diskFile.getFileType()));
+			response.setHeader("Content-Length", ""+diskFile.getSize());
 			response.setCharacterEncoding("UTF-8");
 			os = response.getOutputStream();
 
@@ -232,6 +233,7 @@ public class DiskFileServiceImpl implements DiskFileService {
 
 			}
 			os.flush();
+			System.out.println("OK");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -248,5 +250,6 @@ public class DiskFileServiceImpl implements DiskFileService {
 					e.printStackTrace();
 				}
 		}
+		System.out.println("OK666");
 	}
 }

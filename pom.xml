@@ -12,8 +12,24 @@
 		<dbunit.version>2.5.1</dbunit.version>
 		<hibernate.core.version>3.6.9.Final</hibernate.core.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<activiti.version>5.17.0</activiti.version>
+    	<activiti-spring.version>5.17.0</activiti-spring.version>
 	</properties>
-	<dependencies>
+  
+    <dependencies>  
+    	 <!-- activiti -->
+	    <dependency>
+	        <groupId>org.activiti</groupId>
+	        <artifactId>activiti-engine</artifactId>
+	        <version>${activiti.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.activiti</groupId>
+	        <artifactId>activiti-spring</artifactId>
+	        <version>${activiti.version}</version>
+	    </dependency>
+		<!-- junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -51,6 +67,11 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
 			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+		<groupId>org.springframework</groupId>
+		  <artifactId>spring-tx</artifactId>
+		  <version>${spring.version}</version>
 		</dependency>
 		<!--aspectjweaver包,spring aop 使用 -->
 		<dependency>
@@ -280,6 +301,7 @@
     			${project.basedir}/src/main/webapp/WEB-INF/lib/commons-lang-2.6.jar
    			</systemPath>
 		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>yuqin</finalName>

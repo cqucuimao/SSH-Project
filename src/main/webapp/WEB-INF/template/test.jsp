@@ -3,7 +3,6 @@
 <cqu:border >
 <s:form  action="test_test">
 					<cqu:diskFileSelector name="uDiskFiles" uploadLimit="false"/>
-					<cqu:diskFileSelector name="uDiskFiles2" uploadLimit="false"/>
 					<input class="inputButton" type="submit" value="发送"/>	
 </s:form>
 </cqu:border>   

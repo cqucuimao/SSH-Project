@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,6 +23,7 @@ import javax.persistence.Transient;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.utils.Text;
 
 @Entity
@@ -86,6 +89,13 @@ public class User extends BaseEntity implements Serializable {
 	@Text("可见性")//admin、测试员、测试司机、未知外派员工的可见性为false，使得它们不能在权限管理和员工选择框中出现。
 	private boolean visible;
 
+	@Text("当前合同到期日期")
+	private Date contractExpired;
+	
+	@Text("合同")
+	@OneToMany(mappedBy = "user", fetch=FetchType.LAZY)
+	private  List<Contract> contracts;
+	
 	@Transient
 	private static Set<String> BASE_PRIVILEGE_URLS;
 	
@@ -260,4 +270,20 @@ public class User extends BaseEntity implements Serializable {
 		this.visible = visible;
 	}
 
+	public Date getContractExpired() {
+		return contractExpired;
+	}
+
+	public void setContractExpired(Date contractExpired) {
+		this.contractExpired = contractExpired;
+	}
+
+	public List<Contract> getContracts() {
+		return contracts;
+	}
+
+	public void setContracts(List<Contract> contracts) {
+		this.contracts = contracts;
+	}
+	
 }

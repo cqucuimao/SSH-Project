@@ -44,11 +44,11 @@ public class ProtocolOrderPayOrderAction extends BaseAction implements ModelDriv
 	private Date toDate;
 	private BigDecimal money;
 	
-	//修改时回显参数
+	/*//修改时回显参数
 	private String oldPopoSn;
 	private Date oldFromDate;
 	private Date oldToDate;
-	private BigDecimal oldMoney;
+	private BigDecimal oldMoney;*/
 	
 
 	private long orderId;
@@ -239,7 +239,7 @@ public class ProtocolOrderPayOrderAction extends BaseAction implements ModelDriv
 		this.money = money;
 	}
 
-	public Date getOldFromDate() {
+/*	public Date getOldFromDate() {
 		return oldFromDate;
 	}
 
@@ -270,7 +270,7 @@ public class ProtocolOrderPayOrderAction extends BaseAction implements ModelDriv
 	public void setOldToDate(Date oldToDate) {
 		this.oldToDate = oldToDate;
 	}
-
+*/
 	public long getOrderId() {
 		return orderId;
 	}

@@ -82,6 +82,15 @@
 					protocolOrderPayOrderSn:{
 						required:true,
 					}
+					protocolOrderPayOrderSn:{
+						required:true,
+					}
+					protocolOrderPayOrderSn:{
+						required:true,
+					}
+					protocolOrderPayOrderSn:{
+						required:true,
+					}
 				}
 			});
 		});

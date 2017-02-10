@@ -24,13 +24,13 @@ import com.yuqincar.utils.DateUtils;
 public class Test {
 
 	public static void main(String[] args) {
-		System.out.println(DateUtils.getYMDHMS("2016-12-15 00:00:00").getTime());
-		System.out.println(DateUtils.getYMDHMS("2016-12-15 14:00:00").getTime());
+//		System.out.println(DateUtils.getYMDHMS("2016-12-15 00:00:00").getTime());
+//		System.out.println(DateUtils.getYMDHMS("2016-12-15 14:00:00").getTime());
 		Date date=new Date();
-		date.setTime(1481846001000L);
-		System.out.println(DateUtils.getYMDHMSString(date));
-		date.setTime(1481847051000L);
-		System.out.println(DateUtils.getYMDHMSString(date));
+		date.setTime(1484358960655L);
+		System.out.println("API:"+DateUtils.getYMDHMSString(date));
+		date.setTime(1484207871883L);
+		System.out.println("Database:"+DateUtils.getYMDHMSString(date));
 	}
 	
 	private static void testURLEncode(){

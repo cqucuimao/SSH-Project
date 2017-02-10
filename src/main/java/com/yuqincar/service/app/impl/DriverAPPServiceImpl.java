@@ -97,7 +97,7 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			params.put("plateNumber", order.getCar().getPlateNumber());
 			params.put("driverPhoneNumber", order.getDriver().getPhoneNumber());
 			params.put("fromAddress", order.getFromAddress());
-			if(order.getChargeMode()==ChargeModeEnum.MILE){
+			if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
 				params.put("planBeginDate", DateUtils.getYMDHMString(order.getPlanBeginDate()));
 				params.put("toAddress", order.getToAddress());
 				if(order.getOrderSource()!=OrderSourceEnum.APP)
@@ -105,7 +105,7 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 				if(order.isCallForOther() && order.isCallForOtherSendSMS())
 					smsService.sendTemplateSMS(order.getOtherPhoneNumber(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
 			}else{
-				params.put("planDate", DateUtils.getYMDHMString(order.getPlanBeginDate())+" 至 "+DateUtils.getYMDString(order.getPlanEndDate()));
+				params.put("planDate", DateUtils.getYMDString(order.getPlanBeginDate())+" 至 "+DateUtils.getYMDString(order.getPlanEndDate()));
 				if(order.getOrderSource()!=OrderSourceEnum.APP)
 					smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
 				if(order.isCallForOther() && order.isCallForOtherSendSMS())
@@ -162,15 +162,10 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			return 1;
 
 		order.setStatus(OrderStatusEnum.END);		
-		if(user!=null && date!=null)
-			order.setActualEndDate(date);
-		else{
-			order.setActualEndDate(new Date());
-			order.setEndMile(lbsDao.getCurrentMile(order.getCar()));
-		}
-		orderDao.update(order);
-		
 		if(user!=null && date!=null){
+			//手动编辑司机动作
+			order.setActualEndDate(date);
+		
 			OrderOperationRecord oor=new OrderOperationRecord();
 			oor.setOrder(order);
 			oor.setType(OrderOperationTypeEnum.EDIT_DRIVER_ACTION);
@@ -178,22 +173,28 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			oor.setUser(user);
 			oor.setDescription("增加了司机“结束”操作，指定的操作时间是："+DateUtils.getYMDHMSString(date));
 			orderOperationRecordDao.save(oor);
+		}else{
+			//司机点击APP结束订单
+			order.setActualEndDate(new Date());
+			order.setEndMile(lbsDao.getCurrentMile(order.getCar()));
+			
+			if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL){	
+				//插入结算队列
+				OrderCheckQueue ocq=new OrderCheckQueue();
+				ocq.setOrder(order);
+				ocq.setCounter(0);
+				orderCheckQueueService.save(ocq);
+			}			
+
+			Map<String,String> params=new HashMap<String,String>();
+			params.put("sn", order.getSn());
+			params.put("customerOrganization", order.getCustomerOrganization().getName());
+			params.put("plateNumber", order.getCar().getPlateNumber());
+			params.put("driver", order.getDriver().getName());
+			smsService.sendTemplateSMS(order.getScheduler().getName(), SMSService.SMS_TEMPLATE_ORDER_END, params);
+			
 		}
-		
-		if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL){	
-			//插入结算队列
-			OrderCheckQueue ocq=new OrderCheckQueue();
-			ocq.setOrder(order);
-			ocq.setCounter(0);
-			orderCheckQueueService.save(ocq);
-		}
-		
-		Map<String,String> params=new HashMap<String,String>();
-		params.put("sn", order.getSn());
-		params.put("customerOrganization", order.getCustomerOrganization().getName());
-		params.put("plateNumber", order.getCar().getPlateNumber());
-		params.put("driver", order.getDriver().getName());
-		smsService.sendTemplateSMS(order.getScheduler().getName(), SMSService.SMS_TEMPLATE_ORDER_END, params);
+		orderDao.update(order);		
 		
 		return 0;
 	}

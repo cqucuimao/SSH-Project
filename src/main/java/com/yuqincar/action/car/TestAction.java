@@ -21,6 +21,10 @@ public class TestAction extends BaseAction {
 	  return "test";
    }
    
+   public String init(){
+	   return "init";
+   }
+   
     public UploadedDiskFiles getuDiskFiles2() {
 		return uDiskFiles2;
 	}

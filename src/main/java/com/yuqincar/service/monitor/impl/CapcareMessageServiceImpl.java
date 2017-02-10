@@ -210,7 +210,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 			
 			if(capcareMap.containsKey(plateNumberFromCapcare)){
 				if(lng>0 && lat>0 && "A".equals(mode) 
-						&& (Long.parseLong(time) > Long.parseLong(capcareMap.get(plateNumberFromCapcare).getLastTime())))
+						&& (Long.parseLong(time) >= Long.parseLong(capcareMap.get(plateNumberFromCapcare).getLastTime())))
 					notNullDevices.add(devices.getJSONObject(i));
 			}else{
 				if(lng>0 && lat>0 && "A".equals(mode)){

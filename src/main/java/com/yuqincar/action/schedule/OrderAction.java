@@ -27,6 +27,7 @@ import com.yuqincar.domain.order.CustomerOrganization;
 import com.yuqincar.domain.order.DayOrderDetail;
 import com.yuqincar.domain.order.DriverActionVO;
 import com.yuqincar.domain.order.Order;
+import com.yuqincar.domain.order.OrderCheckQueue;
 import com.yuqincar.domain.order.OrderOperationRecord;
 import com.yuqincar.domain.order.OrderSourceEnum;
 import com.yuqincar.domain.order.OrderStatusEnum;
@@ -34,6 +35,7 @@ import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.common.DiskFileService;
 import com.yuqincar.service.customer.CustomerService;
+import com.yuqincar.service.order.OrderCheckQueueService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
@@ -53,6 +55,8 @@ public class OrderAction extends BaseAction {
 	private CustomerService customerService;
 	@Autowired
 	private DiskFileService diskFileService;
+	@Autowired
+	private OrderCheckQueueService orderCheckQueueService;
 
 	private CustomerOrganization customerOrganization;
 	private String customerName;
@@ -195,6 +199,7 @@ public class OrderAction extends BaseAction {
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
 		return orderService.canAddEndAction(order);
 	}
+	
 	public boolean isCanEditOrderBill(){
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
 		return orderService.canEditOrderBill(order);
@@ -275,6 +280,23 @@ public class OrderAction extends BaseAction {
 			ActionContext.getContext().put("nullAbstractTrackList", nullDayDetails);
 		}
 		return "editOrderBillUI";
+	}
+	
+	public String editAndCheckOrderBill(){
+		String str=editOrderBill();
+		
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL){	
+				//插入结算队列
+				OrderCheckQueue ocq=new OrderCheckQueue();
+				ocq.setOrder(order);
+				ocq.setCounter(0);
+				orderCheckQueueService.save(ocq);
+			}	
+		}
+		
+		return str;
 	}
 	
 	/*

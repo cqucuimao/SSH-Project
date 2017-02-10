@@ -23,7 +23,6 @@ public class CapcareData {
 	@Scheduled(cron = "0 0 1 * * ?")
 	@Transactional
 	public void remove(){
-		System.out.println("remove in CapcareData is running, date="+new Date());
 		capcareMessageService.removeCapcareMessage();
 	}
 }

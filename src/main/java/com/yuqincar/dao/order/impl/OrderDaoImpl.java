@@ -41,7 +41,7 @@ import com.yuqincar.utils.QueryHelper;
 
 @Repository
 public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
-	
+	 
  
 	@SuppressWarnings("unchecked")
 	public List<CarServiceType> getAllCarServiceType() {
@@ -98,9 +98,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 	
 
     public List<List<Order>> getDriverTask(User driver, Date fromDate, Date toDate){
-		System.out.println("in getDriverTask, fromDate="+fromDate);
-		System.out.println("in getDriverTask, toDate="+toDate);
-		System.out.println("in getDriverTask, driver="+driver.getName());
 		List<List<Order>> list = new ArrayList<List<Order>>();
 		String hql = null;
 		int days = DateUtils.elapseDays(fromDate, toDate, true, true);
@@ -108,7 +105,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		for (int i = 0; i < days; i++) {
 			List<Order> dayList=null;
 			Date date = DateUtils.getOffsetDate(fromDate, i);
-			System.out.println("date="+date);
 			// Order 预订用车或者实际在用车都算
 			hql = "from order_ as o where o.status<>? and o.driver=? and (((o.chargeMode=? or o.chargeMode=?) and TO_DAYS(o.planBeginDate)=TO_DAYS(?)) or ((o.chargeMode=? or o.chargeMode=?) and TO_DAYS(o.planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(o.planEndDate)))";
 			List<Order> orderList = (List<Order>) getSession().createQuery(hql)
@@ -116,7 +112,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(2, ChargeModeEnum.MILE).setParameter(3, ChargeModeEnum.PLANE).setParameter(4, date)
 					.setParameter(5, ChargeModeEnum.DAY).setParameter(6, ChargeModeEnum.PROTOCOL).setParameter(7, date)
 					.setParameter(8, date).list();
-			System.out.println("in getDriverTask, orderList.size="+orderList.size());
 			if(orderList!=null && orderList.size()>0){
 				if(dayList==null)
 					dayList=new ArrayList<Order>();
@@ -125,7 +120,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			
 			list.add(dayList);
 		}
-		System.out.println("in getDriverTask, list.size="+list.size());
 		return list;
     }
 
@@ -394,17 +388,18 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null) && car.getServiceType()!=order.getServiceType())
 			return 7;
 		
-		if(car.isInsuranceExpired())
-			return 10;
-		
-		if(car.isExamineExpired())
-			return 11;
-		
-		if(car.isTollChargeExpired())
-			return 12;
-		
-		if(car.isCareExpired())
-			return 13;
+		//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，临时取消保险过期、未年检、未交路桥费、包养过期的限制。
+//		if(car.isInsuranceExpired())
+//			return 10;
+//		
+//		if(car.isExamineExpired())
+//			return 11;
+//		
+//		if(car.isTollChargeExpired())
+//			return 12;
+//		
+//		if(car.isCareExpired())
+//			return 13;
 		
 		if(!car.isBorrowed() && !car.isStandingGarage() && !car.isTempStandingGarage())
 			return 14;

@@ -46,13 +46,17 @@ public class LBSDaoImpl implements LBSDao{
 				+Configuration.getCapcareAppName()+"&language=zh_CN";
 		String json = HttpMethod.get(api);
 		JSONObject data = (JSONObject) JSON.parse(json);
-		JSONObject device = (JSONObject) data.get("device");
-		JSONObject position = (JSONObject) device.get("position");
-		String mileStr=position.getString("altitude");
-		if(!StringUtils.isEmpty(mileStr))
-			return new BigDecimal(mileStr).divide(new BigDecimal(1000)).intValue();
-		else
+		try{
+			JSONObject device = (JSONObject) data.get("device");
+			JSONObject position = (JSONObject) device.get("position");
+			String mileStr=position.getString("altitude");
+			if(!StringUtils.isEmpty(mileStr))
+				return new BigDecimal(mileStr).divide(new BigDecimal(1000)).intValue();
+			else
+				return 0;
+		}catch(Exception e){
 			return 0;
+		}
 	}
 	
 	private List<MileInfo> getMile(Car car, long from, long to){

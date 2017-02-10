@@ -27,7 +27,7 @@
 
     <div class="space">
         <div class="">
-        <s:form name="myForm" action="order_editOrderBill.action">
+        <s:form id="myForm" action="">
         <input type="hidden" name="orderId" value="${orderId }"> 
         <table style="border-color:black;width:84%;">
         <tr>
@@ -190,7 +190,8 @@
 	        		<tfoot>
 						<tr >
 			         	<td style="border:none" colspan="2" class="noprint">
-			             	<input class="inputButton" type="submit" value="确定" >
+			             	<input class="inputButton" id="sure" type="submit" value="确定" >
+			             	<input class="inputButton" id="sureAndCheck" type="submit" value="确定并结算" >
 			              	<a class="p15" href="javascript:history.go(-1);">返回</a>
 			         	</td>
 			    		</tr>
@@ -203,6 +204,15 @@
         </div>
     </div>
     <script type="text/javascript">
+    
+    $("#sure").click(function(){   		
+   		$("#myForm").attr("action","order_editOrderBill.action");
+   	})
+   	
+    $("#sureAndCheck").click(function(){   		
+   		$("#myForm").attr("action","order_editAndCheckOrderBill.action");
+   	})
+    
     $(function(){
     	
     	$("input[id=date]").each(function(){

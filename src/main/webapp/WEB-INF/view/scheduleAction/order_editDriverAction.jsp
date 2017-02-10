@@ -96,35 +96,38 @@
                         		<input class="Wdate half" id="actionTime" name="actionTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /><span class="required">*</span>&nbsp;&nbsp;
                         		<input type="hidden" name="orderId" value="${id }">
                         		<s:if test="canAddAcceptAction">                       			
-                        				<input type="submit" id="accept" class="inputButton coverOff" value="接受订单"/>                      		
+                        				<input type="submit" id="accept" class="inputButton coverOff needTime" value="接受订单"/>                      		
                         		</s:if>
                         		<s:else>                      			
-                        				<input disabled="disabled" type="button" class="inputButton" value="接受订单"/>                      			
+                        				<input disabled="disabled" type="button" class="inputButton needTime" value="接受订单"/>                      			
                         		</s:else>                        		  
                         		<s:if test="canAddBeginAction">                      		                       			
-                        				<input type="submit" id="begin" class="inputButton" value="开始订单"/>                      			
+                        				<input type="submit" id="begin" class="inputButton needTime" value="开始订单"/>                      			
                         		</s:if>
                         		<s:else>                      		                      			
-                        				<input disabled="disabled" type="button" class="inputButton" value="开始订单"/>                      		
+                        				<input disabled="disabled" type="button" class="inputButton needTime" value="开始订单"/>                      		
                         		</s:else>                      		
                         		<s:if test="canAddGetonAction">                       			
-                        				<input type="submit" id="geton" class="inputButton" value="客户上车"/>                     			
+                        				<input type="submit" id="geton" class="inputButton needTime" value="客户上车"/>                     			
                         		</s:if>
                         		<s:else>                        			
-                        				<input disabled="disabled" type="button" class="inputButton" value="客户上车"/>                      			
+                        				<input disabled="disabled" type="button" class="inputButton needTime" value="客户上车"/>                      			
                         		</s:else>                      		
                         		<s:if test="canAddGetoffAction">                       			
-                       				<input type="submit" id="getoff" class="inputButton" value="客户下车"/>                        			
+                       				<input type="submit" id="getoff" class="inputButton needTime" value="客户下车"/>                        			
                         		</s:if>
                         		<s:else>                        			
-                        				<input disabled="disabled" type="button" class="inputButton" value="客户下车"/>                       			
+                        				<input disabled="disabled" type="button" class="inputButton needTime" value="客户下车"/>                       			
                         		</s:else>                       		
                         		<s:if test="canAddEndAction">                       			
-                        				<input type="submit" id="end" class="inputButton" value="结束订单"/>                      			
+                        				<input type="submit" id="end" class="inputButton needTime" value="结束订单"/>                      			
                         		</s:if>
                         		<s:else>                        			
-                        				<input disabled="disabled" type="button" class="inputButton" value="结束订单"/>                       			
-                        		</s:else>                        		
+                        				<input disabled="disabled" type="button" class="inputButton needTime" value="结束订单"/>                       			
+                        		</s:else>                         		                      		
+                        		<s:if test="canEditOrderBill"> 
+                        				<input type="submit" id="editOrderBill" class="inputButton" value="编辑派车单"/>                       			
+                        		</s:if>                     		
                             	<a class="p15" href="javascript:history.go(-1);">返回</a>
                             </form>
                         </td>
@@ -136,7 +139,7 @@
     <script type="text/javascript">
     
    	
-   	$(".inputButton").click(function(){
+   	$(".needTime").click(function(){
    		var last = $(".last").text().replace('-','/').replace('-','/');
    		var actionTime = $("#actionTime").val().replace('-','/').replace('-','/');
    		if(actionTime == ""){
@@ -151,27 +154,24 @@
    		}
    	})
    	
-   	$("#accept").click(function(){
-   		
+   	$("#accept").click(function(){   		
    		$("#actionForm").attr("action","order_addAcceptAction.action");
    	})
-   	$("#begin").click(function(){
-   		
+   	$("#begin").click(function(){   		
    		$("#actionForm").attr("action","order_addBeginAction.action");
    	})
-   	$("#geton").click(function(){
-   		
+   	$("#geton").click(function(){   		
    		$("#actionForm").attr("action","order_addGetonAction.action");
    	})
-   	$("#getoff").click(function(){
-   		
+   	$("#getoff").click(function(){   		
    		$("#actionForm").attr("action","order_addGetoffAction.action");
    	})
-   	$("#end").click(function(){
-   		
+   	$("#end").click(function(){   		
    		$("#actionForm").attr("action","order_addEndAction.action");
-   	})
-   
+   	})     	
+   	$("#editOrderBill").click(function(){   		
+   		$("#actionForm").attr("action","order_editOrderBillUI.action?orderId=%{id}");
+   	})   
     
     function modify(actionId,time,index){
    		var after = index-(-1);//计算index+1

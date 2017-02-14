@@ -73,7 +73,7 @@ public class ScheduleAction extends BaseAction {
 	CarServiceSuperTypeDao carServiceSuperTypeDao;
 	@Autowired
 	PriceService priceSerivce;
-	
+
 	private User keeper;
 	private String keyWord;
 	private String customerOrganizationName;
@@ -189,7 +189,38 @@ public class ScheduleAction extends BaseAction {
 		JSONArray jsonArray = new JSONArray(list);
 		writeJson(jsonArray.toJSONString());
 	}
-
+//@zys 20170213
+	public void getCarPlateNum() {
+		//System.out.println("keyWord="+keyWord);
+		QueryHelper helper = new QueryHelper(Car.class, "c");
+		helper.addWhereCondition(
+				"c.plateNumber like ?", "%" + keyWord + "%");
+		List<Object> list = new ArrayList<Object>();
+		
+		for (Car car : carService.queryCar(1, helper)
+				.getRecordList()) {
+			list.add(car.getPlateNumber());
+		}
+		System.out.println("list.size()="+list.size());
+		JSONArray jsonArray = new JSONArray(list);
+		writeJson(jsonArray.toJSONString());
+	}
+	
+	public void getUserName() {
+		//System.out.println("keyWord="+keyWord);
+		QueryHelper helper = new QueryHelper(User.class, "u");
+		helper.addWhereCondition(
+				"u.name like ?", "%" + keyWord + "%");
+		List<Object> list = new ArrayList<Object>();
+		for (User user : userService.queryUser(1, helper)
+				.getRecordList()) {
+			list.add(user.getName());
+		}
+		System.out.println("list.size()="+list.size());
+		JSONArray jsonArray = new JSONArray(list);
+		writeJson(jsonArray.toJSONString());
+	}
+	
 	public void getCustomer() {
 		System.out.println("in getCustomer");
 		System.out.println("customerOrganization="+customerOrganizationName);
@@ -973,6 +1004,8 @@ public class ScheduleAction extends BaseAction {
 
 	public void setMoneyForPeriodPay(BigDecimal moneyForPeriodPay) {
 		this.moneyForPeriodPay = moneyForPeriodPay;
+	
+	
 	}
 
 	/**
@@ -987,6 +1020,9 @@ public class ScheduleAction extends BaseAction {
 			return true;
 		return false;
 	}
+
+	
+	
 }
 
 /**

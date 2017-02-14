@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yuqincar.dao.car.DriverLicenseDao;
 import com.yuqincar.dao.privilege.UserDao;
+import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.common.PageBean;
@@ -153,6 +154,9 @@ public class UserServiceImpl implements UserService{
 		return userDao.getByLoginName(loginName, companyId);
 	}
 
+	public PageBean<User> queryUser(int pageNum, QueryHelper helper) {
+		return userDao.getPageBean(pageNum, helper);
+	}
 	
 	public TreeNode getUserTree(String name,boolean driverOnly,String departments) {
 		List<User> users = new ArrayList<User>();

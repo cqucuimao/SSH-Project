@@ -17,6 +17,7 @@ public class GetCapcareMsg {
 	
 	//访问凯步的API  http://api.capcare.com.cn:1045/api/device.list.do?token=FCD037A9-56FF-4962-9B63-8CFA860840C5&user_id=45036&app_name=M2616_BD
 	public String excute() throws ConnectTimeoutException{
+		
 		return HttpMethod.get(url);
 	}
 }

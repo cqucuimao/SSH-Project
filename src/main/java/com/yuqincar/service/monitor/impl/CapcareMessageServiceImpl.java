@@ -179,7 +179,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 	/**
 	 * 每个10S从凯步获取车辆位置信息
 	 */
-	public void getCapcareMessagePerTenSecondFromCapcare(){
+	public void getCapcareMessagePerTenSecondFromCapcare() {
 		
 		int limitLen = 100;
 			

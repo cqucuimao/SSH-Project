@@ -156,7 +156,8 @@
 								<tbody>
 								<tr>
 									<th>车牌号</th>
-									<td><cqu:carSelector name="queryCar"/>
+									<%-- <td><cqu:carSelector name="queryCar"/> --%>
+									<td><cqu:carPlateNumber name="queryCar"/>
 										<input class="inputButton" type="button" value="查询" name="button" id="findCar" />
 									</td>
 								</tr>
@@ -195,9 +196,14 @@
 								<tbody>
 								<tr>
 									<th>调度的车</th>
-									<td><cqu:carSelector name="selectedCar" synchDriver="selectedDriver"/></td>
+									<td><cqu:carPlateNumber name="selectedCar"/></td> 
 									<th>调度的司机</th>
-									<td><cqu:userSelector name="selectedDriver"/></td>
+									<td><cqu:driverName name="selectedDriver"/></td> 
+									
+									<%-- <th>调度的车</th>
+									 <td><cqu:carSelector name="selectedCar" synchDriver="selectedDriver"/></td> 
+									<th>调度的司机</th>
+									<td><cqu:userSelector name="selectedDriver"/></td> --%>
 								</tr>
 								</tbody>
 							</table>                             
@@ -523,7 +529,6 @@
                      return parsed;  
                  }
     			});
-			
 			 $("#customerName" ).autocomplete("schedule_getCustomer.action",{
 				 extraParams : {
 					 				keyWord : function(){return $("#customerName").val();},
@@ -640,6 +645,7 @@
 			var msg = new Msg(); //初始化一个操作提示对象
 			$("#schedule").click(
 					function() {
+						//alert($("#carPlate").val());
 						if (checkMain() && checkDriver()){
 							var chargeMode = $("#chargeMode").val();
 							var planBeginDate = $("#planBeginDate").val();
@@ -773,9 +779,11 @@
 				var driverId = x.target.parentNode.nextElementSibling.nextElementSibling.innerHTML;
 				driverId=driverId.split(";")[1];
 				$("#selectedCarLabel").val(plateNumber);
-				$("#selectedCar").val(carId);
+				//$("#selectedCar").val(carId);
+				$("#selectedCar").val(plateNumber);
 				$("#selectedDriverLabel").val(driverName);
-				$("#selectedDriver").val(driverId);
+				//$("#selectedDriver").val(driverId);
+				$("#selectedDriver").val(driverName);
 			});
 
 			$(".inputButton[id=findCar]").click(function() {

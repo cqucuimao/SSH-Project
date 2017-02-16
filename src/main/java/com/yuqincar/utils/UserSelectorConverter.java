@@ -15,8 +15,28 @@ public class UserSelectorConverter extends StrutsTypeConverter {
 	
 	public Object convertFromString(Map context, String[] values, Class toClass) {  
 		if(toClass==User.class){
-			Long id=Long.valueOf((String)values[0]);
-			return userService.getById(id);
+			//System.out.println("i am in UserSelectorConverter******");
+			String rValue=values[0];
+			boolean isNumber=true;
+			for(int i=0;i<rValue.length();i++)
+			{
+				if(!(rValue.charAt(i)>='0'&&rValue.charAt(i)<='9'))
+				{
+					isNumber=false;
+					break;
+				}
+			}
+			if(isNumber)
+			{
+				Long id=Long.valueOf(values[0]);
+				//System.out.println("id: "+id);
+				return userService.getById(id);
+			}else
+			{
+				//System.out.println("carPlateNumber: "+values[0]);
+				return userService.getByName(values[0]);
+			}
+			
 		}
 		return null;
     }  

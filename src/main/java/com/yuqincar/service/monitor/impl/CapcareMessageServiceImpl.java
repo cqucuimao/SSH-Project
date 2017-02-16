@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -178,7 +179,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 	/**
 	 * 每个10S从凯步获取车辆位置信息
 	 */
-	public void getCapcareMessagePerTenSecondFromCapcare() {
+	public void getCapcareMessagePerTenSecondFromCapcare(){
 		
 		int limitLen = 100;
 			
@@ -192,7 +193,12 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		
 		//这两行代码是到凯步平台获取全部监控车辆的位置信息，返回Json数据
 		GetCapcareMsg gcm = new GetCapcareMsg();
-		String capcareMessageString = gcm.excute();
+		String capcareMessageString = null;
+		try {
+			capcareMessageString = gcm.excute();
+		} catch (ConnectTimeoutException e) {
+			
+		}
 		
 		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
 		JSONArray devices = jsonObject.getJSONArray("devices");
@@ -308,7 +314,12 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		
 		//获取凯步返回的所有车辆的车牌号
 		GetCapcareMsg gcm = new GetCapcareMsg();
-		String capcareMessageString = gcm.excute();
+		String capcareMessageString = null;
+		try {
+			capcareMessageString = gcm.excute();
+		} catch (ConnectTimeoutException e) {
+			
+		}
 		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
 		JSONArray devices = jsonObject.getJSONArray("devices");
 		List<String> plateNumberList = new ArrayList<String>();

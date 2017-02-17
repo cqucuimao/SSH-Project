@@ -93,7 +93,7 @@
                     <thead>
                         <tr>
                             <th class="alignCenter"><input type="checkbox" id="checkAll"/></th>
-                            <th>行程段号</th>
+                            <!-- <th>行程段号</th> -->
                             <th>开始时间</th>
                             <th>结束时间</th>
                             <th>时间(min)</th>
@@ -340,9 +340,6 @@
                  	   		   $("#totalPageNum").html(lastPage);
                     	 }
                      });
-                     /* $.get(reqUrl,function(json){
-                    	  
-                    }); */
       		      }
       	    });
       		//显示数据列表
@@ -435,7 +432,13 @@
         		//轨迹列表中的轨迹索引对应的播放时间，相应轨迹的gps坐标点数
         		tracksPlayTimeAndPointLength[index]=new Array(2);
         		tracksPlayTimeAndPointLength[index][0]=playInterval;
-        		$("#Searchresult").append("<tr>"+"<td class='alignCenter'>"+"<input type='checkbox' name='checkItem' class='checkboxItems' id="+index+">"+"<td>"+eval(index+1)+"</td>"
+        		
+        		//这里对轨迹进行过滤，每小时里程数小于2KM的，一律过滤掉（过滤的阀值后期可能更改）
+        		var time = track.states[0].receive - track.states[1].receive;
+        		if(track.distance/time < 2.0/3600000){
+        			return true;
+        		}
+        		$("#Searchresult").append("<tr>"+"<td class='alignCenter'>"+"<input type='checkbox' name='checkItem' class='checkboxItems' id="+index+">"
         				                 +"<td>"+beginTime.toLocaleString()+"</td>"+"<td>"+endTime.toLocaleString()+"</td>"
         				                 +"<td>"+realInterval+"</td>"+"<td class='alignCenter'>"+track.distance+"</td>"+"<td>"+playInterval+"</td>");  
         	});

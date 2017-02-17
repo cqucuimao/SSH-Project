@@ -266,7 +266,7 @@
                      console.log("请求序列");
                      console.log(reqUrl);
                    
-                     //通过服务器接口，查询轨迹列表
+                     //通过服务器接口，查询轨迹列表，崔茂的注释。
                      $.ajax({
                     	 type:"get",
                     	 dataType:'json',

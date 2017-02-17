@@ -271,6 +271,7 @@
                     	 type:"get",
                     	 dataType:'json',
                     	 url:reqUrl,
+                    	 async:true,
                     	 error:function(){
                     		 alert("请求出错，请重试！");
                     	 },
@@ -547,6 +548,7 @@
                     	 type:"get",
                     	 dataType:'json',
                     	 url:reqUrl,
+                    	 async:true,
                     	 error:function(){
                     		 hideMask();
                     		 alert("请求出错，请重试！");

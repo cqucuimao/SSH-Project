@@ -241,6 +241,7 @@
       	    	  console.log(snsData);
       	    	  //获取返回信息的长度
       	    	  var snNum=snsData.sns.length;
+      	    	  //如果snNum=0；表示该车辆没有安装gps设备
       	    	  if(snNum == 0){
            		   		hideMask();
       	    	  } 
@@ -266,70 +267,81 @@
                      console.log(reqUrl);
                    
                      //通过服务器接口，查询轨迹列表
-                     $.get(reqUrl,function(json){
-                    	   if(json.ret != 1){
-                    		   hideMask();
-                	    	   alert("请求出错，请重试！");
-                	       }
-                	       //由于获得的轨迹数据是反向序列，所以首先进行先将序列进行反向
-                	       trackPartsData=json;
-                	       //获取轨迹列表长度
-                	       length=trackPartsData.track.length;
-                	       if(length==0){
-                    	       hideMask();
-                	    	   alert("该时间段内没有轨迹！");
-                	       }
-                	       hideMask();
-                	       //用于存储解析后的百度地图上要显示的轨迹数据
-                	       tracksData=new Array(length);
-                	       //用于存储解析后的百度地图上要显示的轨迹路径
-                	       trackLines=new Array(length);
-                	       //用于记录轨迹的点序列对应的速度序列（在轨迹回过程中，每个点都对应一个速度）
-                	       tracksSpeed=new Array(length);
-                	       trackTimes=new Array(length);
-                	       tracksLocation=new Array(length);
-                	       //为查询得到的轨迹列表进行倒序排列
-                	       var temp;
-                	       var mid=Math.floor(length/2);
-                	       for(var i=0;i<mid;i++){
-                		       temp=trackPartsData.track[i];
-                		       trackPartsData.track[i]=trackPartsData.track[length-i-1];
-                		       trackPartsData.track[length-i-1]=temp;
-                	       }
-                	       console.log("轨迹列表");
-                	       console.log(trackPartsData);
-            		       //这里的复选框的下标与实时监控不同，实时监控的下标是相应车辆的id，而这里只是索引下标
-                	       checkboxStatus=new Array(length);
-            		       for(var i=0;i<length;i++){
-            			       checkboxStatus[i]=false;
-            		       }
-            		       //设置分页信息
-               	   	       num_entries = length;	  //获取记录总数，即轨迹数
-               	   	       showCount = 3;             //每页显示记录数
-               	   	       //计算分页数
-                 	   	   lastPage=Math.ceil(num_entries/showCount);  //Math.ceil向上取整
-                 	   	   
-                 	   	   //初始化分页栏样式,realtime中此代码不再此位置,因为放在realtime相似位置时，无效，具体原因不明
-                           initPageBarStyle();
-                 	   	   
-               	   	       //设置当前页
-               	   	       currentPage=0;
-               	   		   pageList();         //查询之后调用分页组件
-               	   	       pageselectCallback(currentPage);  //分页
-               	   	       $("#pageSkip").empty();
-               	   	       //设置页码跳转框
-               	   	       var selector=$("#pageSkip");     
-               	           for(var i=0;i<lastPage;i++){ 
-               	               selector.append('<option value="'+i+'">'+eval(i+1)+'</option>');     
-               	           }
-               	           //分页组件的当前页和总页数信息
-               	           //如果总页数大于0，则置当前页为1，否则0
-               	           if(num_entries>0)
-               	   		      $("#currentPageNum").html(currentPage+1);
-               	           else
-               	        	  $("#currentPageNum").html(0); 
-               	   		   $("#totalPageNum").html(lastPage);
-                    });
+                     $.ajax({
+                    	 type:"get",
+                    	 dataType:'json',
+                    	 url:reqUrl,
+                    	 error:function(){
+                    		 alert("请求出错，请重试！");
+                    	 },
+                    	 success:function(json){
+                    		 if(!(json.ret == 1)){
+                      		   hideMask();
+                  	    	   alert("请求出错，请重试！");
+                  	       }
+                  	       //由于获得的轨迹数据是反向序列，所以首先进行先将序列进行反向
+                  	       trackPartsData=json;
+                  	       //获取轨迹列表长度
+                  	       length=trackPartsData.track.length;
+                  	       if(length==0){
+                      	       hideMask();
+                  	    	   alert("该时间段内没有轨迹！");
+                  	       }
+                  	       hideMask();
+                  	       //用于存储解析后的百度地图上要显示的轨迹数据
+                  	       tracksData=new Array(length);
+                  	       //用于存储解析后的百度地图上要显示的轨迹路径
+                  	       trackLines=new Array(length);
+                  	       //用于记录轨迹的点序列对应的速度序列（在轨迹回过程中，每个点都对应一个速度）
+                  	       tracksSpeed=new Array(length);
+                  	       trackTimes=new Array(length);
+                  	       tracksLocation=new Array(length);
+                  	       //为查询得到的轨迹列表进行倒序排列
+                  	       var temp;
+                  	       var mid=Math.floor(length/2);
+                  	       for(var i=0;i<mid;i++){
+                  		       temp=trackPartsData.track[i];
+                  		       trackPartsData.track[i]=trackPartsData.track[length-i-1];
+                  		       trackPartsData.track[length-i-1]=temp;
+                  	       }
+                  	       console.log("轨迹列表");
+                  	       console.log(trackPartsData);
+              		       //这里的复选框的下标与实时监控不同，实时监控的下标是相应车辆的id，而这里只是索引下标
+                  	       checkboxStatus=new Array(length);
+              		       for(var i=0;i<length;i++){
+              			       checkboxStatus[i]=false;
+              		       }
+              		       //设置分页信息
+                 	   	       num_entries = length;	  //获取记录总数，即轨迹数
+                 	   	       showCount = 3;             //每页显示记录数
+                 	   	       //计算分页数
+                   	   	   lastPage=Math.ceil(num_entries/showCount);  //Math.ceil向上取整
+                   	   	   
+                   	   	   //初始化分页栏样式,realtime中此代码不再此位置,因为放在realtime相似位置时，无效，具体原因不明
+                             initPageBarStyle();
+                   	   	   
+                 	   	       //设置当前页
+                 	   	       currentPage=0;
+                 	   		   pageList();         //查询之后调用分页组件
+                 	   	       pageselectCallback(currentPage);  //分页
+                 	   	       $("#pageSkip").empty();
+                 	   	       //设置页码跳转框
+                 	   	       var selector=$("#pageSkip");     
+                 	           for(var i=0;i<lastPage;i++){ 
+                 	               selector.append('<option value="'+i+'">'+eval(i+1)+'</option>');     
+                 	           }
+                 	           //分页组件的当前页和总页数信息
+                 	           //如果总页数大于0，则置当前页为1，否则0
+                 	           if(num_entries>0)
+                 	   		      $("#currentPageNum").html(currentPage+1);
+                 	           else
+                 	        	  $("#currentPageNum").html(0); 
+                 	   		   $("#totalPageNum").html(lastPage);
+                    	 }
+                     });
+                     /* $.get(reqUrl,function(json){
+                    	  
+                    }); */
       		      }
       	    });
       		//显示数据列表
@@ -341,6 +353,7 @@
         
         //全选按钮绑定单击事件响应
         $("#checkAll").bind("click", function(){
+        	 
         	 //每次复选框改变之后，地图重新清空
       		 //map.clearOverlays();  
         	 if($("#checkAll").is(":checked")){
@@ -370,8 +383,6 @@
    			    reSetPlayTimeEnd();
  	      	    //显示播放条
           	    $("#playBar").show();
- 	      	  
-          	    
         	 }else{
         		//在页面上清除所有复选框的勾选状态
          		$(".checkboxItems").prop("checked",false);
@@ -519,7 +530,8 @@
          //画出当前选中轨迹
          function drawTrack(index){
         	//将ajax请求置为同步请求，防止异步造成的轨迹乱序
-       		$.ajaxSettings.async=false;
+       		//$.ajaxSettings.async=false;
+        	showMask();
         	var BaiduPoints;    //存储百度point对象的数组，用于画出相应point序列组成的轨迹
         	var BaiduLocations;    //存储百度point对象的数组，用于轨迹回放时显示地点信息
         	var BaiduAddress;    
@@ -531,106 +543,110 @@
     		var reqUrl="apiReplay.action?get.track.do?device_sn="+device_sn+"&begin="+
     				   begin+"&end="+end+"&page_number=-1&page_size=-1";
     		//解析当前轨迹段的gps序列
-    		$.get(reqUrl,function(gpsTrackData){
-    			  console.log("gpsTrackData 轨迹数据");
-    			  console.log(gpsTrackData);
-    			  console.log(gpsTrackData.track);
-    			  console.log("index="+index);
-    			  //当前轨迹段的长度
-    			  var trackPointsLength=gpsTrackData.track.length;
-    			  //存储当前轨迹段的轨迹点数（每一段轨迹都由若干轨迹点组成）
-    			  tracksPlayTimeAndPointLength[index][1]=trackPointsLength;
-    			  tracksSpeed[index]=new Array(trackPointsLength);
-    			  trackTimes[index] = new Array(trackPointsLength);
-    			  //定义百度地图上的point数组
-  		          BaiduPoints=new Array(trackPointsLength);
-    			  //定义点在百度地图上的经纬度
-    			  BaiduLocations = new Array(trackPointsLength);
-    			  
-    			  BaiduAddress = new Array(trackPointsLength);
-    			  //百度地图的API坐标转换接口限制数
-    	          var limitLen=98;
-    	          //由于百度API的接口每次最多解析100个经纬度坐标，所以进行分段
-    	          var parts=Math.floor(trackPointsLength/limitLen)+1;
-    	          //最后一段的数据个数
-    	          var lastPartNum=trackPointsLength%limitLen;
-    	          
-    	          //对每一段都进行坐标序列解析处理，每一段的gps坐标数据转换成百度API坐标转换请求格式
-    	          for(var part=0;part<parts;part++){
-    	        	  var gpsPositionStr="";
-    	                //前几段都按固定值计算,最后一段另行处理
-    	            	if(part!=parts-1){
-    	            	   for(var i=0;i<limitLen;i++){
-    	                	   if(i!=0)
-    	               			  gpsPositionStr=gpsPositionStr+";";
-    	               		   gpsPositionStr=gpsPositionStr+gpsTrackData.track[part*limitLen+i].lng+","+gpsTrackData.track[part*limitLen+i].lat;
-    	               		   //获取轨迹上各个点的速度，并保留1位小数
-   	                		   tracksSpeed[index][part*limitLen+i]=gpsTrackData.track[part*limitLen+i].speed.toFixed(1);
-    	               		   //轨迹上各个点的实际时间
-    	               		   trackTimes[index][part*limitLen+i] = gpsTrackData.track[part*limitLen+i].receive;
-    	               	   }
-    	            	}else{
-    	            	   //最后一段的经纬度个数按剩余值进行计算
-    	            	   for(var i=0;i<lastPartNum;i++){
-    	                	   if(i!=0)
-    	               			   gpsPositionStr=gpsPositionStr+";";
-    	               		    gpsPositionStr=gpsPositionStr+gpsTrackData.track[part*limitLen+i].lng+","+gpsTrackData.track[part*limitLen+i].lat;
-    	               		    //获取轨迹上各个点的速度，并保留1位小数
-    	                		tracksSpeed[index][part*limitLen+i]=gpsTrackData.track[part*limitLen+i].speed.toFixed(1);
-    	                		//轨迹上各个点的实际时间
-     	               		   trackTimes[index][part*limitLen+i] = gpsTrackData.track[part*limitLen+i].receive;
-    	               	   }
-    	            	}
-    	                //每一段轨迹的百度API坐标转换请求
-    	           	    var reqUrl=head+gpsPositionStr;
-    	           	    $.getJSON(reqUrl,function(baiduTrackData){
-         	    	         console.log("转换得到的百度地图轨迹序列");
-         	    	         console.log(baiduTrackData);
-         	    	         var pointsLength=baiduTrackData.result.length;
-         	    	         console.log("====当前轨迹段的长度===== "+pointsLength);
-     	    		         for(var k=0;k<baiduTrackData.result.length;k++){
-     	    		        	 //console.log("in for, k="+k);
-     	    		        	 BaiduLocations[part*limitLen+k] = baiduTrackData.result[k].y+","+baiduTrackData.result[k].x;
-     	    			         BaiduPoints[part*limitLen+k]=new BMap.Point(baiduTrackData.result[k].x,baiduTrackData.result[k].y);
-
-     	    			        //百度API坐标请求得到详细地址,每次只能转换一个
-     	    			       /* var reqUrl_1 = head_1 + BaiduLocations[part*limitLen+k];
-     	    			       $.ajaxSettings.async = true;
-     	    				    $.getJSON(reqUrl_1,function(baiduTrackAddress){
-     	    				    	console.log("in callback, k="+k);
-     	    	      	    		BaiduAddress[part*limitLen+k] = baiduTrackAddress.result.formatted_address;
-     	    	      	    		//console.log("address:"+BaiduAddress[part*limitLen+k]);
-     	    				    }); */
-     	    				   //$.ajaxSettings.async = false;
-     	    	      	    	//console.log("详细地址="+BaiduAddress[part*limitLen+k]);
-     	    		         }
-     	    		        
-     	                });
-    	           	    
-    	   		
-    	          }
-    	          //根据百度点序列数组，画出点序列轨迹，样式如下,蓝色
-    	          var polyline = new BMap.Polyline(BaiduPoints, {strokeColor:"blue",strokeWeight:6,strokeOpacity:0.5});
-    	          //在地图上添加轨迹路径
-	    	      map.addOverlay(polyline);
-    	          //添加轨迹路径的起始点标志,注意，这里的点序列和路径真实起始点是相反的
-    	          var endPoint=BaiduPoints[0];
-    	          var startPoint=BaiduPoints[BaiduPoints.length-1];
-      	          var startIcon = new BMap.Icon("images/start.png", new BMap.Size(58,58));
-      	          var endIcon = new BMap.Icon("images/end.png", new BMap.Size(58,58));
-      	          var startMarker = new BMap.Marker(startPoint,{icon:startIcon});// 创建起点标注
-      	          var endMarker = new BMap.Marker(endPoint,{icon:endIcon});// 创建终点标注
-	      		  map.addOverlay(startMarker);             // 将标注添加到地图中
-	      		  map.addOverlay(endMarker);               // 将标注添加到地图中
-    	          //保存轨迹路径对象，用于下一次同一轨迹的显示,同时保存起始点
-    	          trackLines[index]=new Array(3);
-	              trackLines[index][0]=polyline;
-	      		  trackLines[index][1]=startMarker;
-	      		  trackLines[index][2]=endMarker;
-	              //将得到的百度点序列保存到对应的轨迹数据中，用于轨迹回放
-    	          tracksData[index]=BaiduPoints;
-	              tracksLocation[index] = BaiduLocations;
+    		 $.ajax({
+                    	 type:"get",
+                    	 dataType:'json',
+                    	 url:reqUrl,
+                    	 error:function(){
+                    		 hideMask();
+                    		 alert("请求出错，请重试！");
+                    	 },
+                    	 success:function(gpsTrackData){
+                   		  if(!(gpsTrackData.ret == 1)){
+                     		   hideMask();
+                 	    	   alert("请求出错，请重试！");
+                   		  }
+                   		  hideMask();
+                    	  console.log("gpsTrackData 轨迹数据");
+               			  console.log(gpsTrackData);
+               			  //当前轨迹段的长度
+               			  var trackPointsLength=gpsTrackData.track.length;
+               			  //存储当前轨迹段的轨迹点数（每一段轨迹都由若干轨迹点组成）
+               			  tracksPlayTimeAndPointLength[index][1]=trackPointsLength;
+               			  tracksSpeed[index]=new Array(trackPointsLength);
+               			  trackTimes[index] = new Array(trackPointsLength);
+               			  //定义百度地图上的point数组
+             		          BaiduPoints=new Array(trackPointsLength);
+               			  //定义点在百度地图上的经纬度
+               			  BaiduLocations = new Array(trackPointsLength);
+               			  
+               			  BaiduAddress = new Array(trackPointsLength);
+               			  //百度地图的API坐标转换接口限制数
+               	          var limitLen=98;
+               	          //由于百度API的接口每次最多解析100个经纬度坐标，所以进行分段
+               	          var parts=Math.floor(trackPointsLength/limitLen)+1;
+               	          //最后一段的数据个数
+               	          var lastPartNum=trackPointsLength%limitLen;
+               	          
+               	          //对每一段都进行坐标序列解析处理，每一段的gps坐标数据转换成百度API坐标转换请求格式
+               	          for(var part=0;part<parts;part++){
+               	        	  var gpsPositionStr="";
+               	                //前几段都按固定值计算,最后一段另行处理
+               	            	if(part!=parts-1){
+               	            	   for(var i=0;i<limitLen;i++){
+               	                	   if(i!=0)
+               	               			  gpsPositionStr=gpsPositionStr+";";
+               	               		   gpsPositionStr=gpsPositionStr+gpsTrackData.track[part*limitLen+i].lng+","+gpsTrackData.track[part*limitLen+i].lat;
+               	               		   //获取轨迹上各个点的速度，并保留1位小数
+              	                		   tracksSpeed[index][part*limitLen+i]=gpsTrackData.track[part*limitLen+i].speed.toFixed(1);
+               	               		   //轨迹上各个点的实际时间
+               	               		   trackTimes[index][part*limitLen+i] = gpsTrackData.track[part*limitLen+i].receive;
+               	               	   }
+               	            	}else{
+               	            	   //最后一段的经纬度个数按剩余值进行计算
+               	            	   for(var i=0;i<lastPartNum;i++){
+               	                	   if(i!=0)
+               	               			   gpsPositionStr=gpsPositionStr+";";
+               	               		    gpsPositionStr=gpsPositionStr+gpsTrackData.track[part*limitLen+i].lng+","+gpsTrackData.track[part*limitLen+i].lat;
+               	               		    //获取轨迹上各个点的速度，并保留1位小数
+               	                		tracksSpeed[index][part*limitLen+i]=gpsTrackData.track[part*limitLen+i].speed.toFixed(1);
+               	                		//轨迹上各个点的实际时间
+                	               		   trackTimes[index][part*limitLen+i] = gpsTrackData.track[part*limitLen+i].receive;
+               	               	   }
+               	            	}
+               	                //每一段轨迹的百度API坐标转换请求
+               	           	    var reqUrl=head+gpsPositionStr;
+               	           	    $.ajaxSettings.async=false;
+               	           	    $.getJSON(reqUrl,function(baiduTrackData){
+                    	    	         console.log("转换得到的百度地图轨迹序列");
+                    	    	         console.log(baiduTrackData);
+                    	    	         var pointsLength=baiduTrackData.result.length;
+                    	    	         console.log("====当前轨迹段的长度===== "+pointsLength);
+                	    		         for(var k=0;k<baiduTrackData.result.length;k++){
+                	    		        	 BaiduLocations[part*limitLen+k] = baiduTrackData.result[k].y+","+baiduTrackData.result[k].x;
+                	    			         BaiduPoints[part*limitLen+k]=new BMap.Point(baiduTrackData.result[k].x,baiduTrackData.result[k].y);
+                	    		         }
+                	    		        
+                	                });
+               	           	    
+               	   		
+               	          }
+               	          //根据百度点序列数组，画出点序列轨迹，样式如下,蓝色
+               	          var polyline = new BMap.Polyline(BaiduPoints, {strokeColor:"blue",strokeWeight:6,strokeOpacity:0.5});
+               	          //在地图上添加轨迹路径
+           	    	      map.addOverlay(polyline);
+               	          //添加轨迹路径的起始点标志,注意，这里的点序列和路径真实起始点是相反的
+               	          var endPoint=BaiduPoints[0];
+               	          var startPoint=BaiduPoints[BaiduPoints.length-1];
+                 	          var startIcon = new BMap.Icon("images/start.png", new BMap.Size(58,58));
+                 	          var endIcon = new BMap.Icon("images/end.png", new BMap.Size(58,58));
+                 	          var startMarker = new BMap.Marker(startPoint,{icon:startIcon});// 创建起点标注
+                 	          var endMarker = new BMap.Marker(endPoint,{icon:endIcon});// 创建终点标注
+           	      		  map.addOverlay(startMarker);             // 将标注添加到地图中
+           	      		  map.addOverlay(endMarker);               // 将标注添加到地图中
+               	          //保存轨迹路径对象，用于下一次同一轨迹的显示,同时保存起始点
+               	          trackLines[index]=new Array(3);
+           	              trackLines[index][0]=polyline;
+           	      		  trackLines[index][1]=startMarker;
+           	      		  trackLines[index][2]=endMarker;
+           	              //将得到的百度点序列保存到对应的轨迹数据中，用于轨迹回放
+               	          tracksData[index]=BaiduPoints;
+           	              tracksLocation[index] = BaiduLocations;
+                    	 }
     		 });
+    		/* $.get(reqUrl,function(gpsTrackData){
+    			  
+    		 }); */
     		 //将ajax请求恢复为异步请求
        		 $.ajaxSettings.async=true;
          }
@@ -695,11 +711,7 @@
         }
      	//播放过程每次刷新时的行为
      	function playAction(){
-     		
-     		
-     		
-            var val= $('.slider').slider('value');
-            
+            var val= $('.slider').slider('value');    
             console.log("PPPPPPP查看播放进度PPPPPPPPP");
      		console.log("转换前="+val);
      	   //标记选择的轨迹的索引
@@ -709,6 +721,7 @@
      	   //存储轨迹点对应详细地址
      	   var allTracksLocation=new Array();
      	   //由于gps数据中存储数据和轨迹上点序列的相应数据是倒序的，所以处理时对每一段数据都要进行倒序处理
+     	   console.log("length="+checkboxStatus.length);
             for(var i=0;i<checkboxStatus.length;i++){
          	   if(checkboxStatus[i]){
       			  for(var j=tracksData[i].length-1;j>=0;j--){

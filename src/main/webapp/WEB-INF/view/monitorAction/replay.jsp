@@ -273,6 +273,7 @@
                     	 url:reqUrl,
                     	 async:true,
                     	 error:function(){
+                    		 hideMask();
                     		 alert("请求出错，请重试！");
                     	 },
                     	 success:function(json){

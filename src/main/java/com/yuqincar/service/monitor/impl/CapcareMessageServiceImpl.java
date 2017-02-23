@@ -197,8 +197,8 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		try {
 			capcareMessageString = gcm.excute();
 		} catch (ConnectTimeoutException e) {
-			
-		}
+			return;
+		} 
 		
 		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
 		JSONArray devices = jsonObject.getJSONArray("devices");
@@ -318,7 +318,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		try {
 			capcareMessageString = gcm.excute();
 		} catch (ConnectTimeoutException e) {
-			
+			return;
 		}
 		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
 		JSONArray devices = jsonObject.getJSONArray("devices");

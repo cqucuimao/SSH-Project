@@ -131,18 +131,19 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 				.getStatus().equals(OrderStatusEnum.INQUEUE);
 	}
 
-	public int scheduleOrder(String scheduleMode,Order order, Car car, User driver, User user) {
+	public String scheduleOrder(String scheduleMode,Order order, Car car, User driver, User user) {
+		StringBuffer result=new StringBuffer();
 		if(scheduleMode==OrderService.SCHEDULE_FROM_QUEUE && order.getStatus()!=OrderStatusEnum.INQUEUE)
-			return 1;
+			result.append("订单已经被调度");
 		
 		if(order.getStatus()==OrderStatusEnum.INQUEUE &&
 				(!order.isScheduling() || !order.getScheduler().equals(user)))
-			return 9;
+			result.append("队列订单不能被当前用户调度");
 		
 		// 判断车子状态
-		int carStatus = isCarAndDriverAvailable(order, car,driver);
-		if (carStatus != 0) {
-			return carStatus;
+		String carStatus = isCarAndDriverAvailable(order, car,driver);
+		if (!"OK".equals(carStatus)) {
+			result.append(carStatus);
 		}
 		
 		if(scheduleMode==OrderService.SCHEDULE_FROM_NEW){
@@ -170,7 +171,10 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			update(order);
 		}		
 		
-		return 0;
+		if(result.length()>0)
+			return result.toString();
+		else
+			return "OK";
 	}
 
 	/**
@@ -380,29 +384,30 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		return null;
 	}
 
-	public int isCarAndDriverAvailable(Order order, Car car, User driver) {
+	public String isCarAndDriverAvailable(Order order, Car car, User driver) {
+		StringBuffer result=new StringBuffer();
 		if (!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null) && car.getStatus().equals(CarStatusEnum.SCRAPPED)) {
-			return 3;
+			result.append("车辆已报废；");
 		}
 
 		if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && car==null) && car.getServiceType()!=order.getServiceType())
-			return 7;
+			result.append("车型不匹配；");
 		
 		//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，临时取消保险过期、未年检、未交路桥费、包养过期的限制。
 //		if(car.isInsuranceExpired())
-//			return 10;
+//			result.append("车辆已经过保；");
 //		
 //		if(car.isExamineExpired())
-//			return 11;
+//			result.append("车辆没有年审；");
 //		
 //		if(car.isTollChargeExpired())
-//			return 12;
+//			result.append("车辆没有交路桥费；");
 //		
 //		if(car.isCareExpired())
-//			return 13;
+//			result.append("车辆过期未保养；");
 		
 		if(!car.isBorrowed() && !car.isStandingGarage() && !car.isTempStandingGarage())
-			return 14;
+			result.append("车辆不属于常备车库；");
 		
 		String hql = null;
 
@@ -425,7 +430,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 						.setParameter(6, order.getPlanBeginDate()).setParameter(7, order.getPlanBeginDate()).list();
 			}
 			if (list.size() > 0)
-				return 2;
+				result.append("车辆已经被调度；");
 			
 			hql = "from order_ where status<>? and status<>? and status<>? and driver=? and (chargeMode=? or chargeMode=?) and TO_DAYS(planBeginDate)<=TO_DAYS(?) and TO_DAYS(?)<=TO_DAYS(planEndDate)";
 			list=null;
@@ -445,7 +450,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 						.setParameter(6, order.getPlanBeginDate()).setParameter(7, order.getPlanBeginDate()).list();
 			}
 			if (list.size() > 0)
-				return 8;
+				result.append("司机不可用；");
 			
 		} else {
 			List list=null;
@@ -486,7 +491,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 							.setParameter(9, order.getPlanEndDate()).list();
 				}
 				if (list.size() > 0) {
-					return 2;
+					result.append("车辆已经被调度；");
 				}
 			}
 			
@@ -528,7 +533,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 							.setParameter(9, order.getPlanEndDate()).list();
 				}
 				if (list.size() > 0) {
-					return 8;
+					result.append("司机不可用；");
 				}
 			}
 		}
@@ -536,7 +541,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		// 判断有无保养预约记录
 		hql = "from CarCareAppointment where car=? and done=?";
 		if (getSession().createQuery(hql).setParameter(0, car).setParameter(1, false).list().size() > 0) {
-			return 6;
+			result.append("车辆在保养；");
 		}
 		
 
@@ -544,16 +549,19 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		hql = "from CarRepairAppointment where car=? and done=?";
 		if (getSession().createQuery(hql).setParameter(0, car)
 			.setParameter(1, false).list().size() > 0) {
-			return 4;
+			result.append("车辆在维修；");
 		}
 
 		// 判断有无年检预约记录
 		hql = "from CarExamineAppointment where car=? and done=?";
 		if (getSession().createQuery(hql).setParameter(0, car).setParameter(1, false).list().size() > 0) {
-			return 5;
+			result.append("车辆在年审；");
 		}
 		
-		return 0;
+		if(result.length()==0)
+			result.append("OK");
+		
+		return result.toString();
 	}
 
 	/**
@@ -771,9 +779,11 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 	}
 		
 	public List<Order> getNeedRemindProtocolOrder(){
-		String hql = "from order_ as o where o.chargeMode=? and o.status=? and TO_DAYS(o.planEndDate)-TO_DAYS(?)<=7";
+		String hql = "from order_ as o where o.chargeMode=? and (o.status=? or o.status=? or o.status=? or o.status=? or o.status=?) and TO_DAYS(o.planEndDate)-TO_DAYS(?)<=7";
 		return (List<Order>)getSession().createQuery(hql).setParameter(0, ChargeModeEnum.PROTOCOL)
-				.setParameter(1, OrderStatusEnum.BEGIN).setParameter(2, new Date()).list();
+				.setParameter(1, OrderStatusEnum.SCHEDULED).setParameter(2, OrderStatusEnum.ACCEPTED)
+				.setParameter(3, OrderStatusEnum.BEGIN).setParameter(4, OrderStatusEnum.GETON)
+				.setParameter(5, OrderStatusEnum.GETOFF).setParameter(6, new Date()).list();
 	}
 	
 	public Order getEarliestOrderInQueue(){

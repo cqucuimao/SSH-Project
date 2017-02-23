@@ -385,9 +385,8 @@ public class ScheduleAction extends BaseAction {
 		}else
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
 		order.setServiceType(serviceType);
-		int result=orderService.isCarAndDriverAvailable(order, selectedCar,selectedDriver);
-		//System.out.println("resutl="+result);
-		writeJson("{\"result\":" + result + "}");
+		String result=orderService.isCarAndDriverAvailable(order, selectedCar,selectedDriver);
+		writeJson("{\"result\":\"" + result + "\"}");
 	}
 	
 	public void initInputField(Order order){
@@ -558,7 +557,7 @@ public class ScheduleAction extends BaseAction {
 			order.setCallForOtherSendSMS(false);
 		}
 
-		int result = 0;
+		String result;
 		String str=null;
 		if(scheduleMode==null || scheduleMode.isEmpty()){
 			str=OrderService.SCHEDULE_FROM_NEW;
@@ -569,41 +568,14 @@ public class ScheduleAction extends BaseAction {
 			str=OrderService.SCHEDULE_FROM_UPDATE;
 		User user=(User)ActionContext.getContext().getSession().get("user");
 		result = orderService.scheduleOrder(str, order,customerOrganizationName, customerName, selectedCar, selectedDriver, copyNumber,toUpdateOrder,user);
-		if (result == 0){
+		if (result.equals("OK")){
 			if(scheduleMode.equals(OrderService.SCHEDULE_FROM_UPDATE)){	
 				return "orderView";
 			}
 			return "success";
 		}
 		else{
-			if(result==1)
-				addFieldError("scheduleError", "订单已经被调度 ");
-			else if(result==2)
-				addFieldError("scheduleError", "车辆已经被调度");
-			else if(result==3)
-				addFieldError("scheduleError", "车辆已报废");
-			else if(result==4)
-				addFieldError("scheduleError", "车辆在维修 ");
-			else if(result==5)
-				addFieldError("scheduleError", "车辆在年审");
-			else if(result==6)
-				addFieldError("scheduleError", "车辆在保养");
-			else if(result==7)
-				addFieldError("scheduleError", "车型不匹配");
-			else if(result==8)
-				addFieldError("scheduleError", "司机不可用");
-			else if(result==9)
-				addFieldError("scheduleError", "队列订单不能被当前用户调度");
-			else if(result==10)
-				addFieldError("scheduleError", "车辆已经过保");
-			else if(result==11)
-				addFieldError("scheduleError", "车辆没有年审");
-			else if(result==12)
-				addFieldError("scheduleError", "车辆没有交路桥费");
-			else if(result==13)
-				addFieldError("scheduleError", "车辆过期未保养");
-			else if(result==14)
-				addFieldError("scheduleError", "车辆不属于常备车库");
+			addFieldError("scheduleError",result);
 			return "scheduling";
 		}
 	}

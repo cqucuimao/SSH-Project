@@ -668,40 +668,13 @@
 								type : 'post',
 								dataType : 'json',
 								success : function(data) {
-									if (data.result == 0) {
+									if (data.result == "OK") {
 										coverShow();
 										$("#myForm").attr("action","schedule_startSchedule.action").submit();
-									} else if (data.result == 1) {
-										alert("订单已经被调度");
-									} else if (data.result == 2) {
-										alert("车辆已经被调度");
-									} else if (data.result == 3) {
-										alert("车辆已报废");
-									} else if (data.result == 4) {
-										alert("车辆在维修");
-									} else if (data.result == 5) {
-										alert("车辆在年审");
-									} else if (data.result == 6) {
-										alert("车辆在保养");
-									} else if (data.result == 7) {
-										alert("车型不匹配");
-									} else if (data.result == 8) {
-										alert("司机不可用");
-									} else if (data.result == 9) {
-										alert("队列订单不能被当前用户调度")
-									} else if (data.result == 10) {
-										alert("车辆已经过保")
-									} else if (data.result == 11) {
-										alert("车辆没有年审")
-									} else if (data.result == 12) {
-										alert("车辆没有交路桥费")
-									} else if (data.result == 13) {
-										alert("车辆过期未保养")
-									} else if (data.result == 14) {
-										alert("车辆不属于常备车库")
-									}
+									} else
+										alert(data.result);
 								},
-								error : function(msg) {  			         
+								error : function(msg) {  
 							    	console.log("异常"+msg);  
 							    } 
 							});

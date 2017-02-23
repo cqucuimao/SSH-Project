@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSONArray;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
+import com.yuqincar.dao.order.DayOrderDetailDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
@@ -67,8 +68,10 @@ public class OrderAction extends BaseAction {
 	private Date planEndDate1;
 	private Date planEndDate2;
 	private String serviceType;
+	private Date actualBeginDate;
 	private Date actualBeginDate1;
 	private Date actualBeginDate2;
+	private Date actualEndDate;
 	private Date actualEndDate1;
 	private Date actualEndDate2;
 	private String fromAddress;
@@ -103,7 +106,6 @@ public class OrderAction extends BaseAction {
 	private String beforeTime;
 	private String afterTime;
 	private String reason;
-	private String actualEndDate;
 	private String keyWord;
 	private long carId;
 	private String orderDate;
@@ -147,6 +149,7 @@ public class OrderAction extends BaseAction {
 	private User driver;
 	private User scheduler;
 	private User saler;
+	private int dodIndex;
 	
 	private List<DayOrderDetail> dayDetails = new ArrayList<DayOrderDetail>();
 	
@@ -283,10 +286,16 @@ public class OrderAction extends BaseAction {
 	}
 	
 	public String editAndCheckOrderBill(){
+		//TODO 临时措施 目前设备有问题
 		String str=editOrderBill();
-		
+		////////////////////////
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
+
+			//TODO 临时措施 目前设备有问题
+			order.setStatus(OrderStatusEnum.END);
+			orderService.update(order);
+			////////////////////////
 			if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL){	
 				//插入结算队列
 				OrderCheckQueue ocq=new OrderCheckQueue();
@@ -314,6 +323,10 @@ public class OrderAction extends BaseAction {
 				order.getDayDetails().get(i).setActualMile(dayDetails.get(i).getActualMile());
 				order.getDayDetails().get(i).setChargeMile(dayDetails.get(i).getChargeMile());
 			}
+			//TODO 临时措施 目前设备有问题
+			order.setActualBeginDate(actualBeginDate);
+			order.setActualEndDate(actualEndDate);
+			////////////////////////
 			order.setBeginMile(beginMile);
 			order.setCustomerGetonMile(customerGetonMile);
 			order.setCustomerGetoffMile(customerGetoffMile);
@@ -521,19 +534,15 @@ public class OrderAction extends BaseAction {
 	
 	public String rescheduleDo(){
 		Order order=orderService.getOrderById(orderId);
-		int result=0;
-		result=orderService.orderReschedule(order, car, driver,(User)ActionContext.getContext().getSession().get("user"), rescheduleReason);
-		if(result==1){
-			addFieldError("rescheduleError", "车辆或司机不可用");
+		String result=orderService.orderReschedule(order, car, driver,(User)ActionContext.getContext().getSession().get("user"), rescheduleReason);
+		if(!result.equals("OK")){
+			addFieldError("rescheduleError",result);
 			ActionContext.getContext().getValueStack().push(order);
 			return "reschedule";
-		}else if(result==2){
-			addFieldError("rescheduleError", "此订单当前状态不支持重新调度操作");
+		}else{
 			ActionContext.getContext().getValueStack().push(order);
-			return "reschedule";
+			return "view";
 		}
-		ActionContext.getContext().getValueStack().push(order);
-		return "view";
 	}
 	
 	public String postpone(){
@@ -552,17 +561,13 @@ public class OrderAction extends BaseAction {
 			postponeDate=null;
 			return "postpone";
 		}
-		int result=orderService.orderEndPostpone(order, postponeDate, postponeReason, (User)ActionContext.getContext().getSession().get("user"));
-		if(result==1){
-			addFieldError("postponeError", "车辆在此时间段不可用");
+		String result=orderService.orderEndPostpone(order, postponeDate, postponeReason, (User)ActionContext.getContext().getSession().get("user"));
+		if(!result.equals("OK")){
+			addFieldError("postponeError", result);
 			postponeDate=null;
 			return "postpone";
-		}else if(result==2){
-			addFieldError("postponeError", "此订单当前计费方式或状态不支持延后操作");
-			postponeDate=null;
-			return "postpone";
-		}
-		return "view";
+		}else
+			return "view";
 	}
 	
 	public String getTypeString(){
@@ -686,6 +691,9 @@ public class OrderAction extends BaseAction {
 	
 	private QueryHelper getInitHelper(){
 		QueryHelper helper = new QueryHelper("order_", "o");
+		helper.addWhereCondition("o.status<>? and o.status<>? and o.status<>? and o.status<>?", OrderStatusEnum.INQUEUE,
+				OrderStatusEnum.END,OrderStatusEnum.PAID,OrderStatusEnum.CANCELLED);
+		status="未完成";
 		helper.addOrderByProperty("o.id", false);
 		return helper;
 	}
@@ -702,9 +710,14 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("TO_DAYS(?)<=TO_DAYS(o.planBeginDate)", planBeginDate);
 		if(planEndDate!=null)
 			helper.addWhereCondition("TO_DAYS(o.planBeginDate)<=TO_DAYS(?)", planEndDate);
-		OrderStatusEnum statusEnum=getOrderStatus(status);
-		if(statusEnum!=null)
-			helper.addWhereCondition("o.status=?", statusEnum);
+		if("未完成".equals(status)){//“未完成”是默认值。
+			helper.addWhereCondition("o.status<>? and o.status<>? and o.status<>? and o.status<>?", OrderStatusEnum.INQUEUE,
+					OrderStatusEnum.END,OrderStatusEnum.PAID,OrderStatusEnum.CANCELLED);
+		}else{
+			OrderStatusEnum statusEnum=getOrderStatus(status);
+			if(statusEnum!=null)
+				helper.addWhereCondition("o.status=?", statusEnum);
+		}
 		helper.addOrderByProperty("o.id", false);
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
@@ -712,7 +725,6 @@ public class OrderAction extends BaseAction {
 		customerOrganization=null;
 		planBeginDate=null;
 		planEndDate=null;
-		status=null;
 		return "list";
 	}
 
@@ -881,6 +893,29 @@ public class OrderAction extends BaseAction {
 		return "list";
 	}
 	
+	public String deleteDayOrderDetail(){
+		if(orderId>0 && dodIndex>=0){
+			Order order=orderService.getOrderById(orderId);
+			DayOrderDetail dod=order.getDayDetails().get(dodIndex);
+			orderService.deleteDayOrderDetail(dod.getId());
+			order.getDayDetails().remove(dodIndex);
+			orderService.update(order);
+		}
+		return editOrderBillUI();
+	}
+	
+	public String addDayOrderDetail(){
+		if(orderId>0){
+			Order order=orderService.getOrderById(orderId);
+			DayOrderDetail dod=new DayOrderDetail();
+			dod.setOrder(order);
+			orderService.saveDayOrderDetail(dod);
+			order.getDayDetails().add(dod);
+			orderService.update(order);
+		}
+		return editOrderBillUI();
+	}
+	
 	public CustomerOrganization getCustomerOrganization() {
 		return customerOrganization;
 	}
@@ -926,6 +961,14 @@ public class OrderAction extends BaseAction {
 
 	public long getOrderId() {
 		return orderId;
+	}
+
+	public int getDodIndex() {
+		return dodIndex;
+	}
+
+	public void setDodIndex(int dodIndex) {
+		this.dodIndex = dodIndex;
 	}
 
 	public String getActionId() {
@@ -979,14 +1022,6 @@ public class OrderAction extends BaseAction {
 
 	public void setReason(String cancelReason) {
 		this.reason = cancelReason;
-	}
-
-	public String getActualEndDate() {
-		return actualEndDate;
-	}
-
-	public void setActualEndDate(String actualEndDate) {
-		this.actualEndDate = actualEndDate;
 	}
 
 	public String getKeyWord() {
@@ -1071,6 +1106,22 @@ public class OrderAction extends BaseAction {
 
 	public void setRescheduleReason(String rescheduleReason) {
 		this.rescheduleReason = rescheduleReason;
+	}
+	
+	public Date getActualBeginDate(){
+		return actualBeginDate;
+	}
+	
+	public void setActualBeginDate(Date actualBeginDate){
+		this.actualBeginDate=actualBeginDate;
+	}
+	
+	public Date getActualEndDate(){
+		return actualEndDate;
+	}
+	
+	public void setActualEndDate(Date actualEndDate){
+		this.actualEndDate=actualEndDate;
 	}
 	
 	public float getBeginMile() {

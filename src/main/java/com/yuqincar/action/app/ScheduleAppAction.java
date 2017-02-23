@@ -767,7 +767,11 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		if(postponeDate.before(order.getPlanEndDate())){
 			result=1;
 		}else{
-			result=orderService.orderEndPostpone(order, postponeDate, reason, user);
+			String str=orderService.orderEndPostpone(order, postponeDate, reason, user);
+			if("OK".equals(str))
+				result=0;
+			else
+				result=3;
 		}
 		writeJson("{\"status\":"+result+"}");
 	}

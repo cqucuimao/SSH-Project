@@ -1,6 +1,7 @@
 package com.yuqincar.utils;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -122,7 +123,8 @@ public class HttpMethod {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} finally {
+		} 
+		finally {
 			try {
 				httpclient.close();
 			} catch (IOException e) {

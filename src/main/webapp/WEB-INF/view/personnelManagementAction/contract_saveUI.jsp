@@ -19,6 +19,7 @@
         <s:form action="contract_%{id == null ? 'add' : 'edit'}" id="pageForm">
         	<s:hidden name="id"></s:hidden>
         	<s:hidden name="actionFlag"></s:hidden>
+        	<%-- <input value="${actionFlag }" /> --%>
             <table>
             	<colgroup>
 					<col width="80"></col>
@@ -40,8 +41,8 @@
                         <td>
                         	<s:textfield class="Wdate half" style="width:150px;" type="text" 
                         		name="fromDate" id="fromDate" 
-                        		onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" >
-						  		<s:param name="value">
+                        		onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        		<s:param name="fromDate">
 						  			<s:date name="fromDate" format="yyyy-MM-dd"/>
 						  		</s:param>
 							</s:textfield>
@@ -52,8 +53,8 @@
                         <td>
                         	<s:textfield class="Wdate half" style="width:150px;" type="text" 
                         		name="toDate" id="toDate" 
-                        		onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" >
-						  		<s:param name="value">
+                        		onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        		<s:param name="toDate">
 						  			<s:date name="toDate" format="yyyy-MM-dd"/>
 						  		</s:param>
 							</s:textfield>
@@ -69,8 +70,6 @@
                         <th></th>
                         <td>
                         <s:iterator value="diskFiles" >
-							<%-- <div id="image_${image.id}" class="mt20" style="display: inline-block;"> --%>
-							<%-- <img class="faceImg mt20" alt="img" src="doctor_showImage.action?imageId=${image.id}"> --%>
 							<s:a action="contract_downloadFile?uploadId=%{id}">${fileName}</s:a>
 							<s:a action="contract_deleteFile?deletedId=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;">
 								<i class="icon-operate-delete" title="删除"></i>
@@ -94,11 +93,11 @@
     </div>
     <script type="text/javascript">
 	    $(function(){
-			$("#pageForm").validate({
+	    	$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					editUserName:{
+					editUserLabel:{
 						required:true,
 					},
 					fromDate:{
@@ -106,7 +105,7 @@
 					},
 					toDate:{
 						required:true,
-					}
+					},
 				}
 			});
 		});

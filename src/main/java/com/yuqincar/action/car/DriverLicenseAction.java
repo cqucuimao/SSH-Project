@@ -68,6 +68,11 @@ public class DriverLicenseAction extends BaseAction implements ModelDriven<User>
 	
 	/** 修改*/
 	public String edit() throws Exception {
+		if(model.getDriverLicense().getExpireDate()==null)
+		{
+			addFieldError("expireDate", "驾照到期日期为必填项！");
+			return editUI();
+		}
 		//从数据库中取出原对象
 		DriverLicense dl =userService.getById(model.getId()).getDriverLicense();
 		

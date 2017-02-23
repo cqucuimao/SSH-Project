@@ -25,13 +25,13 @@ public class DiskFileConverter extends StrutsTypeConverter {
 	private String sessionName;
 	
 	@SuppressWarnings("unchecked")
-	public Object convertFromString(Map context, String[] values, Class toClass) { 
-		   System.out.println("values: "+values[0]);
+	public Object convertFromString(Map context, String[] values, Class toClass) {
+		System.out.println("values: "+values[0]);
 		   sessionName="diskFile_"+values[0];
 		   if(ActionContext.getContext().getSession().get(sessionName)==null)
 		   {
 			   System.out.println("sessinoname  in diskFileconverter : "+sessionName);
-			   return diskfiles;  
+			   return null;  
 		   }
 			   
 		   List<File> fileList=(List<File>)ActionContext.getContext().getSession().get(sessionName); 

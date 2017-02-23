@@ -5,6 +5,15 @@
         <!-- 标题 -->
         <div class="title">
             <h1>修改驾照过期时间</h1>
+            <p style="color: red">
+				<s:if test="hasFieldErrors()">
+					<s:iterator value="fieldErrors">
+						<s:iterator value="value">
+							<s:property />
+						</s:iterator>
+					</s:iterator>
+				</s:if>
+			</p>
         </div>
         <div class="editBlock detail p30">
         <s:form action="driverLicense_edit" id="pageForm">
@@ -62,7 +71,7 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					expireDate:{
+					driverLicense.expireDate:{
 						required:true,
 					}
 				}

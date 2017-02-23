@@ -20,4 +20,7 @@ public interface DiskFileService {
 			String fileName);
 	
 	public void downloadDiskFile(DiskFile diskFile, HttpServletResponse response);
+	
+	/**  作为合同扫描件时，设置其对应的合同*/
+	public void updateDiskFileContract(DiskFile diskFile);
 }

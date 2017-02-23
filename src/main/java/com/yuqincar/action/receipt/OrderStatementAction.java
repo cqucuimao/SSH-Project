@@ -305,7 +305,6 @@ public class OrderStatementAction extends BaseAction implements ModelDriven<Orde
 	
 	//新增协议订单收款的对账单
 	public void newPopoStatement(){
-		System.out.println("popoIds="+popoIds);
 		String[] idStrArray=popoIds.split(",");
 		System.out.println("idStrArray="+idStrArray[0]);
 		Long[] ids=new Long[idStrArray.length];

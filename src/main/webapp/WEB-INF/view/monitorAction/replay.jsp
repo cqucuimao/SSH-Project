@@ -281,6 +281,14 @@
                       		   hideMask();
                   	    	   alert("请求出错，请重试！");
                   	       }
+                    	   //过滤轨迹，阀值为每小时2km
+                    	   var jsonTrackArray = json.track;
+					       for(var i=0;i<jsonTrackArray.length;i++){
+					    	   var time = jsonTrackArray[i].states[0].receive - jsonTrackArray[i].states[1].receive;
+				        		if(jsonTrackArray[i].distance/time < 2.0/3600000){
+				        			jsonTrackArray.splice(i,1);
+				        		}
+					       }
                   	       //由于获得的轨迹数据是反向序列，所以首先进行先将序列进行反向
                   	       trackPartsData=json;
                   	       //获取轨迹列表长度
@@ -434,12 +442,7 @@
         		tracksPlayTimeAndPointLength[index]=new Array(2);
         		tracksPlayTimeAndPointLength[index][0]=playInterval;
         		
-        		//这里对轨迹进行过滤，每小时里程数小于2KM的，一律过滤掉（过滤的阀值后期可能更改）
-        		var time = track.states[0].receive - track.states[1].receive;
-        		if(track.distance/time < 2.0/3600000){
-        			return true;
-        		}
-        		$("#Searchresult").append("<tr>"+"<td class='alignCenter'>"+"<input type='checkbox' name='checkItem' class='checkboxItems' id="+index+">"
+       			$("#Searchresult").append("<tr>"+"<td class='alignCenter'>"+"<input type='checkbox' name='checkItem' class='checkboxItems' id="+index+">"
         				                 +"<td>"+beginTime.toLocaleString()+"</td>"+"<td>"+endTime.toLocaleString()+"</td>"
         				                 +"<td>"+realInterval+"</td>"+"<td class='alignCenter'>"+track.distance+"</td>"+"<td>"+playInterval+"</td>");  
         	});

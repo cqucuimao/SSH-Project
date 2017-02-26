@@ -225,8 +225,12 @@
         //初始化播放栏
         initPlayBar();
         
+
+ 	    var jsonTrackArray;
+        
         
         $("#queryBn").click(function(){
+        	jsonTrackArray = new Array();
         	showMask();
         	//每次执行查询操作之后，地图重新清空
       		map.clearOverlays();   
@@ -282,17 +286,16 @@
                   	    	   alert("请求出错，请重试！");
                   	       }
                     	   //过滤轨迹，阀值为每小时2km
-                    	   var jsonTrackArray = json.track;
-					       for(var i=0;i<jsonTrackArray.length;i++){
-					    	   var time = jsonTrackArray[i].states[0].receive - jsonTrackArray[i].states[1].receive;
-				        		if(jsonTrackArray[i].distance/time < 2.0/3600000){
-				        			jsonTrackArray.splice(i,1);
+					       for(var i=0;i<json.track.length;i++){
+					    	   var time = json.track[i].states[0].receive - json.track[i].states[1].receive;
+				        		if(json.track[i].distance/time > 2.0/3600000){
+				        			jsonTrackArray.push(json.track[i]);
 				        		}
 					       }
                   	       //由于获得的轨迹数据是反向序列，所以首先进行先将序列进行反向
                   	       trackPartsData=json;
                   	       //获取轨迹列表长度
-                  	       length=trackPartsData.track.length;
+                  	       length=jsonTrackArray.length;
                   	       if(length==0){
                       	       hideMask();
                   	    	   alert("该时间段内没有轨迹！");
@@ -310,9 +313,9 @@
                   	       var temp;
                   	       var mid=Math.floor(length/2);
                   	       for(var i=0;i<mid;i++){
-                  		       temp=trackPartsData.track[i];
-                  		       trackPartsData.track[i]=trackPartsData.track[length-i-1];
-                  		       trackPartsData.track[length-i-1]=temp;
+                  		       temp=jsonTrackArray[i];
+                  		       jsonTrackArray[i]=jsonTrackArray[length-i-1];
+                  		       jsonTrackArray[length-i-1]=temp;
                   	       }
                   	       console.log("轨迹列表");
                   	       console.log(trackPartsData);
@@ -428,8 +431,8 @@
         	//不能直接使用append方法，需要对上次内容清空，否则查询结果会叠加
         	$("#Searchresult").empty();	
         	//遍历查询到的jsonData数据，将信息解析成页面需要显示的表单格式
-        	//trackPartsData.track待索引的数组，index索引下标，track索引下标对应的变量
-        	$.each(trackPartsData.track,function(index,track){
+        	//jsonTrackArray待索引的数组，index索引下标，track索引下标对应的变量
+        	$.each(jsonTrackArray,function(index,track){
         		var beginTime = new Date();
         		var endTime = new Date();
         		beginTime.setTime(track.states[1].receive);
@@ -543,8 +546,8 @@
         	var BaiduPoints;    //存储百度point对象的数组，用于画出相应point序列组成的轨迹
         	var BaiduLocations;    //存储百度point对象的数组，用于轨迹回放时显示地点信息
         	var BaiduAddress;    
-         	var begin=trackPartsData.track[index].states[1].receive;     //当前轨迹的开始时间
-         	var end=trackPartsData.track[index].states[0].receive;       //当前轨迹的结束时间
+         	var begin=jsonTrackArray[index].states[1].receive;     //当前轨迹的开始时间
+         	var end=jsonTrackArray[index].states[0].receive;       //当前轨迹的结束时间
          	console.log("=================查看一下trackPartsData里的数据===============");
          	console.log(trackPartsData);
          	//解析轨迹列表中的某一段轨迹的url

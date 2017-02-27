@@ -23,6 +23,7 @@ import com.yuqincar.service.privilege.ContractService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
+import java.io.InputStream;
 
 
 @Controller
@@ -54,6 +55,8 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	private long deletedId;
 	private static ArrayList<Long> deletedFileIds=new ArrayList<Long>();//用于存放用户暂时删除的扫描件id
 
+	private static long modifyId;
+	
 	
 	/**列表*/
 	public String list(){
@@ -128,14 +131,18 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 		
 		if(uploadedDiskFiles!=null)
 		{
-			model.setDiskFiles(uploadedDiskFiles.getDiskFiles());
-			contractService.saveContract(model);
-			for (int i=0;i<uploadedDiskFiles.getDiskFiles().size();i++) {
+			//model.setDiskFiles(uploadedDiskFiles.getDiskFiles());
+			//contractService.saveContract(model);
+			/*for (int i=0;i<uploadedDiskFiles.getDiskFiles().size();i++) {
 				DiskFile df=new DiskFile();
 				df=uploadedDiskFiles.getDiskFiles().get(i);
 				df.setContract(model);
 				diskFileService.updateDiskFileContract(df);
-			}
+			}*/
+			//List<DiskFile> diskFiles=new ArrayList<DiskFile>();
+			//diskFiles.addAll(uploadedDiskFiles.getDiskFiles());
+			model.setDiskFiles(uploadedDiskFiles.getDiskFiles());
+			contractService.saveContract(model);
 		}else {
 			model.setDiskFiles(null);
 			contractService.saveContract(model);
@@ -175,6 +182,7 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备回显的数据
 		Contract c = contractService.getContractById(model.getId());
+		modifyId=model.getId();
 		ActionContext.getContext().getValueStack().push(c);
 		//员工姓名
 		if (c.getUser()!= null) {
@@ -197,7 +205,7 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	public String downloadFile() throws Exception {
 		DiskFile diskFile=diskFileService.getDiskFileById(uploadId);
 		diskFileService.downloadDiskFile(diskFile, response);
-		Contract c = diskFile.getContract();
+		/*Contract c = diskFile.getContract();
 		ActionContext.getContext().getValueStack().push(c);
 		//员工姓名
 		if (c.getUser()!= null) {
@@ -208,25 +216,24 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 			fromDate = c.getFromDate();		}
 		if (c.getToDate() != null) {
 			toDate = c.getToDate();
-		}
+		}*/
 		return editUI();
 	}
 	
 	/** 删除扫描件*/
 	public String deleteFile() throws Exception {
-		//System.out.println("deletedId "+deletedId);
 		DiskFile diskFile=diskFileService.getDiskFileById(deletedId);
 		deletedFileIds.add(deletedId);
-		Contract c = diskFile.getContract();
+		Contract c = contractService.getContractById(modifyId);
 		List<DiskFile> diskFiles = new ArrayList<DiskFile>();
 		diskFiles.addAll(c.getDiskFiles());
-		System.out.println("disksizebefore "+diskFiles.size());
+		//System.out.println("disksizebefore "+diskFiles.size());
 		for(int i=0;i<deletedFileIds.size();i++)
 		{
 			DiskFile ddf=diskFileService.getDiskFileById(deletedFileIds.get(i));
 			diskFiles.remove(ddf);
 		}
-		System.out.println("disksize "+diskFiles.size());
+		//System.out.println("disksize "+diskFiles.size());
 		c.setDiskFiles(diskFiles);
 		ActionContext.getContext().getValueStack().push(c);
 		//diskFileService.deleteDiskFile(deletedId);
@@ -267,44 +274,41 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 			return addUI();
 		}
 		//从数据库中取出原对象
+		//System.out.println("model="+model.getId()+" modify="+modifyId);
 		Contract c = contractService.getContractById(model.getId());
 		
 		c.setUser(editUser);
 		c.setFromDate(model.getFromDate());
 		c.setToDate(model.getToDate());
 		
-		
+		//构造出diskFiles用于存放该合同删除扫描件后和添加扫描件后的文件
+		List<DiskFile> diskFiles = new ArrayList<DiskFile>();
+		diskFiles.addAll(c.getDiskFiles());
+		for(int j=0;j<deletedFileIds.size();j++)
+		{
+			diskFiles.remove(diskFileService.getDiskFileById(deletedFileIds.get(j)));
+		}
 		if(uploadedDiskFiles!=null)
 		{
-			List<DiskFile> diskFiles = new ArrayList<DiskFile>();
-			diskFiles.addAll(c.getDiskFiles());
 			diskFiles.addAll(uploadedDiskFiles.getDiskFiles());
-			for(int j=0;j<deletedFileIds.size();j++)
-			{
-				diskFiles.remove(diskFileService.getDiskFileById(deletedFileIds.get(j)));
-			}
-			c.setDiskFiles(diskFiles);
-			//更新到数据库
-			
-			contractService.updateContract(c);
-			DiskFile df=new DiskFile();
+		}
+		c.setDiskFiles(diskFiles);
+		contractService.updateContract(c);
+		//System.out.println("diskFileszieofc="+c.getDiskFiles().size());
+		DiskFile df=new DiskFile();
+		//添加uploadedDiskFiles控件中的文件到数据库中
+		if(uploadedDiskFiles!=null)
+		{
 			for (int i=0;i<uploadedDiskFiles.getDiskFiles().size();i++) {
 				df=uploadedDiskFiles.getDiskFiles().get(i);
-				df.setContract(model);
-				diskFileService.updateDiskFileContract(df);
+				InputStream is=diskFileService.getInputStream(df);
+				diskFileService.updateDiskFileData(df, is, df.getFileName());;
 			}
-			for(int j=0;j<deletedFileIds.size();j++)
-			{
-				diskFileService.deleteDiskFile(deletedFileIds.get(j));
-			}
-		}else {
-			for(int j=0;j<deletedFileIds.size();j++)
-			{
-				diskFileService.deleteDiskFile(deletedFileIds.get(j));
-			}
-			if(model.getUser()!=null){
-			contractService.saveContract(model);
-			}
+		}
+		//删除之前删除的扫描件
+		for(int j=0;j<deletedFileIds.size();j++)
+		{
+			diskFileService.deleteDiskFile(deletedFileIds.get(j));
 		}
 		
 		ActionContext.getContext().getValueStack().push(new Contract());
@@ -322,13 +326,17 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	/** 删除*/
 	public String delete() throws Exception {
 		Contract c=contractService.getContractById(model.getId());
-		if(c.getDiskFiles()!=null)
+		//contractService.deleteContract(model.getId());
+		/*if(c.getDiskFiles()!=null)
 		{
 			for (int i=0;i<c.getDiskFiles().size();i++) {
 				diskFileService.deleteDiskFile(c.getDiskFiles().get(i).getId());
 			}
-		}
-		contractService.deleteContract(model.getId());
+		}*/
+		c.setDiskFiles(null);
+		contractService.updateContract(c);
+		//System.out.println("diskfilesize="+c.getDiskFiles().size());
+		contractService.deleteContract(c.getId());
 		return freshList();
 	}
 	

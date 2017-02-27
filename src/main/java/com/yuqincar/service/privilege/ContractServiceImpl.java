@@ -62,6 +62,7 @@ public class ContractServiceImpl implements ContractService {
 	@Transactional
 	public void deleteContract(Long id)
 	{
+		
 		contractDao.delete(id);
 	}
 	

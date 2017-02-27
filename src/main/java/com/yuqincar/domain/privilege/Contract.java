@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -27,7 +29,9 @@ public class Contract extends BaseEntity {
 	private Date toDate;
 	
 	@Text("扫描件")
-	@OneToMany(mappedBy="contract",fetch=FetchType.LAZY )
+	@OneToMany
+	@JoinTable(name = "contract_scanning", joinColumns = { @JoinColumn(name = "contract_id")},
+	inverseJoinColumns = { @JoinColumn(name = "diskFile_id") })
 	private List<DiskFile> diskFiles;
 
 	public User getUser() {

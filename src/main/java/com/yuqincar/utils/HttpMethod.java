@@ -12,6 +12,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -121,6 +122,10 @@ public class HttpMethod {
 			return httpclient.execute(httpget, responseHandler);
 		} catch (ClientProtocolException e) {
 			throw new RuntimeException(e);
+		} catch (ConnectTimeoutException e) {
+			return null;
+		} catch (SocketTimeoutException e) {
+			return null;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} 

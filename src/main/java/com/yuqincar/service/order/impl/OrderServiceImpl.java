@@ -253,6 +253,25 @@ public class OrderServiceImpl implements OrderService {
 		order.getCustomer().setAddresses(addresses);
 		customerDao.save(order.getCustomer());
 	}
+	
+	private void sendSMSToDriver(Order order){
+		Map<String,String> param=new HashMap<String,String>();
+		param.put("customerOrganization", order.getCustomerOrganization().getName());
+		param.put("customerName", order.getCustomer().getName());
+		param.put("phoneNumber",order.getPhone());
+		if(order.getChargeMode()==ChargeModeEnum.DAY)
+			param.put("time", DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
+		else
+			param.put("time", DateUtils.getYMDString(order.getPlanBeginDate()));
+		
+		if(!order.isCallForOther())
+			smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, param);
+		else{
+			param.put("otherPassengerName", order.getOtherPassengerName());
+			param.put("otherPhoneNumber", order.getOtherPhoneNumber());
+			smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER, param);
+		}
+	}
 		
 	@Transactional
 	public String scheduleOrder(String scheduleMode,Order order, String organizationName, String customerName, Car car, User driver, int copyNumber,Order toUpdateOrder,User user) {
@@ -280,16 +299,7 @@ public class OrderServiceImpl implements OrderService {
 						timeString=DateUtils.getYMDHMString(order.getPlanBeginDate());
 					appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。用车时间："+timeString+ "；上车地点："+order.getFromAddress(),null);
 					
-					Map<String,String> param=new HashMap<String,String>();
-					param.put("customerOrganization", order.getCustomerOrganization().getName());
-					param.put("customerName", order.getCustomer().getName());
-					param.put("phoneNumber",order.getPhone());
-					if(order.getChargeMode()==ChargeModeEnum.DAY)
-						param.put("time", DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
-					else
-						param.put("time", DateUtils.getYMDString(order.getPlanBeginDate()));
-										
-					smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, param);
+					sendSMSToDriver(order);
 				}
 				
 				//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，所以自动操作司机接受。
@@ -432,13 +442,14 @@ public class OrderServiceImpl implements OrderService {
 					.append(order.getToAddress()).append("；");
 		}
 		
-		boolean needSendRescheduleSMS=false;
+		boolean carChanged=false;
+		boolean driverChanged=false;
 		if((order.getCar()!=null && !order.getCar().equals(toUpdateOrder.getCar())) ||
 				(order.getCar()==null && toUpdateOrder.getCar()!=null)){
 			sb.append("(").append(++n).append(")").append("车辆由：")
 				.append(toUpdateOrder.getCar()!=null ? toUpdateOrder.getCar().getPlateNumber() : "<空>")
 				.append(" 改为 ").append(order.getCar()!=null ? order.getCar().getPlateNumber() : "<空>").append("；");
-			needSendRescheduleSMS=true;
+			carChanged=true;
 		}
 				
 		if((order.getDriver()!=null && !order.getDriver().equals(toUpdateOrder.getDriver())) || 
@@ -446,14 +457,18 @@ public class OrderServiceImpl implements OrderService {
 			sb.append("(").append(++n).append(")").append("司机由：")
 				.append(toUpdateOrder.getDriver()!=null ? toUpdateOrder.getDriver().getName() : "<空>")
 				.append(" 改为 ").append(order.getDriver()!=null ? order.getDriver().getName() : "<空>").append("；");
-			needSendRescheduleSMS=true;
+			driverChanged=true;
 		}
-		if(needSendRescheduleSMS){
+		if(carChanged || driverChanged){
 			Map<String,String> param=new HashMap<String,String>();
 			param.put("plateNumber", order.getCar().getPlateNumber());
 			param.put("driverName", order.getDriver().getName());
 			param.put("phoneNumber", order.getDriver().getPhoneNumber());
 			smsService.sendTemplateSMS(order.getPhone(), SMSService.SMS_TEMPLATE_RESCHEDULE, param);
+			if(order.isCallForOther() && order.isCallForOtherSendSMS())
+				smsService.sendTemplateSMS(order.getOtherPhoneNumber(), SMSService.SMS_TEMPLATE_RESCHEDULE, param);
+				
+			sendSMSToDriver(order);
 		}
 		
 		if((order.getPayPeriod()!=null && order.getPayPeriod()!=toUpdateOrder.getPayPeriod()) || 
@@ -1082,6 +1097,7 @@ public class OrderServiceImpl implements OrderService {
 					//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，采用调度填写的数据。
 					mile=dod.getActualMile();
 					//mile=lbsDao.getStepMile(order.getCar(), dod.getGetonDate(), dod.getGetoffDate());
+					//dod.setActualMile(mile);
 					if(i==0 && getonDistance>10)
 						mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
 					if(i==order.getDayDetails().size()-1 && getoffDistance>10)
@@ -1118,7 +1134,6 @@ public class OrderServiceImpl implements OrderService {
 						chargeMoney =price.getPerDay().floatValue()+(mile-100)*price.getPerMileAfterLimit().floatValue();
 					}
 					
-					dod.setActualMile(mile);
 					dod.setChargeMile(chargeMile);
 					dod.setChargeMoney(new BigDecimal(chargeMoney));
 					//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，采用调度填写的数据。
@@ -1134,6 +1149,7 @@ public class OrderServiceImpl implements OrderService {
 				//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，采用调度填写的数据。
 				mile=dod.getActualMile();
 				//mile=lbsDao.getStepMile(order.getCar(), dod.getGetonDate(), dod.getGetoffDate());
+				//dod.setActualMile(mile);
 				if(getonDistance>10)
 					mile=mile+(getonDistance-10);   //如果上车地点超过10公里远，超出部分列入行驶公里数
 				if(getoffDistance>10)
@@ -1159,7 +1175,6 @@ public class OrderServiceImpl implements OrderService {
 					}					
 				}
 				
-				dod.setActualMile(mile);
 				dod.setChargeMile(chargeMile);
 				dod.setChargeMoney(new BigDecimal(chargeMoney));
 				//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，采用调度填写的数据。

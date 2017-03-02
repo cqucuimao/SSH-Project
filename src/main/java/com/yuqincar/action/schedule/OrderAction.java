@@ -253,14 +253,22 @@ public class OrderAction extends BaseAction {
 
 			dayDetails=order.getDayDetails();
 			List<DayOrderDetail> nullDayDetails = new ArrayList<DayOrderDetail>();
-			if(dayDetails.size()<8){	
-				nullDayDetails.add(null);
+			if(dayDetails.size()<8){
+				for(int i=0;i<8-dayDetails.size();i++)
+					nullDayDetails.add(null);
 			}
 			ActionContext.getContext().put("abstractTrackList", dayDetails);
 			ActionContext.getContext().put("nullAbstractTrackList", nullDayDetails);
 		}
 		return "print";
 	}
+	
+	//获取当前日期，供订单中显示
+	public String getNowDate(){
+		Date date = new Date();
+		return DateUtils.getChineseYMDString(date);
+	}
+	
 	/**
 	 * 编辑派车单--显示页面
 	 * @return
@@ -357,7 +365,9 @@ public class OrderAction extends BaseAction {
 	 * 显示用车单位签名（图片）
 	 */
 	public void getSignature(){
-		diskFileService.downloadDiskFile(diskFileService.getDiskFileById(imageId), response);
+		System.out.println("imageId="+imageId);
+		if(imageId>0)
+			diskFileService.downloadDiskFile(diskFileService.getDiskFileById(imageId), response);
 	}
 	/*
 	 * 订单详情页,非弹出框

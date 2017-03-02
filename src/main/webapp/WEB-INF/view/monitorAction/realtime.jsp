@@ -53,7 +53,7 @@
                     	<s:a class="buttonA" action="realtime_exportCapcareMessage">导出车辆位置</s:a>
                     </td>
                        <td>
-                    	<s:a class="buttonA" action="realtime_initCapcareMessage">初始化车辆位置</s:a>
+                    	<s:a class="buttonA" action="realtime_testLog">测试日志</s:a>
                     </td>
                 </tr>
             </table>
@@ -171,9 +171,9 @@
         </div>
         
         <!-- 警报信息弹出框 -->
-        <div id="alarmMessageDetail" class="dataGrid" style="display:none;width:800px;height:400px;OVERFLOW-Y: auto;">
-			<div  class="tableWrap">
-				<table id="warningMessages">
+        <div id="alarmMessageDetail" class="dataGrid" style="display:none;width:800px;height:400px;">
+			<div  class="tableWrap" style="height:300px;OVERFLOW-Y:auto;border:0">
+				<table id="warningMessages" style="border:1px solid silver;">
 					<thead>
 						<tr>
 						    <th><input type="checkbox" id="checkAllWarningId"/>全选</th>
@@ -191,7 +191,9 @@
 					</tbody>
 				</table>
 			</div>
-			<div id="processWarningId" style="display:none;" class="bottomBar borderT alignCenter"><input class="inputButton" type="button" value="处理" id="dealWarningsId"/></div>
+			<div id="processWarningId" style="position:absolute;bottom:0;display:none;margin-left:350px;margin-bottom:25px;border:0" class="bottomBar borderT alignCenter">
+				<input class="inputButton" type="button" value="处理" id="dealWarningsId"/>
+			</div>
 		</div>
     
 	    <!-- 总记录列表，Ajax请求获得的所有数据，这些数据需要隐藏-->

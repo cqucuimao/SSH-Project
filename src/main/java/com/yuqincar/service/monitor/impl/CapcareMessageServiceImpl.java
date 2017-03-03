@@ -192,6 +192,8 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 				capcareMap.put(capcareMessage.getPlateNumber(), capcareMessage);
 			}
 		}
+
+
 		//这两行代码是到凯步平台获取全部监控车辆的位置信息，返回Json数据
 		GetCapcareMsg gcm = new GetCapcareMsg();
 		String capcareMessageString  = gcm.excute();

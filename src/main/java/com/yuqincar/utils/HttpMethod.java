@@ -122,6 +122,10 @@ public class HttpMethod {
 			return httpclient.execute(httpget, responseHandler);
 		} catch (ClientProtocolException e) {
 			throw new RuntimeException(e);
+		} catch (ConnectTimeoutException e) {
+			return null;
+		} catch (SocketTimeoutException e) {
+			return null;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} 

@@ -8,7 +8,8 @@
 	}
 	.space{font-family:"黑体";}
 	td{
-	height:50px;
+	font-weight: bold;
+	height:45px;
 	font-size:22px;
 	}
 	.ttt0{

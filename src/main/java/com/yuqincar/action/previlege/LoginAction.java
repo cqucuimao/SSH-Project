@@ -67,7 +67,7 @@ public class LoginAction extends BaseAction{
 					company=Sameusers.get(0).getCompany();					
 			}			
 
-			if(!validationCode.equals(ActionContext.getContext().getSession().get("securityCode"))){
+			if(!validationCode.toLowerCase().equals(ActionContext.getContext().getSession().get("securityCode"))){
 				addFieldError("loginError", "验证码不正确！");
 				return "loginUI";
 			}

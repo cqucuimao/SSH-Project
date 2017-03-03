@@ -34,6 +34,7 @@ public class DiskFileAction extends ActionSupport {
 	}
 
 	public String execute(){
+		System.out.println("11111111111111");
 		sessionName="diskFile_"+diskName;
 		ArrayList<File> uploadLists=new ArrayList<File>();
 		String newFileName=null;
@@ -97,6 +98,7 @@ public class DiskFileAction extends ActionSupport {
 			ActionContext.getContext().getSession().put(sessionName,uploadLists);
 			for(int i=0;i<uploadLists.size();i++)
 				System.out.println("*******"+uploadLists.get(i));
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

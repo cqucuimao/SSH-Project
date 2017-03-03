@@ -41,7 +41,7 @@ public class SecurityCodeImageAction  extends ActionSupport implements SessionAw
         String securityCode = SecurityCode.getSecurityCode();
         imageStream = SecurityImage.getImageAsInputStream(securityCode);
         //放入session中
-        session.put("securityCode", securityCode);
+        session.put("securityCode", securityCode.toLowerCase());
         return SUCCESS;
     }
     

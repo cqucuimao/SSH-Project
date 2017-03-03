@@ -304,17 +304,24 @@ public class OrderServiceImpl implements OrderService {
 				
 				//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，所以自动操作司机接受。
 				driverAPPService.orderAccept(order);
-				int days=DateUtils.elapseDays(order.getPlanBeginDate(), order.getPlanEndDate(),true,true);
-				for(int n=0;n<days;n++){
-					Date date=DateUtils.getMinDate(DateUtils.getOffsetDate(order.getPlanBeginDate(), n));
-					DayOrderDetail dod=new DayOrderDetail();
-					dod.setOrder(order);
-					dod.setGetonDate(date);
-					dod.setGetoffDate(date);
-					dayOrderDetailDao.save(dod);
-				}
 				order.setActualBeginDate(DateUtils.getMinDate(order.getPlanBeginDate()));
-				order.setActualEndDate(DateUtils.getMinDate(order.getPlanEndDate()));
+				if(order.getChargeMode()!=ChargeModeEnum.PROTOCOL){
+					int days=1;
+					if(order.getChargeMode()==ChargeModeEnum.DAY)
+						days=DateUtils.elapseDays(order.getPlanBeginDate(), order.getPlanEndDate(),true,true);
+					for(int n=0;n<days;n++){
+						Date date=DateUtils.getMinDate(DateUtils.getOffsetDate(order.getPlanBeginDate(), n));
+						DayOrderDetail dod=new DayOrderDetail();
+						dod.setOrder(order);
+						dod.setGetonDate(date);
+						dod.setGetoffDate(date);
+						dayOrderDetailDao.save(dod);
+					}
+				}
+				if(order.getChargeMode()==ChargeModeEnum.DAY || order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+					order.setActualEndDate(DateUtils.getMinDate(order.getPlanEndDate()));
+				else
+					order.setActualEndDate(DateUtils.getMinDate(order.getPlanBeginDate()));
 				orderDao.update(order);
 				//////////////////////////////////
 			}else{
@@ -863,8 +870,6 @@ public class OrderServiceImpl implements OrderService {
 		    //计算前缀的长度
 		    int prefix="renderReverse&&renderReverse(".length();
 		    String realAddressJson=addressJson.substring(prefix, addressJson.length()-1);
-//		    System.out.println("result=");
-//		    System.out.println(JSON.parseObject(realAddressJson).getJSONObject("result"));
 		    JSONObject result=JSON.parseObject(realAddressJson).getJSONObject("result");
 		    String address=result.getString("formatted_address") + "（" + result.getString("sematic_description")+ "）";
 		    sb.append(address).append(" - ");

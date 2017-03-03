@@ -42,7 +42,7 @@ public interface DocumentService extends BaseService{
 	 * 
 	 * pagination参数指定了分页信息。
 	 */
-	public PageBean<Document> getToBeChecked(User user);
+	public PageBean<Document> getToBeChecked(int pageNum,User user);
 
 	/*
 	 * user当前能够审核Document对象吗？

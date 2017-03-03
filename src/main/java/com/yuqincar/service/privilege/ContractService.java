@@ -1,5 +1,6 @@
 package com.yuqincar.service.privilege;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public interface ContractService extends BaseService{
     
     public Contract getContractById(Long id);
     
-    public void updateContract(Contract c);
+    public void updateContract(Contract c);//deletedFileIds 中保存了删除的扫描件的id
     
     public void deleteContract(Long id);
     

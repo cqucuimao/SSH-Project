@@ -6,21 +6,27 @@
 	{
 		.noprint{display:none;}
 	}
+	.space{font-family:"黑体";}
 	td{
-	
-	height:30px;
+	height:50px;
+	font-size:22px;
 	}
-	.ttt{
-	float:left;margin-left:5px;width:95px;height:30px;
+	.ttt0{
+	float:left;width:30px;height:30px;font-weight:bold;
+	}
+	.ttt1{
+	float:left;margin-left:15px;width:135px;height:30px;font-weight:bold;
+	}
+	.ttt2{
+	float:left;margin-left:60px;width:135px;height:30px;font-weight:bold;
 	}
 </style>
     <div class="space">
-        <div class="">
 		<table id="tableId" style="border-color:black;width:100%;" border="1" >
 		<tr>
 			<table border="1" style="border-color:black;width:100%;">
 				<tr>
-					<th colspan="4" style="font-size:20px;border:none">重庆市渝勤汽车服务有限公司派车单</th>
+					<th colspan="4" style="font-size:40px;border:none">重庆市渝勤汽车服务有限公司派车单</th>
 				</tr>
 				<tr>
 					<td style="border:none" colspan="3"></td>
@@ -65,12 +71,14 @@
 					</tr>
 					<s:iterator value="abstractTrackList">
 					<tr>
-						<td align="center"><s:date name="getonDate" format="yyyy-MM-dd"/></td>
-						<td align="center"><s:date name="getonDate" format="yyyy-MM-dd HH:mm"/></td>
-						<td align="center"><s:date name="getoffDate" format="yyyy-MM-dd HH:mm"/></td>
+						<td align="center"><s:date name="getonDate" format="MM-dd"/></td>
+						<td align="center"><s:date name="getonDate" format="MM-dd HH:mm"/></td>
+						<td align="center"><s:date name="getoffDate" format="MM-dd HH:mm"/></td>
 						<td align="center">${pathAbstract}</td>
-						<td align="center">${actualMile }</td>
-						<td align="center">${chargeMile }</td>
+						<s:if test="actualMile > 0"><td align="center">${actualMile }</td></s:if>
+						<s:else><td align="center"></td></s:else>
+						<s:if test="chargeMile > 0"><td align="center">${chargeMile }</td></s:if>
+						<s:else><td align="center"></td></s:else>
 					</tr>
 					</s:iterator>
 					<s:iterator value="nullAbstractTrackList" >
@@ -91,46 +99,76 @@
 					<table border="1" style="border-color:black;width:100%;">
 					<tr>
 						<td class="alignCenter" width="15%" style="border-top:none">出库路码</td>
-						<td class="alignCenter" width="10%" style="border-top:none">${beginMile }</td>
+						<s:if test="beginMile > 0">
+							<td class="alignCenter" width="10%" style="border-top:none">${beginMile }</td>
+						</s:if>
+						<s:else>
+							<td class="alignCenter" width="10%" style="border-top:none"></td>
+						</s:else>
 						<td class="alignCenter" width="15%" style="border-top:none">客户上车路码</td>
-						<td class="alignCenter" width="10%" style="border-top:none">${customerGetonMile }</td>
+						<s:if test="customerGetonMile > 0">
+							<td class="alignCenter" width="10%" style="border-top:none">${customerGetonMile }</td>
+						</s:if>
+						<s:else>
+							<td class="alignCenter" width="10%" style="border-top:none"></td>
+						</s:else>
 						<td class="alignCenter" width="15%" style="border-top:none">客户下车路码</td>
-						<td class="alignCenter" width="10%" style="border-top:none">${customerGetoffMile }</td>
+						<s:if test="customerGetoffMile > 0">
+							<td class="alignCenter" width="10%" style="border-top:none">${customerGetoffMile }</td>
+						</s:if>
+						<s:else>
+							<td class="alignCenter" width="10%" style="border-top:none"></td>
+						</s:else>
 						<td class="alignCenter" width="15%" style="border-top:none">回库路码</td>
-						<td class="alignCenter" width="10%" style="border-top:none">${endMile }</td>
+						<s:if test="endMile > 0">
+							<td class="alignCenter" width="10%" style="border-top:none">${endMile }</td>
+						</s:if>
+						<s:else>
+							<td class="alignCenter" width="10%" style="border-top:none"></td>
+						</s:else>
 					</tr>
 					<tr>
 						<td class="alignCenter">邮费</td>
-						<td class="alignCenter">${refuelMoney }</td>
+						<s:if test="refuelMoney > 0"><td class="alignCenter">${refuelMoney }</td></s:if>
+						<s:else><td class="alignCenter"></td></s:else>
 						<td class="alignCenter">洗车费</td>
-						<td class="alignCenter">${washingFee }</td>
+						<s:if test="washingFee > 0"><td class="alignCenter">${washingFee }</td></s:if>
+						<s:else><td class="alignCenter"></td></s:else>
 						<td class="alignCenter">停车费</td>
-						<td class="alignCenter">${parkingFee }</td>
+						<s:if test="parkingFee > 0"><td class="alignCenter">${parkingFee }</td></s:if>
+						<s:else><td class="alignCenter"></td></s:else>
 						<td class="alignCenter">计费路码</td>
-						<td class="alignCenter">${totalChargeMile }</td>
+						<s:if test="totalChargeMile > 0"><td class="alignCenter">${totalChargeMile }</td></s:if>
+						<s:else><td class="alignCenter"></td></s:else>
 					</tr>
 					<tr>
 						<td class="alignCenter">过路费<br/>（客户自理）</td>
-						<td class="alignCenter">${toll }</td>
+						<s:if test="toll > 0"><td class="alignCenter">${toll }</td></s:if>
+						<s:else><td class="alignCenter"></td></s:else>
 						<td class="alignCenter">食宿</td>
-						<td class="alignCenter">${roomAndBoardFee }</td>
+						<s:if test="roomAndBoardFee > 0"><td class="alignCenter">${roomAndBoardFee }</td></s:if>
+						<s:else><td class="alignCenter"></td></s:else>
 						<td class="alignCenter">其他费用</td>
-						<td class="alignCenter" style="padding-left:8px">${otherFee }</td>
+						<s:if test="otherFee > 0"><td class="alignCenter" style="padding-left:8px">${otherFee }</td></s:if>
+						<s:else><td class="alignCenter" style="padding-left:8px"></td></s:else>
 						<td class="alignCenter">税费</td>
-						<td class="alignCenter">${tax }</td>
+						<s:if test="tax > 0"><td class="alignCenter">${tax }</td></s:if>
+						<s:else><td class="alignCenter"></td></s:else>
 					</tr>
 					<tr>
 						<td class="alignCenter">核算金额</td>
-						<td class="alignCenter" colspan="3">${orderMoney }</td>
+						<s:if test="orderMoney > 0"><td class="alignCenter" colspan="3">${orderMoney }</td></s:if>
+						<s:else><td class="alignCenter" colspan="3"></td></s:else>
 						<td class="alignCenter">实收金额</td>
-						<td class="alignCenter" colspan="3">${actualMoney}</td>
+						<s:if test="actualMoney > 0"><td class="alignCenter" colspan="3">${actualMoney }</td></s:if>
+						<s:else><td class="alignCenter" colspan="3"></td></s:else>
 					</tr>
 					<tr>
-						<td colspan="8">&nbsp;&nbsp;&nbsp;&nbsp;请为本次服务评价：&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="grade" value="4" readonly="readonly"/>非常满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="grade" value="3" readonly="readonly"/>满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="grade" value="2" readonly="readonly"/>一般满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="grade" value="1" readonly="readonly"/>不满意&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<td colspan="8">&nbsp;&nbsp;请为本次服务评价：&nbsp;&nbsp;
+						<input type="radio" name="grade" value="4" readonly="readonly"/>非常满意&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="grade" value="3" readonly="readonly"/>满意&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="grade" value="2" readonly="readonly"/>一般满意&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="grade" value="1" readonly="readonly"/>不满意&nbsp;&nbsp;&nbsp;&nbsp;
 						<input id="gradeId" type="hidden" name="grade" value="${grade }"></td>
 					</tr>
 					<tr>
@@ -148,8 +186,7 @@
 					</tr>
 					<tr>
 						<td style="border:none;"></td>
-						<td colspan="5" style="border:none;padding-left:50px">
-						</td>			
+						<td colspan="5" style="border:none;padding-left:50px">${nowDate }</td>			
 						<td colspan="2" style="border:none">派车人：${scheduler.name }</td>
 					</tr>
 					<tr>
@@ -166,11 +203,11 @@
 					<tr>
 						<td style="border:none">　</td>
 						<td style="border:none" colspan="7">
-						<div class="ttt">注：白联</div>
-						<div class="ttt">财务联，红联</div>
-						<div class="ttt">运营联，篮联</div>
-						<div class="ttt">存根联，黄联</div>
-						<div class="ttt">客户联</div>
+						<div class="ttt0">注：</div>
+						<div class="ttt1">白联&nbsp;财务联</div>
+						<div class="ttt2">红联&nbsp;运营联</div>
+						<div class="ttt2">篮联&nbsp;存根联</div>
+						<div class="ttt2">黄联&nbsp;客户联</div>
 						</td>
 					</tr>
 					<tfoot>
@@ -185,7 +222,6 @@
 			    </td>
 			  </tr>
 		</table>
-        </div>
     </div>
     <script type="text/javascript">
     $(function(){
@@ -208,17 +244,5 @@
 			$("input[name=grade][value=4]").attr("checked",true);
 		}
 	 });
-    $(function(){
-    	//获取当前日期
-    	today = new Date();  
-		centry="";
-		if  (today.getFullYear()<2000 )  
-		    centry = "19" ; 
-		date = centry + (today.getFullYear())+ "年" + 
-		    		(today.getMonth() + 1 ) + "月" + 
-		    		today.getDate() + "日 "; 
-		$("#tableId tr:eq(22) td:eq(1)").text(date);
-    	
-    });
     </script>
 </cqu:border>

@@ -17,6 +17,7 @@ import org.springframework.util.FileCopyUtils;
 
 import com.yuqincar.dao.common.DiskFileDao;
 import com.yuqincar.domain.common.DiskFile;
+import com.yuqincar.domain.privilege.Contract;
 import com.yuqincar.service.common.DiskFileService;
 import com.yuqincar.utils.Configuration;
 
@@ -251,5 +252,10 @@ public class DiskFileServiceImpl implements DiskFileService {
 				}
 		}
 		System.out.println("OK666");
+	}
+	
+	@Transactional
+	public void updateDiskFileContract(DiskFile diskFile) {
+		diskFileDao.update(diskFile);
 	}
 }

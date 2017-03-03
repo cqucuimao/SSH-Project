@@ -402,6 +402,7 @@
 			<s:if test=" #session.user.hasPrivilegeByUrl('/driverLicense_list') ">
 			<dd>
 				<s:a action="driverLicense_list">驾照管理</s:a>
+				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
 			</dl>

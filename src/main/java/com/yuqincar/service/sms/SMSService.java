@@ -12,6 +12,7 @@ public interface SMSService {
 	public final static String SMS_TEMPLATE_ORDER_CANCELLED = "91550689";
 	public final static String SMS_TEMPLATE_ORDER_ENQUEUE = "91550805";
 	public final static String SMS_TEMPLATE_NEW_ORDER = "91551512";
+	public final static String SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER = "";
 	public final static String SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER="91551668";
 	public final static String SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER="91551669";
 	public final static String SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER="91551670";
@@ -23,7 +24,7 @@ public interface SMSService {
 	public final static String SMS_TEMPLATE_RESERVECARAPPLYORDER_CARAPPROVED_FOR_PROPOSER="91552060";
 	public final static String SMS_TEMPLATE_RESERVECARAPPLYORDER_DRIVERAPPROVED_FOR_PROPOSER="91552061";
 	public final static String SMS_TEMPLATE_ORDER_END="91552062";
-	public final static String SMS_TEMPLATE_RESCHEDULE="";
+	public final static String SMS_TEMPLATE_RESCHEDULE="91552286";
 	
 	/**
 	 * 发送模板短信

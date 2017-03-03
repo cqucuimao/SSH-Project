@@ -72,6 +72,8 @@ public interface UserService extends BaseService{
 	
 	void saveDispatchUser(String name,String phoneNumber);
 	
+	public PageBean<User> queryUser(int pageNum , QueryHelper helper);
+	
 	void updateDispatchUser(User user);
 	/**
 	 * 没有订单、保养、维修、加油、洗车才能删除

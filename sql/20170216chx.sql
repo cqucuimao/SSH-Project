@@ -1,0 +1,1 @@
+update order_ set payPeriod=0 where chargeMode=2 and payPeriod is null 

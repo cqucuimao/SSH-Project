@@ -30,6 +30,7 @@ import com.yuqincar.service.app.DriverAPPService;
 import com.yuqincar.service.order.OrderCheckQueueService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.sms.SMSService;
+import com.yuqincar.utils.CommonUtils;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
 
@@ -96,16 +97,18 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			params.put("driverName", order.getDriver().getName());
 			params.put("plateNumber", order.getCar().getPlateNumber());
 			params.put("driverPhoneNumber", order.getDriver().getPhoneNumber());
-			params.put("fromAddress", order.getFromAddress());
+			params.put("customerSurname", CommonUtils.getSurname(order.getCustomer().getName()));
+			params.put("schedulerName", order.getScheduler().getName());
+			//params.put("fromAddress", order.getFromAddress());
 			if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
 				params.put("planBeginDate", DateUtils.getYMDHMString(order.getPlanBeginDate()));
-				params.put("toAddress", order.getToAddress());
+				//params.put("toAddress", order.getToAddress());
 				if(order.getOrderSource()!=OrderSourceEnum.APP)
 					smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
 				if(order.isCallForOther() && order.isCallForOtherSendSMS())
 					smsService.sendTemplateSMS(order.getOtherPhoneNumber(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
 			}else{
-				params.put("planDate", DateUtils.getYMDString(order.getPlanBeginDate())+" 至 "+DateUtils.getYMDString(order.getPlanEndDate()));
+				params.put("planBeginDate", DateUtils.getYMDString(order.getPlanBeginDate()));
 				if(order.getOrderSource()!=OrderSourceEnum.APP)
 					smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
 				if(order.isCallForOther() && order.isCallForOtherSendSMS())

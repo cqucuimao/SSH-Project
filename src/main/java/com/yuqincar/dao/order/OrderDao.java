@@ -64,19 +64,9 @@ public interface OrderDao extends BaseDao<Order> {
      * 
      * @param order
      *            订单
-     * @return  0 成功 
-     *          1 订单已经被调度 
-     *          2 车辆已经被调度 
-     *          3 车辆已报废 
-     *          4 车辆在维修 
-     *          5 车辆在年审 
-     *          6 车辆在保养
-     *          7 车型不匹配
-     *          8 司机不可用
-     *          9 队列订单不能被当前用户调度
-     *          （2-8是由isCarAvailable返回的）
+     * @return  "OK" 表示成功
      */
-    public int scheduleOrder(String scheduleMode,Order order, Car car, User driver, User user);
+    public String scheduleOrder(String scheduleMode,Order order, Car car, User driver, User user);
 
     /**
      * 得到队列中的所有订单，并按时间升序排列（距离现在时间较远的排前面）。也就是返回order.status==IN_QUEUE的所有订单。
@@ -139,16 +129,9 @@ public interface OrderDao extends BaseDao<Order> {
 	 * 判断是否可以将订单调度给car。要求order中的chargeMode,planBeginDate,planEndDate不能为空。
 	 * @param order
 	 * @param car
-	 * @return  0 成功 
-     *          2 车辆已经被调度 
-     *          3 车辆已报废 
-     *          4 车辆在维修 
-     *          5 车辆在年审 
-     *          6 车辆在保养
-     *          7 车型不匹配
-     *          8 司机有其它订单任务
+	 * @return  "OK"  成功
      */
-	public int isCarAndDriverAvailable(Order order, Car car, User driver);
+	public String isCarAndDriverAvailable(Order order, Car car, User driver);
 	
 	/**
 	 * 

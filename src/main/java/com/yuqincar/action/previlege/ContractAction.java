@@ -1,11 +1,14 @@
 package com.yuqincar.action.previlege;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.itextpdf.text.log.SysoLogger;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
@@ -20,6 +23,7 @@ import com.yuqincar.service.privilege.ContractService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
+import java.io.InputStream;
 
 
 @Controller
@@ -39,7 +43,7 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	private String userName;
 	private Date fromDateQ;
 	private Date toDateQ;
-	private String actionFlag;
+	private static String actionFlag;
 	
 	/**添加或修改参数*/
 	private User editUser;
@@ -49,11 +53,15 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	
 	private long uploadId;
 	private long deletedId;
+	private static ArrayList<Long> deletedFileIds=new ArrayList<Long>();//用于存放用户暂时删除的扫描件id
 
+	private static long modifyId;
+	
 	
 	/**列表*/
 	public String list(){
 		QueryHelper helper = new QueryHelper(Contract.class, "c");
+		helper.addOrderByProperty("c.id", false);
 		PageBean pageBean = contractService.queryContract(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("contractHelper", helper);
@@ -63,6 +71,7 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	/**更新合同列表*/
 	public String freshList(){
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("contractHelper");
+		helper.addOrderByProperty("c.id", false);
 		PageBean pageBean = contractService.queryContract(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		return "list";
@@ -71,6 +80,7 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	/**查询*/
 	public String queryList(){
 		QueryHelper helper = new QueryHelper(Contract.class, "c");
+		helper.addOrderByProperty("c.id", false);
 		if(userName!=null)
 			helper.addWhereCondition("c.user.name like ?", "%"+userName+"%");
 		if(fromDateQ!=null && toDateQ==null)
@@ -90,23 +100,55 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	
 	/** 添加页面 */
 	public String addUI() throws Exception {
+		uploadedDiskFiles=null;
 		ActionContext.getContext().put("actionFlag", actionFlag);
 		return "saveUI";
 	}
 	
 	/** 添加*/
 	public String add() throws Exception {
+		if(editUser==null)
+		{
+			addFieldError("editUser", "员工姓名为必填项！");
+			return addUI();
+		}
+		if(model.getFromDate()==null)
+		{
+			addFieldError("fromDate", "合同开始日期为必填项！");
+			return addUI();
+		}
+		if(model.getToDate()==null)
+		{
+			addFieldError("toDate", "合同结束日期为必填项！");
+			return addUI();
+		}
 		if(model.getFromDate().after(model.getToDate()))
 		{
 			addFieldError("toDate", "你填写的结束日期早于开始日期！");
 			return addUI();
 		}
 		model.setUser(editUser);
-		//System.out.println("uDiskFiles size: "+model.getDiskFiles().size());
-		//model.setDiskFiles(uploadedDiskFiles.getDiskFiles());
-		contractService.saveContract(model);
 		
+		if(uploadedDiskFiles!=null)
+		{
+			//model.setDiskFiles(uploadedDiskFiles.getDiskFiles());
+			//contractService.saveContract(model);
+			/*for (int i=0;i<uploadedDiskFiles.getDiskFiles().size();i++) {
+				DiskFile df=new DiskFile();
+				df=uploadedDiskFiles.getDiskFiles().get(i);
+				df.setContract(model);
+				diskFileService.updateDiskFileContract(df);
+			}*/
+			//List<DiskFile> diskFiles=new ArrayList<DiskFile>();
+			//diskFiles.addAll(uploadedDiskFiles.getDiskFiles());
+			model.setDiskFiles(uploadedDiskFiles.getDiskFiles());
+			contractService.saveContract(model);
+		}else {
+			model.setDiskFiles(null);
+			contractService.saveContract(model);
+		}
 		ActionContext.getContext().getValueStack().push(new Contract());
+		ActionContext.getContext().put("uploadedDiskFiles", null);
 		return freshList();
 	}
 	
@@ -140,6 +182,7 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 		ActionContext.getContext().put("actionFlag", actionFlag);
 		// 准备回显的数据
 		Contract c = contractService.getContractById(model.getId());
+		modifyId=model.getId();
 		ActionContext.getContext().getValueStack().push(c);
 		//员工姓名
 		if (c.getUser()!= null) {
@@ -153,19 +196,16 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 			toDate = c.getToDate();
 		}
 		
-		//扫描件
-		/*if(c.getDiskFiles()!=null)
-		{
-			
-		}*/
+		uploadedDiskFiles=null;
+		
 		return "saveUI";
 	}
 	
 	/** 下载扫描件*/
 	public String downloadFile() throws Exception {
 		DiskFile diskFile=diskFileService.getDiskFileById(uploadId);
-		//diskFileService.downloadDiskFile(diskFile, response);
-		Contract c = diskFile.getContract();
+		diskFileService.downloadDiskFile(diskFile, response);
+		/*Contract c = diskFile.getContract();
 		ActionContext.getContext().getValueStack().push(c);
 		//员工姓名
 		if (c.getUser()!= null) {
@@ -173,23 +213,30 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 		}
 		//合同起止时间
 		if (c.getFromDate() != null) {
-			fromDate = c.getFromDate();
-		}
+			fromDate = c.getFromDate();		}
 		if (c.getToDate() != null) {
 			toDate = c.getToDate();
-		}
-		diskFileService.downloadDiskFile(diskFile, response);
-		System.out.println("OKKKKKK");
-		return "saveUI";
+		}*/
+		return editUI();
 	}
 	
 	/** 删除扫描件*/
 	public String deleteFile() throws Exception {
-		
 		DiskFile diskFile=diskFileService.getDiskFileById(deletedId);
-		Contract c = diskFile.getContract();
+		deletedFileIds.add(deletedId);
+		Contract c = contractService.getContractById(modifyId);
+		List<DiskFile> diskFiles = new ArrayList<DiskFile>();
+		diskFiles.addAll(c.getDiskFiles());
+		//System.out.println("disksizebefore "+diskFiles.size());
+		for(int i=0;i<deletedFileIds.size();i++)
+		{
+			DiskFile ddf=diskFileService.getDiskFileById(deletedFileIds.get(i));
+			diskFiles.remove(ddf);
+		}
+		//System.out.println("disksize "+diskFiles.size());
+		c.setDiskFiles(diskFiles);
 		ActionContext.getContext().getValueStack().push(c);
-		diskFileService.deleteDiskFile(deletedId);
+		//diskFileService.deleteDiskFile(deletedId);
 		//员工姓名
 		if (c.getUser()!= null) {
 			editUser= c.getUser();
@@ -206,19 +253,69 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	
 	/** 修改*/
 	public String edit() throws Exception {
+		if(editUser==null)
+		{
+			addFieldError("editUser", "员工姓名为必填项！");
+			return addUI();
+		}
+		if(model.getFromDate()==null)
+		{
+			addFieldError("fromDate", "合同开始日期为必填项！");
+			return addUI();
+		}
+		if(model.getToDate()==null)
+		{
+			addFieldError("toDate", "合同结束日期为必填项！");
+			return addUI();
+		}
+		if(model.getFromDate().after(model.getToDate()))
+		{
+			addFieldError("toDate", "你填写的结束日期早于开始日期！");
+			return addUI();
+		}
 		//从数据库中取出原对象
+		//System.out.println("model="+model.getId()+" modify="+modifyId);
 		Contract c = contractService.getContractById(model.getId());
+		
 		c.setUser(editUser);
 		c.setFromDate(model.getFromDate());
 		c.setToDate(model.getToDate());
-
-		System.out.println("actionFlag2="+ actionFlag);
-		//更新到数据库
+		
+		//构造出diskFiles用于存放该合同删除扫描件后和添加扫描件后的文件
+		List<DiskFile> diskFiles = new ArrayList<DiskFile>();
+		diskFiles.addAll(c.getDiskFiles());
+		for(int j=0;j<deletedFileIds.size();j++)
+		{
+			diskFiles.remove(diskFileService.getDiskFileById(deletedFileIds.get(j)));
+		}
+		if(uploadedDiskFiles!=null)
+		{
+			diskFiles.addAll(uploadedDiskFiles.getDiskFiles());
+		}
+		c.setDiskFiles(diskFiles);
 		contractService.updateContract(c);
+		//System.out.println("diskFileszieofc="+c.getDiskFiles().size());
+		DiskFile df=new DiskFile();
+		//添加uploadedDiskFiles控件中的文件到数据库中
+		if(uploadedDiskFiles!=null)
+		{
+			for (int i=0;i<uploadedDiskFiles.getDiskFiles().size();i++) {
+				df=uploadedDiskFiles.getDiskFiles().get(i);
+				InputStream is=diskFileService.getInputStream(df);
+				diskFileService.updateDiskFileData(df, is, df.getFileName());;
+			}
+		}
+		//删除之前删除的扫描件
+		for(int j=0;j<deletedFileIds.size();j++)
+		{
+			diskFileService.deleteDiskFile(deletedFileIds.get(j));
+		}
+		
 		ActionContext.getContext().getValueStack().push(new Contract());
+		System.out.println("FLAG="+actionFlag);
 		if(actionFlag.equals("editFromList"))
 		{
-			System.out.println("actionFlag2=OK"+ actionFlag);
+			deletedFileIds.clear();
 			return freshList();
 		}
 		else {
@@ -226,10 +323,20 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 		}
 	}
 	
-	
 	/** 删除*/
 	public String delete() throws Exception {
-		contractService.deleteContract(model.getId());
+		Contract c=contractService.getContractById(model.getId());
+		//contractService.deleteContract(model.getId());
+		/*if(c.getDiskFiles()!=null)
+		{
+			for (int i=0;i<c.getDiskFiles().size();i++) {
+				diskFileService.deleteDiskFile(c.getDiskFiles().get(i).getId());
+			}
+		}*/
+		c.setDiskFiles(null);
+		contractService.updateContract(c);
+		//System.out.println("diskfilesize="+c.getDiskFiles().size());
+		contractService.deleteContract(c.getId());
 		return freshList();
 	}
 	
@@ -322,6 +429,12 @@ public class ContractAction extends BaseAction implements ModelDriven<Contract> 
 	public void setDeletedId(long deletedId) {
 		this.deletedId = deletedId;
 	}
-	
-	
+
+	public ArrayList<Long> getDeletedFileIds() {
+		return deletedFileIds;
+	}
+
+	public void setDeletedFileIds(ArrayList<Long> deletedFileIds) {
+		this.deletedFileIds = deletedFileIds;
+	}
 }

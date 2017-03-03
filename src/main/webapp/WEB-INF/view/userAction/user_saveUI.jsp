@@ -161,6 +161,13 @@
     	    var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
     	    return this.optional(element) || (length == 11 && mobile.test(value));
     	}, "请正确填写您的手机号码");
+    	
+    	//验证驾照号码，就是身份证号
+    	jQuery.validator.addMethod("isCard", function(value, element) {
+    	    var length = value.length;
+    	    var card = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+    	    return this.optional(element) || (length == 18 && card.test(value));
+    	}, "请正确填写您的驾照号码");
     
 	    $(function(){
 			$("#pageForm").validate({
@@ -179,7 +186,8 @@
 						minlength:11
 					},
 					licenseID:{
-						required:true
+						required:true,
+						isCard:true
 					},
 					expireDate:{
 						required:true

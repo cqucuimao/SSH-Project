@@ -156,7 +156,8 @@
 								<tbody>
 								<tr>
 									<th>车牌号</th>
-									<td><cqu:carSelector name="queryCar"/>
+									<%-- <td><cqu:carSelector name="queryCar"/> --%>
+									<td><cqu:carPlateNumber name="queryCar"/>
 										<input class="inputButton" type="button" value="查询" name="button" id="findCar" />
 									</td>
 								</tr>
@@ -195,9 +196,14 @@
 								<tbody>
 								<tr>
 									<th>调度的车</th>
-									<td><cqu:carSelector name="selectedCar" synchDriver="selectedDriver"/></td>
+									<td><cqu:carPlateNumber name="selectedCar"/></td> 
 									<th>调度的司机</th>
-									<td><cqu:userSelector name="selectedDriver"/></td>
+									<td><cqu:driverName name="selectedDriver"/></td> 
+									
+									<%-- <th>调度的车</th>
+									 <td><cqu:carSelector name="selectedCar" synchDriver="selectedDriver"/></td> 
+									<th>调度的司机</th>
+									<td><cqu:userSelector name="selectedDriver"/></td> --%>
 								</tr>
 								</tbody>
 							</table>                             
@@ -523,7 +529,6 @@
                      return parsed;  
                  }
     			});
-			
 			 $("#customerName" ).autocomplete("schedule_getCustomer.action",{
 				 extraParams : {
 					 				keyWord : function(){return $("#customerName").val();},
@@ -640,6 +645,7 @@
 			var msg = new Msg(); //初始化一个操作提示对象
 			$("#schedule").click(
 					function() {
+						//alert($("#carPlate").val());
 						if (checkMain() && checkDriver()){
 							var chargeMode = $("#chargeMode").val();
 							var planBeginDate = $("#planBeginDate").val();
@@ -662,40 +668,13 @@
 								type : 'post',
 								dataType : 'json',
 								success : function(data) {
-									if (data.result == 0) {
+									if (data.result == "OK") {
 										coverShow();
 										$("#myForm").attr("action","schedule_startSchedule.action").submit();
-									} else if (data.result == 1) {
-										alert("订单已经被调度");
-									} else if (data.result == 2) {
-										alert("车辆已经被调度");
-									} else if (data.result == 3) {
-										alert("车辆已报废");
-									} else if (data.result == 4) {
-										alert("车辆在维修");
-									} else if (data.result == 5) {
-										alert("车辆在年审");
-									} else if (data.result == 6) {
-										alert("车辆在保养");
-									} else if (data.result == 7) {
-										alert("车型不匹配");
-									} else if (data.result == 8) {
-										alert("司机不可用");
-									} else if (data.result == 9) {
-										alert("队列订单不能被当前用户调度")
-									} else if (data.result == 10) {
-										alert("车辆已经过保")
-									} else if (data.result == 11) {
-										alert("车辆没有年审")
-									} else if (data.result == 12) {
-										alert("车辆没有交路桥费")
-									} else if (data.result == 13) {
-										alert("车辆过期未保养")
-									} else if (data.result == 14) {
-										alert("车辆不属于常备车库")
-									}
+									} else
+										alert(data.result);
 								},
-								error : function(msg) {  			         
+								error : function(msg) {  
 							    	console.log("异常"+msg);  
 							    } 
 							});
@@ -773,9 +752,11 @@
 				var driverId = x.target.parentNode.nextElementSibling.nextElementSibling.innerHTML;
 				driverId=driverId.split(";")[1];
 				$("#selectedCarLabel").val(plateNumber);
-				$("#selectedCar").val(carId);
+				//$("#selectedCar").val(carId);
+				$("#selectedCar").val(plateNumber);
 				$("#selectedDriverLabel").val(driverName);
-				$("#selectedDriver").val(driverId);
+				//$("#selectedDriver").val(driverId);
+				$("#selectedDriver").val(driverName);
 			});
 
 			$(".inputButton[id=findCar]").click(function() {

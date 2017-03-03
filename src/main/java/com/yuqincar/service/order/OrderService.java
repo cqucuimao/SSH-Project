@@ -93,18 +93,9 @@ public interface OrderService extends BaseService {
 	 * 
 	 * @param order
 	 *            订单
-	 * @return 	0 成功 
-	 * 			1 订单已经被调度 
-	 * 			2 车辆已经被调度 
-	 * 			3 车辆已报废 
-	 * 			4 车辆在维修 
-	 * 			5 车辆在年审 
-	 * 			6 车辆在保养 
-	 * 			7 车型不匹配 
-	 * 			8 乘车人数超过限定
-	 * 			9 超过调度时间，被剥夺调度权
+	 * @return 	"OK" 表示成功
 	 */
-	public int scheduleOrder(String scheduleMode,Order order,String organizationName, String customerName,Car car, User driver, int copyNumber,Order toUpdateOrder,User user);
+	public String scheduleOrder(String scheduleMode,Order order,String organizationName, String customerName,Car car, User driver, int copyNumber,Order toUpdateOrder,User user);
 
 	/**
 	 * 得到队列中的所有订单，并按时间升序排列（距离现在时间较远的排前面）。也就是返回order.status==IN_QUEUE的所有订单。
@@ -184,11 +175,9 @@ public interface OrderService extends BaseService {
 	 * @param order
 	 * @param endDate
 	 * @param description
-	 * @return 0 成功
-	 * 		   1 车辆不可用
-	 * 		   2 状态不对
+	 * @return "OK" 表示成功
 	 */
-	public int orderEndPostpone(Order order, Date endDate, String description, User user);
+	public String orderEndPostpone(Order order, Date endDate, String description, User user);
 
 	/**
 	 * 是否可以重新调度。只有到order.status==BEGIN时才可以。
@@ -209,11 +198,9 @@ public interface OrderService extends BaseService {
 	 * @param order
 	 * @param car
 	 * @param user
-	 * @return 0 成功 
-	 * 		   1 车辆不可用
-	 * 		   2 状态不对
+	 * @return "OK" 表示成功
 	 */
-	public int orderReschedule(Order order, Car car, User driver, User user,String description);
+	public String orderReschedule(Order order, Car car, User driver, User user,String description);
 
 	public Order getOrderById(long id);
 
@@ -268,7 +255,7 @@ public interface OrderService extends BaseService {
 	 * @param car
 	 * @return
 	 */
-	public int isCarAndDriverAvailable(Order order, Car car, User driver);
+	public String isCarAndDriverAvailable(Order order, Car car, User driver);
 	
 	public List<Order> getNeedRemindProtocolOrder();
 	
@@ -344,4 +331,7 @@ public interface OrderService extends BaseService {
 	
 	public void editOrderBill(Order order, User user);
 	
+	public void deleteDayOrderDetail(long id);
+	
+	public void saveDayOrderDetail(DayOrderDetail dod);
 }

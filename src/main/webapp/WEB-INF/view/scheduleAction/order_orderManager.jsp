@@ -40,7 +40,7 @@
 					</td>
 					<th><s:property value="tr.getText('order.Order.status')" /></th>
 					<td>
-						<s:select name="status" list="{'所有状态','在队列','已调度','已接受','已开始','已上车','已下车','已结束','已付费','已取消'}"></s:select>
+						<s:select name="status" list="{'所有状态','未完成','在队列','已调度','已接受','已开始','已上车','已下车','已结束','已付费','已取消'}"></s:select>
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="button" />
@@ -102,9 +102,11 @@
 							<td class="alignCenter">
 							<s:a action="order_view.action?orderId=%{id}"><i class="icon-operate-detail" title="查看"></i></s:a>
 							<s:a action="order_print.action?orderId=%{id}"><i class="icon-operate-print" title="打印"></i></s:a>
+							<!-- 
 							<s:if test="canEditDriverAction"> 
 								<s:a action="order_editDriverAction.action?orderId=%{id}"><i class="icon-operate-password" title="编辑司机动作"></i></s:a>
 							</s:if>
+							 -->
 							<s:if test="canEditOrderBill"> 
 								<s:a action="order_editOrderBillUI.action?orderId=%{id}"><i class="icon-operate-edit" title="编辑派车单"></i></s:a>
 							</s:if>

@@ -1,5 +1,6 @@
 package com.yuqincar.service.monitor.impl;
 
+import java.net.SocketTimeoutException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.HttpMethod;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 @Service
 public class CapcareMessageServiceImpl implements CapcareMessageService{
@@ -179,7 +181,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 	/**
 	 * 每个10S从凯步获取车辆位置信息
 	 */
-	public void getCapcareMessagePerTenSecondFromCapcare(){
+	public void getCapcareMessagePerTenSecondFromCapcare() {
 		
 		int limitLen = 100;
 			
@@ -190,15 +192,9 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 				capcareMap.put(capcareMessage.getPlateNumber(), capcareMessage);
 			}
 		}
-		
 		//这两行代码是到凯步平台获取全部监控车辆的位置信息，返回Json数据
 		GetCapcareMsg gcm = new GetCapcareMsg();
-		String capcareMessageString = null;
-		try {
-			capcareMessageString = gcm.excute();
-		} catch (ConnectTimeoutException e) {
-			
-		}
+		String capcareMessageString  = gcm.excute();
 		
 		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
 		JSONArray devices = jsonObject.getJSONArray("devices");
@@ -314,12 +310,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		
 		//获取凯步返回的所有车辆的车牌号
 		GetCapcareMsg gcm = new GetCapcareMsg();
-		String capcareMessageString = null;
-		try {
-			capcareMessageString = gcm.excute();
-		} catch (ConnectTimeoutException e) {
-			
-		}
+		String capcareMessageString = gcm.excute();
 		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
 		JSONArray devices = jsonObject.getJSONArray("devices");
 		List<String> plateNumberList = new ArrayList<String>();

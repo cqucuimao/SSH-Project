@@ -32,7 +32,7 @@
 							<td>
 								<s:textfield cssClass="inputText" name="title" readonly="true"/>
 								<s:if test="canDeleteServiceType">
-									<s:a action="priceTable_deleteCarServiceType?carServiceTypeId=%{id}&carServiceSuperTypeId=%{carServiceSuperTypeId}" onclick="return confirm('确认要删除吗？'); if(!result) coverHidden(); alert('chen'); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
+									<s:a action="priceTable_deleteCarServiceType?carServiceTypeId=%{id}&carServiceSuperTypeId=%{carServiceSuperTypeId}" onclick="return confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
 								</s:if>
 							</td>
 						</tr>

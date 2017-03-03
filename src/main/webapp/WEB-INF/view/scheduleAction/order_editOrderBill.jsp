@@ -75,10 +75,24 @@
 	        			<td class="alignCenter" width="36%">经过地点摘要</td>
 	        			<td class="alignCenter" width="10%">实际公里</td>
 	        			<td class="alignCenter" width="10%">收费公里</td>
-	        		</tr>
+	        		</tr>	        
+					<!-- //TODO 临时措施 目前设备有问题 -->		
+					<tr>
+						<td class="alignCenter">实际开始时间</td>
+						<td class="alignCenter"><s:textfield class="Wdate1 half" id="date" name="actualBeginDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td style="display:none">&nbsp;</td>
+					</tr>
+					<!-- /////////////////////////////-->
 	        		<s:iterator value="abstractTrackList" status="track" >
 					<tr>
-						<td class="alignCenter"><s:date name="getonDate" format="yyyy-MM-dd"/></td>
+						<td class="alignCenter">
+							<s:a action="order_deleteDayOrderDetail?orderId=%{orderId}&dodIndex=%{#track.index}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>
+							<s:date name="getonDate" format="yyyy-MM-dd"/>
+						</td>
 						<td class="alignCenter"><s:textfield class="Wdate1 half" id="date" name="%{'dayDetails['+#track.index+'].getonDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
 						<td class="alignCenter"><s:textfield class="Wdate1 half" id="date" name="%{'dayDetails['+#track.index+'].getoffDate'}" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="%{'dayDetails['+#track.index+'].pathAbstract'}" /></td>
@@ -86,7 +100,29 @@
 						<td class="alignCenter"><s:textfield class="inputStyle" name="%{'dayDetails['+#track.index+'].chargeMile'}" /></td>
 						<td style="display:none"><input class="chargeMoney" type="text" value="${chargeMoney }"></td>
 					</tr>
-					</s:iterator>
+					</s:iterator>	
+					<!-- //TODO 临时措施 目前设备有问题 -->	
+					<tr>
+						<td class="alignCenter">
+							<s:a action="order_addDayOrderDetail?orderId=%{orderId}"><i class="icon-operate-edit" title="增加"></i></s:a>
+						</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td style="display:none">&nbsp;</td>
+					</tr>				        		
+					<tr>
+						<td class="alignCenter">实际结束时间</td>
+						<td class="alignCenter"><s:textfield class="Wdate1 half" id="date" name="actualEndDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" /></td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td class="alignCenter">&nbsp;</td>
+						<td style="display:none">&nbsp;</td>
+					</tr>
+					<!-- /////////////////////////////-->
 					<s:iterator value="nullAbstractTrackList" >
 					<tr>
 						<td class="alignCenter"></td>

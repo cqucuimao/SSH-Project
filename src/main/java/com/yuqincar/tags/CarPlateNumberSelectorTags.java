@@ -23,7 +23,8 @@ public class CarPlateNumberSelectorTags extends TagSupport {
 		try {
 			String labelValue = (car == null ? "" : car.getPlateNumber());
 			//String idValue = (car == null ? "" : String.valueOf(car.getId()));
-			
+			options.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"skins/jquery.autocomplete.css\">");
+			options.append("<script type=\"text/javascript\" src=\"js/jquery.autocomplete.js\"></script>");
 			options.append(" <script type=\"text/javascript\">");
 			options.append("$(function() {");
 			options.append("$(\"#"+name+"\" ).autocomplete(\"schedule_getCarPlateNum.action\",{");

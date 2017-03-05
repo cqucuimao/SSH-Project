@@ -196,9 +196,13 @@
 								<tbody>
 								<tr>
 									<th>调度的车</th>
-									<td><cqu:carPlateNumber name="selectedCar"/></td> 
+									<td>
+									<cqu:carPlateNumber name="selectedCar"/>
+									</td> 
 									<th>调度的司机</th>
-									<td><cqu:driverName name="selectedDriver"/></td> 
+									<td>
+									<cqu:driverName name="selectedDriver"/>
+									</td> 
 									
 									<%-- <th>调度的车</th>
 									 <td><cqu:carSelector name="selectedCar" synchDriver="selectedDriver"/></td> 

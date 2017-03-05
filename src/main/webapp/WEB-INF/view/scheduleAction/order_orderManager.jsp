@@ -28,9 +28,12 @@
 					<td>
 						<cqu:customerOrganizationSelector name="customerOrganization"/>
 					</td>					
+					
 					<th><s:property value="tr.getText('order.Order.driver')" /></th>
+					
 					<td>
-						<cqu:userSelector name="driver"/>						
+						<cqu:driverName name="driver"/> 
+					<%-- <cqu:userSelector name="driver"/>  --%>					
 					</td>
 					<th>计划起止时间</th>
 					<td>

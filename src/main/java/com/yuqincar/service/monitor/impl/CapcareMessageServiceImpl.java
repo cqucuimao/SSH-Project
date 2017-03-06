@@ -183,7 +183,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 	 */
 	public void getCapcareMessagePerTenSecondFromCapcare() {
 		
-		int limitLen = 100;
+		int limitLen = 98;
 			
 		//考虑到服务器重启后的第一次访问，内存中是没有位置信息的，如果map.size()==0,那么就从数据库的CapcareMessage实体中获取位置来初始化map。
 		if(capcareMap.size() == 0){
@@ -282,13 +282,13 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 			//再对每一组数据进行处理
 			for(int k=0;k<len;k++){
 				//这是凯步以及经过坐标转换后返回的数据
-				String plateNumber = carService.getCarByDeviceSN(notNullDevices.getJSONObject(i*len+k).getString("sn")).getPlateNumber();
+				String plateNumber = carService.getCarByDeviceSN(notNullDevices.getJSONObject(i*limitLen+k).getString("sn")).getPlateNumber();
 				String longitude = baiduPositionArray.getJSONObject(k).get("x").toString();
 				String latitude = baiduPositionArray.getJSONObject(k).get("y").toString();
-				String status = notNullDevices.getJSONObject(i*len+k).getJSONObject("position").get("status").toString();
-				String speed = notNullDevices.getJSONObject(i*len+k).getJSONObject("position").get("speed").toString();
-				String direction = notNullDevices.getJSONObject(i*len+k).getJSONObject("position").get("direction").toString();
-				String lastTime = notNullDevices.getJSONObject(i*len+k).getJSONObject("position").getString("receive");
+				String status = notNullDevices.getJSONObject(i*limitLen+k).getJSONObject("position").get("status").toString();
+				String speed = notNullDevices.getJSONObject(i*limitLen+k).getJSONObject("position").get("speed").toString();
+				String direction = notNullDevices.getJSONObject(i*limitLen+k).getJSONObject("position").get("direction").toString();
+				String lastTime = notNullDevices.getJSONObject(i*limitLen+k).getJSONObject("position").getString("receive");
 				capcareMessage = capcareMessageDao.getCapcareMessageByPlateNumber(plateNumber);
 				capcareMessage.setLongitude(longitude);
 				capcareMessage.setLatitude(latitude);

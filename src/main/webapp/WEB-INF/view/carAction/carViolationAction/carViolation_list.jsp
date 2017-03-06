@@ -15,7 +15,8 @@
 					</td>
 					<th><s:property value="tr.getText('car.CarViolation.car')" /></th>
 					<td>
-						<cqu:carSelector name="car"/>
+						<cqu:carPlateNumber name="car"/>
+						<%-- <cqu:carSelector name="car"/> --%>
 					</td>
 					<th>从</th>
 					<td>

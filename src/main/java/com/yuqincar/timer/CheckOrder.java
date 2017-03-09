@@ -18,7 +18,7 @@ public class CheckOrder {
 	@Autowired
 	private OrderService orderService;
 	
-	@Scheduled(cron = "10 * * * * ? ") 
+	@Scheduled(cron = "10 * * * * ? ") 	
 	@Transactional
 	public void check(){
 		List<OrderCheckQueue> ocqList=orderCheckQueueService.getAll();
@@ -33,5 +33,4 @@ public class CheckOrder {
 			}
 		}
 	}
-	
 }

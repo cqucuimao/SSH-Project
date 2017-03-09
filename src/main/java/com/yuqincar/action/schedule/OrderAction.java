@@ -20,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSONArray;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
-import com.yuqincar.dao.order.DayOrderDetailDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
@@ -38,6 +37,7 @@ import com.yuqincar.service.common.DiskFileService;
 import com.yuqincar.service.customer.CustomerService;
 import com.yuqincar.service.order.OrderCheckQueueService;
 import com.yuqincar.service.order.OrderService;
+import com.yuqincar.service.privilege.DepartmentService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
@@ -58,6 +58,8 @@ public class OrderAction extends BaseAction {
 	private DiskFileService diskFileService;
 	@Autowired
 	private OrderCheckQueueService orderCheckQueueService;
+	@Autowired
+	private DepartmentService departmentService;
 
 	private CustomerOrganization customerOrganization;
 	private String customerName;
@@ -76,6 +78,8 @@ public class OrderAction extends BaseAction {
 	private Date actualEndDate2;
 	private String fromAddress;
 	private String toAddress;
+	private String customerMemo;
+	private String destination;
 	private BigDecimal orderMoney1;
 	private BigDecimal orderMoney2;
 	private BigDecimal actualMoney1;
@@ -324,6 +328,7 @@ public class OrderAction extends BaseAction {
 		if(orderId>0){
 			Order order=orderService.getOrderById(orderId);
 			
+			order.setDestination(destination);			
 			for(int i=0;i<order.getDayDetails().size();i++){
 				order.getDayDetails().get(i).setGetonDate(dayDetails.get(i).getGetonDate());
 				order.getDayDetails().get(i).setGetoffDate(dayDetails.get(i).getGetoffDate());
@@ -704,6 +709,7 @@ public class OrderAction extends BaseAction {
 		helper.addWhereCondition("o.status<>? and o.status<>? and o.status<>? and o.status<>?", OrderStatusEnum.INQUEUE,
 				OrderStatusEnum.END,OrderStatusEnum.PAID,OrderStatusEnum.CANCELLED);
 		status="未完成";
+		ActionContext.getContext().getSession().put("orderManagerStatus", status);
 		helper.addOrderByProperty("o.id", false);
 		return helper;
 	}
@@ -732,10 +738,28 @@ public class OrderAction extends BaseAction {
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("orderManagerHelper", helper);
+		ActionContext.getContext().getSession().put("orderManagerStatus", status);
 		customerOrganization=null;
 		planBeginDate=null;
 		planEndDate=null;
 		return "list";
+	}
+	
+	public String getOrderColor(){
+		Order order=(Order)ActionContext.getContext().getValueStack().peek();
+		if(order.getCar().isBorrowed() || 
+				order.getDriver().getDepartment().equals(departmentService.getExpatriateDepartment()))
+			return "blue";
+		
+		switch(order.getStatus()){
+		case CANCELLED:
+			return "red";
+		case END:
+		case PAID:
+			return "green";
+		default:
+			return "black";
+		}
 	}
 
 	public String orderManager() {
@@ -750,6 +774,7 @@ public class OrderAction extends BaseAction {
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("orderManagerHelper");
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
+		status=(String)ActionContext.getContext().getSession().get("orderManagerStatus");
 		return "list";
 	}
 
@@ -830,6 +855,10 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("o.fromAddress like ?", "%"+fromAddress+"%");
 		if(toAddress != null && !toAddress.isEmpty())
 			helper.addWhereCondition("o.toAddress like ?", "%"+toAddress+"%");
+		if(customerMemo != null && !customerMemo.isEmpty())
+			helper.addWhereCondition("o.customerMemo like ?", "%"+customerMemo+"%");
+		if(destination != null && !destination.isEmpty())
+			helper.addWhereCondition("o.destination like ?", "%"+destination+"%");
 		if(orderMoney1 != null)
 			helper.addWhereCondition("?<=o.orderMoney", orderMoney1);
 		if(orderMoney2 != null)
@@ -1400,6 +1429,22 @@ public class OrderAction extends BaseAction {
 
 	public void setToAddress(String toAddress) {
 		this.toAddress = toAddress;
+	}
+
+	public String getCustomerMemo() {
+		return customerMemo;
+	}
+
+	public void setCustomerMemo(String customerMemo) {
+		this.customerMemo = customerMemo;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
 	}
 
 	public BigDecimal getOrderMoney1() {

@@ -31,7 +31,13 @@
 						</td> 
                         <th><s:property value="tr.getText('order.Order.serviceType')" />：</th>
                         <td>${serviceType.title }</td>
-                    </tr>
+                    </tr>                    
+                    <tr>
+                        <th><s:property value="tr.getText('order.Order.customerMemo')" />：</th>
+                        <td>${customerMemo}</td>
+                        <th><s:property value="tr.getText('order.Order.destination')" />：</th>
+                        <td>${destination}</td>
+                     </tr>
                     <tr>             	
                         <th><s:property value="tr.getText('order.Order.fromAddress')" />：</th>
                         <td>${fromAddress }</td>
@@ -48,9 +54,14 @@
                         	<s:if test="toAddress!=null">
                         		${toAddress }
                         	</s:if>
-                        </td>
-                        
-                    </tr>            
+                        </td>                        
+                    </tr>   
+                    <tr>
+                    	<th><s:property value="tr.getText('order.Order.smsForCustomer')" />：</th>
+                    	<td><s:if test="smsForCustomer">是</s:if><s:else>否</s:else></td>   
+                    	<th><s:property value="tr.getText('order.Order.smsForDriver')" />：</th>
+                    	<td><s:if test="smsForDriver">是</s:if><s:else>否</s:else></td> 
+                    </tr>      
                 </tbody>
              </table><br><br><br><br>
              <div class="title" style="">

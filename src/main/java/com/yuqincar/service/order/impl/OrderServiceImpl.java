@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,6 +103,17 @@ public class OrderServiceImpl implements OrderService {
 	public List<CarServiceType> getAllCarServiceType() {
 		return orderDao.getAllCarServiceType();
 	}
+	
+	@Transactional
+	public void EnQueueAgain(Order order,String organizationName, String customerName){
+		order.setScheduling(false);
+		order.setScheduler(null);
+		order.setQueueTime(new Date());
+		List<BaseEntity> cc=dealCCP(organizationName,customerName,order.getPhone());
+		order.setCustomerOrganization((CustomerOrganization)cc.get(0));
+		order.setCustomer((Customer)cc.get(1));
+		orderDao.update(order);
+	}
 
 	@Transactional
 	public void EnQueue(Order order,String baseSN,int copyNumber) {
@@ -177,6 +189,8 @@ public class OrderServiceImpl implements OrderService {
 			o.setOrderSource(order.getOrderSource());
 			o.setFromAddress(order.getFromAddress());
 			o.setToAddress(order.getToAddress());
+			o.setCustomerMemo(order.getCustomerMemo());
+			o.setDestination(order.getDestination());
 			o.setSaler(order.getSaler());
 			o.setOrderMoney(order.getOrderMoney());
 			o.setActualMoney(order.getActualMoney());
@@ -255,26 +269,29 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	private void sendSMSToDriver(Order order){
-		Map<String,String> param=new HashMap<String,String>();
-		param.put("customerOrganization", order.getCustomerOrganization().getName());
-		param.put("customerName", order.getCustomer().getName());
-		param.put("phoneNumber",order.getPhone());
-		if(order.getChargeMode()==ChargeModeEnum.DAY)
-			param.put("time", DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
-		else
-			param.put("time", DateUtils.getYMDString(order.getPlanBeginDate()));
-		
-		if(!order.isCallForOther())
-			smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, param);
-		else{
-			param.put("otherPassengerName", order.getOtherPassengerName());
-			param.put("otherPhoneNumber", order.getOtherPhoneNumber());
-			smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER, param);
+		if(order.isSmsForDriver()){
+			Map<String,String> param=new HashMap<String,String>();
+			param.put("customerOrganization", order.getCustomerOrganization().getName());
+			param.put("customerName", order.getCustomer().getName());
+			param.put("phoneNumber",order.getPhone());
+			if(order.getChargeMode()==ChargeModeEnum.DAY)
+				param.put("time", DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
+			else
+				param.put("time", DateUtils.getYMDString(order.getPlanBeginDate()));
+			
+			if(!order.isCallForOther())
+				smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, param);
+			else{
+				param.put("otherPassengerName", order.getOtherPassengerName());
+				param.put("otherPhoneNumber", order.getOtherPhoneNumber());
+				smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER, param);
+			}
 		}
 	}
 		
 	@Transactional
-	public String scheduleOrder(String scheduleMode,Order order, String organizationName, String customerName, Car car, User driver, int copyNumber,Order toUpdateOrder,User user) {
+	public String scheduleOrder(String scheduleMode,Order order, String organizationName, String customerName, 
+			Car car, User driver, int copyNumber,Order toUpdateOrder,User user) {
 		//处理是否新建客户单位和客户
 		List<BaseEntity> cc=dealCCP(organizationName,customerName,order.getPhone());
 		order.setCustomerOrganization((CustomerOrganization)cc.get(0));
@@ -447,6 +464,32 @@ public class OrderServiceImpl implements OrderService {
 			else if(toUpdateOrder.getToAddress()==null)
 				sb.append("(").append(++n).append(")").append("新增下车地点：")
 					.append(order.getToAddress()).append("；");
+		}
+		
+		if(order.getCustomerMemo()==null || StringUtils.isEmpty(order.getCustomerMemo())){
+			if(toUpdateOrder.getCustomerMemo()!=null)
+				sb.append("(").append(++n).append(")").append("删除了客户要求").append("；");
+		}else{
+			if(toUpdateOrder.getCustomerMemo()!=null && !order.getCustomerMemo().equals(toUpdateOrder.getCustomerMemo()))
+				sb.append("(").append(++n).append(")").append("客户要求由：")
+					.append(toUpdateOrder.getCustomerMemo()).append(" 改为 ")
+					.append(order.getCustomerMemo()).append("；");
+			else if(toUpdateOrder.getCustomerMemo()==null)
+				sb.append("(").append(++n).append(")").append("新增客户要求：")
+					.append(order.getCustomerMemo()).append("；");
+		}
+		
+		if(order.getDestination()==null || StringUtils.isEmpty(order.getDestination())){
+			if(toUpdateOrder.getDestination()!=null)
+				sb.append("(").append(++n).append(")").append("删除了目的地").append("；");
+		}else{
+			if(toUpdateOrder.getDestination()!=null && !order.getDestination().equals(toUpdateOrder.getDestination()))
+				sb.append("(").append(++n).append(")").append("目的地由：")
+					.append(toUpdateOrder.getDestination()).append(" 改为 ")
+					.append(order.getDestination()).append("；");
+			else if(toUpdateOrder.getDestination()==null)
+				sb.append("(").append(++n).append(")").append("新增目的地：")
+					.append(order.getDestination()).append("；");
 		}
 		
 		boolean carChanged=false;
@@ -1557,6 +1600,10 @@ public class OrderServiceImpl implements OrderService {
 	public void editOrderBill(Order order, User user){
 		Order oldOrder=orderDao.getById(order.getId());
 		StringBuffer sb=new StringBuffer();
+		if((order.getDestination()==null && oldOrder.getDestination()!=null) 
+				|| (order.getDestination()!=null && oldOrder.getDestination()!=null && !order.getDestination().equals(oldOrder.getDestination()))
+				|| (order.getDestination()!=null && oldOrder.getDestination()==null))
+			sb.append("将目的地由： ").append(oldOrder.getDestination()!=null ? oldOrder.getDestination() : "<空>").append(" 改为了： ").append(order.getDestination()!=null ? order.getDestination() : "<空>").append("；");
 		for(int i=0;i<oldOrder.getDayDetails().size();i++){
 			DayOrderDetail dod=order.getDayDetails().get(i);
 			DayOrderDetail oldDod=oldOrder.getDayDetails().get(i);

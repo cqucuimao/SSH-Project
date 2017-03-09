@@ -61,7 +61,9 @@
 	        			<td class="alignCenter" style="border-bottom:none">驾驶员/电话</td>
 	        			<td class="alignCenter" style="border-bottom:none">${driver.name }：${driver.phoneNumber }</td>
 	        			<td class="alignCenter" style="border-bottom:none">目的地</td>
-	        			<td class="alignCenter" style="border-bottom:none">${toAddress}</td>
+	        			<td class="alignCenter" width="10%" style="border-top:none">
+	        				<s:textfield class="inputStyle" name="destination" />
+	        			</td>
 	        		</tr>
 	        	</table>      	
         </tr>
@@ -241,12 +243,38 @@
     </div>
     <script type="text/javascript">
     
-    $("#sure").click(function(){   		
-   		$("#myForm").attr("action","order_editOrderBill.action");
+    $("#sure").click(function(){ 
+    	flag=1;
+    	$("input[id=date]").each(function(){
+    		if($(this).val().length==0)
+    		{
+    			flag=0;
+    		}
+    	});
+    	if(flag==1)
+   			$("#myForm").attr("action","order_editOrderBill.action");
+    	else{
+    		alert("出入库时间、上下车时间不能均不能为空！");
+    		coverSwitcherOff();
+    		return false;
+    	}
    	})
    	
-    $("#sureAndCheck").click(function(){   		
-   		$("#myForm").attr("action","order_editAndCheckOrderBill.action");
+    $("#sureAndCheck").click(function(){   
+    	flag=1;
+    	$("input[id=date]").each(function(){
+    		if($(this).val().length==0)
+    		{
+    			flag=0;
+    		}
+    	});
+    	if(flag==1)
+       		$("#myForm").attr("action","order_editAndCheckOrderBill.action");
+    	else{
+    		alert("出入库时间、上下车时间不能均不能为空！");
+    		coverSwitcherOff();
+    		return false;
+    	}
    	})
     
     $(function(){

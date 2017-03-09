@@ -77,7 +77,13 @@
                         		${toAddress }
                         	</s:if>
                         </td>
-                    </tr>                  
+                    </tr>                      
+                    <tr>
+                        <th><s:property value="tr.getText('order.Order.customerMemo')" />：</th>
+                        <td>${customerMemo }</td>
+                        <th><s:property value="tr.getText('order.Order.destination')" />：</th>
+                        <td>${destination }</td>
+                    </tr>                 
                     <tr>
                         <th><s:property value="tr.getText('order.Order.queueTime')" />：</th>
                         <td>
@@ -135,7 +141,13 @@
 	                        <th></th>
 	                        <td></td>
                         </s:else>
-                    </tr>
+                    </tr>                     
+                    <tr>
+                    	<th><s:property value="tr.getText('order.Order.smsForCustomer')" />：</th>
+                    	<td><s:if test="smsForCustomer">是</s:if><s:else>否</s:else></td>   
+                    	<th><s:property value="tr.getText('order.Order.smsForDriver')" />：</th>
+                    	<td><s:if test="smsForDriver">是</s:if><s:else>否</s:else></td> 
+                    </tr>   
                 </tbody>
              </table>
              <s:iterator value="operationRecord" status="status">

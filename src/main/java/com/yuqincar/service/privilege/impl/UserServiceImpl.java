@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService{
 		
 		// 默认密码是123456
 		User user =new User();
-		Department department = departmentService.getById((long)6);
+		Department department = departmentService.getExpatriateDepartment();
 		String md5 = DigestUtils.md5Hex("123456"); // 密码要使用MD5摘要
 		user.setPassword(md5);
 		user.setDepartment(department);

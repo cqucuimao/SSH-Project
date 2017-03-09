@@ -68,7 +68,9 @@
 							<td>${fromAddress}</td>
 							<td>${toAddress}</td>
 							<td class="alignCenter">
-								<s:a action="schedule_scheduleFromQueue?scheduleFromQueueOrderId=%{id}"><i class="icon-operate-schedule" title="调度"></i></s:a>
+								<s:if test="canDistributeOrderToUser">
+									<s:a action="schedule_scheduleFromQueue?scheduleFromQueueOrderId=%{id}"><i class="icon-operate-schedule" title="调度"></i></s:a>
+								</s:if>
 							</td>
 						</tr>
 						</s:iterator>

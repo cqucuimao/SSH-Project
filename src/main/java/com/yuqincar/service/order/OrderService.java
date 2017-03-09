@@ -32,6 +32,8 @@ public interface OrderService extends BaseService {
 	 */
 	public List<CarServiceType> getAllCarServiceType();
 
+	public void EnQueueAgain(Order order,String organizationName, String customerName);
+	
 	/**
 	 * 进队列。实质是先保存订单，等待调度。 需要设置进队列时间queueTime。
 	 * 保存订单前，需要设置order的SN置，原则是"YYMMXXXXXX"
@@ -95,7 +97,8 @@ public interface OrderService extends BaseService {
 	 *            订单
 	 * @return 	"OK" 表示成功
 	 */
-	public String scheduleOrder(String scheduleMode,Order order,String organizationName, String customerName,Car car, User driver, int copyNumber,Order toUpdateOrder,User user);
+	public String scheduleOrder(String scheduleMode,Order order,String organizationName, String customerName,Car car, 
+			User driver, int copyNumber,Order toUpdateOrder,User user);
 
 	/**
 	 * 得到队列中的所有订单，并按时间升序排列（距离现在时间较远的排前面）。也就是返回order.status==IN_QUEUE的所有订单。

@@ -55,7 +55,7 @@
 					<td class="alignCenter" style="border-bottom:none">驾驶员/电话</td>
 					<td class="alignCenter" style="border-bottom:none">&nbsp;&nbsp;${driver.name }：${driver.phoneNumber }</td>
 					<td class="alignCenter" style="border-bottom:none">目的地</td>
-					<td class="alignCenter" style="border-bottom:none">&nbsp;&nbsp;${toAddress}</td>
+					<td class="alignCenter" style="border-bottom:none">&nbsp;&nbsp;${destination}</td>
 				</tr>
 			</table>
 		</tr>
@@ -129,7 +129,7 @@
 						</s:else>
 					</tr>
 					<tr>
-						<td class="alignCenter">邮费</td>
+						<td class="alignCenter">油费</td>
 						<s:if test="refuelMoney > 0"><td class="alignCenter">${refuelMoney }</td></s:if>
 						<s:else><td class="alignCenter"></td></s:else>
 						<td class="alignCenter">洗车费</td>

@@ -301,7 +301,7 @@ public class OrderAppAction extends BaseAction{
 		order.setMemo("");		
 		order.setOrderSource(OrderSourceEnum.APP);
 		
-		orderService.EnQueue(order, null,0);
+		orderService.EnQueue(order,0);
 		
 		writeJson("{\"status\":true}");
 	}

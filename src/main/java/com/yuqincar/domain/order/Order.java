@@ -65,10 +65,10 @@ public class Order extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	private CarServiceType serviceType; // 车型
 
-	@Text("出发地")
+	@Text("上车地点")
 	private String fromAddress; // 上车地点
 
-	@Text("目的地")
+	@Text("下车地点")
 	private String toAddress; // 下车地点
 	
 	@Text("客户要求")

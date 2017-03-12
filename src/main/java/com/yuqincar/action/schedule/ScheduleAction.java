@@ -336,11 +336,19 @@ public class ScheduleAction extends BaseAction {
 		order.setCustomerMemo(customerMemo);
 		order.setDestination(destination);
 		if(saler!=null)
-			order.setSaler(saler);
-		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+			order.setSaler(saler);		
+		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
-		else
-			order.setOrderMoney(new BigDecimal(0));
+			order.setActualMoney(protocolMoney);
+			order.setPayPeriod(ProtocolOrderPayPeriodEnum.getById(payPeriodId));
+			order.setFirstPayDate(DateUtils.getYMD(firstPayDate));
+			order.setMoneyForPeriodPay(moneyForPeriodPay);
+		}else{
+			if(order.getOrderMoney()==null)
+				order.setOrderMoney(new BigDecimal(0));
+			if(order.getActualMoney()==null)
+				order.setActualMoney(new BigDecimal(0));
+		}
 		order.setServiceType(serviceType);
 		order.setPhone(phone);
 		order.setStatus(OrderStatusEnum.INQUEUE);
@@ -364,7 +372,7 @@ public class ScheduleAction extends BaseAction {
 			order.setOrderSource(OrderSourceEnum.SCHEDULER);
 			if(needCopy==null || needCopy.equals("off"))
 				copyNumber=0;
-			orderService.EnQueue(order,null,copyNumber);
+			orderService.EnQueue(order,copyNumber);
 		}else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_QUEUE)){//从队列拿出后再进队列
 			orderService.EnQueueAgain(order,customerOrganizationName,customerName);
 		}
@@ -434,10 +442,10 @@ public class ScheduleAction extends BaseAction {
 		if(order.getSaler()!=null)
 			saler=order.getSaler();
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
-			protocolMoney=order.getOrderMoney();
+			protocolMoney=order.getOrderMoney().setScale(0,BigDecimal.ROUND_HALF_UP);
 			payPeriodId = order.getPayPeriod().getId();
 			firstPayDate = DateUtils.getYMDHMString(order.getFirstPayDate());
-			moneyForPeriodPay = order.getMoneyForPeriodPay();
+			moneyForPeriodPay = order.getMoneyForPeriodPay().setScale(0,BigDecimal.ROUND_HALF_UP);
 		}
 		serviceType=order.getServiceType();
 		memo=order.getMemo();

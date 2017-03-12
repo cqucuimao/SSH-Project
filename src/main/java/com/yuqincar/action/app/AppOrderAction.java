@@ -74,8 +74,12 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		long companyId = Long.valueOf(request.getParameter("companyId"));
 		user = userService.getByLoginNameAndMD5Password(username, pwd,companyId);
 		
-		if(user!=null && !privilegeService.canUserHasPrivilege(user, "/driver_app"))
+		if(user==null)
+			return;
+		if(!privilegeService.canUserHasPrivilege(user, "/driver_app")){
 			user=null;
+			return;
+		}
 		if(user.getStatus()!=UserStatusEnum.NORMAL)
 			user=null;
 	}
@@ -127,6 +131,14 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		vo.customerName = order.getCustomer().getName();
 		vo.customerOrganization = order.getCustomerOrganization().getName();
 		vo.customerPhone = order.getPhone();
+		vo.customerDemo=order.getCustomerMemo()==null ? "" : order.getCustomerMemo();
+		vo.destination=order.getDestination()==null ? "" : order.getDestination();
+		vo.refuelMoney=order.getRefuelMoney()==null ? "0" : order.getRefuelMoney().toString();
+		vo.washingMoney=order.getWashingFee()==null ? "0" : order.getWashingFee().toString();
+		vo.parkingFee=order.getParkingFee()==null ? "0" : order.getParkingFee().toString();
+		vo.toll=order.getToll()==null ? "0" : order.getToll().toString();
+		vo.roomAndBoardFee=order.getRoomAndBoardFee()==null ? "0" : order.getRoomAndBoardFee().toString();
+		vo.otherFee=vo.otherFee==null ? "0" : order.getOtherFee().toString();
 		return vo;
 	}
 		
@@ -603,7 +615,14 @@ class OrderVo {
 	public String customerPhone;
 	public OrderStatusEnum status;
 	public String sn;
-
+	public String customerDemo;
+	public String destination;
+	public String refuelMoney;
+	public String washingMoney;
+	public String parkingFee;
+	public String toll;
+	public String roomAndBoardFee;
+	public String otherFee;
 }
 
 class AppOrderStatusVo {

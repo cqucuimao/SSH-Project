@@ -116,14 +116,14 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Transactional
-	public void EnQueue(Order order,String baseSN,int copyNumber) {
+	public void EnQueue(Order order,int copyNumber) {
 		System.out.println("in EnQueue");
 		//处理是否新建客户单位和客户		
 		List<BaseEntity> cc=dealCCP(order.getCustomerOrganization().getName(),order.getCustomer().getName(),order.getPhone());
 		order.setCustomerOrganization((CustomerOrganization)cc.get(0));
 		order.setCustomer((Customer)cc.get(1));
 				
-		orderDao.EnQueue(order,baseSN);
+		orderDao.EnQueue(order);
 		
 		if(copyNumber>0)
 			copyOrderScheduled(order,copyNumber);
@@ -169,7 +169,6 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	private void copyOrderScheduled(Order order, int n) {
-		String baseSN=order.getSn();
 		for (int i = 0; i < n; i++) {
 			Order o = new Order();
 			o.setCustomerOrganization(order.getCustomerOrganization());
@@ -194,8 +193,7 @@ public class OrderServiceImpl implements OrderService {
 			o.setSaler(order.getSaler());
 			o.setOrderMoney(order.getOrderMoney());
 			o.setActualMoney(order.getActualMoney());
-			EnQueue(o,baseSN,0);
-			baseSN=o.getSn();
+			EnQueue(o,0);
 		}
 	}
 	

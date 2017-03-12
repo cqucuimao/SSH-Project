@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.jsp.IteratorStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -153,6 +154,7 @@ public class OrderAction extends BaseAction {
 	private User driver;
 	private User scheduler;
 	private User saler;
+	private String customerOrganizationKeyword;
 	private int dodIndex;
 	
 	private List<DayOrderDetail> dayDetails = new ArrayList<DayOrderDetail>();
@@ -924,6 +926,8 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("o.otherFee<=?", otherFee2);
 		if(saler!=null)
 			helper.addWhereCondition("o.saler=?", saler);
+		if(customerOrganizationKeyword!=null && !StringUtils.isEmpty(customerOrganizationKeyword))
+			helper.addWhereCondition("o.customerOrganization.name like ?","%"+customerOrganizationKeyword+"%");
 		
 		helper.addOrderByProperty("o.id", false);
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
@@ -1701,6 +1705,14 @@ public class OrderAction extends BaseAction {
 
 	public void setSaler(User saler) {
 		this.saler = saler;
+	}
+
+	public String getCustomerOrganizationKeyword() {
+		return customerOrganizationKeyword;
+	}
+
+	public void setCustomerOrganizationKeyword(String customerOrganizationKeyword) {
+		this.customerOrganizationKeyword = customerOrganizationKeyword;
 	}
 }
 

@@ -142,7 +142,9 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.saler')" /></th>
-					<td><cqu:userSelector name="saler"/></td>
+					<td><cqu:userSelector name="saler"/></td>					
+					<th><s:property value="tr.getText('order.Order.customerOrganization')" />(模糊查询)</th>
+					<td><s:textfield class="inputText" name="customerOrganizationKeyword" /></td>
 				</tr>
 				</tbody>
 				<tfoot>

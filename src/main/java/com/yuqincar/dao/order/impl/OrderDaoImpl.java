@@ -48,7 +48,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		return getSession().createQuery("from CarServiceType").list();
 	}
 
-	public void EnQueue(Order order,String baseSN) {
+	public void EnQueue(Order order) {
 
 		/**
 		 * 进队列。实质是先保存订单，等待调度。 需要设置进队列时间queueTime。
@@ -56,7 +56,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		 * ,YY表示两位年，MM表示两位月，XXXXX表示每个月的流水号，每个月从00001开始。
 		 * 
 		 */
-		dealSN(order,baseSN);
+		dealSN(order);
 		order.setQueueTime(new Date());
 		// 设置订单状态,状态设置为进队列
 		order.setStatus(OrderStatusEnum.INQUEUE);
@@ -147,7 +147,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		}
 		
 		if(scheduleMode==OrderService.SCHEDULE_FROM_NEW){
-			dealSN(order,null);
+			dealSN(order);
 			order.setCar(car);
 			order.setStatus(OrderStatusEnum.SCHEDULED);
 			order.setDriver(driver);
@@ -155,7 +155,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			order.setScheduleTime(new Date());
 			save(order);
 		}else if(scheduleMode==OrderService.SCHEDULE_FROM_QUEUE){
-			dealSN(order,null);
+			dealSN(order);
 			order.setCar(car);
 			order.setDriver(driver);
 			order.setStatus(OrderStatusEnum.SCHEDULED);
@@ -164,7 +164,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			order.setScheduling(false);
 			update(order);
 		}else if(scheduleMode==OrderService.SCHEDULE_FROM_UPDATE){
-			dealSN(order,null);
+			dealSN(order);
 			order.setCar(car);
 			order.setDriver(driver);
 			order.setScheduler(user);
@@ -596,58 +596,45 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 		return d;
 	}
 
-	private void dealSN(Order order, String baseSN) {
+	private void dealSN(Order order) {
 		Company company=null;
 		if(ActionContext.getContext()!=null)
 			company=(Company) ActionContext.getContext().getSession().get("company");
 		String SN_PREFIX=company.getOrderPrefix();
 		String SN_COOPERATION_PREFIX=company.getCooperationOrderPrefix();
-		if(baseSN==null){
-			if(order.getSn()==null){
-				// 设置sn号,从数据库查当前年月的数据,如果没有,从00001开始,如果有加1即可
-				String sn = null;
-				Calendar cc = Calendar.getInstance();
-				String yy = String.valueOf(cc.get(Calendar.YEAR)).substring(2);
-				String mm = String.valueOf(cc.get(Calendar.MONTH) + 1);
-				String yearMonth = (yy.length() < 2 ? "0" + yy : yy)
-						+ (mm.length() < 2 ? "0" + mm : mm);
-				// 通过createTime判断,降序排列
-				String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by id desc";
-				Query query = getSession().createQuery(sql).setParameter(0,new Date());
-				List list = query.list();
-				if (list.size() == 0) {
-					sn = yearMonth + "00001";
-				} else {
-					String lastSN=((Order)list.get(0)).getSn();
-					if(lastSN.startsWith(SN_PREFIX))
-						lastSN=lastSN.substring(SN_PREFIX.length());
-					else if(lastSN.startsWith(SN_COOPERATION_PREFIX))
-						lastSN=lastSN.substring(SN_COOPERATION_PREFIX.length());
-					sn = String.valueOf(Integer.parseInt(lastSN) + 1);
-				}
-				if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null))
-					order.setSn(SN_COOPERATION_PREFIX+sn);
-				else
-					order.setSn(SN_PREFIX+sn);
-			}else{
-				if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null)){
-					if(order.getSn().startsWith(SN_PREFIX))
-						order.setSn(SN_COOPERATION_PREFIX+order.getSn().substring(SN_PREFIX.length()));
-				}else
-					if(order.getSn().startsWith(SN_COOPERATION_PREFIX))
-						order.setSn(SN_PREFIX+order.getSn().substring(SN_COOPERATION_PREFIX.length()));
+		if(order.getSn()==null){
+			// 设置sn号,从数据库查当前年月的数据,如果没有,从00001开始,如果有加1即可
+			String sn = null;
+			Calendar cc = Calendar.getInstance();
+			String yy = String.valueOf(cc.get(Calendar.YEAR)).substring(2);
+			String mm = String.valueOf(cc.get(Calendar.MONTH) + 1);
+			String yearMonth = (yy.length() < 2 ? "0" + yy : yy)
+					+ (mm.length() < 2 ? "0" + mm : mm);
+			// 通过createTime判断,降序排列
+			String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by id desc";
+			Query query = getSession().createQuery(sql).setParameter(0,new Date());
+			List list = query.list();
+			if (list.size() == 0) {
+				sn = yearMonth + "00001";
+			} else {
+				String lastSN=((Order)list.get(0)).getSn();
+				if(lastSN.startsWith(SN_PREFIX))
+					lastSN=lastSN.substring(SN_PREFIX.length());
+				else if(lastSN.startsWith(SN_COOPERATION_PREFIX))
+					lastSN=lastSN.substring(SN_COOPERATION_PREFIX.length());
+				sn = String.valueOf(Integer.parseInt(lastSN) + 1);
 			}
-		}else{	//复制订单时，需要指定
-			String sn=null;
-			if(baseSN.startsWith(SN_PREFIX)){
-				sn=baseSN.substring(SN_PREFIX.length());
-				sn=String.valueOf(Integer.parseInt(sn)+1);
-				order.setSn(SN_PREFIX+sn);
-			}else if(baseSN.startsWith(SN_COOPERATION_PREFIX)){
-				sn=baseSN.substring(SN_COOPERATION_PREFIX.length());
-				sn=String.valueOf(Integer.parseInt(sn)+1);
+			if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null))
 				order.setSn(SN_COOPERATION_PREFIX+sn);
-			}
+			else
+				order.setSn(SN_PREFIX+sn);
+		}else{
+			if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null)){
+				if(order.getSn().startsWith(SN_PREFIX))
+					order.setSn(SN_COOPERATION_PREFIX+order.getSn().substring(SN_PREFIX.length()));
+			}else
+				if(order.getSn().startsWith(SN_COOPERATION_PREFIX))
+					order.setSn(SN_PREFIX+order.getSn().substring(SN_COOPERATION_PREFIX.length()));
 		}
 	}
 
@@ -669,12 +656,13 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 	}
 
 	public Order getUndoOrder(User user, Long orderId) {
-		String hql = "from order_ as o where o.id=? and o.driver=? and o.status=?";
+		String hql = "from order_ as o where o.id=? and o.driver=? and (o.status=? or o.status=?)";
 
 		return (Order) getSession().createQuery(hql)//
 				.setParameter(0, orderId)//
 				.setParameter(1, user)//
 				.setParameter(2, OrderStatusEnum.SCHEDULED)//
+				.setParameter(3, OrderStatusEnum.ACCEPTED)//
 				.uniqueResult();
 	}
 

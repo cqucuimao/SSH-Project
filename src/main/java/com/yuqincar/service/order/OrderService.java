@@ -41,7 +41,7 @@ public interface OrderService extends BaseService {
 	 * 
 	 * @param order
 	 */
-	public void EnQueue(Order order,String baseSN,int copyNumber);
+	public void EnQueue(Order order,int copyNumber);
 
 	/**
 	 * 得到推荐的汽车。并将满足条件的汽车按照匹配度降序排列，可分页。 推荐汽车的原则： 

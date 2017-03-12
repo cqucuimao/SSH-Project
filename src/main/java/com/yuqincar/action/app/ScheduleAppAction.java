@@ -469,7 +469,7 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 		*/
 		order.setMemo(memo);
 		order.setOrderSource(OrderSourceEnum.SCHEDULER);
-		orderService.EnQueue(order,null,copyOrderCount);
+		orderService.EnQueue(order,copyOrderCount);
 	}
 	
 	public void getOrdersInQueue(){

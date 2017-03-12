@@ -93,6 +93,8 @@
 					<td><s:select name="standbyCarLabel" list="#{0:'否',1:'是'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="" /></td>
 				</tr>
 				<tr>
+					<th><s:property value="tr.getText('car.Car.borrowed')" /></th>
+					<td><s:select name="borrowedLabel" list="#{0:'否',1:'是'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="" /></td>
 					<th><s:property value="tr.getText('car.Car.memo')" /></th>
 					<td><s:textfield class="inputText" name="memo" /></td>
 				</tr>

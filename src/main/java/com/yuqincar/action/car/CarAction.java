@@ -86,6 +86,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private String examineExpiredLabel;
 	private String tollChargeExpiredLabel;
 	private String standbyCarLabel;
+	private String borrowedLabel;
 	private CarRepair unDoneAppointRepair;
 	private CarCare unDoneAppointCare;
 	private CarExamine unDoneAppointExamine;
@@ -280,6 +281,13 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		}
 		if(insuranceExpiredLabel == "否" || "否".equals(insuranceExpiredLabel)){
 			helper.addWhereCondition("c.insuranceExpired =?", false);
+		}
+		//是否外调车
+		if("是".equals(borrowedLabel)){
+			helper.addWhereCondition("c.borrowed =?", true);
+		}
+		if("否".equals(borrowedLabel)){
+			helper.addWhereCondition("c.borrowed =?", false);
 		}
 		helper.addOrderByProperty("c.id", false);
 		PageBean<Car> pageBean = carService.queryCar(pageNum, helper);		
@@ -623,6 +631,14 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		this.transmissionTypeLabel = transmissionTypeLabel;
 	}
 	
+	public String getBorrowedLabel() {
+		return borrowedLabel;
+	}
+
+	public void setBorrowedLabel(String borrowedLabel) {
+		this.borrowedLabel = borrowedLabel;
+	}
+
 	public String getCareExpiredLabel() {
 		return careExpiredLabel;
 	}

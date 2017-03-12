@@ -74,6 +74,10 @@
                         <th><s:property value="tr.getText('car.Car.mileage')" />：</th>
                         <td>${mileage}</td>
                     </tr>
+                     <tr>
+                        <th><s:property value="tr.getText('car.Car.borrowed')" />：</th>
+                        <td><s:if test="borrowed">是</s:if><s:else>否</s:else></td>
+                    </tr>
                     <tr>
                     	<th>&nbsp;</th>
                     	<td>&nbsp;</td>

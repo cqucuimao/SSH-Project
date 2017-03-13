@@ -325,6 +325,12 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/smsRecord_list') ">
+			<dd>
+				<s:a action="smsRecord_list">短信记录</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
 		</dl>
 		</s:if>
 		

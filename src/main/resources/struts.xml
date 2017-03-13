@@ -466,6 +466,12 @@
 			<result name="query">/WEB-INF/view/queryStatisticsAction/accountsReceivableStatisticAction/accountsReceivableStatistic_queryList.jsp
 			</result>
 		</action>
+		
+		<!-- 短信记录查询 -->
+		<action name="smsRecord_*" class="smsRecordAction" method="{1}">
+			<result name="list">/WEB-INF/view/queryStatisticsAction/smsRecord_list.jsp
+			</result>
+		</action>
 
 		<!-- GPS设备API -->
 		<action name="api" class="apiAction" method="api">

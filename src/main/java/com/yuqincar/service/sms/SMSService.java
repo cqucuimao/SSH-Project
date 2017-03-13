@@ -25,8 +25,8 @@ public interface SMSService {
 	public final static String SMS_TEMPLATE_RESERVECARAPPLYORDER_DRIVERAPPROVED_FOR_PROPOSER="91552061";
 	public final static String SMS_TEMPLATE_ORDER_END="91552062";
 	public final static String SMS_TEMPLATE_RESCHEDULE="91552286";
-	
-	
+	public final static String SMS_TEMPLATE_NEW_ORDER_V2 = "91552375";
+	public final static String SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER_V2 = "91552327";
 	
 	
 	/**

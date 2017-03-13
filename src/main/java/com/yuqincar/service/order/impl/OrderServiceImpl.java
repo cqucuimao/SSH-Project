@@ -276,6 +276,8 @@ public class OrderServiceImpl implements OrderService {
 				param.put("time", DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
 			else
 				param.put("time", DateUtils.getYMDString(order.getPlanBeginDate()));
+			param.put("destination", order.getDestination()==null ? "无" : order.getDestination());
+			param.put("customerMemo", order.getCustomerMemo()==null ? "无" : order.getCustomerMemo());
 			
 			if(!order.isCallForOther())
 				smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, param);

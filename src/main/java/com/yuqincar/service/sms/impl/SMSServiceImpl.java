@@ -35,7 +35,7 @@ public class SMSServiceImpl implements SMSService {
 	private static String APP_ID = "593884530000249253";//应用ID------登录平台在应用设置可以找到
 	private static String APP_SECRET = "ba1a8529eef141b3d5b631d998f33fd0";//应用secret-----登录平台在应用设置可以找到
 	private static int SMS_TRY_TIMES = 6;
-	private static String SEND_SUCCESS_TEMPLATE="{\"res_code\":0,\"res_message\":\"Success\",\"idertifier\":\"90610913090118406454\"}";
+	private static String SEND_SUCCESS_TEMPLATE="{\"res_code\":0,\"res_message\":\"Success\",\"idertifier\":\"90610313152615759721\"}";
 
 	
 	//短信模板ID与短信模板内容的对应关系
@@ -50,8 +50,8 @@ public class SMSServiceImpl implements SMSService {
 		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_POSTPONE,"您的订单（{sn}）结束时间已经延后。原时间：{oriDate}；延后到：{newDate}。");
 		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_CANCELLED,"您的订单（{sn}）已经被取消。原因：{reason}。");
 		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_ENQUEUE,"有新订单入队列。{customer}（{customerOrganization}，{phoneNumber}），{chargeMode}，{time}，{address}。");
-		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER,"您有新的订单任务。单位：{customerOrganization}，联系人：{customerName}， 联系电话：{phoneNumber}，用车时间：{time}。请接受！");
-		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER,"您有新的订单任务。单位：{customerOrganization}，联系人：{customerName}， 联系电话：{phoneNumber}，实际乘车人：{otherPassengerName}（{otherPhoneNumber}），用车时间：{time}。请接受！");
+		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER,"您有新的订单任务。单位：{customerOrganization}，联系人：{customerName}， 联系电话：{phoneNumber}，用车时间：{time}，目的地：{destination}，客户要求：{customerMemo}。请接受！");
+		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER,"您有新的订单任务。单位：{customerOrganization}，联系人：{customerName}， 联系电话：{phoneNumber}，实际乘车人：{otherPassengerName}（{otherPhoneNumber}），用车时间：{time}，目的地：{destination}，客户要求：{customerMemo}。请接受！");
 		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER,"车辆{plateNumber}达到了保养里程。系统已经为您生成了保养预约，日期是{date}，请保养车辆。保养完成后，请及时通知后勤保障科同事，以便解除车辆锁定。在此之前，调度人员无法为该车调度订单。");
 		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER,"车辆{plateNumber}达到了保养里程。系统已经生成了保养预约，日期是{date}，请关注。");
 		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER,"车辆{plateNumber}达到了保养里程，系统已经生成了保养预约。但由于该车辆没有指定默认驾驶员，保养记录也无法指定驾驶员。所以需要您联系驾驶员前去做保养，并在系统中指定保养预约驾驶员，否则无法锁定驾驶员，有可能导致订单调度错误。");
@@ -64,8 +64,6 @@ public class SMSServiceImpl implements SMSService {
 		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_DRIVERAPPROVED_FOR_PROPOSER,"您提交的临时扩充常备车库申请已由{driverApproveUser}配置司机完成。");
 		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_END,"订单（{sn}）已经执行完毕。单位：{customerOrganization}，车辆：{plateNumber}，驾驶员：{driver}。");
 		SMS_CONTENT.put(SMS_TEMPLATE_RESCHEDULE,"您的订单已经重新调度。车辆：{plateNumber}，司机：{driverName}（{phoneNumber}）。");
-		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER_V2,"您有新的订单任务。单位：{customerOrganization}，联系人：{customerName}， 联系电话：{phoneNumber}，用车时间：{time}，目的地：{destination}，客户要求：{customerMemo}。请接受！");
-		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER_V2,"您有新的订单任务。单位：{customerOrganization}，联系人：{customerName}， 联系电话：{phoneNumber}，实际乘车人：{otherPassengerName}（{otherPhoneNumber}），用车时间：{time}，目的地：{destination}，客户要求：{customerMemo}。请接受！");
 	
 	}
 
@@ -104,15 +102,11 @@ public class SMSServiceImpl implements SMSService {
 		String resJson = "";
 		//验证码短信不需要打开开关。这是为了使测试服务器能够正常发送验证码。
 		if("on".equals(Configuration.getSmsSwitch()) || "13883101475".equals(phoneNumber) || templateId.equals(SMSService.SMS_TEMPLATE_VERFICATION_CODE)){
-			System.out.println("*****"+Configuration.getSmsSwitch());
 			resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
-			AddSMSRecord(phoneNumber,templateId,paramString);
-			System.out.println("***resJson="+resJson);
 		}else{
 			sendSMSToFile(phoneNumber,templateId,paramString);
 			resJson=SEND_SUCCESS_TEMPLATE;
 		}
-		System.out.println("***SEND_SUCCESS_TEMPLATE="+SEND_SUCCESS_TEMPLATE);
 		return resJson;
 	}
 
@@ -146,6 +140,17 @@ public class SMSServiceImpl implements SMSService {
 		
 		try{
 			String resJson=sendTemplateSMS(phoneNumber,templateId,template_param);
+			if(!resJson.toLowerCase().contains("success")){
+				SMSQueue sq=new SMSQueue();
+				sq.setPhoneNumber(phoneNumber);
+				sq.setTemplateId(templateId);
+				sq.setParams(template_param);
+				sq.setInQueueDate(new Date());
+				sq.setTryTimes(0);
+				sMSQueueService.saveSMSQueue(sq);
+			}else{
+				AddSMSRecord(phoneNumber,templateId,template_param);
+			}
 			return resJson;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -166,8 +171,9 @@ public class SMSServiceImpl implements SMSService {
 		List<SMSQueue> smsList=sMSQueueService.getAllSMSQueue();
 		for(SMSQueue sms:smsList){
 			try{
-				sendTemplateSMS(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams());
-				sMSQueueService.deleteSMSQueue(sms.getId());
+				String resJson=sendTemplateSMS(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams());
+				if(resJson.toLowerCase().contains("success"))
+					sMSQueueService.deleteSMSQueue(sms.getId());
 			}catch(Exception e){
 				sms.setTryTimes(sms.getTryTimes()+1);
 				if(sms.getTryTimes()>=SMS_TRY_TIMES)

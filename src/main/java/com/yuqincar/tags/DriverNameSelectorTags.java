@@ -31,6 +31,11 @@ public class DriverNameSelectorTags extends TagSupport {
 			options.append("$(\"#"+name+"\" ).autocomplete(\"schedule_getUserName.action\",{");
 			options.append("extraParams : {keyWord : function(){return $(\"#"+name+"\" ).val();}},");
 			options.append("formatItem: function(item) { return item;  },");
+			
+			options.append("mustMatch: true,");
+			options.append("multiple: true,");
+			options.append("multipleSeparator: \" \",");
+			
 			options.append("parse:function(data) {");
 			options.append("var parsed = []; ");
 			options.append("for (var i = 0; i < data.length; i++) { ");

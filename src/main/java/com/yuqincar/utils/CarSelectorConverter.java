@@ -35,8 +35,19 @@ public class CarSelectorConverter extends StrutsTypeConverter {
 				return carService.getCarById(id);
 			}else
 			{
-				//System.out.println("carPlateNumber: "+values[0]);
-				return carService.getCarByPlateNumber(values[0]);
+				String name=values[0];
+				System.out.println("carPlateNumber: "+name);
+				char ch='(';
+				if(name.contains(Character.toString(ch)))
+				{
+					int index=name.indexOf('(');
+					name=name.substring(0, index);
+					//System.out.println("carPlateNumber: "+name);
+					return carService.getCarByPlateNumber(name);
+				}
+				else
+					return carService.getCarByPlateNumber(values[0]);
+				
 			}
 		}
 		return null;

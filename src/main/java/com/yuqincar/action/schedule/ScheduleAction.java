@@ -185,12 +185,15 @@ public class ScheduleAction extends BaseAction {
 		for (CustomerOrganization co : customerOrganizationService
 				.queryCustomerOrganizationByKeyword(keyWord).getRecordList())
 			list.add(co.getName());
+			//list.add(co);
 		System.out.println("list.size()="+list.size());
 		JSONArray jsonArray = new JSONArray(list);
 		writeJson(jsonArray.toJSONString());
 	}
 //@zys 20170213
 	public void getCarPlateNum() {
+		//System.out.println("in getCarPlateNumber");
+		//System.out.println("keyword="+keyWord);
 		//System.out.println("keyWord="+keyWord);
 		QueryHelper helper = new QueryHelper(Car.class, "c");
 		helper.addWhereCondition(
@@ -199,7 +202,8 @@ public class ScheduleAction extends BaseAction {
 		
 		for (Car car : carService.queryCar(1, helper)
 				.getRecordList()) {
-			list.add(car.getPlateNumber());
+		list.add(car.getPlateNumber()+"("+car.getServiceType().getTitle()+")");
+			//list.add(car.getPlateNumber());
 		}
 		System.out.println("list.size()="+list.size());
 		JSONArray jsonArray = new JSONArray(list);

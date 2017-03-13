@@ -29,9 +29,16 @@ public class CarPlateNumberSelectorTags extends TagSupport {
 			options.append("$(function() {");
 			options.append("$(\"#"+name+"\" ).autocomplete(\"schedule_getCarPlateNum.action\",{");
 			options.append("extraParams : {keyWord : function(){return $(\"#"+name+"\" ).val();}},");
+//			options.append("extraParams : {keyWord : function(){alert($(\"#"+name+"\" ).val());return $(\"#"+name+"\" ).val();}},");
 			options.append("formatItem: function(item) { return item;  },");
+			
+			options.append("mustMatch: true,");
+			options.append("multiple: true,");
+			options.append("multipleSeparator: \" \",");
+			
 			options.append("parse:function(data) {");
-			options.append("var parsed = []; ");
+			options.append("var parsed = [];");
+//			options.append("alert('length='+data.length);");
 			options.append("for (var i = 0; i < data.length; i++) { ");
 			options.append("parsed[parsed.length] = {  ");
 			options.append("data: data[i], ");
@@ -42,7 +49,7 @@ public class CarPlateNumberSelectorTags extends TagSupport {
 			options.append("}); ");
 			options.append("</script>");
 			
-			options.append("<input class=\"inputText\" type=\"text\" id="+name+" name="+name+"  value=\'"+labelValue+"\'/>");
+			options.append("<input class=\"inputText\"  style=\"width:180px\"  type=\"text\" id="+name+" name="+name+"  value=\'"+labelValue+"\'/>");
 			out.println(options);
 		} catch (IOException e) {
 			e.printStackTrace();

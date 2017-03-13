@@ -463,7 +463,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 	
 	public String popup() {
-		List<TreeNode> nodes = new ArrayList() ;
+		List<TreeNode> nodes = new ArrayList();
 		
 		if(!StringUtils.isEmpty(model.getPlateNumber()))
 			nodes= carService.getCarTree(model.getPlateNumber(),synchDriver);

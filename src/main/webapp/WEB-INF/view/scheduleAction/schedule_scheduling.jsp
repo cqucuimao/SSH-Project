@@ -110,6 +110,18 @@
 										<td>
 											<s:textfield class="inputText" type="text" name="toAddress" id="toAddress" />
 										</td>
+									</tr>
+									<tr>
+										<th>客户要求</th>
+										<td>
+											<s:textfield class="inputText" type="text" name="customerMemo" id="customerMemo" />
+										</td>
+									</tr>
+									<tr>
+										<th>目的地</th>
+										<td>
+											<s:textfield class="inputText" type="text" name="destination" id="destination" />
+										</td>
 									</tr>	
 									<tr class="filter_protocol">
 										<th>协议价格<span class="required">*</span></th>
@@ -216,7 +228,10 @@
 						<div class="bottomBar borderT">
 							<input type="button" id="schedule" class="inputButton" value="调度" />
 							<input type="button" id="inQueue" class="inputButton" value="进入队列" />
-							<input type="reset" id="reset" class="inputButton" value="重置" />							
+							<input type="reset" id="reset" class="inputButton" value="重置" />
+							&nbsp;调度时发送短信：&nbsp;
+							<input type="checkbox" class="m10" id="smsForCustomer" name="smsForCustomer" checked/>&nbsp;客户&nbsp;&nbsp;					
+							<input type="checkbox" class="m10" id="smsForDriver" name="smsForDriver" checked/>&nbsp;司机					
 							<s:if test="fromUpdate">
                             	<a class="p15" href="javascript:history.go(-1);">返回</a>
 							</s:if>
@@ -261,13 +276,24 @@
 			$("#fromAddress").val("${fromAddress}");
 			$("#toAddress").val("${toAddress}");
 			
+			$("#destination").val("${destination}");
+			$("#customerMemo").val("${customerMemo}");
+						
 			if("filter_days"=="${chargeMode}" || "filter_protocol"=="${chargeMode}"){
 				formatDateField1($("#planBeginDate"));
 				formatDateField1($("#planEndDate"));
 				formatDateField1($("#firstPayDate"));
-			}
-			
-			$("input[type=button][value=进入队列]").hide();
+			}			
+
+			if("on"=="${smsForCustomer}")
+				$("#smsForCustomer").attr("checked", true);
+			else
+				$("#smsForCustomer").attr("checked", false);
+				
+			if("on"=="${smsForDriver}")
+				$("#smsForDriver").attr("checked", true);
+			else
+				$("#smsForDriver").attr("checked", false);
 		}
 		
 		function initFromUpdate(){
@@ -301,6 +327,9 @@
 			$("#fromAddress").val("${fromAddress}");
 			$("#toAddress").val("${toAddress}");
 			
+			$("#destination").val("${destination}");
+			$("#customerMemo").val("${customerMemo}");
+			
 			$("#schedule").val("确认修改");
 			$("#inQueue").hide();
 			$("#reset").hide();
@@ -310,6 +339,15 @@
 				formatDateField1($("#planEndDate"));
 				formatDateField1($("#firstPayDate"));
 			}
+
+			if("on"=="${smsForCustomer}")
+				$("#smsForCustomer").attr("checked", true);
+			else
+				$("#smsForCustomer").attr("checked", false);
+			if("on"=="${smsForDriver}")
+				$("#smsForDriver").attr("checked", true);
+			else
+				$("#smsForCustomer").attr("checked", false);
 		}
 	
 	

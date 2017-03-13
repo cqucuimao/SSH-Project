@@ -29,7 +29,7 @@ public class OrderCheckQueueServiceImpl implements OrderCheckQueueService {
 	public void update(OrderCheckQueue orderCheckQueue) {
 		orderCheckQueueDao.update(orderCheckQueue);
 	}
-
+	
 	public List<OrderCheckQueue> getAll() {
 		return orderCheckQueueDao.getAll();
 	}

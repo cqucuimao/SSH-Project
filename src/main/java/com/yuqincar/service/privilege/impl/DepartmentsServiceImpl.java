@@ -59,7 +59,10 @@ public class DepartmentsServiceImpl implements DepartmentService {
 	public boolean canDeleteDepartment(Long id) {
 		return departmentDao.canDeleteDepartment(id);
 	}
-
+	
+	public Department getExpatriateDepartment(){
+		return departmentDao.getDepartmentByName("外派");
+	}
 
 
 }

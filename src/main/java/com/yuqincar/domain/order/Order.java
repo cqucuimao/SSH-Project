@@ -65,11 +65,17 @@ public class Order extends BaseEntity {
 	@OneToOne(fetch=FetchType.LAZY)
 	private CarServiceType serviceType; // 车型
 
-	@Text("出发地")
+	@Text("上车地点")
 	private String fromAddress; // 上车地点
 
-	@Text("目的地")
+	@Text("下车地点")
 	private String toAddress; // 下车地点
+	
+	@Text("客户要求")
+	private String customerMemo;
+	
+	@Text("目的地")
+	private String destination;
 	
 	@Text("每天行程细节")
 	@OneToMany(mappedBy="order")
@@ -213,6 +219,12 @@ public class Order extends BaseEntity {
 	@Text("周期收款单")
 	@OneToMany(mappedBy = "order", fetch=FetchType.LAZY)
 	private List<ProtocolOrderPayOrder> payorders;
+	
+	@Text("给客户发送短信")
+	private boolean smsForCustomer;
+	
+	@Text("给司机发送短信")
+	private boolean smsForDriver;
 
 	public OrderStatement getOrderStatement() {
 		return orderStatement;
@@ -471,6 +483,22 @@ public class Order extends BaseEntity {
 		this.toAddress = toAddress;
 	}
 
+	public String getCustomerMemo() {
+		return customerMemo;
+	}
+
+	public void setCustomerMemo(String customerMemo) {
+		this.customerMemo = customerMemo;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
 	public List<DayOrderDetail> getDayDetails() {
 		return dayDetails;
 	}
@@ -661,5 +689,21 @@ public class Order extends BaseEntity {
 
 	public void setPayorders(List<ProtocolOrderPayOrder> payorders) {
 		this.payorders = payorders;
+	}
+
+	public boolean isSmsForCustomer() {
+		return smsForCustomer;
+	}
+
+	public void setSmsForCustomer(boolean smsForCustomer) {
+		this.smsForCustomer = smsForCustomer;
+	}
+
+	public boolean isSmsForDriver() {
+		return smsForDriver;
+	}
+
+	public void setSmsForDriver(boolean smsForDriver) {
+		this.smsForDriver = smsForDriver;
 	}	
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -16,10 +18,13 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+
+import com.yuqincar.action.lbs.GetBaiduMsg;
 
 
 
-public class HttpMethod {
+public class HttpMethod {  
 
 	public static RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(8000)
 			.setConnectionRequestTimeout(2000).setSocketTimeout(8000).build();
@@ -122,11 +127,7 @@ public class HttpMethod {
 			return httpclient.execute(httpget, responseHandler);
 		} catch (ClientProtocolException e) {
 			throw new RuntimeException(e);
-		} catch (ConnectTimeoutException e) {
-			return null;
-		} catch (SocketTimeoutException e) {
-			return null;
-		} catch (IOException e) {
+		}  catch (IOException e) {
 			throw new RuntimeException(e);
 		} 
 		finally {

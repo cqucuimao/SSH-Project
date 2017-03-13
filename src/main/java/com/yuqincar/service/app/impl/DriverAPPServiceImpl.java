@@ -103,13 +103,13 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
 				params.put("planBeginDate", DateUtils.getYMDHMString(order.getPlanBeginDate()));
 				//params.put("toAddress", order.getToAddress());
-				if(order.getOrderSource()!=OrderSourceEnum.APP)
+				if(order.getOrderSource()!=OrderSourceEnum.APP && order.isSmsForCustomer())
 					smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
 				if(order.isCallForOther() && order.isCallForOtherSendSMS())
 					smsService.sendTemplateSMS(order.getOtherPhoneNumber(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
 			}else{
 				params.put("planBeginDate", DateUtils.getYMDString(order.getPlanBeginDate()));
-				if(order.getOrderSource()!=OrderSourceEnum.APP)
+				if(order.getOrderSource()!=OrderSourceEnum.APP && order.isSmsForCustomer())
 					smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
 				if(order.isCallForOther() && order.isCallForOtherSendSMS())
 					smsService.sendTemplateSMS(order.getOtherPhoneNumber(),SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);

@@ -4,7 +4,7 @@ import com.yuqincar.domain.common.BaseEnum;
 
 public enum DocumentStatusEnum implements BaseEnum{
 	
-	UNCHECKED(0,"待审核"),
+	UNCHECKED(0,"未审核"),
 	
 	CHECKING(1,"正在审核"),
 	

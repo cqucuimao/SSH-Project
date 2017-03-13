@@ -27,7 +27,7 @@ public interface OrderDao extends BaseDao<Order> {
      * 保存订单前，需要设置order的SN置，原则是"YYMMXXXXXX",YY表示两位年，MM表示两位月，XXXXX表示每个月的流水号，每个月从00001开始。
      * @param order
      */
-    public void EnQueue(Order order,String baseSN);
+    public void EnQueue(Order order);
 
     /**
      * 通过sn查询订单

@@ -85,6 +85,10 @@ public class ScheduleAction extends BaseAction {
 	private CarServiceType serviceType;
 	private String fromAddress;
 	private String toAddress;
+	private String destination;
+	private String customerMemo;
+	private String smsForCustomer;
+	private String smsForDriver;
 	private String memo;
 	private String needCopy;
 	private int copyNumber;
@@ -300,16 +304,16 @@ public class ScheduleAction extends BaseAction {
 	public String inQueue() {
 		System.out.println("in inQueue");
 		System.out.println("i am coming here");
-		Order order = new Order();
+		Order order=null;
+		if(scheduleMode==null || scheduleMode.isEmpty())
+			order=new Order();
+		else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_QUEUE)){
+			order=orderService.getOrderById(scheduleFromQueueOrderId);
+		}
 		CustomerOrganization customerOrganization = null;
 		Customer customer = null;
 		ChargeModeEnum chargeModeEnum = null;
-		customerOrganization=new CustomerOrganization();
-		customerOrganization.setName(customerOrganizationName);
-		order.setCustomerOrganization(customerOrganization);	//到Service层去处理是否新建客户单位
-		customer=new Customer();
-		customer.setName(customerName);
-		order.setCustomer(customer);							//到Service层去处理是否新建客户
+		
 		if(callForOther!=null && callForOther.equals("on")){
 			order.setCallForOther(true);
 			order.setOtherPassengerName(otherPassengerName);
@@ -333,21 +337,50 @@ public class ScheduleAction extends BaseAction {
 		order.setFromAddress(fromAddress);
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			order.setToAddress(toAddress);
+		order.setCustomerMemo(customerMemo);
+		order.setDestination(destination);
 		if(saler!=null)
-			order.setSaler(saler);
-		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL)
+			order.setSaler(saler);		
+		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
-		else
-			order.setOrderMoney(new BigDecimal(0));
+			order.setActualMoney(protocolMoney);
+			order.setPayPeriod(ProtocolOrderPayPeriodEnum.getById(payPeriodId));
+			order.setFirstPayDate(DateUtils.getYMD(firstPayDate));
+			order.setMoneyForPeriodPay(moneyForPeriodPay);
+		}else{
+			if(order.getOrderMoney()==null)
+				order.setOrderMoney(new BigDecimal(0));
+			if(order.getActualMoney()==null)
+				order.setActualMoney(new BigDecimal(0));
+		}
 		order.setServiceType(serviceType);
 		order.setPhone(phone);
 		order.setStatus(OrderStatusEnum.INQUEUE);
 		order.setMemo(memo);
-		order.setOrderSource(OrderSourceEnum.SCHEDULER);
-		System.out.println("needCopy="+needCopy);
-		if(needCopy==null || needCopy.equals("off"))
-			copyNumber=0;
-		orderService.EnQueue(order,null,copyNumber);
+		if(smsForCustomer!=null && smsForCustomer.equals("on"))
+			order.setSmsForCustomer(true);
+		else
+			order.setSmsForCustomer(false);
+		if(smsForDriver!=null && smsForDriver.equals("on"))
+			order.setSmsForDriver(true);
+		else
+			order.setSmsForDriver(false);
+		
+		if(scheduleMode==null || scheduleMode.isEmpty()){   //新建后进队列
+			customerOrganization=new CustomerOrganization();
+			customerOrganization.setName(customerOrganizationName);
+			order.setCustomerOrganization(customerOrganization);	//到Service层去处理是否新建客户单位
+			customer=new Customer();
+			customer.setName(customerName);
+			order.setCustomer(customer);							//到Service层去处理是否新建客户
+			order.setOrderSource(OrderSourceEnum.SCHEDULER);
+			if(needCopy==null || needCopy.equals("off"))
+				copyNumber=0;
+			orderService.EnQueue(order,copyNumber);
+		}else if(scheduleMode.equals(OrderService.SCHEDULE_FROM_QUEUE)){//从队列拿出后再进队列
+			orderService.EnQueueAgain(order,customerOrganizationName,customerName);
+		}
+		
 		return "success";
 	}
 
@@ -408,16 +441,20 @@ public class ScheduleAction extends BaseAction {
 		fromAddress=order.getFromAddress();
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			toAddress=order.getToAddress();
+		customerMemo=order.getCustomerMemo();
+		destination=order.getDestination();
 		if(order.getSaler()!=null)
 			saler=order.getSaler();
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
-			protocolMoney=order.getOrderMoney();
+			protocolMoney=order.getOrderMoney().setScale(0,BigDecimal.ROUND_HALF_UP);
 			payPeriodId = order.getPayPeriod().getId();
 			firstPayDate = DateUtils.getYMDHMString(order.getFirstPayDate());
-			moneyForPeriodPay = order.getMoneyForPeriodPay();
+			moneyForPeriodPay = order.getMoneyForPeriodPay().setScale(0,BigDecimal.ROUND_HALF_UP);
 		}
 		serviceType=order.getServiceType();
 		memo=order.getMemo();
+		smsForCustomer=order.isSmsForCustomer() ? "on" : "off";
+		smsForDriver=order.isSmsForDriver() ? "on" : "off";
 	}
 	
 	public String scheduleFromQueue(){
@@ -497,9 +534,15 @@ public class ScheduleAction extends BaseAction {
 			toUpdateOrder.setServiceType(order.getServiceType());
 			toUpdateOrder.setFromAddress(order.getFromAddress());
 			toUpdateOrder.setToAddress(order.getToAddress());
+			toUpdateOrder.setCustomerMemo(order.getCustomerMemo());
+			toUpdateOrder.setDestination(order.getDestination());
 			toUpdateOrder.setSaler(order.getSaler());
 			toUpdateOrder.setCar(order.getCar());
 			toUpdateOrder.setDriver(order.getDriver());
+			toUpdateOrder.setMemo(order.getMemo());
+			toUpdateOrder.setSmsForCustomer(order.isSmsForCustomer());
+			toUpdateOrder.setSmsForDriver(order.isSmsForDriver());
+			
 			if(order.isCallForOther()){
 				toUpdateOrder.setCallForOther(true);
 				toUpdateOrder.setOtherPassengerName(order.getOtherPassengerName());
@@ -523,6 +566,8 @@ public class ScheduleAction extends BaseAction {
 			order.setToAddress(toAddress);
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
 		}
+		order.setCustomerMemo(customerMemo);
+		order.setDestination(destination);
 		if(saler!=null)
 			order.setSaler(saler);
 		
@@ -543,6 +588,15 @@ public class ScheduleAction extends BaseAction {
 		order.setPhone(phone);
 		
 		order.setMemo(memo);
+		if(smsForCustomer!=null && smsForCustomer.equals("on"))
+			order.setSmsForCustomer(true);
+		else
+			order.setSmsForCustomer(false);
+		if(smsForDriver!=null && smsForDriver.equals("on"))
+			order.setSmsForDriver(true);
+		else
+			order.setSmsForDriver(false);
+		
 		if(needCopy==null || needCopy.isEmpty() || needCopy.equals("off"))
 			copyNumber=0;
 		
@@ -666,6 +720,7 @@ public class ScheduleAction extends BaseAction {
 		QueryHelper helper = new QueryHelper("order_", "o");
 		helper.addWhereCondition("o.status=?", OrderStatusEnum.INQUEUE);
 		helper.addWhereCondition("o.scheduling=?", false);
+		helper.addOrderByProperty("o.queueTime", true);
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().put("queueSize", pageBean.getRecordCount());
@@ -900,6 +955,38 @@ public class ScheduleAction extends BaseAction {
 
 	public void setToAddress(String toAddress) {
 		this.toAddress = toAddress;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public String getCustomerMemo() {
+		return customerMemo;
+	}
+
+	public void setCustomerMemo(String customerMemo) {
+		this.customerMemo = customerMemo;
+	}
+
+	public String getSmsForCustomer() {
+		return smsForCustomer;
+	}
+
+	public void setSmsForCustomer(String smsForCustomer) {
+		this.smsForCustomer = smsForCustomer;
+	}
+
+	public String getSmsForDriver() {
+		return smsForDriver;
+	}
+
+	public void setSmsForDriver(String smsForDriver) {
+		this.smsForDriver = smsForDriver;
 	}
 
 	public User getKeeper() {

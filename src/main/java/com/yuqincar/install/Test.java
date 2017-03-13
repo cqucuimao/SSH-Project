@@ -3,12 +3,17 @@ package com.yuqincar.install;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.TreeSet;
 
 import net.sf.json.JSONObject;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.struts2.views.freemarker.tags.RadioModel;
 
 import com.baidu.yun.core.log.YunLogEvent;
 import com.baidu.yun.core.log.YunLogHandler;
@@ -19,18 +24,24 @@ import com.baidu.yun.push.exception.PushClientException;
 import com.baidu.yun.push.exception.PushServerException;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceRequest;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceResponse;
+import com.itextpdf.text.pdf.hyphenation.TernaryTree.Iterator;
 import com.yuqincar.utils.DateUtils;
 
 public class Test {
 
 	public static void main(String[] args) {
-//		System.out.println(DateUtils.getYMDHMS("2016-12-15 00:00:00").getTime());
-//		System.out.println(DateUtils.getYMDHMS("2016-12-15 14:00:00").getTime());
-		Date date=new Date();
-		date.setTime(1484358960655L);
-		System.out.println("API:"+DateUtils.getYMDHMSString(date));
-		date.setTime(1484207871883L);
-		System.out.println("Database:"+DateUtils.getYMDHMSString(date));
+		Scanner s = new Scanner(System.in);
+        int n = s.nextInt();
+        ArrayList<Integer> lists = new ArrayList<Integer>();
+        
+        for(int i=0;i<n;i++){
+            lists.add(s.nextInt());
+        }
+        
+        TreeSet<Integer> hs = new TreeSet<Integer>(lists);
+        for(int i=0;i<hs.size();i++){
+            System.out.println((Integer)hs.toArray()[i]);
+        }
 	}
 	
 	private static void testURLEncode(){

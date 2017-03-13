@@ -61,7 +61,13 @@
 					<td><s:textfield class="inputText" name="fromAddress" /></td>
 					<th><s:property value="tr.getText('order.Order.toAddress')" /></th>
 					<td><s:textfield class="inputText" name="toAddress" /></td>
-			    </tr>
+			    </tr> 
+				<tr>
+					<th><s:property value="tr.getText('order.Order.customerMemo')" /></th>
+					<td><s:textfield class="inputText" name="customerMemo" /></td>
+					<th><s:property value="tr.getText('order.Order.destination')" /></th>
+					<td><s:textfield class="inputText" name="destination" /></td>
+			    </tr> 
 				<tr>
 					<th><s:property value="tr.getText('order.Order.orderMoney')" /></th>
 					<td><s:textfield id="orderMoney1" class="inputText half" name="orderMoney1" />&nbsp;<s:textfield id="orderMoney2" class="inputText half" name="orderMoney2" /></td>
@@ -136,7 +142,9 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.saler')" /></th>
-					<td><cqu:userSelector name="saler"/></td>
+					<td><cqu:userSelector name="saler"/></td>					
+					<th><s:property value="tr.getText('order.Order.customerOrganization')" />(模糊查询)</th>
+					<td><s:textfield class="inputText" name="customerOrganizationKeyword" /></td>
 				</tr>
 				</tbody>
 				<tfoot>

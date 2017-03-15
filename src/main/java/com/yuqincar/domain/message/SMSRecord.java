@@ -13,7 +13,6 @@ import com.yuqincar.utils.Text;
 @Entity
 public class SMSRecord extends BaseEntity{
 	@Text("发送日期")
-	@Temporal(TemporalType.DATE)
 	private Date date;
 
 	@Column(nullable=false)

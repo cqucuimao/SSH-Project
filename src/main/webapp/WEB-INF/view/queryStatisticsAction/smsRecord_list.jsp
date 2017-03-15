@@ -52,17 +52,19 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<th>发送日期</th>
+							<th>发送时间</th>
 							<th>手机号码</th>
+							<th>接收人</th>
 							<th>短信内容</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover" id="htcList">
 					<s:iterator value="recordList"> 
 					<tr>
-						<td><s:date name="date" format="yyyy-MM-dd"/></td>
+						<td><s:date name="date" /></td>
 					    <td>${phoneNumber}</td>
-					    <td>${content}</td>
+					    <td>${sendName}</td>
+					    <td width="60%">${content}</td>
 					</tr>
 					</s:iterator> 
 					</tbody>

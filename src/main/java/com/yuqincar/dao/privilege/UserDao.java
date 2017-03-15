@@ -18,4 +18,5 @@ public interface UserDao extends BaseDao<User>{
 	public List<User> getUsersByLoginName(String loginName);
 	public User getByName(String name);
 	public List<User> getAllDrivers();
+	public User getByPhoneNumber(String phoneNumber);
 } 

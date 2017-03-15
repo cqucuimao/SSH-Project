@@ -268,4 +268,8 @@ public class UserServiceImpl implements UserService{
 	public List<User> getAllDrivers() {
 		return userDao.getAllDrivers();
 	}
+	public User getByPhoneNumber(String phoneNumber)
+	{
+		return userDao.getByPhoneNumber(phoneNumber);
+	}
 }

@@ -174,4 +174,14 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 		
 		return users;
 	}
+	
+	public User getByPhoneNumber(String phoneNumber)
+	{
+		if(phoneNumber == null) 
+			return null;
+		return (User) getSession().createQuery(
+					"FROM User WHERE phoneNumber=?")
+					.setParameter(0, phoneNumber)
+					.uniqueResult();
+	}
 }

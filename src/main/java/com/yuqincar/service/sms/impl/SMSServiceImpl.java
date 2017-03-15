@@ -128,6 +128,7 @@ public class SMSServiceImpl implements SMSService {
 		System.out.println("###smsTemplate="+content);
 		SMSRecord sr=new SMSRecord();
 		sr.setDate(new Date());
+		System.out.println("***Date="+new Date());
 		sr.setContent(content);
 		sr.setPhoneNumber(phoneNumber);
 		sMSRecordService.saveSMSRecord(sr);

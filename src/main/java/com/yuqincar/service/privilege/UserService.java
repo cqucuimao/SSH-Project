@@ -60,6 +60,8 @@ public interface UserService extends BaseService{
 	
 	User getByName(String name);
 	
+	User getByPhoneNumber(String phoneNumber);
+	
 	List<User> getAllDrivers();
 
 	PageBean getPageBean( int pageNum , QueryHelper helper);

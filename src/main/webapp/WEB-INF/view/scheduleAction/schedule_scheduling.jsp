@@ -347,7 +347,7 @@
 			if("on"=="${smsForDriver}")
 				$("#smsForDriver").attr("checked", true);
 			else
-				$("#smsForCustomer").attr("checked", false);
+				$("#smsForDriver").attr("checked", false);
 		}
 	
 	

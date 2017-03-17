@@ -1,22 +1,17 @@
 package com.yuqincar.service.sms.impl;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.activiti.engine.impl.cmd.AddCommentCmd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.yuqincar.domain.common.Company;
 import com.yuqincar.domain.message.SMSQueue;
 import com.yuqincar.domain.message.SMSRecord;
 import com.yuqincar.service.message.SMSQueueService;
@@ -35,7 +30,7 @@ public class SMSServiceImpl implements SMSService {
 	private static String APP_ID = "593884530000249253";//应用ID------登录平台在应用设置可以找到
 	private static String APP_SECRET = "ba1a8529eef141b3d5b631d998f33fd0";//应用secret-----登录平台在应用设置可以找到
 	private static int SMS_TRY_TIMES = 6;
-	private static String SEND_SUCCESS_TEMPLATE="{\"res_code\":0,\"res_message\":\"Success\",\"idertifier\":\"90610313152615759721\"}";
+	//private static String SEND_SUCCESS_TEMPLATE="{\"res_code\":0,\"res_message\":\"Success\",\"idertifier\":\"90610313152615759721\"}";
 
 	
 	//短信模板ID与短信模板内容的对应关系
@@ -75,6 +70,7 @@ public class SMSServiceImpl implements SMSService {
 	@Autowired
 	private SMSRecordService sMSRecordService;
 	
+	/*
 	private void sendSMSToFile(String phoneNumber, String templateId, String content) {
 		File file = new File(Configuration.getSmsLogFile());
 		PrintWriter pw = null;
@@ -93,6 +89,7 @@ public class SMSServiceImpl implements SMSService {
 				pw.close();
 		}
 	}
+	*/
 	
 	private String sendTemplateSMS(String phoneNumber,String templateId, String paramString) throws Exception{
 		String postEntity = "app_id=" + APP_ID + "&access_token="
@@ -103,15 +100,13 @@ public class SMSServiceImpl implements SMSService {
 		//验证码短信不需要打开开关。这是为了使测试服务器能够正常发送验证码。
 		if("on".equals(Configuration.getSmsSwitch()) || "13883101475".equals(phoneNumber) || templateId.equals(SMSService.SMS_TEMPLATE_VERFICATION_CODE)){
 			resJson = HttpInvoker.httpPost1(SMS_GATE_URL, null, postEntity);
-		}else{
-			sendSMSToFile(phoneNumber,templateId,paramString);
-			resJson=SEND_SUCCESS_TEMPLATE;
 		}
+		
 		return resJson;
 	}
 
 	@Transactional
-	public void AddSMSRecord(String phoneNumber,String templateId, String paramString)
+	private void AddSMSRecord(String phoneNumber,String templateId, String paramString, Company company)
 	{
 		//短信内容
 		String content=SMS_CONTENT.get(templateId);
@@ -131,11 +126,25 @@ public class SMSServiceImpl implements SMSService {
 		System.out.println("***Date="+new Date());
 		sr.setContent(content);
 		sr.setPhoneNumber(phoneNumber);
+		sr.setCompany(company);
 		sMSRecordService.saveSMSRecord(sr);
 	}
 	
 	@Transactional
-	public String sendTemplateSMS(String phoneNumber,String templateId, Map<String, String> params) {
+	public void sendTemplateSMS(String phoneNumber,String templateId, Map<String, String> params) {
+		Gson gson = new Gson();
+		String template_param = gson.toJson(params);		
+		SMSQueue sq=new SMSQueue();
+		sq.setPhoneNumber(phoneNumber);
+		sq.setTemplateId(templateId);
+		sq.setParams(template_param);
+		sq.setInQueueDate(new Date());
+		sq.setTryTimes(0);
+		sMSQueueService.saveSMSQueue(sq);		
+	}
+	
+	@Transactional	
+	public void sendInstantTemplateSMS(String phoneNumber,String templateId,Map<String,String> params){
 		Gson gson = new Gson();
 		String template_param = gson.toJson(params);
 		
@@ -150,9 +159,8 @@ public class SMSServiceImpl implements SMSService {
 				sq.setTryTimes(0);
 				sMSQueueService.saveSMSQueue(sq);
 			}else{
-				AddSMSRecord(phoneNumber,templateId,template_param);
+				AddSMSRecord(phoneNumber,templateId,template_param,null);
 			}
-			return resJson;
 		}catch(Exception e){
 			e.printStackTrace();
 			SMSQueue sq=new SMSQueue();
@@ -162,19 +170,25 @@ public class SMSServiceImpl implements SMSService {
 			sq.setInQueueDate(new Date());
 			sq.setTryTimes(0);
 			sMSQueueService.saveSMSQueue(sq);
-			return SEND_SUCCESS_TEMPLATE;
 		}
 	}
 	
 	@Transactional
 	public void sendSMSInQueue(){
-		System.out.println("in sendSMSInQueue");
 		List<SMSQueue> smsList=sMSQueueService.getAllSMSQueue();
 		for(SMSQueue sms:smsList){
 			try{
 				String resJson=sendTemplateSMS(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams());
-				if(resJson.toLowerCase().contains("success"))
+				if(resJson.toLowerCase().contains("success")){
 					sMSQueueService.deleteSMSQueue(sms.getId());
+					AddSMSRecord(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams(),sms.getCompany());
+				}else{
+					sms.setTryTimes(sms.getTryTimes()+1);
+					if(sms.getTryTimes()>=SMS_TRY_TIMES)
+						sMSQueueService.deleteSMSQueue(sms.getId());
+					else
+						sMSQueueService.updateSMSQueue(sms);
+				}
 			}catch(Exception e){
 				sms.setTryTimes(sms.getTryTimes()+1);
 				if(sms.getTryTimes()>=SMS_TRY_TIMES)
@@ -189,17 +203,12 @@ public class SMSServiceImpl implements SMSService {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String result = "";
 		try {
 			Map<String,String> map = new HashMap<String,String>();
 			map.put("param1", "手机");
 			map.put("param2", RandomUtil.randomFor6());
-			result = new SMSServiceImpl().sendTemplateSMS("13883101475",SMSService.SMS_TEMPLATE_VERFICATION_CODE,map);
-			System.out.println("++++Result="+result);
+			new SMSServiceImpl().sendInstantTemplateSMS("13883101475",SMSService.SMS_TEMPLATE_VERFICATION_CODE,map);
 			Gson gson = new Gson();
-			Map<String,String> jsonMap = gson.fromJson(result,new TypeToken<Map<String, String>>() {
-			}.getType());
-			System.out.println(jsonMap.get("res_message"));
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

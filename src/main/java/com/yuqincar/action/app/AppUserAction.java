@@ -108,31 +108,23 @@ public class AppUserAction extends BaseAction implements Preparable{
 		Map<String,String> map = new HashMap();
 		map.put("param1", "手机");
 		map.put("param2", code);
-		String result = smsService.sendTemplateSMS(phoneNumber,SMSService.SMS_TEMPLATE_VERFICATION_CODE,map);
-		
-		Gson gson = new Gson();
-		Map<String,String> jsonMap = gson.fromJson(result,new TypeToken<Map<String, String>>() {
-		}.getType());
-		System.out.println(result);
-		if(jsonMap.get("res_message").equals("Success")) {
-			VerificationCode sendCode = codeService.getByPhoneNumber(phoneNumber);
-			if(sendCode!=null){
-				//更新验证码
-				code=DigestUtils.md5Hex(code);
-				sendCode.setCode(code);
-				codeService.update(sendCode);
-			}else{
-				//保存验证码
-				VerificationCode vcode = new VerificationCode();
-				code=DigestUtils.md5Hex(code);
-				vcode.setCode(code);
-				vcode.setPhoneNumber(phoneNumber);
-				codeService.save(vcode);
-			}
-			this.writeJson("{\"status\":true}");
-		} else  {
-			this.writeJson("{\"status\":false}");
+		smsService.sendInstantTemplateSMS(phoneNumber,SMSService.SMS_TEMPLATE_VERFICATION_CODE,map);
+				
+		VerificationCode sendCode = codeService.getByPhoneNumber(phoneNumber);
+		if(sendCode!=null){
+			//更新验证码
+			code=DigestUtils.md5Hex(code);
+			sendCode.setCode(code);
+			codeService.update(sendCode);
+		}else{
+			//保存验证码
+			VerificationCode vcode = new VerificationCode();
+			code=DigestUtils.md5Hex(code);
+			vcode.setCode(code);
+			vcode.setPhoneNumber(phoneNumber);
+			codeService.save(vcode);
 		}
+		this.writeJson("{\"status\":true}");		
 	}
 
 	public void verifiySMSCode() {

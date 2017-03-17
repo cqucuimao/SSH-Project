@@ -224,15 +224,11 @@ public class ScheduleAction extends BaseAction {
 				.getRecordList()) {
 			list.add(user.getName());
 		}
-		System.out.println("list.size()="+list.size());
 		JSONArray jsonArray = new JSONArray(list);
 		writeJson(jsonArray.toJSONString());
 	}
 	
 	public void getCustomer() {
-		System.out.println("in getCustomer");
-		System.out.println("customerOrganization="+customerOrganizationName);
-		System.out.println("keyWord="+keyWord);
 		QueryHelper helper = new QueryHelper(Customer.class, "c");
 		helper.addWhereCondition(
 				"c.customerOrganization.name=? and c.name like ?",
@@ -263,8 +259,6 @@ public class ScheduleAction extends BaseAction {
 	}
 	
 	public void getOtherPassengers(){
-		System.out.println("in getOtherPassengers");
-		System.out.println("phone="+phone);
 		Customer customer=customerService.getCustomerByPhoneNumber(phone);
 		if(customer!=null){
 			List<Object> list = new ArrayList<Object>();
@@ -276,8 +270,6 @@ public class ScheduleAction extends BaseAction {
 	}
 	
 	public void getOtherPhoneNumbers(){
-		System.out.println("in getOtherPhoneNumbers");
-		System.out.println("phone="+phone);
 		Customer customer=customerService.getCustomerByPhoneNumber(phone);
 		if(customer!=null){
 			List<Object> list = new ArrayList<Object>();
@@ -302,8 +294,6 @@ public class ScheduleAction extends BaseAction {
 	}
 
 	public String inQueue() {
-		System.out.println("in inQueue");
-		System.out.println("i am coming here");
 		Order order=null;
 		if(scheduleMode==null || scheduleMode.isEmpty())
 			order=new Order();

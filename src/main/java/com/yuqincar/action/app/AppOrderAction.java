@@ -138,7 +138,7 @@ public class AppOrderAction extends BaseAction implements Preparable {
 		vo.parkingFee=order.getParkingFee()==null ? "0" : order.getParkingFee().toString();
 		vo.toll=order.getToll()==null ? "0" : order.getToll().toString();
 		vo.roomAndBoardFee=order.getRoomAndBoardFee()==null ? "0" : order.getRoomAndBoardFee().toString();
-		vo.otherFee=vo.otherFee==null ? "0" : order.getOtherFee().toString();
+		vo.otherFee=order.getOtherFee()==null ? "0" : order.getOtherFee().toString();
 		return vo;
 	}
 		

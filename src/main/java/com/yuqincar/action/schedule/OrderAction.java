@@ -749,10 +749,9 @@ public class OrderAction extends BaseAction {
 	
 	public String getOrderColor(){
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
-		if(order.getCar().isBorrowed() || 
-				order.getDriver().getDepartment().equals(departmentService.getExpatriateDepartment()))
+		if((order.getCar()!=null && order.getCar().isBorrowed()) || 
+				(order.getDriver()!=null && order.getDriver().getDepartment().equals(departmentService.getExpatriateDepartment())))
 			return "blue";
-		
 		switch(order.getStatus()){
 		case CANCELLED:
 			return "red";

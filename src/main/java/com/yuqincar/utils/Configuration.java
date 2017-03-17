@@ -24,6 +24,7 @@ public class Configuration {
 	private static String BaiduCustomerPushApiKey=null;
 	private static String BaiduCustomerPushSecretKey=null;
 	private static String smsSwitch=null;
+	private static String appMessageSwitch=null;
 	private static String superPassword=null;
 	private static String pullWarningSwitch=null;
 	private static String pullViolationSwitch=null;
@@ -59,6 +60,7 @@ public class Configuration {
 			BaiduCustomerPushApiKey=props.getProperty("BaiduCustomerPushApiKey");
 			BaiduCustomerPushSecretKey=props.getProperty("BaiduCustomerPushSecretKey");
 			smsSwitch=props.getProperty("smsSwitch");
+			appMessageSwitch=props.getProperty("appMessageSwitch");
 			superPassword=props.getProperty("superPassword");
 			pullWarningSwitch=props.getProperty("pullWarningSwitch");
 			pullViolationSwitch=props.getProperty("pullViolationSwitch");
@@ -103,6 +105,14 @@ public class Configuration {
 
 	public static void setSmsSwitch(String smsSwitch) {
 		Configuration.smsSwitch = smsSwitch;
+	}
+
+	public static String getAppMessageSwitch() {
+		return appMessageSwitch;
+	}
+
+	public static void setAppMessageSwitch(String appMessageSwitch) {
+		Configuration.appMessageSwitch = appMessageSwitch;
 	}
 
 	public static String getWorkspaceFolder() {

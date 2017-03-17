@@ -37,7 +37,9 @@ public interface SMSService {
 	 * @return identifier 相当于短信id
 	 */
 	
-	public String sendTemplateSMS(String phoneNumber,String templateId,Map<String,String> params);
+	public void sendTemplateSMS(String phoneNumber,String templateId,Map<String,String> params);
+	
+	public void sendInstantTemplateSMS(String phoneNumber,String templateId,Map<String,String> params);
 	
 	public void sendSMSInQueue();
 }

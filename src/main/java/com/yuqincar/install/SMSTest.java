@@ -25,17 +25,15 @@ public class SMSTest {
 	
 	public void sendSMS(){
 		Map<String,String> params=new HashMap<String,String>();
-		String message=null;
-		
+				
 		Order order=orderService.getOrderBySN("YQ170200009");
 		
 		params.put("customerOrganization", order.getCustomerOrganization().getName());
 		params.put("customerName", order.getCustomer().getName());
 		params.put("phoneNumber",order.getPhone());
 		params.put("time", DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
-		message=smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, params);
+		smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, params);
 		params.clear();
-		System.out.println("message="+message);
 		
 		params.put("driverName", order.getDriver().getName());
 		params.put("plateNumber", order.getCar().getPlateNumber());
@@ -43,9 +41,8 @@ public class SMSTest {
 		params.put("customerSurname", CommonUtils.getSurname(order.getCustomer().getName()));
 		params.put("schedulerName", order.getScheduler().getName());
 		params.put("planBeginDate", DateUtils.getYMDString(order.getPlanBeginDate()));
-		message=smsService.sendTemplateSMS(order.getPhone(), SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
-		params.clear();		
-		System.out.println("message="+message);
+		smsService.sendTemplateSMS(order.getPhone(), SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
+		params.clear();
 		
 	}
 

@@ -308,7 +308,7 @@ public class OrderServiceImpl implements OrderService {
 			if(order.isCallForOther())
 				saveOtherPassenger(order);
 			if(scheduleMode==OrderService.SCHEDULE_FROM_NEW || scheduleMode==OrderService.SCHEDULE_FROM_QUEUE){
-				if(!(order.getChargeMode()==ChargeModeEnum.PROTOCOL && order.getDriver()==null)){
+				if(order.getDriver()!=null){  //协议用车有可能不指定司机。当然就不发送APP消息和短信。
 					String timeString=null;
 					if(order.getChargeMode()==ChargeModeEnum.DAY)
 						timeString=DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate());
@@ -574,6 +574,7 @@ public class OrderServiceImpl implements OrderService {
 	public int cancelOrder(Order order, User user, String description){
 		if (canCancelOrder(order)) {
 			order.setStatus(OrderStatusEnum.CANCELLED);
+			order.setSn("X"+order.getSn());
 			orderDao.update(order);
 			
 			OrderOperationRecord oor=new OrderOperationRecord();

@@ -1,0 +1,1 @@
+update order_ as o set o.sn=concat('X',o.sn) where status=8

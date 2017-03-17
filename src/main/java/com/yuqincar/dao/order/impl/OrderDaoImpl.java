@@ -611,19 +611,42 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 			String yearMonth = (yy.length() < 2 ? "0" + yy : yy)
 					+ (mm.length() < 2 ? "0" + mm : mm);
 			// 通过createTime判断,降序排列
-			String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by id desc";
-			Query query = getSession().createQuery(sql).setParameter(0,new Date());
-			List list = query.list();
-			if (list.size() == 0) {
-				sn = yearMonth + "00001";
-			} else {
-				String lastSN=((Order)list.get(0)).getSn();
-				if(lastSN.startsWith(SN_PREFIX))
-					lastSN=lastSN.substring(SN_PREFIX.length());
-				else if(lastSN.startsWith(SN_COOPERATION_PREFIX))
-					lastSN=lastSN.substring(SN_COOPERATION_PREFIX.length());
-				sn = String.valueOf(Integer.parseInt(lastSN) + 1);
+//			String sql = "from order_ where date_format(createTime,'%Y-%m')=date_format(?,'%Y-%m') order by id desc";
+			String sql = "select distinct cast(SUBSTRING(o.sn,LENGTH(o.sn)-8) as int) as s from order_ as o " +
+					 "where date_format(o.createTime,'%Y-%m')=date_format(?,'%Y-%m') and o.status<>? order by s asc";
+			Query query = getSession().createQuery(sql).setParameter(0,new Date())
+					.setParameter(1, OrderStatusEnum.CANCELLED);
+			
+			List<Integer> list=(List<Integer>)query.list();
+			System.out.println("*******************************");
+			for(Integer n:list)
+				System.out.println(n);
+			System.out.println("*******************************");
+			if(list.size()==0)
+				sn=yearMonth+"00001";
+			else{
+				int i;
+				for(i=0;i<list.size()-1;i++){
+					if(list.get(i+1)-list.get(i)>1)
+						break;
+				}
+				sn=String.valueOf(list.get(i)+1);
 			}
+				
+//			List list = query.list();
+//			if (list.size() == 0) {
+//				sn = yearMonth + "00001";
+//			} else {
+//				String lastSN=((Order)list.get(0)).getSn();
+//				System.out.println("1lastSN="+lastSN);
+//				if(lastSN.startsWith(SN_PREFIX))
+//					lastSN=lastSN.substring(SN_PREFIX.length());
+//				else if(lastSN.startsWith(SN_COOPERATION_PREFIX))
+//					lastSN=lastSN.substring(SN_COOPERATION_PREFIX.length());
+//				System.out.println("2lastSN="+lastSN);
+//				sn = String.valueOf(Integer.parseInt(lastSN) + 1);
+//				System.out.println("sn="+sn);
+//			}
 			if(order.getChargeMode()==ChargeModeEnum.PROTOCOL && (order.getCar()==null || order.getDriver()==null))
 				order.setSn(SN_COOPERATION_PREFIX+sn);
 			else

@@ -61,7 +61,7 @@
 					<tbody class="tableHover" id="htcList">
 					<s:iterator value="recordList"> 
 					<tr>
-						<td><s:date name="date" /></td>
+						<td><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
 					    <td>${phoneNumber}</td>
 					    <td>${sendName}</td>
 					    <td width="60%">${content}</td>

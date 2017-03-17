@@ -33,9 +33,11 @@ public class smsRecordAction extends BaseAction {
 	private String contentQ;
 	/**列表*/
 	public String list(){
+		System.out.println("smsRecord List");
 		QueryHelper helper = new QueryHelper(SMSRecord.class, "sr");
 		helper.addOrderByProperty("sr.id", false);
 		PageBean<SMSRecord> pageBean = smsRecordService.querySMSRecord(pageNum, helper);
+		System.out.println("size="+pageBean.getRecordList().size());
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("smsRecordHelper", helper);
 		return "list";

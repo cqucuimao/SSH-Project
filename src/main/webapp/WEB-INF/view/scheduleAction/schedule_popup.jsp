@@ -15,6 +15,7 @@
 					<thead>
 						<tr>
 							<th style="text-align:center">车类</th>
+							<th style="text-align:center">选择</th>
 							<th style="text-align:center">车型</th>
 							<th style="text-align:center">8小时<br/>（100公里内）</th>
 							<th style="text-align:center">4小时<br/>（50公里内）</th>

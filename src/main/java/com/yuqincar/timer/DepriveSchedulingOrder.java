@@ -19,7 +19,6 @@ public class DepriveSchedulingOrder {
 	@Scheduled(cron = "15 * * * * ?") // 每分钟（第0秒）执行一次
 	@Transactional
 	public void deprive() {
-		System.out.println("in deprive");
 		List<Order> orderList=orderService.getToBeDeprivedSchedulingOrder();
 		for(Order order:orderList){
 			order.setScheduling(false);

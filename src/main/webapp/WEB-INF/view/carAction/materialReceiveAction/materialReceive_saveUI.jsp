@@ -35,13 +35,13 @@
 							<input id="editNormalInfo" type="hidden" value="${editNormalInfo}" />
 							<input id="editKeyInfo" type="hidden" value="${editKeyInfo}" />
 							<s:textfield id="type" type="hidden" value="%{type}" />
-							<cqu:carSelector name="car" synchDriver="driver"/>
+							<cqu:carAutocompleteSelector name="car" synchDriver="driver"/>
 						</td>
                     </tr>
                 	<tr>
                         <th><s:property value="tr.getText('car.Material.driver')"/><span class="required">*</span></th>
                         <td>
-                        	<cqu:userSelector name="driver"/>
+                        	<cqu:userAutocompleteSelector name="driver"/>
                         </td>
 					<td>
                     </tr>

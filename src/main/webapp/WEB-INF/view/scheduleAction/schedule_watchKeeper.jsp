@@ -16,7 +16,7 @@
                     <tr>
                         <th><s:property value="tr.getText('order.WatchKeeper.keeper')" />：<span class="required">*</span></th>
                         <td>
-                        	<cqu:userSelector name="keeper"/>
+                        	<cqu:userAutocompleteSelector name="keeper"/>
 						</td>
                     </tr>
                 </tbody>

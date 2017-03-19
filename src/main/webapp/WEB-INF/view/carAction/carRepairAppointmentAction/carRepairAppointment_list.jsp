@@ -24,11 +24,11 @@
 					</td>
 					<th><s:property value="tr.getText('car.CarRepair.car')" /></th>
 					<td>
-						<cqu:carSelector name="car" synchDriver="driver"/>
+						<cqu:carAutocompleteSelector name="car" synchDriver="driver"/>
 					</td>
 					<th><s:property value="tr.getText('car.CarRepair.driver')" /></th>
 					<td>
-						<cqu:userSelector name="driver"/>
+						<cqu:userAutocompleteSelector name="driver"/>
 					</td>
 					<th>从</th>
 					<td>

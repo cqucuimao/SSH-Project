@@ -276,12 +276,12 @@ public class OrderServiceImpl implements OrderService {
 				param.put("time", DateUtils.getYMDString(order.getPlanBeginDate())+" 到 "+DateUtils.getYMDString(order.getPlanEndDate()));
 			else
 				param.put("time", DateUtils.getYMDString(order.getPlanBeginDate()));
-			param.put("destination", order.getDestination()==null ? "无" : order.getDestination());
-			param.put("customerMemo", order.getCustomerMemo()==null ? "无" : order.getCustomerMemo());
+			param.put("destination", (order.getDestination()==null || StringUtils.isEmpty(order.getDestination())) ? "无" : order.getDestination());
+			param.put("customerMemo",(order.getCustomerMemo()==null || StringUtils.isEmpty(order.getCustomerMemo())) ? "无" : order.getCustomerMemo());
 			
-			if(!order.isCallForOther())
+			if(!order.isCallForOther()){
 				smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER, param);
-			else{
+			}else{
 				param.put("otherPassengerName", order.getOtherPassengerName());
 				param.put("otherPhoneNumber", order.getOtherPhoneNumber());
 				smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER, param);
@@ -296,7 +296,6 @@ public class OrderServiceImpl implements OrderService {
 		List<BaseEntity> cc=dealCCP(organizationName,customerName,order.getPhone());
 		order.setCustomerOrganization((CustomerOrganization)cc.get(0));
 		order.setCustomer((Customer)cc.get(1));
-			
 		String result= orderDao.scheduleOrder(scheduleMode, order, car, driver, user);
 		if("OK".equals(result)){
 			//复制订单
@@ -304,7 +303,7 @@ public class OrderServiceImpl implements OrderService {
 				copyOrderScheduled(order,copyNumber);
 
 			saveCustomerAddress(order);
-			
+
 			if(order.isCallForOther())
 				saveOtherPassenger(order);
 			if(scheduleMode==OrderService.SCHEDULE_FROM_NEW || scheduleMode==OrderService.SCHEDULE_FROM_QUEUE){
@@ -315,7 +314,7 @@ public class OrderServiceImpl implements OrderService {
 					else
 						timeString=DateUtils.getYMDHMString(order.getPlanBeginDate());
 					appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。用车时间："+timeString+ "；上车地点："+order.getFromAddress(),null);
-					
+
 					sendSMSToDriver(order);
 				}
 				
@@ -467,7 +466,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 		if(order.getCustomerMemo()==null || StringUtils.isEmpty(order.getCustomerMemo())){
-			if(toUpdateOrder.getCustomerMemo()!=null)
+			if(toUpdateOrder.getCustomerMemo()!=null && !StringUtils.isEmpty(toUpdateOrder.getCustomerMemo()))
 				sb.append("(").append(++n).append(")").append("删除了客户要求").append("；");
 		}else{
 			if(toUpdateOrder.getCustomerMemo()!=null && !order.getCustomerMemo().equals(toUpdateOrder.getCustomerMemo()))
@@ -480,7 +479,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 		if(order.getDestination()==null || StringUtils.isEmpty(order.getDestination())){
-			if(toUpdateOrder.getDestination()!=null)
+			if(toUpdateOrder.getDestination()!=null && !StringUtils.isEmpty(toUpdateOrder.getDestination()))
 				sb.append("(").append(++n).append(")").append("删除了目的地").append("；");
 		}else{
 			if(toUpdateOrder.getDestination()!=null && !order.getDestination().equals(toUpdateOrder.getDestination()))

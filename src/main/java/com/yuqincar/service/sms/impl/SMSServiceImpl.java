@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.yuqincar.domain.common.Company;
+import com.yuqincar.domain.message.SMSFailRecord;
 import com.yuqincar.domain.message.SMSQueue;
 import com.yuqincar.domain.message.SMSRecord;
 import com.yuqincar.service.message.SMSQueueService;
+import com.yuqincar.service.sms.SMSFailRecordService;
 import com.yuqincar.service.sms.SMSRecordService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.Configuration;
@@ -70,6 +72,8 @@ public class SMSServiceImpl implements SMSService {
 	@Autowired
 	private SMSRecordService sMSRecordService;
 	
+	@Autowired
+	private SMSFailRecordService sMSFailRecordService;
 	/*
 	private void sendSMSToFile(String phoneNumber, String templateId, String content) {
 		File file = new File(Configuration.getSmsLogFile());
@@ -108,7 +112,16 @@ public class SMSServiceImpl implements SMSService {
 	@Transactional
 	private void AddSMSRecord(String phoneNumber,String templateId, String paramString, Company company)
 	{
-		//短信内容
+		SMSRecord sr=new SMSRecord();
+		sr.setDate(new Date());
+		System.out.println("***Date="+new Date());
+		sr.setContent(getSMSRecordContent(templateId, paramString));
+		sr.setPhoneNumber(phoneNumber);
+		sr.setCompany(company);
+		sMSRecordService.saveSMSRecord(sr);
+	}
+	
+	protected String getSMSRecordContent(String templateId,String paramString) {
 		String content=SMS_CONTENT.get(templateId);
 		String paramStr=paramString.replace("{", "");
 		paramStr=paramStr.replace("}", "");
@@ -120,14 +133,20 @@ public class SMSServiceImpl implements SMSService {
 			String strValue=infor.substring(infor.indexOf(":")+1);
 			content=content.replace("{"+strKey+"}", strValue);
 		}
-		System.out.println("###smsTemplate="+content);
-		SMSRecord sr=new SMSRecord();
+		return content;
+	}
+	
+	@Transactional
+	private void AddSMSFailRecord(String phoneNumber,String templateId, String paramString, Company company, String errorMemo)
+	{
+		//System.out.println("###smsTemplate="+content);
+		SMSFailRecord sr=new SMSFailRecord();
 		sr.setDate(new Date());
-		System.out.println("***Date="+new Date());
-		sr.setContent(content);
+		sr.setContent(getSMSRecordContent(templateId,paramString));
 		sr.setPhoneNumber(phoneNumber);
 		sr.setCompany(company);
-		sMSRecordService.saveSMSRecord(sr);
+		sr.setErrorMemo(errorMemo);
+		sMSFailRecordService.saveSMSFailRecord(sr);
 	}
 	
 	@Transactional
@@ -179,20 +198,27 @@ public class SMSServiceImpl implements SMSService {
 		for(SMSQueue sms:smsList){
 			try{
 				String resJson=sendTemplateSMS(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams());
+				//System.out.println("****resJson="+resJson);
 				if(resJson.toLowerCase().contains("success")){
 					sMSQueueService.deleteSMSQueue(sms.getId());
 					AddSMSRecord(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams(),sms.getCompany());
 				}else{
 					sms.setTryTimes(sms.getTryTimes()+1);
 					if(sms.getTryTimes()>=SMS_TRY_TIMES)
+					{
 						sMSQueueService.deleteSMSQueue(sms.getId());
+						AddSMSFailRecord(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams(),sms.getCompany(),resJson.toString());
+					}
 					else
 						sMSQueueService.updateSMSQueue(sms);
 				}
 			}catch(Exception e){
 				sms.setTryTimes(sms.getTryTimes()+1);
 				if(sms.getTryTimes()>=SMS_TRY_TIMES)
+				{
 					sMSQueueService.deleteSMSQueue(sms.getId());
+					AddSMSFailRecord(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams(),sms.getCompany(),e.getMessage());
+				}
 				else
 					sMSQueueService.updateSMSQueue(sms);
 			}

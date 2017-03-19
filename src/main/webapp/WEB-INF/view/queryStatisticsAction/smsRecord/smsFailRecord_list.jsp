@@ -4,12 +4,20 @@
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
-			<h1>短信记录</h1>
+			<h1>发送失败短信记录</h1>
 			<p>&nbsp;&nbsp;</p>
+		</div>
+		<div class="tab_next style2">
+			<table>
+				<tr>
+					<td><s:a action="smsRecord_list"><span>发送成功短信记</span></s:a></td>
+				    <td  class="on"><a href="#" class="coverOff"><span>发送失败短信记</span></a></td>
+				</tr>
+			</table>
 		</div>
 		<br/>
 		<div class="editBlock search">
-		<s:form action="smsRecord_queryList">
+		<s:form action="smsFailRecord_queryList">
 			<table>
 				<tr>
 					<th>手机号码</th>
@@ -56,6 +64,7 @@
 							<th>手机号码</th>
 							<th>接收人</th>
 							<th>短信内容</th>
+							<th>出错信息</th>
 						</tr>
 					</thead>
 					<tbody class="tableHover" id="htcList">
@@ -64,13 +73,14 @@
 						<td><s:date name="date" format="yyyy-MM-dd HH:mm:ss"/></td>
 					    <td>${phoneNumber}</td>
 					    <td>${sendName}</td>
-					    <td width="60%">${content}</td>
+					    <td width="48%">${content}</td>
+					    <td width="25%">${errorMemo}</td>
 					</tr>
 					</s:iterator> 
 					</tbody>
 				</table>
 			</div>
-			<s:form id="pageForm" action="smsRecord_freshList">
+			<s:form id="pageForm" action="smsFailRecord_freshList">
 			<%@ include file="/WEB-INF/view/public/pageView.jspf" %>
 			</s:form>
 	   </div>

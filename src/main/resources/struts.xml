@@ -469,7 +469,12 @@
 		
 		<!-- 短信记录查询 -->
 		<action name="smsRecord_*" class="smsRecordAction" method="{1}">
-			<result name="list">/WEB-INF/view/queryStatisticsAction/smsRecord_list.jsp
+			<result name="list">/WEB-INF/view/queryStatisticsAction/smsRecord/smsRecord_list.jsp
+			</result>
+		</action>
+		<!-- 短信发送失败记录查询 -->
+		<action name="smsFailRecord_*" class="smsFailRecordAction" method="{1}">
+			<result name="list">/WEB-INF/view/queryStatisticsAction/smsRecord/smsFailRecord_list.jsp
 			</result>
 		</action>
 

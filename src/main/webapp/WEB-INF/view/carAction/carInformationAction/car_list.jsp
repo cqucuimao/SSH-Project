@@ -37,9 +37,6 @@
 					<td>
 						<s:a cssClass="buttonA" action="car_queryUI">详细查询</s:a>
 					</td>
-					<td>
-					<cqu:diskFileSelector name="uploadedDiskFiles" uploadLimit="false"/>
-					</td>
 				</tr>
 			</table>
 			</s:form>

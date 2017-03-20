@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
@@ -99,7 +100,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private int mileage2;
 	private int seatNumber1;
 	private int seatNumber2;
-	
+	private String keyword;
 	private Car car;
 	
 	public String queryList() {
@@ -514,6 +515,19 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		return "popup";
 	}
 	
+	public void carAutocompleteRequest() {
+		if(keyword!=null && keyword.contains("("))
+			keyword=keyword.substring(0,keyword.indexOf("("));
+		QueryHelper helper = new QueryHelper(Car.class, "c");
+		helper.addWhereCondition("c.plateNumber like ?", "%" + keyword + "%");
+		List<Object> list = new ArrayList<Object>();			
+		for (Car car : carService.queryCar(1, helper).getRecordList()) {
+			list.add(car.getPlateNumber()+"("+car.getServiceType().getTitle()+")");
+		}
+		JSONArray jsonArray = new JSONArray(list);
+		writeJson(jsonArray.toJSONString());
+	}
+	
 	
 	//判断车辆能否删除
 	public boolean isCanDeleteCar(){
@@ -742,5 +756,14 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 
 	public void setCar(Car car) {
 		this.car = car;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}	
+	
 }

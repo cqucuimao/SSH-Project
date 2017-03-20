@@ -34,7 +34,7 @@
 							<input id="editNormalInfo" type="hidden" value="${editNormalInfo}" />
 							<input id="editKeyInfo" type="hidden" value="${editKeyInfo}" />
 							<s:textfield id="type" type="hidden" value="%{type}" />
-							<cqu:carSelector name="car"/>
+							<cqu:carAutocompleteSelector name="car"/>
 						</td>
                     </tr>
                 	<tr>

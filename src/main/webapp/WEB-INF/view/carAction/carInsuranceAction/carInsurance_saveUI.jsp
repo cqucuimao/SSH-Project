@@ -43,7 +43,7 @@
                 	<tr>
                         <th><s:property value="tr.getText('car.CarInsurance.car')" /><span class="required">*</span></th>
 						<td>
-							<cqu:carSelector name="car"/>						
+							<cqu:carAutocompleteSelector name="car"/>						
 						</td>
                     </tr>
                 	<tr>

@@ -88,9 +88,9 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.car')" /></th>
-					<td><cqu:carSelector name="car"/></td>
+					<td><cqu:carAutocompleteSelector name="car"/></td>
 					<th><s:property value="tr.getText('order.Order.driver')" /></th>
-					<td><cqu:userSelector name="driver"/></td>
+					<td><cqu:userAutocompleteSelector name="driver"/></td>
 				</tr>
 				<tr>	
 					<th><s:property value="tr.getText('order.Order.status')" /></th>
@@ -100,7 +100,7 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.scheduler')" /></th>
-					<td><cqu:userSelector name="scheduler"/></td>
+					<td><cqu:userAutocompleteSelector name="scheduler"/></td>
 					<th><s:property value="tr.getText('order.Order.orderSource')" /></th>
 					<td><s:select name="orderSource" list="{'所有来源','调度员','客户端','网站'}"  /></td>
 				</tr>
@@ -142,7 +142,7 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.saler')" /></th>
-					<td><cqu:userSelector name="saler"/></td>					
+					<td><cqu:userAutocompleteSelector name="saler"/></td>					
 					<th><s:property value="tr.getText('order.Order.customerOrganization')" />(模糊查询)</th>
 					<td><s:textfield class="inputText" name="customerOrganizationKeyword" /></td>
 				</tr>

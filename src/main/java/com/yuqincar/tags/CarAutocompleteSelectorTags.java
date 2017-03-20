@@ -11,7 +11,7 @@ import org.apache.struts2.views.jsp.TagUtils;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.yuqincar.domain.car.Car;
 
-public class CarPlateNumberSelectorTags extends TagSupport {
+public class CarAutocompleteSelectorTags extends TagSupport {
 	private static final long serialVersionUID = 1L;
 	private String name;
 
@@ -27,14 +27,12 @@ public class CarPlateNumberSelectorTags extends TagSupport {
 			options.append("<script type=\"text/javascript\" src=\"js/jquery.autocomplete.js\"></script>");
 			options.append(" <script type=\"text/javascript\">");
 			options.append("$(function() {");
-			options.append("$(\"#"+name+"\" ).autocomplete(\"schedule_getCarPlateNum.action\",{");
-			options.append("extraParams : {keyWord : function(){return $(\"#"+name+"\" ).val();}},");
-//			options.append("extraParams : {keyWord : function(){alert($(\"#"+name+"\" ).val());return $(\"#"+name+"\" ).val();}},");
+			options.append("$(\"#"+name+"\" ).autocomplete(\"car_carAutocompleteRequest.action\",{");
+			options.append("extraParams : {keyword : function(){return $(\"#"+name+"\" ).val();}},");
+//			options.append("extraParams : {keyword : function(){alert($(\"#"+name+"\" ).val());return $(\"#"+name+"\" ).val();}},");
 			options.append("formatItem: function(item) { return item;  },");
 			
 			options.append("mustMatch: true,");
-			options.append("multiple: true,");
-			options.append("multipleSeparator: \" \",");
 			
 			options.append("parse:function(data) {");
 			options.append("var parsed = [];");

@@ -65,7 +65,7 @@
             <table id="queryInfoTB">
                 <tr>
                     <th>车牌号</th>
-                    <td><cqu:carSelector name="car"/></td>
+                    <td><cqu:carAutocompleteSelector name="car"/></td>
                     <th>起始时间</th>
 					<td>
 						<input class="Wdate half" style="width:165px;" type="text" id="beginTime" onfocus="new WdatePicker({dateFmt:'yyyy/MM/dd HH:mm:ss'})" />

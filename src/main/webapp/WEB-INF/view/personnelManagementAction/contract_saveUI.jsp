@@ -33,7 +33,7 @@
                 	<tr>
                         <th>员工姓名<span class="required">*</span></th>
                         <td>
-                        	<cqu:userSelector name="editUser"/>
+                        	<cqu:userAutocompleteSelector name="editUser"/>
 						</td>
                     </tr>
                     <tr>

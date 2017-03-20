@@ -157,6 +157,11 @@ public class OrderAction extends BaseAction {
 	private String customerOrganizationKeyword;
 	private int dodIndex;
 	
+	private boolean refuelMoneyAccount;
+	private boolean washingFeeAccount;
+	private boolean parkingFeeAccount;
+	private boolean otherFeeAccount;
+
 	private List<DayOrderDetail> dayDetails = new ArrayList<DayOrderDetail>();
 	
 	public boolean isCanUpdateOrder(){
@@ -284,7 +289,7 @@ public class OrderAction extends BaseAction {
 			Order order=orderService.getOrderById(orderId);
 			ActionContext.getContext().getValueStack().push(orderId);
 			ActionContext.getContext().getValueStack().push(order);
-
+			
 			dayDetails=order.getDayDetails();
 			List<DayOrderDetail> nullDayDetails = new ArrayList<DayOrderDetail>();
 			if(dayDetails.size()<8){
@@ -358,7 +363,10 @@ public class OrderAction extends BaseAction {
 			order.setGrade(grade);
 			order.setOptions(options);
 			order.setTax(tax);
-			
+			order.setRefuelMoneyAccount(refuelMoneyAccount);
+			order.setWashingFeeAccount(washingFeeAccount);
+			order.setParkingFeeAccount(parkingFeeAccount);
+			order.setOtherFeeAccount(otherFeeAccount);
 			orderService.editOrderBill(order, user);
 		}
 
@@ -1713,6 +1721,39 @@ public class OrderAction extends BaseAction {
 	public void setCustomerOrganizationKeyword(String customerOrganizationKeyword) {
 		this.customerOrganizationKeyword = customerOrganizationKeyword;
 	}
+
+	public boolean isRefuelMoneyAccount() {
+		return refuelMoneyAccount;
+	}
+
+	public void setRefuelMoneyAccount(boolean refuelMoneyAccount) {
+		this.refuelMoneyAccount = refuelMoneyAccount;
+	}
+
+	public boolean isWashingFeeAccount() {
+		return washingFeeAccount;
+	}
+
+	public void setWashingFeeAccount(boolean washingFeeAccount) {
+		this.washingFeeAccount = washingFeeAccount;
+	}
+
+	public boolean isParkingFeeAccount() {
+		return parkingFeeAccount;
+	}
+
+	public void setParkingFeeAccount(boolean parkingFeeAccount) {
+		this.parkingFeeAccount = parkingFeeAccount;
+	}
+
+	public boolean isOtherFeeAccount() {
+		return otherFeeAccount;
+	}
+
+	public void setOtherFeeAccount(boolean otherFeeAccount) {
+		this.otherFeeAccount = otherFeeAccount;
+	}
+	
 }
 
 class AbstractTrackVO{

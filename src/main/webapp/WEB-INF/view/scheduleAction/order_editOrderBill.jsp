@@ -23,6 +23,10 @@
 		width:100%;
 		height:80%;
 	}
+	.inputStyle1{
+		width:55%;
+		height:80%;
+	}
 </style>
 
     <div class="space">
@@ -153,11 +157,16 @@
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">油费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="refuelMoney" /></td>
+						<td class="alignCenter" >
+							<s:textfield class="inputStyle1" name="refuelMoney" />
+							<s:checkbox class="m10" name="refuelMoneyAccount"/>入账
+						</td>
 						<td class="alignCenter">洗车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="washingFee" /></td>
+						<td class="alignCenter"><s:textfield class="inputStyle1" name="washingFee" />
+							<s:checkbox class="m10" name="washingFeeAccount"/>入账</td>
 						<td class="alignCenter">停车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="parkingFee" /></td>
+						<td class="alignCenter"><s:textfield class="inputStyle1" name="parkingFee" />
+							<s:checkbox class="m10" name="parkingFeeAccount"/>入账</td>
 						<td class="alignCenter">计费路码</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="totalChargeMile" /></td>
 	        		</tr>
@@ -167,7 +176,8 @@
 						<td class="alignCenter">食宿</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" onchange="getTax();getMoney()" onblur="getOrderMoney()"/></td>
 						<td class="alignCenter">其他费用</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="otherFee" onchange="getTax();getMoney()" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle1" name="otherFee" onchange="getTax();getMoney()" onblur="getOrderMoney()"/>
+							<s:checkbox class="m10" name="otherFeeAccount"/>入账</td>
 						<td class="alignCenter">税费</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" onchange="getMoney()" onblur="getOrderMoney()"/></td>						
 	        		</tr>

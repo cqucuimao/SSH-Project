@@ -225,6 +225,18 @@ public class Order extends BaseEntity {
 	
 	@Text("给司机发送短信")
 	private boolean smsForDriver;
+	
+	@Text("油费是否入账")
+	private boolean refuelMoneyAccount;
+	
+	@Text("停车费是否入账")
+	private boolean parkingFeeAccount;
+	
+	@Text("洗车费是否入账")
+	private boolean washingFeeAccount;
+	
+	@Text("其他费用是否入账")
+	private boolean otherFeeAccount;
 
 	public OrderStatement getOrderStatement() {
 		return orderStatement;
@@ -705,5 +717,39 @@ public class Order extends BaseEntity {
 
 	public void setSmsForDriver(boolean smsForDriver) {
 		this.smsForDriver = smsForDriver;
-	}	
+	}
+
+	public boolean isRefuelMoneyAccount() {
+		return refuelMoneyAccount;
+	}
+
+	public void setRefuelMoneyAccount(boolean refuelMoneyAccount) {
+		this.refuelMoneyAccount = refuelMoneyAccount;
+	}
+
+	public boolean isParkingFeeAccount() {
+		return parkingFeeAccount;
+	}
+
+	public void setParkingFeeAccount(boolean parkingFeeAccount) {
+		this.parkingFeeAccount = parkingFeeAccount;
+	}
+
+	public boolean isWashingFeeAccount() {
+		return washingFeeAccount;
+	}
+
+	public void setWashingFeeAccount(boolean washingFeeAccount) {
+		this.washingFeeAccount = washingFeeAccount;
+	}
+
+	public boolean isOtherFeeAccount() {
+		return otherFeeAccount;
+	}
+
+	public void setOtherFeeAccount(boolean otherFeeAccount) {
+		this.otherFeeAccount = otherFeeAccount;
+	}
+
+	
 }

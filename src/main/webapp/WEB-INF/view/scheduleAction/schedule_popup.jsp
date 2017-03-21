@@ -11,7 +11,7 @@
  <div class="space">
     <div class="dataGrid">
 			<div class="tableWrap">
-				<table >
+				<table>
 					<thead>
 						<tr>
 							<th style="text-align:center">车类</th>
@@ -34,19 +34,19 @@
 										<s:property value="#column.key"/>
 									</td>
 									</s:if> 
-									<td class="alignCenter">
+									<td class="alignCenter" style="cursor:pointer">
                             			<input type="radio" name="id" value="${list1[0]}" data="${list1[1]}" />
                                 	</td>
-									<td>  
+									<td style="cursor:pointer">  
 								 		<s:property value="#list1[1]"/>
 								 	</td>
-									<td>
+									<td style="cursor:pointer">
 										<s:property value="#list1[2]"/>
 									</td> 
-									<td><s:property value="#list1[3]"/></td> 
-									<td><s:property value="#list1[4]"/></td> 
-									<td><s:property value="#list1[5]"/></td> 
-									<td><s:property value="#list1[6]"/></td> 
+									<td style="cursor:pointer"><s:property value="#list1[3]"/></td> 
+									<td style="cursor:pointer"><s:property value="#list1[4]"/></td> 
+									<td style="cursor:pointer"><s:property value="#list1[5]"/></td> 
+									<td style="cursor:pointer"><s:property value="#list1[6]"/></td> 
 								</tr> 
 								</s:iterator> 
 						 		</s:iterator>

@@ -24,7 +24,7 @@
             <table>
                 <tr>
                     <th>车牌号</th>
-                    <td><cqu:carSelector name="car"/></td>
+                    <td><cqu:carAutocompleteSelector name="car"/></td>
                     <th>驻车地点</th>
                     <td>
                     <s:select style="width:135px;" name="servicePoint.name" id="servicePointId" list="#servicePointList" listKey="id" listValue="name"/>

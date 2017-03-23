@@ -12,7 +12,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.privilege.User;
 
-public class DriverNameSelectorTags extends TagSupport {
+public class UserAutocompleteSelectorTags extends TagSupport {
 	private static final long serialVersionUID = 1L;
 	private String name;
 
@@ -28,13 +28,11 @@ public class DriverNameSelectorTags extends TagSupport {
 			options.append("<script type=\"text/javascript\" src=\"js/jquery.autocomplete.js\"></script>");
 			options.append(" <script type=\"text/javascript\">");
 			options.append("$(function() {");
-			options.append("$(\"#"+name+"\" ).autocomplete(\"schedule_getUserName.action\",{");
-			options.append("extraParams : {keyWord : function(){return $(\"#"+name+"\" ).val();}},");
+			options.append("$(\"#"+name+"\" ).autocomplete(\"user_userAutocompleteRequest.action\",{");
+			options.append("extraParams : {keyword : function(){return $(\"#"+name+"\" ).val();}},");
 			options.append("formatItem: function(item) { return item;  },");
 			
 			options.append("mustMatch: true,");
-			options.append("multiple: true,");
-			options.append("multipleSeparator: \" \",");
 			
 			options.append("parse:function(data) {");
 			options.append("var parsed = []; ");

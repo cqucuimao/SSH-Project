@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
@@ -64,7 +65,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private int genderId;
 	private int userTypeId;
 	private int statusId;
-
+	private String keyword;
 	private String userStatus;
 	
 	/** 查询 */
@@ -110,6 +111,19 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		Gson gson = new Gson();
 		ActionContext.getContext().put("nodes", gson.toJson(nodes));
 		return "popup";
+	}
+	
+	public void userAutocompleteRequest() {
+		QueryHelper helper = new QueryHelper(User.class, "u");
+		helper.addWhereCondition(
+				"u.name like ?", "%" + keyword + "%");
+		List<Object> list = new ArrayList<Object>();
+		for (User user : userService.queryUser(1, helper)
+				.getRecordList()) {
+			list.add(user.getName());
+		}
+		JSONArray jsonArray = new JSONArray(list);
+		writeJson(jsonArray.toJSONString());
 	}
 
 	/** 删除 */
@@ -529,6 +543,14 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 }

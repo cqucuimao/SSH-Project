@@ -13,9 +13,9 @@
             <table id="queryInfoTB">
                 <tr>
                     <th>司机名称</th>
-                    <td><cqu:userSelector name="driver"/></td>
+                    <td><cqu:userAutocompleteSelector name="driver"/></td>
                     <th>车牌号</th>
-                    <td><cqu:carSelector name="car"/></td>
+                    <td><cqu:carAutocompleteSelector name="car"/></td>
                     <th>起始时间</th>
                     <td>
 						<s:textfield class="Wdate half" style="width:120px;" type="text" name="beginDate" id="startTime" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" >

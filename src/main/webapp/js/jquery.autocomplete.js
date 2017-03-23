@@ -160,7 +160,7 @@ $.Autocompleter = function(input, options) {
 	}).blur(function() {
 		hasFocus = 0;
 		if (!config.mouseDownOnSelect) {
-			hideResults();
+			hideResultsNow();    //原来是hideResults，改为hideResultsNow的目的是失去焦点时立即执行隐藏，以防止用户立即提交表单。
 		}
 	}).click(function() {
 		// show select when clicking in a focused field
@@ -312,7 +312,7 @@ $.Autocompleter = function(input, options) {
 		select.hide();
 		clearTimeout(timeout);
 		stopLoading();
-		if (options.mustMatch) {
+		if (hasFocus==0 && options.mustMatch) {  //新增了hasFocus==0的条件，目的是限定只有当失去焦点时，才做mustMatch的匹配
 			// call search and run callback
 			$input.search(
 				function (result){

@@ -22,13 +22,13 @@
 					<tr>
 						<th><s:property value="tr.getText('car.CarViolation.car')" /><span class="required">*</span></th>
 						<td>
-						 	<cqu:carSelector name="car" synchDriver="driver"/>
+						 	<cqu:carAutocompleteSelector name="car" synchDriver="driver"/>
 						</td>
 					</tr>
 					<tr>
                         <th><s:property value="tr.getText('car.CarViolation.driver')" /></th>
                         <td>
-                        	<cqu:userSelector name="driver"/>
+                        	<cqu:userAutocompleteSelector name="driver"/>
 						</td>
 					<td>
                     </tr>

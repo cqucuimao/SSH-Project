@@ -100,13 +100,13 @@
                     </tr>                  
                     <tr>
                         <th>车辆：<span class="required">*</span></th>
-                        <td><cqu:carSelector name="car" synchDriver="driver"/></td>
+                        <td><cqu:carAutocompleteSelector name="car" synchDriver="driver"/></td>
                         <th></th>
                         <td></td>
                     </tr>                  
                     <tr>
                         <th>司机：<span class="required">*</span></th>
-                        <td><cqu:userSelector name="driver"/></td>
+                        <td><cqu:userAutocompleteSelector name="driver"/></td>
                         <th></th>
                         <td></td>
                     </tr>             

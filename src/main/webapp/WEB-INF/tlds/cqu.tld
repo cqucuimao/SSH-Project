@@ -148,8 +148,8 @@
 </tag>  
 
 <tag>  
-	 <name>carPlateNumber</name>                              
-	 <tag-class>com.yuqincar.tags.CarPlateNumberSelectorTags</tag-class>
+	 <name>carAutocompleteSelector</name>                              
+	 <tag-class>com.yuqincar.tags.CarAutocompleteSelectorTags</tag-class>
 	 <attribute>    
                 <name>name</name>    
                 <required>true</required>  
@@ -158,8 +158,8 @@
 </tag> 
 
 <tag>  
-	 <name>driverName</name>                              
-	 <tag-class>com.yuqincar.tags.DriverNameSelectorTags</tag-class>
+	 <name>userAutocompleteSelector</name>                              
+	 <tag-class>com.yuqincar.tags.UserAutocompleteSelectorTags</tag-class>
 	 <attribute>    
                 <name>name</name>    
                 <required>true</required>  

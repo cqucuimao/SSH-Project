@@ -17,11 +17,11 @@
 					</td>
 					<th>司机</th>
 					<td>
-						<cqu:userSelector name="driver"/>
+						<cqu:userAutocompleteSelector name="driver"/>
 					</td>
 					<th>车牌号</th>
 					<td>
-						<cqu:carSelector name="car"/>
+						<cqu:carAutocompleteSelector name="car"/>
 					</td>
 					<th>时间</th>
 					<td>

@@ -66,6 +66,4 @@ public class Contract extends BaseEntity {
 		this.diskFiles = diskFiles;
 	}
 
-	
-	
 }

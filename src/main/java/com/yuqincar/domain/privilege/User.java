@@ -113,6 +113,8 @@ public class User extends BaseEntity implements Serializable {
 			BASE_PRIVILEGE_URLS.add("/user_changePassword");
 			BASE_PRIVILEGE_URLS.add("/user_changePhoneNumber");
 			BASE_PRIVILEGE_URLS.add("/user_detail");
+			BASE_PRIVILEGE_URLS.add("/user_userAutocompleteRequest");
+			BASE_PRIVILEGE_URLS.add("/car_carAutocompleteRequest");
 		}
 		return BASE_PRIVILEGE_URLS;
 	}

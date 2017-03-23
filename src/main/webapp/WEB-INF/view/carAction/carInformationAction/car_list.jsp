@@ -18,8 +18,7 @@
 					</td>
 					<th><s:property value="tr.getText('car.Car.plateNumber')" /></th>
 					<td>
-						<%-- <cqu:carSelector name="car"/> --%>
-						<cqu:carPlateNumber name="car"/>
+						<cqu:carAutocompleteSelector name="car"/>
 					</td>
 					<th><s:property value="tr.getText('car.CarServiceType.title')" /></th>
 					<td><s:select name="serviceType.title" cssClass="SelectStyle"
@@ -29,8 +28,7 @@
                     </td>
 					<th><s:property value="tr.getText('car.Car.driver')" /></th>
 					<td>
-						<cqu:driverName name="selectedDriver"/>
-						<%-- <cqu:userSelector name="driver" driverOnly="true"/> --%>
+						<cqu:userAutocompleteSelector name="selectedDriver"/>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="submit" />
 					</td>

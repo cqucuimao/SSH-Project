@@ -618,10 +618,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 					.setParameter(1, OrderStatusEnum.CANCELLED);
 			
 			List<Integer> list=(List<Integer>)query.list();
-			System.out.println("*******************************");
-			for(Integer n:list)
-				System.out.println(n);
-			System.out.println("*******************************");
 			if(list.size()==0)
 				sn=yearMonth+"00001";
 			else{

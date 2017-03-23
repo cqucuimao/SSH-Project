@@ -194,39 +194,6 @@ public class ScheduleAction extends BaseAction {
 		JSONArray jsonArray = new JSONArray(list);
 		writeJson(jsonArray.toJSONString());
 	}
-//@zys 20170213
-	public void getCarPlateNum() {
-		//System.out.println("in getCarPlateNumber");
-		//System.out.println("keyword="+keyWord);
-		//System.out.println("keyWord="+keyWord);
-		QueryHelper helper = new QueryHelper(Car.class, "c");
-		helper.addWhereCondition(
-				"c.plateNumber like ?", "%" + keyWord + "%");
-		List<Object> list = new ArrayList<Object>();
-		
-		for (Car car : carService.queryCar(1, helper)
-				.getRecordList()) {
-		list.add(car.getPlateNumber()+"("+car.getServiceType().getTitle()+")");
-			//list.add(car.getPlateNumber());
-		}
-		System.out.println("list.size()="+list.size());
-		JSONArray jsonArray = new JSONArray(list);
-		writeJson(jsonArray.toJSONString());
-	}
-	
-	public void getUserName() {
-		//System.out.println("keyWord="+keyWord);
-		QueryHelper helper = new QueryHelper(User.class, "u");
-		helper.addWhereCondition(
-				"u.name like ?", "%" + keyWord + "%");
-		List<Object> list = new ArrayList<Object>();
-		for (User user : userService.queryUser(1, helper)
-				.getRecordList()) {
-			list.add(user.getName());
-		}
-		JSONArray jsonArray = new JSONArray(list);
-		writeJson(jsonArray.toJSONString());
-	}
 	
 	public void getCustomer() {
 		QueryHelper helper = new QueryHelper(Customer.class, "c");
@@ -327,8 +294,10 @@ public class ScheduleAction extends BaseAction {
 		order.setFromAddress(fromAddress);
 		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE)
 			order.setToAddress(toAddress);
-		order.setCustomerMemo(customerMemo);
-		order.setDestination(destination);
+		if(customerMemo!=null && !StringUtils.isEmpty(customerMemo))
+			order.setCustomerMemo(customerMemo);
+		if(destination!=null && !StringUtils.isEmpty(destination))
+			order.setDestination(destination);
 		if(saler!=null)
 			order.setSaler(saler);		
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
@@ -556,8 +525,10 @@ public class ScheduleAction extends BaseAction {
 			order.setToAddress(toAddress);
 			order.setPlanBeginDate(DateUtils.getYMDHM(planBeginDate));
 		}
-		order.setCustomerMemo(customerMemo);
-		order.setDestination(destination);
+		if(customerMemo!=null && !StringUtils.isEmpty(customerMemo))
+			order.setCustomerMemo(customerMemo);
+		if(destination!=null && !StringUtils.isEmpty(destination))
+			order.setDestination(destination);
 		if(saler!=null)
 			order.setSaler(saler);
 		

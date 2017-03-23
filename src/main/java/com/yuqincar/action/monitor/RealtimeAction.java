@@ -222,7 +222,6 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 			carsVO=parseCars(carsByStatus);
 		}
 		String jsonStr="{\"cars\":"+JSON.toJSONString(carsVO)+"}"; 
-		System.out.println("jsonStr="+jsonStr);
 		this.writeJson(jsonStr);
 		
 	}

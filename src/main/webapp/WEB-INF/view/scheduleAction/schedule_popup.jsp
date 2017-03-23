@@ -11,7 +11,7 @@
  <div class="space">
     <div class="dataGrid">
 			<div class="tableWrap">
-				<table >
+				<table>
 					<thead>
 						<tr>
 							<th style="text-align:center">车类</th>
@@ -34,34 +34,25 @@
 										<s:property value="#column.key"/>
 									</td>
 									</s:if> 
-									<td class="alignCenter">
+									<td class="alignCenter" style="cursor:pointer">
                             			<input type="radio" name="id" value="${list1[0]}" data="${list1[1]}" />
                                 	</td>
-									<td>  
+									<td style="cursor:pointer">  
 								 		<s:property value="#list1[1]"/>
 								 	</td>
-									<td>
+									<td style="cursor:pointer">
 										<s:property value="#list1[2]"/>
 									</td> 
-									<td><s:property value="#list1[3]"/></td> 
-									<td><s:property value="#list1[4]"/></td> 
-									<td><s:property value="#list1[5]"/></td> 
-									<td><s:property value="#list1[6]"/></td> 
+									<td style="cursor:pointer"><s:property value="#list1[3]"/></td> 
+									<td style="cursor:pointer"><s:property value="#list1[4]"/></td> 
+									<td style="cursor:pointer"><s:property value="#list1[5]"/></td> 
+									<td style="cursor:pointer"><s:property value="#list1[6]"/></td> 
 								</tr> 
 								</s:iterator> 
 						 		</s:iterator>
 					</tbody>
 				</table>
 	      </div>
-	      <!-- 填充div，防止部分数据被遮盖 -->
-        <div style="width:245px;height:60px">  
-     </div> 
-        <div class="bottomBar alignCenter" style="position:fixed;bottom:0;background-color:white;width:100%;height:60px">
-            <input id="sure" class="inputButton" type="button" value="确定" />
-            <input id="clear" class="inputButton" type="button" value="清空" />
-            <input id="close" class="inputButton" type="button" value="关闭" />
-        </div>
-    </div>
     <script type="text/javascript">
         $(function(){
        	       var selectorName=art.dialog.data("selectorName");
@@ -71,7 +62,8 @@
     	       {
     				$("input[type=radio][name='id'][value='"+input_id_value+"']").attr("checked",'checked');
     	       } 
-            $("#sure").click(function(){
+            $("tr").click(function(){
+            	$(this).find("input[type='radio']").attr("checked",true);
             	var selectorName=art.dialog.data("selectorName");
             	var newVal=$('input:radio[name="id"]:checked').attr('data');
             	var id=$('input:radio[name="id"]:checked').attr('value');
@@ -87,23 +79,6 @@
             	input.select(); 
             	art.dialog.close();
             })
-            
-            $("#clear").click(function(){
-            	var selectorName=art.dialog.data("selectorName");
-            	var origin = artDialog.open.origin;
-            	var input = origin.document.getElementById(selectorName+"Label");
-            	var input_id = origin.document.getElementById(selectorName); 
-
-            	input.value = "";
-            	input.select();
-            	input_id.value= "";
-            	input.select();
-            	art.dialog.close();
-            })
-            
-            $("#close").click(function(){
-            	art.dialog.close();
-            }) 
         })
     </script>
 </div>

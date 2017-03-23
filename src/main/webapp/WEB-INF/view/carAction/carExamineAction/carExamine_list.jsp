@@ -23,9 +23,9 @@
 						<s:a cssClass="buttonA" action="carExamine_addUI?actionFlag=register">年审登记</s:a>
 					</td>
 					<th><s:property value="tr.getText('car.CarExamine.car')" /></th>
-					<td><cqu:carSelector name="car"/></td>
+					<td><cqu:carAutocompleteSelector name="car"/></td>
 					<th><s:property value="tr.getText('car.CarExamine.driver')" /></th>
-					<td><cqu:userSelector name="driver"/></td>
+					<td><cqu:userAutocompleteSelector name="driver"/></td>
 					<th>从</th>
 					<td>
 						<s:textfield name="date1" id="date1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />

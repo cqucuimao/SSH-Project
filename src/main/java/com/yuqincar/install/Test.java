@@ -30,18 +30,9 @@ import com.yuqincar.utils.DateUtils;
 public class Test {
 
 	public static void main(String[] args) {
-		Scanner s = new Scanner(System.in);
-        int n = s.nextInt();
-        ArrayList<Integer> lists = new ArrayList<Integer>();
-        
-        for(int i=0;i<n;i++){
-            lists.add(s.nextInt());
-        }
-        
-        TreeSet<Integer> hs = new TreeSet<Integer>(lists);
-        for(int i=0;i<hs.size();i++){
-            System.out.println((Integer)hs.toArray()[i]);
-        }
+		String keyword="渝AGB526(斯柯达明锐)";
+		keyword=keyword.substring(0,keyword.indexOf("("));
+		System.out.println(keyword);
 	}
 	
 	private static void testURLEncode(){

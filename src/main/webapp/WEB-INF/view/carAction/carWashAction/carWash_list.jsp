@@ -17,7 +17,7 @@
 					</td>
 					<th><s:property value="tr.getText('car.CarWash.car')" /></th>
 					<td>
-						<cqu:carSelector name="car"/>
+						<cqu:carAutocompleteSelector name="car"/>
 					</td>
 					<th>从</th>
 					<td>

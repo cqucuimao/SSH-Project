@@ -145,7 +145,7 @@
 									</tr>					
 									<tr>
 										<th>业务员</th>
-										<td><cqu:userSelector name="saler" departments="运营科;技术保障科"/></td>
+										<td><cqu:userAutocompleteSelector name="saler"/></td>
 									</tr>
 									<tr>
 										<th></th>
@@ -168,8 +168,7 @@
 								<tbody>
 								<tr>
 									<th>车牌号</th>
-									<%-- <td><cqu:carSelector name="queryCar"/> --%>
-									<td><cqu:carPlateNumber name="queryCar"/>
+									<td><cqu:carAutocompleteSelector name="queryCar"/>
 										<input class="inputButton" type="button" value="查询" name="button" id="findCar" />
 									</td>
 								</tr>
@@ -209,17 +208,12 @@
 								<tr>
 									<th>调度的车</th>
 									<td>
-									<cqu:carPlateNumber name="selectedCar"/>
+									<cqu:carAutocompleteSelector name="selectedCar"/>
 									</td> 
 									<th>调度的司机</th>
 									<td>
-									<cqu:driverName name="selectedDriver"/>
-									</td> 
-									
-									<%-- <th>调度的车</th>
-									 <td><cqu:carSelector name="selectedCar" synchDriver="selectedDriver"/></td> 
-									<th>调度的司机</th>
-									<td><cqu:userSelector name="selectedDriver"/></td> --%>
+									<cqu:userAutocompleteSelector name="selectedDriver"/>
+									</td>
 								</tr>
 								</tbody>
 							</table>                             

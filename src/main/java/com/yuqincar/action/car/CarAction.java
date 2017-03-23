@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
+import com.mysql.jdbc.Driver;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
@@ -29,6 +32,8 @@ import com.yuqincar.domain.car.TransmissionTypeEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
 import com.yuqincar.domain.monitor.Device;
+import com.yuqincar.domain.order.Customer;
+import com.yuqincar.domain.privilege.Contract;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.service.car.CarCareService;
 import com.yuqincar.service.car.CarExamineService;
@@ -100,6 +105,10 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private int seatNumber1;
 	private int seatNumber2;
 	
+	//调度员修改车辆默认司机
+	private String plateNumberEDD;
+	private User defaultDriverEDD;
+	private boolean isTruePlateNumberEDD;
 	private Car car;
 	
 	public String queryList() {
@@ -549,8 +558,63 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		ActionContext.getContext().getValueStack().push(car);
 		return "detail";
 	}
-
 	
+	/** 修改车辆默认司机页面*/
+	public String editDefaultDriverUI() throws Exception {
+		return "saveEditDefaultDriverUI";
+	}
+
+	/** 查询车辆默认司机*/
+	public void queryDefaultDriver(){
+		System.out.println("plateNumberEDD="+plateNumberEDD);
+		DriverName dn = new DriverName();
+		System.out.println("is or not");
+		plateNumberEDD = plateNumberEDD.substring(0, plateNumberEDD.indexOf("("));
+		System.out.println("plateNumberEDD="+plateNumberEDD);
+		dn.setDriverName(carService.getCarByPlateNumber(plateNumberEDD).getDriver().getName());
+		String json = JSON.toJSONString(dn);
+		writeJson(json);
+	}
+	
+	class DriverName{
+		private String driverName;
+
+		public String getDriverName() {
+			return driverName;
+		}
+
+		public void setDriverName(String driverName) {
+			this.driverName = driverName;
+		}
+		
+	}
+	
+	/** 修改车辆默认司机页面*/
+	public String editDefaultDriver() throws Exception {
+		
+		if(plateNumberEDD!=null)
+		{
+			if(plateNumberEDD==null)
+			{
+				addFieldError("plateNumberEDD", "你填写的车牌号不存在！");
+				isTruePlateNumberEDD=false;
+			}else {
+				isTruePlateNumberEDD=true;
+				Car c=null;
+				c.setDriver(defaultDriverEDD);
+				carService.updateCar(c);
+			}
+		}
+		else {
+			isTruePlateNumberEDD=false;
+			addFieldError("plateNumberEDD", "请填写车牌号！");
+		}
+		return "saveEditDefaultDriverUI";
+	}
+	
+	public boolean isPlateNumberTrue(){
+		return isTruePlateNumberEDD;
+	}
 	public Long getCarServiceTypeId() {
 		return carServiceTypeId;
 	}
@@ -742,5 +806,29 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 
 	public void setCar(Car car) {
 		this.car = car;
-	}	
+	}
+	
+	public String getPlateNumberEDD() {
+		return plateNumberEDD;
+	}
+
+	public void setPlateNumberEDD(String plateNumberEDD) {
+		this.plateNumberEDD = plateNumberEDD;
+	}
+
+	public User getDefaultDriverEDD() {
+		return defaultDriverEDD;
+	}
+
+	public void setDefaultDriverEDD(User defaultDriverEDD) {
+		this.defaultDriverEDD = defaultDriverEDD;
+	}
+
+	public boolean isTruePlateNumberEDD() {
+		return isTruePlateNumberEDD;
+	}
+
+	public void setTruePlateNumberEDD(boolean isTruePlateNumberEDD) {
+		this.isTruePlateNumberEDD = isTruePlateNumberEDD;
+	}
 }

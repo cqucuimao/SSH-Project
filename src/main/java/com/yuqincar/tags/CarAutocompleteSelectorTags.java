@@ -57,7 +57,7 @@ public class CarAutocompleteSelectorTags extends TagSupport {
 			options.append("}); ");
 			options.append("</script>");
 			
-			options.append("<input class=\"half inputText\" type=\"text\" id="+name+" name="+name+"  value=\'"+labelValue+"\'/>");
+			options.append("<input class=\"inputText\" style=\"width:200px;\" type=\"text\" id="+name+" name="+name+"  value=\'"+labelValue+"\'/>");
 			out.println(options);
 		} catch (IOException e) {
 			e.printStackTrace();

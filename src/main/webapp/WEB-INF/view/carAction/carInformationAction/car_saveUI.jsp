@@ -114,7 +114,7 @@
 					<tr>
 						<th><s:property value="tr.getText('car.Car.driver')" /></th>
 						<td>
-							<cqu:userAutocompleteSelector name="driver" driverOnly="true"/>				
+							<cqu:userAutocompleteSelector name="driver"/>				
 						</td>
 					</tr>
 					<tr>

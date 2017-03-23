@@ -6,14 +6,18 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.jsp.TagUtils;
 
 import com.opensymphony.xwork2.util.ValueStack;
 import com.yuqincar.domain.car.Car;
 
+import freemarker.template.utility.StringUtil;
+
 public class CarAutocompleteSelectorTags extends TagSupport {
 	private static final long serialVersionUID = 1L;
 	private String name;
+	private String synchDriver;
 
 	public int doStartTag() throws JspException {
 		ValueStack stack = TagUtils.getStack(pageContext);
@@ -44,10 +48,16 @@ public class CarAutocompleteSelectorTags extends TagSupport {
 			options.append("result: data[i]  ");
 			options.append("   };  }  return parsed;  ");
 			options.append("   } }); ");
+			options.append("}).result(function(event,data){");
+			if(! StringUtils.isEmpty(synchDriver)){
+				options.append("$.get(\"car_getSynchDriverName.action?selectedPlateNumber=\"+data,function(data){");
+				options.append("console.log(data);$(\"#driver\").val(data.driverName);");
+				options.append("});");
+			}
 			options.append("}); ");
 			options.append("</script>");
 			
-			options.append("<input class=\"inputText\"  style=\"width:180px\"  type=\"text\" id="+name+" name="+name+"  value=\'"+labelValue+"\'/>");
+			options.append("<input class=\"half inputText\" type=\"text\" id="+name+" name="+name+"  value=\'"+labelValue+"\'/>");
 			out.println(options);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -67,6 +77,14 @@ public class CarAutocompleteSelectorTags extends TagSupport {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSynchDriver() {
+		return synchDriver;
+	}
+
+	public void setSynchDriver(String synchDriver) {
+		this.synchDriver = synchDriver;
 	}
 
 	

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
@@ -38,6 +39,8 @@ import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.device.DeviceService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.QueryHelper;
+
+import freemarker.template.utility.StringUtil;
 
 @Controller
 @Scope("prototype")
@@ -101,6 +104,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private int seatNumber1;
 	private int seatNumber2;
 	private String keyword;
+	private String selectedPlateNumber;
 	private Car car;
 	
 	public String queryList() {
@@ -528,6 +532,31 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		writeJson(jsonArray.toJSONString());
 	}
 	
+	//获取车辆对应的默认司机
+	public void getSynchDriverName(){
+		if(!"undefined".equals(selectedPlateNumber) && selectedPlateNumber != null){
+			selectedPlateNumber=selectedPlateNumber.substring(0,selectedPlateNumber.indexOf("("));
+			Car car = carService.getCarByPlateNumber(selectedPlateNumber);
+			if(car.getDriver() != null && car.getDriver().getName() != null){
+				DriverName dn = new DriverName();
+				dn.setDriverName(car.getDriver().getName());
+				String json = JSON.toJSONString(dn);
+				writeJson(json);
+			}
+		}
+	}
+	
+	class DriverName{
+		private String driverName;
+
+		public String getDriverName() {
+			return driverName;
+		}
+
+		public void setDriverName(String driverName) {
+			this.driverName = driverName;
+		}
+	}
 	
 	//判断车辆能否删除
 	public boolean isCanDeleteCar(){
@@ -764,6 +793,14 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
+	}
+
+	public String getSelectedPlateNumber() {
+		return selectedPlateNumber;
+	}
+
+	public void setSelectedPlateNumber(String selectedPlateNumber) {
+		this.selectedPlateNumber = selectedPlateNumber;
 	}	
 	
 }

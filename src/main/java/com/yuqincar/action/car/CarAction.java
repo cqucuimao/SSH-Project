@@ -107,9 +107,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private String keyword;
 	private String selectedPlateNumber;
 	//调度员修改车辆默认司机
-	private String plateNumberEDD;
-	private User defaultDriverEDD;
-	private boolean isTruePlateNumberEDD;
+	private User newDriver;
 	private Car car;
 	
 	public String queryList() {
@@ -540,6 +538,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	//获取车辆对应的默认司机
 	public void getSynchDriverName(){
+		System.out.println("is or not");
 		if(!"undefined".equals(selectedPlateNumber) && selectedPlateNumber != null){
 			selectedPlateNumber=selectedPlateNumber.substring(0,selectedPlateNumber.indexOf("("));
 			Car car = carService.getCarByPlateNumber(selectedPlateNumber);
@@ -600,80 +599,25 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 	
 	/** 修改车辆默认司机页面*/
-	public String editDefaultDriverUI() throws Exception {
-		
+	public String editDefaultDriverUI() throws Exception {	
 		return "saveEditDefaultDriverUI";
-	}
-
-	/** 查询车辆默认司机*/
-	/*public void queryDefaultDriver(){
-		DriverName dn = new DriverName();
-		if(plateNumberEDD.length()!=0){
-			plateNumberEDD = plateNumberEDD.substring(0, plateNumberEDD.indexOf("("));
-			System.out.println("***plateNumberEDD"+plateNumberEDD);
-			if(carService.getCarByPlateNumber(plateNumberEDD).getDriver()!=null)
-				dn.setDriverName(carService.getCarByPlateNumber(plateNumberEDD).getDriver().getName());
-			else {
-				dn.setDriverName("");
-			}
-			System.out.println(plateNumberEDD+" "+dn.getDriverName());
-			dn.setErrorMessage("");
-			String json = JSON.toJSONString(dn);
-			writeJson(json);
-		}else {
-			dn.setDriverName("");
-			dn.setErrorMessage("车牌号不能为空");
-			String json = JSON.toJSONString(dn);
-			writeJson(json);
-		}
-	}*/
-	
-	class DriverNameEDD{
-		private String driverName;
-		private String errorMessage;
-
-		public String getDriverName() {
-			return driverName;
-		}
-
-		public void setDriverName(String driverName) {
-			this.driverName = driverName;
-		}
-
-		public String getErrorMessage() {
-			return errorMessage;
-		}
-
-		public void setErrorMessage(String errorMessage) {
-			this.errorMessage = errorMessage;
-		}
 	}
 	
 	/** 修改车辆默认司机*/
-	public void editDefaultDriver() throws Exception {
-		System.out.println("****plateNumberEDD="+plateNumberEDD);
-		DriverNameEDD dn = new DriverNameEDD();
-		if(plateNumberEDD.length()!=0)
-		{
-			plateNumberEDD = plateNumberEDD.substring(0, plateNumberEDD.indexOf("("));
-			Car c=carService.getCarByPlateNumber(plateNumberEDD);
-			c.setDriver(defaultDriverEDD);
-			carService.updateCar(c);
-			defaultDriverEDD=null;
-			dn.setDriverName("success");
-			dn.setErrorMessage("");
-			String json = JSON.toJSONString(dn);
-			writeJson(json);
-		}else{
-			dn.setErrorMessage("车牌号不能为空");
-			dn.setDriverName("");
-			String json = JSON.toJSONString(dn);
-			writeJson(json);
+	public String editDefaultDriver() throws Exception {
+		
+		if(car == null){
+			addFieldError("plateNumber", "车牌号不能为空！");
+			return editDefaultDriverUI();
 		}
-	}
-	
-	public boolean isPlateNumberTrue(){
-		return isTruePlateNumberEDD;
+		if(newDriver != null){
+			car.setDriver(newDriver);
+		}else{
+			car.setDriver(null);
+		}
+		carService.updateCar(car);
+		ActionContext.getContext().getValueStack().push(car);
+		return editDefaultDriverUI();
 	}
 	public Long getCarServiceTypeId() {
 		return carServiceTypeId;
@@ -867,31 +811,16 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setCar(Car car) {
 		this.car = car;
 	}
-	
-	public String getPlateNumberEDD() {
-		return plateNumberEDD;
+
+
+	public User getNewDriver() {
+		return newDriver;
 	}
 
-	public void setPlateNumberEDD(String plateNumberEDD) {
-		this.plateNumberEDD = plateNumberEDD;
+	public void setNewDriver(User newDriver) {
+		this.newDriver = newDriver;
 	}
 
-	public User getDefaultDriverEDD() {
-		return defaultDriverEDD;
-	}
-
-	public void setDefaultDriverEDD(User defaultDriverEDD) {
-		this.defaultDriverEDD = defaultDriverEDD;
-	}
-
-	public boolean isTruePlateNumberEDD() {
-		return isTruePlateNumberEDD;
-	}
-
-	public void setTruePlateNumberEDD(boolean isTruePlateNumberEDD) {
-		this.isTruePlateNumberEDD = isTruePlateNumberEDD;
-	}
-	
 	public String getKeyword() {
 		return keyword;
 	}

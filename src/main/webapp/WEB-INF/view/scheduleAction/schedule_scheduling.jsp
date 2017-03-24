@@ -561,7 +561,7 @@
                          	value: data[i],  
                          	result: data[i]  
                          };  
-                     }                       
+                     }              
                      return parsed;  
                  }
     			});

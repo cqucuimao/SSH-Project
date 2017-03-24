@@ -153,7 +153,12 @@
 	 <attribute>    
                 <name>name</name>    
                 <required>true</required>  
-                <rtexprvalue>true</rtexprvalue>  
+                <rtexprvalue>false</rtexprvalue>  
+      </attribute> 
+      <attribute>    
+                <name>synchDriver</name>    
+                <required>false</required>  
+                <rtexprvalue>false</rtexprvalue>  
       </attribute> 
 </tag> 
 

@@ -95,6 +95,11 @@
         </div>
     </div>
     <script type="text/javascript">
+    	var miles = $("input[name=careMiles]").val();
+    	if(miles <= 0 ){
+    		$("input[name=careMiles]").val("");
+    	}
+    		
 	    //编辑时的权限处理
 		//alert($("#editNormalInfo").val());
 		//alert($("#editKeyInfo").val());

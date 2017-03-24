@@ -46,7 +46,7 @@ public class UserAutocompleteSelectorTags extends TagSupport {
 			options.append("}); ");
 			options.append("</script>");
 			
-			options.append("<input class=\"inputText\" type=\"text\" id="+name+" name="+name+"  value=\'"+labelValue+"\'/>");
+			options.append("<input class=\"half inputText\" type=\"text\" id="+name+" name="+name+"  value=\'"+labelValue+"\'/>");
 			out.println(options);
 		} catch (IOException e) {
 			e.printStackTrace();

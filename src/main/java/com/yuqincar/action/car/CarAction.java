@@ -41,6 +41,8 @@ import com.yuqincar.service.device.DeviceService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.QueryHelper;
 
+import freemarker.template.utility.StringUtil;
+
 @Controller
 @Scope("prototype")
 public class CarAction extends BaseAction implements ModelDriven<Car>{
@@ -103,7 +105,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private int seatNumber1;
 	private int seatNumber2;
 	private String keyword;
-	
+	private String selectedPlateNumber;
 	//调度员修改车辆默认司机
 	private String plateNumberEDD;
 	private User defaultDriverEDD;
@@ -523,6 +525,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 	
 	public void carAutocompleteRequest() {
+		System.out.println("in carAutocompleteRequest");
 		if(keyword!=null && keyword.contains("("))
 			keyword=keyword.substring(0,keyword.indexOf("("));
 		QueryHelper helper = new QueryHelper(Car.class, "c");
@@ -535,6 +538,31 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		writeJson(jsonArray.toJSONString());
 	}
 	
+	//获取车辆对应的默认司机
+	public void getSynchDriverName(){
+		if(!"undefined".equals(selectedPlateNumber) && selectedPlateNumber != null){
+			selectedPlateNumber=selectedPlateNumber.substring(0,selectedPlateNumber.indexOf("("));
+			Car car = carService.getCarByPlateNumber(selectedPlateNumber);
+			if(car.getDriver() != null && car.getDriver().getName() != null){
+				DriverName dn = new DriverName();
+				dn.setDriverName(car.getDriver().getName());
+				String json = JSON.toJSONString(dn);
+				writeJson(json);
+			}
+		}
+	}
+	
+	class DriverName{
+		private String driverName;
+
+		public String getDriverName() {
+			return driverName;
+		}
+
+		public void setDriverName(String driverName) {
+			this.driverName = driverName;
+		}
+	}
 	
 	//判断车辆能否删除
 	public boolean isCanDeleteCar(){
@@ -600,7 +628,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		}
 	}*/
 	
-	class DriverName{
+	class DriverNameEDD{
 		private String driverName;
 		private String errorMessage;
 
@@ -624,7 +652,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	/** 修改车辆默认司机*/
 	public void editDefaultDriver() throws Exception {
 		System.out.println("****plateNumberEDD="+plateNumberEDD);
-		DriverName dn = new DriverName();
+		DriverNameEDD dn = new DriverNameEDD();
 		if(plateNumberEDD.length()!=0)
 		{
 			plateNumberEDD = plateNumberEDD.substring(0, plateNumberEDD.indexOf("("));
@@ -871,4 +899,12 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
+	
+	public String getSelectedPlateNumber() {
+		return selectedPlateNumber;
+	}
+
+	public void setSelectedPlateNumber(String selectedPlateNumber) {
+		this.selectedPlateNumber = selectedPlateNumber;
+	}	
 }

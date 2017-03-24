@@ -181,7 +181,6 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	public List<TreeNode> getCarTree(String plateNumber,String synchDriver) {
-		System.out.println("in getCarTree, plateNumber="+plateNumber);
 		List<Car> cars ;
 		//默认展开
 		boolean flag = true;

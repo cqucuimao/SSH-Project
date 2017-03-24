@@ -520,6 +520,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	}
 	
 	public void carAutocompleteRequest() {
+		System.out.println("in carAutocompleteRequest");
 		if(keyword!=null && keyword.contains("("))
 			keyword=keyword.substring(0,keyword.indexOf("("));
 		QueryHelper helper = new QueryHelper(Car.class, "c");

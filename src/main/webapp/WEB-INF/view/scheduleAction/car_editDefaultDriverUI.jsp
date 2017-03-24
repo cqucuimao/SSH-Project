@@ -16,48 +16,42 @@
 			</p>
         </div>
         <div class="editBlock detail p30">
+         <%-- <s:form action="car_editDefaultDriver" name="pageForm" id="pageForm"> --%>
             <table>
             	<colgroup>
 					<col width="80"></col>
+					<col></col>
+					<col></col>
+					<col></col>
+					<col></col>
 					<col width="120"></col>
-					<col></col>
-					<col></col>
-					<col></col>
-					<col></col>
 				</colgroup>
                 <tbody>
                 	<tr>
-                        	<th>车牌号<span class="required">*</span></th>
+                        <th>车牌号<span class="required">*</span></th>
                         	<td>
                         		<%-- <s:textfield cssClass="inputText" name="plateNumberEDD"/> --%>
-                        		<cqu:carPlateNumber name="car"/>
+                        		<cqu:carAutocompleteSelector name="car"/>
                         		<!--<input name="car" id="car" value="{}">  -->
                         	</td>
-                        	<td>
-                        	<span style="width:20px;"></span>
-                        	</td>
-                        	<td>
-                        		<input class="inputButton" type="submit" id="findCar" value="查询" name="button" />
-                            	<a class="p15" href="javascript:history.go(-1);">返回</a>
-                        	</td>
                     </tr>
-                    
-                    
-                    <tr id="defaultDriver" style="display:none;">
+                    <tr>
                         <th>默认司机</th>
                         <td>
-                        	<cqu:userSelector name="defaultDriverEDD"/>
+                        	<cqu:userAutocompleteSelector name="user"/>
 						</td>
-						<td>
-                        	<span style="width:20px;"></span>
-                        	</td>
-						 <td>
-                            <input class="inputButton coverOff" type="submit" value="确定" />
-                        </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <input class="inputButton coverOff" type="submit" value="确定" id="editdefaultDriver"/>
+                            <a class="p15" href="javascript:history.go(-1);">返回</a>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
-        
+      
         </div>
     </div>
     <script type="text/javascript">
@@ -79,32 +73,70 @@
 			});
 		});
 	    
-	    $(".inputButton[id=findCar]").click(function() {
-	    	$("#defaultDriver").show();
-	    	var plateNumber = $("#car").val();
+	 /*    $(".inputButton[id=findCar]").click(function() {
+	    	/* if ($("#car").val() == "") {
+	    		$("#defaultDriver").hide();
+				alert("车牌号不能为空！");
+				coverHidden();
+			}else{ */
+				$("#defaultDriver").show();
+	    		var plateNumber = $("#car").val();
 // 			$.get("car_queryDefaultDriver.action?plateNumberEDD="+encodeURI(plateNumber),function(data){
 // 				alert("ture");
 // 				//$("#defaultDriverEDD").val(data);
 // 				coverHidden();
 // 			});
+				$.ajax({
+					url:'car_queryDefaultDriver.action',
+					type:'post',
+					data:{
+						plateNumberEDD:plateNumber
+					},
+					dataType:'json',
+					success : function(data){
+						if(data.errorMessage=="")
+							$("#user").val(data.driverName);
+						else
+							{
+								alert(data.errorMessage);
+								$("#defaultDriver").hide();
+							}
+						coverHidden();
+					},
+					error:function(){
+						coverHidden();
+					}
+				});
+			
+		}) */
+	
+	   $(".inputButton[id=editdefaultDriver]").click(function() {
+	    	var plateNumber = $("#car").val();
+	    	var defaultDriver = $("#user").val();
 			$.ajax({
-				url:'car_queryDefaultDriver.action',
+				url:'car_editDefaultDriver.action',
 				type:'post',
 				data:{
-					plateNumberEDD:plateNumber
+					plateNumberEDD:plateNumber,
+					defaultDriverEDD:defaultDriver
 				},
 				dataType:'json',
 				success : function(data){
-					alert(data.driverName);
-					$("#defaultDriverEDD").val(data.driverName);
+					if(data.errorMessage=="")
+						{
+						alert("修改成功！");
+						}
+					else{
+						alert(data.errorMessage);
+						}
 					coverHidden();
+					}
 				},
 				error:function(){
 					alert("error");
 					coverHidden();
 				}
 			});
-			
 	})
     </script>
 </cqu:border>

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
+import com.mysql.jdbc.Driver;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
@@ -105,6 +106,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private int seatNumber2;
 	private String keyword;
 	private String selectedPlateNumber;
+	//调度员修改车辆默认司机
+	private User newDriver;
 	private Car car;
 	
 	public String queryList() {
@@ -535,6 +538,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	//获取车辆对应的默认司机
 	public void getSynchDriverName(){
+		System.out.println("is or not");
 		if(!"undefined".equals(selectedPlateNumber) && selectedPlateNumber != null){
 			selectedPlateNumber=selectedPlateNumber.substring(0,selectedPlateNumber.indexOf("("));
 			Car car = carService.getCarByPlateNumber(selectedPlateNumber);
@@ -593,8 +597,28 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		ActionContext.getContext().getValueStack().push(car);
 		return "detail";
 	}
-
 	
+	/** 修改车辆默认司机页面*/
+	public String editDefaultDriverUI() throws Exception {	
+		return "saveEditDefaultDriverUI";
+	}
+	
+	/** 修改车辆默认司机*/
+	public String editDefaultDriver() throws Exception {
+		
+		if(car == null){
+			addFieldError("plateNumber", "车牌号不能为空！");
+			return editDefaultDriverUI();
+		}
+		if(newDriver != null){
+			car.setDriver(newDriver);
+		}else{
+			car.setDriver(null);
+		}
+		carService.updateCar(car);
+		ActionContext.getContext().getValueStack().push(car);
+		return editDefaultDriverUI();
+	}
 	public Long getCarServiceTypeId() {
 		return carServiceTypeId;
 	}
@@ -788,6 +812,15 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		this.car = car;
 	}
 
+
+	public User getNewDriver() {
+		return newDriver;
+	}
+
+	public void setNewDriver(User newDriver) {
+		this.newDriver = newDriver;
+	}
+
 	public String getKeyword() {
 		return keyword;
 	}
@@ -795,7 +828,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
-
+	
 	public String getSelectedPlateNumber() {
 		return selectedPlateNumber;
 	}
@@ -803,5 +836,4 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setSelectedPlateNumber(String selectedPlateNumber) {
 		this.selectedPlateNumber = selectedPlateNumber;
 	}	
-	
 }

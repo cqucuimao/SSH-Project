@@ -35,7 +35,7 @@ public class UserSelectorTags extends TagSupport {
 						+ "Label class=\"inputText\" type=\"text\" onclick=\"onUserSelectorClick(\'"
 						+ name + "\',\'"+driverOnly+"\',\'"+departments+"\');\" value=\'" + labelValue + "\' />");
 				
-			options.append("<input id=" + name + " name=" + name
+			options.append("<input style=\"width:180px\"  id=" + name + " name=" + name
 					+ " type=\"hidden\" value=\'" + idValue + "\'/>");
 			out.println(options);
 

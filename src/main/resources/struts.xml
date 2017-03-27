@@ -115,6 +115,8 @@
 			<result name="borrowedUI">/WEB-INF/view/carAction/carInformationAction/car_borrowedUI.jsp
 			</result>
 			<result name="toList" type="redirectAction">car_list</result>
+			<result name="saveEditDefaultDriverUI">/WEB-INF/view/scheduleAction/car_editDefaultDriverUI.jsp
+			</result>
 		</action>
 
 		<!-- 价格表管理管理 -->

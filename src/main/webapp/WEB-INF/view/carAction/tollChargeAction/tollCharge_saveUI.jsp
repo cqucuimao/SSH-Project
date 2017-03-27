@@ -112,8 +112,8 @@
 	    	{  
     			$("#nextPayDate").removeAttr("onfocus"); 
     			$("#nextPayDate").attr("readonly", true); 
-		    	$("#carLabel").removeAttr("onclick");
-		    	$("#carLabel").attr("readonly", true); 
+		    	$("#car").removeAttr("onclick");
+		    	$("#car").attr("readonly", true); 
 	    	}
     	   }
     	}

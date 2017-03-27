@@ -175,8 +175,8 @@
 	    	});
     	}
     	if($("#editKeyInfo").val() == "true" && $("#editNormalInfo").val() == "false"){
-    		$("#carLabel").removeAttr("onclick");
-	    	$("#carLabel").attr("readonly", true); 
+    		$("#car").removeAttr("onclick");
+	    	$("#car").attr("readonly", true); 
 	    	$("input[name=insureCompany]").attr("readonly",true);
 	    	$("input[name=compulsoryPolicyNumber]").attr("readonly",true);
 	    	$("input[name=commercialPolicyNumber]").attr("readonly",true);

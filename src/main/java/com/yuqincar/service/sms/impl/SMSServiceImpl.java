@@ -114,7 +114,6 @@ public class SMSServiceImpl implements SMSService {
 	{
 		SMSRecord sr=new SMSRecord();
 		sr.setDate(new Date());
-		System.out.println("***Date="+new Date());
 		sr.setContent(getSMSRecordContent(templateId, paramString));
 		sr.setPhoneNumber(phoneNumber);
 		sr.setCompany(company);
@@ -198,7 +197,6 @@ public class SMSServiceImpl implements SMSService {
 		for(SMSQueue sms:smsList){
 			try{
 				String resJson=sendTemplateSMS(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams());
-				//System.out.println("****resJson="+resJson);
 				if(resJson.toLowerCase().contains("success")){
 					sMSQueueService.deleteSMSQueue(sms.getId());
 					AddSMSRecord(sms.getPhoneNumber(),sms.getTemplateId(),sms.getParams(),sms.getCompany());

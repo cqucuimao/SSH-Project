@@ -109,10 +109,10 @@
     		$("input[name=date]").removeAttr("onfocus"); 
     	}
     	if($("#editKeyInfo").val() == "true" && $("#editNormalInfo").val() == "false"){
-    		$("#carLabel").removeAttr("onclick");
-	    	$("#carLabel").attr("readonly", true); 
-	    	$("#driverLabel").removeAttr("onclick");
-	    	$("#driverLabel").attr("readonly", true); 
+    		$("#car").removeAttr("onclick");
+	    	$("#car").attr("readonly", true); 
+	    	$("#driver").removeAttr("onclick");
+	    	$("#driver").attr("readonly", true); 
 	    	$("input[name=careDepo]").attr("readonly",true);
 	    	$("input[name=careMiles]").attr("readonly",true);
 	    	$("input[name=mileInterval]").attr("readonly",true);

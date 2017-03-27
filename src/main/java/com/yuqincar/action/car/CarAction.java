@@ -617,6 +617,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		}
 		carService.updateCar(car);
 		ActionContext.getContext().getValueStack().push(car);
+		addFieldError("", "修改成功！");
 		return editDefaultDriverUI();
 	}
 	public Long getCarServiceTypeId() {

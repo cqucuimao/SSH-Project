@@ -71,7 +71,7 @@ public class DriverAction extends BaseAction {
 	         
 	        teMap = new LinkedHashMap<LineTitleVO, LinkedHashMap<String, Integer>>();
 	        driverUseInfoNum = new LinkedHashMap<String, Integer>();
-	        List<List<Order>> driverUseInfo = orderService.getDriverTask(_driver, _beginDate, _endDate);
+	        List<List<Order>> driverUseInfo = orderService.getCarTask(c, _beginDate, _endDate);
 	        int i = 0;
 	        for (List<Order> dayList : driverUseInfo) {
 	        	if(dayList!=null && dayList.size()>0){
@@ -101,13 +101,13 @@ public class DriverAction extends BaseAction {
 	     	}
 	        LineTitleVO ltvo=new LineTitleVO();
 	        ltvo.setType("driver");
-	        ltvo.setCarId(c.getDriver().getId());  //用carId这个域来存放driverId，后期应该将carId这个名称改一改。
+	        ltvo.setCarId(c.getId());  //用carId这个域来存放driverId，后期应该将carId这个名称改一改。
 	        if(c.isCareExpired() || c.isExamineExpired() || c.isInsuranceExpired() || c.isTollChargeExpired())
 	        	ltvo.setAvailable(false);
 	        else
 	        	ltvo.setAvailable(true);
 	        ltvo.setDriverName(_driver.getName());
-	        ltvo.setServiceType("");
+	        ltvo.setServiceType(c.getServiceType().getTitle());
 	        ltvo.setPhone(_driver.getPhoneNumber());
 	        teMap.put(ltvo, driverUseInfoNum);
 	        driverStatus.add(teMap);

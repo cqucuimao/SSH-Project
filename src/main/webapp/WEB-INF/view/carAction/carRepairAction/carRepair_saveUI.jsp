@@ -117,10 +117,10 @@
 			$("input[name=moneyNoGuaranteed]").attr("readonly",true);
 		}
 		if($("#editKeyInfo").val() == "true" && $("#editNormalInfo").val() == "false"){
-			$("#carLabel").removeAttr("onclick");
-	    	$("#carLabel").attr("readonly", true); 
-	    	$("#driverLabel").removeAttr("onclick");
-	    	$("#driverLabel").attr("readonly", true); 
+			$("#car").removeAttr("onclick");
+	    	$("#car").attr("readonly", true); 
+	    	$("#driver").removeAttr("onclick");
+	    	$("#driver").attr("readonly", true); 
 	    	$("input[name=repairLocation]").attr("readonly",true);
 	    	$("#reason").attr("readonly",true);
 	    	$("#memo").attr("readonly",true);

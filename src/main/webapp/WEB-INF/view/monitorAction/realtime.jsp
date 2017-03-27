@@ -5,6 +5,12 @@
 		body, html,#allmap {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
 		#BaiduMap{height:500px;width:100%;}
 	</style>
+	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+    <script type="text/javascript" src="js/artDialog4.1.7/jquery.artDialog.source.js"></script>
+    <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
+	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
+	<script type="text/javascript" src="js/common.js"></script>	
     <div class="space">
         <div class="title subtract">
             <h1>实时监控</h1>
@@ -204,12 +210,7 @@
         <!-- 警报声音 -->
         <div><audio id="audioId" src="media/alarm.mp3" id="audio1" hidden="true" loop="true" /></div>
      </div>
-    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-    <script type="text/javascript" src="js/artDialog4.1.7/jquery.artDialog.source.js"></script>
-    <script src="js/artDialog4.1.7/artDialog.source.js?skin=blue"></script>
-	<script src="js/artDialog4.1.7/plugins/iframeTools.source.js"></script>	
-	<script type="text/javascript" src="js/common.js"></script>	
+    
 	
     <script src="http://api.map.baidu.com/api?v=2.0&ak=${baiduKey }"></script>
     <script type="text/javascript">

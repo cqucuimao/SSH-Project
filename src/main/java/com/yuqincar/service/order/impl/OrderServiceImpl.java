@@ -52,6 +52,7 @@ import com.yuqincar.service.app.DriverAPPService;
 import com.yuqincar.service.order.OrderService;
 import com.yuqincar.service.order.WatchKeeperService;
 import com.yuqincar.service.sms.SMSService;
+import com.yuqincar.utils.CommonUtils;
 import com.yuqincar.utils.Configuration;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.HttpMethod;
@@ -266,7 +267,8 @@ public class OrderServiceImpl implements OrderService {
 		customerDao.save(order.getCustomer());
 	}
 	
-	private void sendSMSToDriver(Order order){
+	@Transactional
+	public void sendOrderInfoSMSToDriver(Order order){
 		if(order.isSmsForDriver()){
 			Map<String,String> param=new HashMap<String,String>();
 			param.put("customerOrganization", order.getCustomerOrganization().getName());
@@ -286,6 +288,31 @@ public class OrderServiceImpl implements OrderService {
 				param.put("otherPhoneNumber", order.getOtherPhoneNumber());
 				smsService.sendTemplateSMS(order.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER, param);
 			}
+		}
+	}
+		
+	@Transactional
+	public void sendOrderInfoSMSToCustomer(Order order){
+		Map<String,String> params=new HashMap<String,String>();
+		params.put("driverName", order.getDriver().getName());
+		params.put("plateNumber", order.getCar().getPlateNumber());
+		params.put("driverPhoneNumber", order.getDriver().getPhoneNumber());
+		params.put("customerSurname", CommonUtils.getSurname(order.getCustomer().getName()));
+		params.put("schedulerName", order.getScheduler().getName());
+		//params.put("fromAddress", order.getFromAddress());
+		if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
+			params.put("planBeginDate", DateUtils.getYMDHMString(order.getPlanBeginDate()));
+			//params.put("toAddress", order.getToAddress());
+			if(order.getOrderSource()!=OrderSourceEnum.APP && order.isSmsForCustomer())
+				smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
+			if(order.isCallForOther() && order.isCallForOtherSendSMS())
+				smsService.sendTemplateSMS(order.getOtherPhoneNumber(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
+		}else{
+			params.put("planBeginDate", DateUtils.getYMDString(order.getPlanBeginDate()));
+			if(order.getOrderSource()!=OrderSourceEnum.APP && order.isSmsForCustomer())
+				smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
+			if(order.isCallForOther() && order.isCallForOtherSendSMS())
+				smsService.sendTemplateSMS(order.getOtherPhoneNumber(),SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
 		}
 	}
 		
@@ -315,7 +342,7 @@ public class OrderServiceImpl implements OrderService {
 						timeString=DateUtils.getYMDHMString(order.getPlanBeginDate());
 					appMessageService.sendMessageToDriverAPP(order.getDriver(), "你有新的订单。用车时间："+timeString+ "；上车地点："+order.getFromAddress(),null);
 
-					sendSMSToDriver(order);
+					sendOrderInfoSMSToDriver(order);
 				}
 				
 				//TODO 临时措施 目前设备有问题，暂时不需要司机做动作，所以自动操作司机接受。
@@ -517,7 +544,7 @@ public class OrderServiceImpl implements OrderService {
 			if(order.isCallForOther() && order.isCallForOtherSendSMS())
 				smsService.sendTemplateSMS(order.getOtherPhoneNumber(), SMSService.SMS_TEMPLATE_RESCHEDULE, param);
 				
-			sendSMSToDriver(order);
+			sendOrderInfoSMSToDriver(order);
 		}
 		
 		if((order.getPayPeriod()!=null && order.getPayPeriod()!=toUpdateOrder.getPayPeriod()) || 
@@ -573,7 +600,7 @@ public class OrderServiceImpl implements OrderService {
 	public int cancelOrder(Order order, User user, String description){
 		if (canCancelOrder(order)) {
 			order.setStatus(OrderStatusEnum.CANCELLED);
-			order.setSn("X"+order.getSn());
+			order.setSn(order.getSn()+"X"+order.getId());
 			orderDao.update(order);
 			
 			OrderOperationRecord oor=new OrderOperationRecord();
@@ -1254,8 +1281,14 @@ public class OrderServiceImpl implements OrderService {
 			agentMoney=agentMoney.add(order.getToll());
 		if(order.getRoomAndBoardFee()!=null)
 			agentMoney=agentMoney.add(order.getRoomAndBoardFee());
-		if(order.getOtherFee()!=null)
+		if(order.isOtherFeeAccount() && order.getOtherFee()!=null)
 			agentMoney=agentMoney.add(order.getOtherFee());
+		if(order.isRefuelMoneyAccount() && order.getRefuelMoney()!=null)
+			agentMoney=agentMoney.add(order.getRefuelMoney());
+		if(order.isWashingFeeAccount() && order.getWashingFee()!=null)
+			agentMoney=agentMoney.add(order.getWashingFee());
+		if(order.isParkingFeeAccount() && order.getParkingFee()!=null)
+			agentMoney=agentMoney.add(order.getParkingFee());
 		order.setTax(agentMoney.multiply(new BigDecimal(Configuration.getAgentMoneyTaxRatio())));
 		order.setOrderMoney(order.getOrderMoney().add(agentMoney).add(order.getTax()));
 		order.setActualMoney(order.getOrderMoney());

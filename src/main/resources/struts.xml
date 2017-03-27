@@ -316,9 +316,6 @@
 			</result>
 			<result name="test">/WEB-INF/template/body.jsp
 			</result>  
-			<!-- <result name="test">/WEB-INF/index222.jsp
-			</result>  -->
-			<result name="success">/WEB-INF/template/succ.jsp</result>
 		  </action>
 		
 	    <action name="test_*" class="testAction" method="{1}">

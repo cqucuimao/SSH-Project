@@ -63,6 +63,7 @@
                 			<th><s:property value="tr.getText('car.CarWash.polishingMoney')" /></th>
                 			<th><s:property value="tr.getText('car.CarWash.engineCleanMoney')" /></th>
                 			<th><s:property value="tr.getText('car.CarWash.cushionCleanMoney')" /></th>
+                			<th><s:property value="tr.getText('car.CarWash.pitchCleanMoney')" /></th>
                 			<th>操作</th>
 						</tr>
 					</thead>
@@ -78,6 +79,7 @@
 							<td >${polishingMoney }</td>
 							<td >${engineCleanMoney }</td>
 							<td >${cushionCleanMoney }</td>
+							<td >${pitchCleanMoney }</td>
 							
 							<td>
                     			<s:a action="carWash_delete?id=%{id}" onclick="result=confirm('确认要删除吗？'); if(!result) coverHidden(); return result;"><i class="icon-operate-delete" title="删除"></i></s:a>

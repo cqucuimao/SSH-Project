@@ -52,6 +52,9 @@ public class CarWash extends BaseEntity {
 	@Text("座套清洗金额")
 	private BigDecimal cushionCleanMoney;
 	
+	@Text("沥青清洗金额")
+	private BigDecimal pitchCleanMoney;
+	
 	
 	public Car getCar() {
 		return car;
@@ -123,6 +126,14 @@ public class CarWash extends BaseEntity {
 
 	public void setCushionCleanMoney(BigDecimal cushionCleanMoney) {
 		this.cushionCleanMoney = cushionCleanMoney;
+	}
+
+	public BigDecimal getPitchCleanMoney() {
+		return pitchCleanMoney;
+	}
+
+	public void setPitchCleanMoney(BigDecimal pitchCleanMoney) {
+		this.pitchCleanMoney = pitchCleanMoney;
 	}
 
 	

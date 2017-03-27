@@ -98,6 +98,13 @@
                         </td>
                     </tr>
                     
+                    <tr>
+                        <th><s:property value="tr.getText('car.CarWash.pitchCleanMoney')" /></th>
+                        <td>
+                        	<s:textfield id="pitchCleanMoney" cssClass="inputText" name="pitchCleanMoney"/>
+                        </td>
+                    </tr>
+                    
                 </tbody>
                 <tfoot>
                     <tr>
@@ -128,6 +135,7 @@
 			    	$("#polishingMoney").attr("readonly", true); 
 			    	$("#engineCleanMoney").attr("readonly", true); 
 			    	$("#cushionCleanMoney").attr("readonly", true); 
+			    	$("#pitchCleanMoney").attr("readonly", true); 
 	    		}
 	    		
 	    		if($("#editKeyInfo").val()=="true")
@@ -136,8 +144,8 @@
 			    	$("#submit").click(function(){
 			    		$("#select_list").removeAttr("disabled"); 
 			    	});
-			    	$("#carLabel").removeAttr("onclick");
-			    	$("#carLabel").attr("readonly", true); 
+			    	$("#carLable").removeAttr("onclick");
+			    	$("#carLable").attr("readonly", true); 
 			    	$("#driverLabel").removeAttr("onclick");
 			    	$("#driverLabel").attr("readonly", true); 
 		    	}
@@ -176,6 +184,10 @@
 						min:0
 					},
 					cushionCleanMoney:{
+						number:true,
+						min:0
+					},
+					pitchCleanMoney:{
 						number:true,
 						min:0
 					},

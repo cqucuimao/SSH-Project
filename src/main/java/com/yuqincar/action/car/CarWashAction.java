@@ -120,7 +120,7 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
    
    public String importExcelFile() throws Exception{
 		InputStream is = new FileInputStream(upload);
-		List<List<String>> excelLines = ExcelUtil.getLinesFromExcel(is, 1, 1, 9, 0);
+		List<List<String>> excelLines = ExcelUtil.getLinesFromExcel(is, 1, 1, 10, 0);
 		List<CarWash> carWash = new ArrayList<CarWash>();
 		List<CarWashShop>  shoplists=new ArrayList<CarWashShop>();
 		boolean flag=false;
@@ -204,10 +204,13 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 							cw.setEngineCleanMoney(en);
 							BigDecimal cu = new BigDecimal(excelLines.get(i).get(8));
 							cw.setCushionCleanMoney(cu);
+							BigDecimal pi = new BigDecimal(excelLines.get(i).get(9));
+							cw.setPitchCleanMoney(pi);
 							
 							carWash.add(cw);
 							
 						} catch (Exception e) {
+							e.printStackTrace();
 							failReason = "不明原因";
 							ActionContext.getContext().getValueStack().push(failReason);
 							ActionContext.getContext().getValueStack().push(result);
@@ -262,6 +265,7 @@ public class CarWashAction extends BaseAction implements ModelDriven<CarWash> {
 			carWash.setPolishingMoney(model.getPolishingMoney());
 			carWash.setEngineCleanMoney(model.getEngineCleanMoney());
 			carWash.setCushionCleanMoney(model.getCushionCleanMoney());
+			carWash.setCushionCleanMoney(model.getPitchCleanMoney());
 		}
 		
 		carWashService.updateCarWash(carWash);

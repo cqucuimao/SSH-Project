@@ -189,8 +189,8 @@
 			$("input[name=money]").attr("readonly",true);
 		}
 		if($("#editKeyInfo").val() == "true" && $("#editNormalInfo").val() == "false"){
-			$("#carLabel").removeAttr("onclick");
-	    	$("#carLabel").attr("readonly", true); 
+			$("#carLable").removeAttr("onclick");
+	    	$("#carLable").attr("readonly", true); 
 	    	$("#driverLabel").removeAttr("onclick");
 	    	$("#driverLabel").attr("readonly", true); 
 			$("input[name=nextExamineDate]").attr("readonly",true);
@@ -204,7 +204,7 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					carLabel:{
+					car:{
 						required:true,
 					},
 					driverLabel:{

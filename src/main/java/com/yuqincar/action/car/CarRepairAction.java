@@ -121,6 +121,7 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 	public String importExcelFile() throws Exception{
         InputStream is = new FileInputStream(upload);
 		List<List<String>> excelLines = ExcelUtil.getLinesFromExcel(is, 1, 1, 9, 0);
+		System.out.println("excelLines="+excelLines);
 		List<CarRepair> carRepairs = new ArrayList<CarRepair>();
 		User user=(User) ActionContext.getContext().getSession().get("user");
 				for(int i=1;i<excelLines.size();i++){
@@ -169,9 +170,9 @@ public class CarRepairAction extends BaseAction implements ModelDriven<CarRepair
 							//维修内容
 							cr.setMemo(excelLines.get(i).get(5));
 							
-							
+							//维修原因
 							cr.setReason(excelLines.get(i).get(6));							
-							
+							//未赔付金额
 							if(excelLines.get(i).get(7).length()>0){
 								BigDecimal mng = new BigDecimal(excelLines.get(i).get(7));
 								cr.setMoneyNoGuaranteed(mng);

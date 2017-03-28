@@ -112,8 +112,8 @@
 	    	{  
     			$("#nextPayDate").removeAttr("onfocus"); 
     			$("#nextPayDate").attr("readonly", true); 
-		    	$("#carLabel").removeAttr("onclick");
-		    	$("#carLabel").attr("readonly", true); 
+		    	$("#carLable").removeAttr("onclick");
+		    	$("#carLable").attr("readonly", true); 
 	    	}
     	   }
     	}
@@ -123,7 +123,7 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					carLabel:{
+					car:{
 						required:true,
 					},
 					payDate:{

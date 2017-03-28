@@ -1,4 +1,4 @@
-﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+﻿﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/common/common.jsp" %>
 <cqu:border>
 	<link rel="stylesheet" type="text/css" href="<%=basePath%>skins/jquery.autocomplete.css">
@@ -787,7 +787,7 @@
 				var driverName = x.target.parentNode.nextElementSibling.nextElementSibling.innerText;
 				var driverId = x.target.parentNode.nextElementSibling.nextElementSibling.innerHTML;
 				driverId=driverId.split(";")[1];
-				$("#selectedCarLabel").val(plateNumber);
+				$("#selectedcar").val(plateNumber);
 				//$("#selectedCar").val(carId);
 				$("#selectedCar").val(plateNumber);
 				$("#selectedDriverLabel").val(driverName);

@@ -98,10 +98,10 @@
 				submitout: function(element) { $(element).valid(); },
 				rules:{
 					// 配置具体的验证规则
-					carLabel:{
+					car:{
 						required:true,
 					},
-					driverLabel:{
+					driver:{
 						required:true,
 					},
 					date:{

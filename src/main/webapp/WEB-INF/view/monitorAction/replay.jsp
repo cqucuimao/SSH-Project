@@ -1,4 +1,4 @@
-﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+﻿﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="cqu" uri="//WEB-INF/tlds/cqu.tld" %>
 <%
@@ -162,7 +162,7 @@
     
         //从实时监控页面跳转过来后，需要填充时间
         //获取查询条件中车牌号的值
-        var plateNumberValue=$("#queryInfoTB").find("tr").find("td").find("#carLabel").val();
+        var plateNumberValue=$("#queryInfoTB").find("tr").find("td").find("#car").val();
         //如果车牌号不为空，说明是跳转过来的，为车牌号，开始时间，结束时间设置预定值
         if(plateNumberValue!=""){
         	//将当前值转化为xxxx-xx-xx xx:xx:xx日期格式

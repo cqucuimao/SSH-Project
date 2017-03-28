@@ -109,8 +109,8 @@
     		$("input[name=date]").removeAttr("onfocus"); 
     	}
     	if($("#editKeyInfo").val() == "true" && $("#editNormalInfo").val() == "false"){
-    		$("#carLabel").removeAttr("onclick");
-	    	$("#carLabel").attr("readonly", true); 
+    		$("#carLable").removeAttr("onclick");
+	    	$("#carLable").attr("readonly", true); 
 	    	$("#driverLabel").removeAttr("onclick");
 	    	$("#driverLabel").attr("readonly", true); 
 	    	$("input[name=careDepo]").attr("readonly",true);
@@ -123,7 +123,7 @@
 			$("#pageForm").validate({
 				submitout: function(element) { $(element).valid(); },
 				rules:{
-					carLabel:{
+					car:{
 						required:true,
 					},
 					driverLabel:{

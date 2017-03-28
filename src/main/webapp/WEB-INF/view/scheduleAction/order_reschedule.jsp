@@ -142,7 +142,7 @@
 		$("#myForm").validate({
 			submitout: function(element) { $(element).valid(); },
 			rules:{		
-				carLabel:{
+				car:{
 					required:true
 				},
 				driverLabel:{

@@ -90,7 +90,7 @@
 					<th><s:property value="tr.getText('car.Car.tollChargeExpired')" /></th>
 					<td><s:select name="tollChargeExpiredLabel" list="#{0:'否',1:'是'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="" /></td>
 					<th><s:property value="tr.getText('car.Car.standbyCar')" /></th>
-					<td><s:select name="standbyCarLabel" list="#{0:'否',1:'是'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="" /></td>
+					<td><s:select name="standbycar" list="#{0:'否',1:'是'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="" /></td>
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('car.Car.borrowed')" /></th>

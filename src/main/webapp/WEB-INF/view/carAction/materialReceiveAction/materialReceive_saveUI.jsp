@@ -93,10 +93,10 @@
 		    		if($("#editKeyInfo").val()=="true")
 			    	{  
 		    			$("#content").attr("readonly", true);
-				    	$("#carLable").removeAttr("onclick");
-				    	$("#carLable").attr("readonly", true); 
-				    	$("#driverLabel").removeAttr("onclick");
-				    	$("#driverLabel").attr("readonly", true); 
+				    	$("#car").removeAttr("onclick");
+				    	$("#car").attr("readonly", true); 
+				    	$("#driver").removeAttr("onclick");
+				    	$("#driver").attr("readonly", true); 
 			    	}
 	    	   }
 	    	}

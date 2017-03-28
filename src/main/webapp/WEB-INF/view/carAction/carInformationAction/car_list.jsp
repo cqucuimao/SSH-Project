@@ -28,7 +28,7 @@
                     </td>
 					<th><s:property value="tr.getText('car.Car.driver')" /></th>
 					<td>
-						<cqu:userAutocompleteSelector name="selectedDriver"/>
+						<cqu:userAutocompleteSelector name="driver"/>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="submit" />
 					</td>

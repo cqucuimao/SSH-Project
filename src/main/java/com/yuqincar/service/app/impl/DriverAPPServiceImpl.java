@@ -93,27 +93,7 @@ public class DriverAPPServiceImpl implements DriverAPPService{
 			orderDao.update(order);
 
 			//给乘客发送短信
-			Map<String,String> params=new HashMap<String,String>();
-			params.put("driverName", order.getDriver().getName());
-			params.put("plateNumber", order.getCar().getPlateNumber());
-			params.put("driverPhoneNumber", order.getDriver().getPhoneNumber());
-			params.put("customerSurname", CommonUtils.getSurname(order.getCustomer().getName()));
-			params.put("schedulerName", order.getScheduler().getName());
-			//params.put("fromAddress", order.getFromAddress());
-			if(order.getChargeMode()==ChargeModeEnum.MILE || order.getChargeMode()==ChargeModeEnum.PLANE){
-				params.put("planBeginDate", DateUtils.getYMDHMString(order.getPlanBeginDate()));
-				//params.put("toAddress", order.getToAddress());
-				if(order.getOrderSource()!=OrderSourceEnum.APP && order.isSmsForCustomer())
-					smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
-				if(order.isCallForOther() && order.isCallForOtherSendSMS())
-					smsService.sendTemplateSMS(order.getOtherPhoneNumber(),SMSService.SMS_TEMPLATE_MILE_ORDER_ACCEPTED, params);
-			}else{
-				params.put("planBeginDate", DateUtils.getYMDString(order.getPlanBeginDate()));
-				if(order.getOrderSource()!=OrderSourceEnum.APP && order.isSmsForCustomer())
-					smsService.sendTemplateSMS(order.getPhone(),SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
-				if(order.isCallForOther() && order.isCallForOtherSendSMS())
-					smsService.sendTemplateSMS(order.getOtherPhoneNumber(),SMSService.SMS_TEMPLATE_DAY_ORDER_ACCEPTED, params);
-			}
+			orderService.sendOrderInfoSMSToCustomer(order);
 			
 			//给APP下单用户发送APP提醒消息
 			if(order.getOrderSource()==OrderSourceEnum.APP){

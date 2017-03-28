@@ -4,14 +4,14 @@
 	<div class="space">
 		<!-- 标题 -->
 		<div class="title">
-			<h1>发送失败短信记录</h1>
+			<h1>短信发送失败记录</h1>
 			<p>&nbsp;&nbsp;</p>
 		</div>
 		<div class="tab_next style2">
 			<table>
 				<tr>
-					<td><s:a action="smsRecord_list"><span>发送成功短信记</span></s:a></td>
-				    <td  class="on"><a href="#" class="coverOff"><span>发送失败短信记</span></a></td>
+					<td><s:a action="smsRecord_list"><span>短信发送成功记录</span></s:a></td>
+				    <td  class="on"><a href="#" class="coverOff"><span>短信发送失败记录</span></a></td>
 				</tr>
 			</table>
 		</div>

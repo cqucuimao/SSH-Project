@@ -337,4 +337,13 @@ public interface OrderService extends BaseService {
 	public void deleteDayOrderDetail(long id);
 	
 	public void saveDayOrderDetail(DayOrderDetail dod);
+	
+	/**************************************************/
+	
+	public void sendOrderInfoSMSToDriver(Order order);
+	
+	public void sendOrderInfoSMSToCustomer(Order order);
+	
+	
+	
 }

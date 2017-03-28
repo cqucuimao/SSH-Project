@@ -189,10 +189,10 @@
 			$("input[name=money]").attr("readonly",true);
 		}
 		if($("#editKeyInfo").val() == "true" && $("#editNormalInfo").val() == "false"){
-			$("#carLable").removeAttr("onclick");
-	    	$("#carLable").attr("readonly", true); 
-	    	$("#driverLabel").removeAttr("onclick");
-	    	$("#driverLabel").attr("readonly", true); 
+			$("#car").removeAttr("onclick");
+	    	$("#car").attr("readonly", true); 
+	    	$("#driver").removeAttr("onclick");
+	    	$("#driver").attr("readonly", true); 
 			$("input[name=nextExamineDate]").attr("readonly",true);
 			$("input[name=nextExamineDate]").removeAttr("onfocus"); 
 	    	$("input[name=otherFee]").attr("readonly",true);

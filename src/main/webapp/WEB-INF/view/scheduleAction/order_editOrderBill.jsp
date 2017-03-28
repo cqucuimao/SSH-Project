@@ -156,30 +156,56 @@
 	        			<td class="alignCenter" width="10%" style="border-top:none"><s:textfield class="inputStyle" name="endMile" /></td>
 	        		</tr>
 	        		<tr>
-	        			<td class="alignCenter">油费</td>
-						<td class="alignCenter" >
-							<s:textfield class="inputStyle1" name="refuelMoney" />
-							<s:checkbox class="m10" name="refuelMoneyAccount"/>入账
+	        			<td class="alignCenter">油费</td>	        			
+						<td class="alignCenter">
+							<table border="0">
+								<tr>
+									<td width="50%"><s:textfield class="inputStyle" name="refuelMoney"  onblur="getTax();getMoney()"/></td>
+									<td width="20%" align="right"><s:checkbox class="m10" name="refuelMoneyAccount" onchange="getTax();getMoney()"/></td>
+									<td width="30%" align="left">入账</td>
+								</tr>
+							</table>
 						</td>
 						<td class="alignCenter">洗车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle1" name="washingFee" />
-							<s:checkbox class="m10" name="washingFeeAccount"/>入账</td>
+						<td class="alignCenter">
+							<table border="0">
+								<tr>
+									<td width="50%"><s:textfield class="inputStyle" name="washingFee"  onblur="getTax();getMoney()"/></td>
+									<td width="20%" align="right"><s:checkbox class="m10" name="washingFeeAccount" onchange="getTax();getMoney()"/></td>
+									<td width="30%" align="left">入账</td>
+								</tr>
+							</table>
+						</td>
 						<td class="alignCenter">停车费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle1" name="parkingFee" />
-							<s:checkbox class="m10" name="parkingFeeAccount"/>入账</td>
+						<td class="alignCenter">
+							<table border="0">
+								<tr>
+									<td width="50%"><s:textfield class="inputStyle" name="parkingFee"  onblur="getTax();getMoney()"/></td>
+									<td width="20%" align="right"><s:checkbox class="m10" name="parkingFeeAccount" onchange="getTax();getMoney()"/></td>
+									<td width="30%" align="left">入账</td>
+								</tr>
+							</table>
+						</td>
 						<td class="alignCenter">计费路码</td>
 						<td class="alignCenter"><s:textfield class="inputStyle" name="totalChargeMile" /></td>
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">过路费（客户自理）</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="toll" onchange="getTax();getMoney()" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="toll" onblur="getTax();getMoney()"/></td>
 						<td class="alignCenter">食宿</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" onchange="getTax();getMoney()" onblur="getOrderMoney()"/></td>
+						<td class="alignCenter"><s:textfield class="inputStyle" name="roomAndBoardFee" onblur="getTax();getMoney()"/></td>
 						<td class="alignCenter">其他费用</td>
-						<td class="alignCenter"><s:textfield class="inputStyle1" name="otherFee" onchange="getTax();getMoney()" onblur="getOrderMoney()"/>
-							<s:checkbox class="m10" name="otherFeeAccount"/>入账</td>
+						<td class="alignCenter">
+							<table border="0">
+								<tr>
+									<td width="50%"><s:textfield class="inputStyle" name="otherFee" onblur="getTax();getMoney()"/></td>
+									<td width="20%" align="right"><s:checkbox class="m10" name="otherFeeAccount" onchange="getTax();getMoney()"/></td>
+									<td width="30%" align="left">入账</td>
+								</tr>
+							</table>
+						</td>
 						<td class="alignCenter">税费</td>
-						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" onchange="getMoney()" onblur="getOrderMoney()"/></td>						
+						<td class="alignCenter"><s:textfield class="inputStyle" name="tax" onblur="getMoney()"/></td>						
 	        		</tr>
 	        		<tr>
 	        			<td class="alignCenter">核算金额</td>
@@ -211,7 +237,7 @@
 	        		</tr>
 	        		<tr>
 	        			<td style="border:none;"></td>
-						<td colspan="5" style="border:none;padding-left:50px"></td>			
+						<td colspan="5" style="border:none;padding-left:50px" id="dateLabel"></td>			
 						<td colspan="2" style="border:none">派车人：${scheduler.name }</td>
 	        		</tr>
 	        		<tr>
@@ -321,8 +347,8 @@
 		date = centry + (today.getFullYear())+ "年" + 
 		    		(today.getMonth() + 1 ) + "月" + 
 		    		today.getDate() + "日 "; 
-		$("#tableId tr:eq(7) td:eq(1)").text(date);
-    	
+		//$("#tableId tr:eq(7) td:eq(1)").text(date);
+    	$("#dateLabel").text(date);
     });
     //保留两位小数
     function toDecimal(x) {  
@@ -334,11 +360,27 @@
         return f;  
     } 
   	//计算税费,它的值是过路费、食宿、其它费用之和的3.6%
-	function getTax(){ 
+	function getTax(){
+  		var refuelMoney=0;
+  		if($("input[name=refuelMoneyAccount]").attr("checked")=="checked")
+  			refuelMoney=$("input[name=refuelMoney]").val();
+  		
+  		var washingFee=0;
+  		if($("input[name=washingFeeAccount]").attr("checked")=="checked")
+  			washingFee=$("input[name=washingFee]").val();
+  		
+  		var parkingFee=0;
+  		if($("input[name=parkingFeeAccount]").attr("checked")=="checked")
+  			parkingFee=$("input[name=parkingFee]").val();
+
+  		var otherFee=0;
+  		if($("input[name=otherFeeAccount]").attr("checked")=="checked")
+  			otherFee=$("input[name=otherFee]").val();
+  		
   		var toll = $("input[name=toll]").val();
   		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
-  		var otherFee = $("input[name=otherFee]").val();
-  		var allMoney = Number(toll)+Number(roomAndBoardFee)+Number(otherFee);
+  		
+  		var allMoney = Number(refuelMoney)+Number(washingFee)+Number(parkingFee)+Number(otherFee)+Number(toll)+Number(roomAndBoardFee);
   		var tax = allMoney * 0.036;
   		if(tax!=0){
   	  		$("input[name=tax]").val(toDecimal(tax)); 		
@@ -347,39 +389,39 @@
   		}
 	 }	
   	//核算金额
-  	function getOrderMoney(){
+  	function getMoney(){
+  		var refuelMoney=0;
+  		if($("input[name=refuelMoneyAccount]").attr("checked")=="checked")
+  			refuelMoney=$("input[name=refuelMoney]").val();
+  		
+  		var washingFee=0;
+  		if($("input[name=washingFeeAccount]").attr("checked")=="checked")
+  			washingFee=$("input[name=washingFee]").val();
+  		
+  		var parkingFee=0;
+  		if($("input[name=parkingFeeAccount]").attr("checked")=="checked")
+  			parkingFee=$("input[name=parkingFee]").val();
+
+  		var otherFee=0;
+  		if($("input[name=otherFeeAccount]").attr("checked")=="checked")
+  			otherFee=$("input[name=otherFee]").val();
+  		
   		var toll = $("input[name=toll]").val();
   		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
-  		var otherFee = $("input[name=otherFee]").val();
+  		
   		var tax = $("input[name=tax]").val();
-  		var orderMoney = Number(toll)+Number(roomAndBoardFee)+Number(otherFee)+Number(tax);
+  		var orderMoney = Number(refuelMoney)+Number(washingFee)+Number(parkingFee)+Number(otherFee)+Number(toll)+Number(roomAndBoardFee)+Number(tax);
   		$(".chargeMoney").each(function(){
   			 var value =$(this).val();
   			 orderMoney = Number(orderMoney) + Number(value);
   		}); 
   		if(orderMoney!=0){
-  	  		$("input[name=orderMoney]").val(toDecimal(orderMoney)); 		
+  	  		$("input[name=orderMoney]").val(toDecimal(orderMoney)); 
+  	  		$("input[name=actualMoney]").val(toDecimal(orderMoney));		
   		}else{
   	  		$("input[name=orderMoney]").val(""); 
   		}
   	}
-	 //核算金额变化，实收金额也改变
-	 function getMoney(){
-		 var toll = $("input[name=toll]").val();
-  		var roomAndBoardFee = $("input[name=roomAndBoardFee]").val();
-  		var otherFee = $("input[name=otherFee]").val();
-  		var tax = $("input[name=tax]").val();
-  		var orderMoney = Number(toll)+Number(roomAndBoardFee)+Number(otherFee)+Number(tax);
-  		$(".chargeMoney").each(function(){
-  			 var value =$(this).val();
-  			 orderMoney = Number(orderMoney) + Number(value);
-  		}); 
-  		if(orderMoney!=0){
-  	  		$("input[name=actualMoney]").val(toDecimal(orderMoney)); 		
-  		}else{
-  	  		$("input[name=actualMoney]").val(""); 
-  		}
-	 }
     
     </script>
 </cqu:border>

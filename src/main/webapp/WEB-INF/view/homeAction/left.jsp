@@ -74,12 +74,6 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
-			<s:if test=" #session.user.hasPrivilegeByUrl('/car_editDefaultDriverUI') ">
-			<dd>
-				<s:a action="car_editDefaultDriverUI">修改默认司机</s:a>
-				<i class="icon-menu-arrow"></i>
-			</dd>
-			</s:if>
 			<s:if test=" #session.user.hasPrivilegeByUrl('/schedule_queue') ">
 			<dd>
 				<s:a action="schedule_queue">待调度队列</s:a>
@@ -101,6 +95,12 @@
 			<s:if test=" #session.user.hasPrivilegeByUrl('/reserveCarApplyOrder_list') ">
 			<dd>
 				<s:a action="reserveCarApplyOrder_list">扩充常备车库申请</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/car_editDefaultDriverUI') ">
+			<dd>
+				<s:a action="car_editDefaultDriverUI">修改默认司机</s:a>
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

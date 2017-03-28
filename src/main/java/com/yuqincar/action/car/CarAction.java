@@ -538,7 +538,6 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	
 	//获取车辆对应的默认司机
 	public void getSynchDriverName(){
-		System.out.println("is or not");
 		if(!"undefined".equals(selectedPlateNumber) && selectedPlateNumber != null){
 			selectedPlateNumber=selectedPlateNumber.substring(0,selectedPlateNumber.indexOf("("));
 			Car car = carService.getCarByPlateNumber(selectedPlateNumber);

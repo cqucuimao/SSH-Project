@@ -47,7 +47,8 @@ public class CarAutocompleteSelectorTags extends TagSupport {
 			options.append(" }  }); ");
 			options.append("$(\"#"+name+"\").result(function(event,data,formatted){");
 			if(! StringUtils.isEmpty(synchDriver)){
-				options.append("$.get(\"car_getSynchDriverName.action?selectedPlateNumber=\"+formatted,function(data){");
+				System.out.println("123456");
+				options.append("$.get(\"car_getSynchDriverName.action?selectedPlateNumber=\"+encodeURI(formatted),function(data){");
 				options.append("if(!data){}else{");
 				options.append("$(\"#"+synchDriver+"\").val(data.driverName)}");
 				options.append("});");

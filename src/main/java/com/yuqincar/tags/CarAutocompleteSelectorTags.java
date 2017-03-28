@@ -25,7 +25,7 @@ public class CarAutocompleteSelectorTags extends TagSupport {
 		StringBuffer options = new StringBuffer();
 		JspWriter out = pageContext.getOut();
 		try {
-			String labelValue = (car == null ? "" : car.getPlateNumber());
+			String labelValue = (car == null ? "" : car.getPlateNumber()+"("+car.getServiceType().getTitle()+")");
 			//String idValue = (car == null ? "" : String.valueOf(car.getId()));
 			options.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"skins/jquery.autocomplete.css\">");
 			options.append("<script type=\"text/javascript\" src=\"js/jquery.autocomplete.js\"></script>");

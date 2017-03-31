@@ -39,28 +39,28 @@ public class SMSServiceImpl implements SMSService {
 	public static Map<String, String> SMS_CONTENT;
 	static {
 		SMS_CONTENT=new HashMap<String,String>();
-		SMS_CONTENT.put(SMS_TEMPLATE_MILE_ORDER_ACCEPTED, "尊敬的{customerSurname}老师，您好！我是重庆市党政机关过渡性车辆服务中心（重庆市渝勤汽车服务有限公司）调度{schedulerName}，很高兴为您服务。{planBeginDate}，为您服务的驾驶员{driverName}，电话：{driverPhoneNumber}，车号：{plateNumber}。驾驶员会提前与你联系。服务监督电话60391609。夜间与周末用车服务电话60391610。谢谢！");
-		SMS_CONTENT.put(SMS_TEMPLATE_DAY_ORDER_ACCEPTED,"尊敬的{customerSurname}老师，您好！我是重庆市党政机关过渡性车辆服务中心（重庆市渝勤汽车服务有限公司）调度{schedulerName}，很高兴为您服务。{planBeginDate}，为您服务的驾驶员{driverName}，电话：{driverPhoneNumber}，车号：{plateNumber}。驾驶员会提前与你联系。服务监督电话60391609。夜间与周末用车服务电话60391610。谢谢！");
-		SMS_CONTENT.put(SMS_TEMPLATE_EXAMINE_APPOINTMENT,"您已经预约了一次车辆年审。年审时间为：{carExamineDate}。请在年审结束之后及时联系后勤管理人员登记具体年审信息。");
-		SMS_CONTENT.put(SMS_TEMPLATE_REPAIR_APPOINTMENT,"您已经预约了一次车辆维修。维修时间为：{carRepairDate}。请在维修结束之后及时联系后勤管理人员登记具体维修信息。");
-		SMS_CONTENT.put(SMS_TEMPLATE_VERFICATION_CODE,"尊敬的{param1}用户，您的验证码为{param2}，感谢您的使用！");
-		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_POSTPONE,"您的订单（{sn}）结束时间已经延后。原时间：{oriDate}；延后到：{newDate}。");
-		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_CANCELLED,"您的订单（{sn}）已经被取消。原因：{reason}。");
-		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_ENQUEUE,"有新订单入队列。{customer}（{customerOrganization}，{phoneNumber}），{chargeMode}，{time}，{address}。");
-		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER,"您有新的订单任务。单位：{customerOrganization}，联系人：{customerName}， 联系电话：{phoneNumber}，用车时间：{time}，目的地：{destination}，客户要求：{customerMemo}。请接受！");
-		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER,"您有新的订单任务。单位：{customerOrganization}，联系人：{customerName}， 联系电话：{phoneNumber}，实际乘车人：{otherPassengerName}（{otherPhoneNumber}），用车时间：{time}，目的地：{destination}，客户要求：{customerMemo}。请接受！");
-		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER,"车辆{plateNumber}达到了保养里程。系统已经为您生成了保养预约，日期是{date}，请保养车辆。保养完成后，请及时通知后勤保障科同事，以便解除车辆锁定。在此之前，调度人员无法为该车调度订单。");
-		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER,"车辆{plateNumber}达到了保养里程。系统已经生成了保养预约，日期是{date}，请关注。");
-		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER,"车辆{plateNumber}达到了保养里程，系统已经生成了保养预约。但由于该车辆没有指定默认驾驶员，保养记录也无法指定驾驶员。所以需要您联系驾驶员前去做保养，并在系统中指定保养预约驾驶员，否则无法锁定驾驶员，有可能导致订单调度错误。");
-		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_4S_EMPLOYEE,"车辆{plateNumber}已经生成保养预约，日期是{date}。");
-		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_NEARBY,"车辆{plateNumber}还有大约{mileage}公里将达到保养里程数，请根据实际情况合理安排工作。保养车辆前，请一定联系保养管理员创建保养预约。");
-		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_SUBMITTED_FOR_APPROVEUSER,"有一个{proposer}提交的临时扩充常备车库申请需要您审核");
-		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_REJECTED_FOR_PROPOSER,"您提交的临时扩充常备车库申请被{approveUser}驳回。原因：{reason}。");
-		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_APPROVED_FOR_PROPOSER_CARAPPROVEUSER_DRIVERAPPROVEUSER,"您有新的临时扩充常备车库申请被{approveUser}审核通过。");
-		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_CARAPPROVED_FOR_PROPOSER,"您提交的临时扩充常备车库申请已由{carApproveUser}配置车辆完成。");
-		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_DRIVERAPPROVED_FOR_PROPOSER,"您提交的临时扩充常备车库申请已由{driverApproveUser}配置司机完成。");
-		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_END,"订单（{sn}）已经执行完毕。单位：{customerOrganization}，车辆：{plateNumber}，驾驶员：{driver}。");
-		SMS_CONTENT.put(SMS_TEMPLATE_RESCHEDULE,"您的订单已经重新调度。车辆：{plateNumber}，司机：{driverName}（{phoneNumber}）。");
+		SMS_CONTENT.put(SMS_TEMPLATE_MILE_ORDER_ACCEPTED, "尊敬的customerSurname老师，您好！我是重庆市党政机关过渡性车辆服务中心（重庆市渝勤汽车服务有限公司）调度schedulerName，很高兴为您服务。planBeginDate，为您服务的驾驶员driverName，电话：driverPhoneNumber，车号：plateNumber。驾驶员会提前与你联系。服务监督电话60391609。夜间与周末用车服务电话60391610。谢谢！");
+		SMS_CONTENT.put(SMS_TEMPLATE_DAY_ORDER_ACCEPTED,"尊敬的customerSurname老师，您好！我是重庆市党政机关过渡性车辆服务中心（重庆市渝勤汽车服务有限公司）调度schedulerName，很高兴为您服务。planBeginDate，为您服务的驾驶员driverName，电话：driverPhoneNumber，车号：plateNumber。驾驶员会提前与你联系。服务监督电话60391609。夜间与周末用车服务电话60391610。谢谢！");
+		SMS_CONTENT.put(SMS_TEMPLATE_EXAMINE_APPOINTMENT,"您已经预约了一次车辆年审。年审时间为：carExamineDate。请在年审结束之后及时联系后勤管理人员登记具体年审信息。");
+		SMS_CONTENT.put(SMS_TEMPLATE_REPAIR_APPOINTMENT,"您已经预约了一次车辆维修。维修时间为：carRepairDate。请在维修结束之后及时联系后勤管理人员登记具体维修信息。");
+		SMS_CONTENT.put(SMS_TEMPLATE_VERFICATION_CODE,"尊敬的param1用户，您的验证码为param2，感谢您的使用！");
+		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_POSTPONE,"您的订单（sn）结束时间已经延后。原时间：oriDate；延后到：newDate。");
+		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_CANCELLED,"您的订单（sn）已经被取消。原因：reason。");
+		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_ENQUEUE,"有新订单入队列。customer（customerOrganization，phoneNumber），chargeMode，time，address。");
+		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER,"您有新的订单任务。单位：customerOrganization，联系人：customerName， 联系电话：phoneNumber，用车时间：time，目的地：destination，客户要求：customerMemo。请接受！");
+		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER,"您有新的订单任务。单位：customerOrganization，联系人：customerName， 联系电话：phoneNumber，实际乘车人：otherPassengerName（otherPhoneNumber），用车时间：time，目的地：destination，客户要求：customerMemo。请接受！");
+		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER,"车辆plateNumber达到了保养里程。系统已经为您生成了保养预约，日期是date，请保养车辆。保养完成后，请及时通知后勤保障科同事，以便解除车辆锁定。在此之前，调度人员无法为该车调度订单。");
+		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER,"车辆plateNumber达到了保养里程。系统已经生成了保养预约，日期是date，请关注。");
+		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER,"车辆plateNumber达到了保养里程，系统已经生成了保养预约。但由于该车辆没有指定默认驾驶员，保养记录也无法指定驾驶员。所以需要您联系驾驶员前去做保养，并在系统中指定保养预约驾驶员，否则无法锁定驾驶员，有可能导致订单调度错误。");
+		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_4S_EMPLOYEE,"车辆plateNumber已经生成保养预约，日期是date。");
+		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_NEARBY,"车辆plateNumber还有大约mileage公里将达到保养里程数，请根据实际情况合理安排工作。保养车辆前，请一定联系保养管理员创建保养预约。");
+		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_SUBMITTED_FOR_APPROVEUSER,"有一个proposer提交的临时扩充常备车库申请需要您审核");
+		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_REJECTED_FOR_PROPOSER,"您提交的临时扩充常备车库申请被approveUser驳回。原因：reason。");
+		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_APPROVED_FOR_PROPOSER_CARAPPROVEUSER_DRIVERAPPROVEUSER,"您有新的临时扩充常备车库申请被approveUser审核通过。");
+		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_CARAPPROVED_FOR_PROPOSER,"您提交的临时扩充常备车库申请已由carApproveUser配置车辆完成。");
+		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_DRIVERAPPROVED_FOR_PROPOSER,"您提交的临时扩充常备车库申请已由driverApproveUser配置司机完成。");
+		SMS_CONTENT.put(SMS_TEMPLATE_ORDER_END,"订单（sn）已经执行完毕。单位：customerOrganization，车辆：plateNumber，驾驶员：driver。");
+		SMS_CONTENT.put(SMS_TEMPLATE_RESCHEDULE,"您的订单已经重新调度。车辆：plateNumber，司机：driverName（phoneNumber）。");
 	
 	}
 
@@ -136,7 +136,16 @@ public class SMSServiceImpl implements SMSService {
 		Gson gson = new Gson();
 		Map<String,String> map=gson.fromJson(paramString, Map.class); /*将内容转化成Map*/
 		for(String key:map.keySet())
-			content=content.replaceFirst(key, map.get(key));
+		{
+			/*System.out.println("{"+key+"}");
+			System.out.println(content);
+			if(content.contentEquals("{phoneNumber}"))
+				System.out.println("***OK");
+			else {
+				System.out.println("***NO");
+			}*/
+			content=content.replaceAll(key, map.get(key));
+		}
 		return content;
 	}
 	

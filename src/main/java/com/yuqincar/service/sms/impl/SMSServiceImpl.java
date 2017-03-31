@@ -122,7 +122,7 @@ public class SMSServiceImpl implements SMSService {
 	
 	protected String getSMSRecordContent(String templateId,String paramString) {
 		String content=SMS_CONTENT.get(templateId);
-		String paramStr=paramString.replace("{", "");
+		/*String paramStr=paramString.replace("{", "");
 		paramStr=paramStr.replace("}", "");
 		String[] paramStringArr=paramStr.split(",");
 		for(int i=0;i<paramStringArr.length;i++)
@@ -131,7 +131,12 @@ public class SMSServiceImpl implements SMSService {
 			String strKey=infor.substring(0, infor.indexOf(":"));
 			String strValue=infor.substring(infor.indexOf(":")+1);
 			content=content.replace("{"+strKey+"}", strValue);
-		}
+		}*/
+		
+		Gson gson = new Gson();
+		Map<String,String> map=gson.fromJson(paramString, Map.class); /*将内容转化成Map*/
+		for(String key:map.keySet())
+			content=content.replaceFirst(key, map.get(key));
 		return content;
 	}
 	

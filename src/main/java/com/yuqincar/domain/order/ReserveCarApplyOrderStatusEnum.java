@@ -37,7 +37,7 @@ public enum ReserveCarApplyOrderStatusEnum implements BaseEnum {
 		return ReserveCarApplyOrderStatusEnum.values();
 	}
 
-	public static ReserveCarApplyOrderStatusEnum getById(int id) {
+	public ReserveCarApplyOrderStatusEnum getById(int id) {
 		for (ReserveCarApplyOrderStatusEnum u : ReserveCarApplyOrderStatusEnum.values()) {
 			if (u.getId() == id)
 				return u;

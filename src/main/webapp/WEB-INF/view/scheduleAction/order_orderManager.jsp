@@ -42,7 +42,8 @@
 					</td>
 					<th><s:property value="tr.getText('order.Order.status')" /></th>
 					<td>
-						<s:select name="status" list="{'所有状态','未完成','在队列','已调度','已接受','已开始','已上车','已下车','已结束','已付费','已取消'}"></s:select>
+						<%-- <s:select name="status" list="{'所有状态','未完成','在队列','已调度','已接受','已开始','已上车','已下车','已结束','已付费','已取消'}"></s:select> --%>
+						<cqu:enumSelector name="status" enumName="com.yuqincar.domain.order.OrderStatusEnum"/>
 					</td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" name="button" />

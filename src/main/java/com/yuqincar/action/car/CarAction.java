@@ -347,8 +347,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		model.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
 		model.setServicePoint(carService.getServicePointById(servicePointId));
 		model.setStatus(CarStatusEnum.NORMAL);
-		model.setPlateType(PlateTypeEnum.getById(plateTypeId));
-		model.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
+		model.setPlateType(PlateTypeEnum.BLUE.getById(plateTypeId));
+		model.setTransmissionType(TransmissionTypeEnum.AUTO.getById(transmissionTypeId));
 		model.setBorrowed(false);
 		if(StringUtils.isEmpty(model.getTollChargeSN()))
 			model.setTollChargeSN(null);
@@ -436,8 +436,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		car.setTollChargeSN(StringUtils.isEmpty(model.getTollChargeSN()) ? null : model.getTollChargeSN());
 		car.setEnrollDate(model.getEnrollDate());
 		car.setSeatNumber(model.getSeatNumber());
-		car.setPlateType(PlateTypeEnum.getById(plateTypeId));
-		car.setTransmissionType(TransmissionTypeEnum.getById(transmissionTypeId));
+		car.setPlateType(PlateTypeEnum.BLUE.getById(plateTypeId));
+		car.setTransmissionType(TransmissionTypeEnum.AUTO.getById(transmissionTypeId));
 		car.setRegistDate(model.getRegistDate());
 		car.setDriver(model.getDriver());
 		car.setServicePoint(carService.getServicePointById(servicePointId));

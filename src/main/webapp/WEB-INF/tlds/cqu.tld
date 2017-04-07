@@ -172,4 +172,18 @@
       </attribute> 
 </tag> 
 
+<tag>  
+	 <name>enumSelector</name>                              
+	 <tag-class>com.yuqincar.tags.enumSelectorTags</tag-class>
+	 <attribute>    
+                <name>name</name>    
+                <required>true</required>  
+                <rtexprvalue>true</rtexprvalue>  
+      </attribute> 
+      <attribute>    
+                <name>enumName</name>    
+                <required>true</required>  
+                <rtexprvalue>true</rtexprvalue>  
+      </attribute> 
+</tag>
 </taglib>  

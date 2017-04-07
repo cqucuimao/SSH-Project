@@ -44,7 +44,7 @@ public enum OrderStatusEnum implements BaseEnum {
 		return OrderStatusEnum.values();
 	}
 
-	public static OrderStatusEnum getById(int id) {
+	public OrderStatusEnum getById(int id) {
 		for (OrderStatusEnum u : OrderStatusEnum.values()) {
 			if (u.getId() == id)
 				return u;

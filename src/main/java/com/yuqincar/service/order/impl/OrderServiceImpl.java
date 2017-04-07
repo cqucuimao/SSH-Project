@@ -1335,7 +1335,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	private OrderStatusEnum getStatusFromActionVOId(String id){
-		return OrderStatusEnum.getById(Integer.valueOf(id.split("-")[1]));
+		return OrderStatusEnum.ACCEPTED.getById(Integer.valueOf(id.split("-")[1]));
 	}
 	
 	private DayOrderDetail getDayOrderDetailFromActionVOId(String id){

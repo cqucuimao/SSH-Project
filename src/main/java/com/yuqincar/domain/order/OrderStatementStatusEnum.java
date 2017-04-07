@@ -32,7 +32,7 @@ public enum OrderStatementStatusEnum implements BaseEnum {
 		return OrderStatementStatusEnum.values();
 	}
 
-	public static OrderStatementStatusEnum getById(int id) {
+	public OrderStatementStatusEnum getById(int id) {
 		for (OrderStatementStatusEnum u : OrderStatementStatusEnum.values()) {
 			if (u.getId() == id)
 				return u;

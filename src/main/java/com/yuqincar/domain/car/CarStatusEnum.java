@@ -27,7 +27,7 @@ public enum CarStatusEnum implements BaseEnum {
 		return CarStatusEnum.values();
 	}
 
-	public static CarStatusEnum getById(int id) {
+	public CarStatusEnum getById(int id) {
 		for (CarStatusEnum u : CarStatusEnum.values()) {
 			if (u.getId() == id)
 				return u;

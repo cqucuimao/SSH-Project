@@ -22,6 +22,7 @@ import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.car.TollCharge;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
+import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
 import com.yuqincar.domain.privilege.UserGenderEnum;
@@ -66,10 +67,11 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private int userTypeId;
 	private int statusId;
 	private String keyword;
-	private String userStatus;
+	private UserStatusEnum userStatus;
 	
 	/** 查询 */
 	public String queryList(){
+		
 		QueryHelper helper = new QueryHelper("User", "u");
 		if(model.getName()!=null && !"".equals(model.getName()))
 			helper.addWhereCondition("u.name like ?", "%"+model.getName()+"%");
@@ -78,8 +80,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		helper.addOrderByProperty("u.id", false);
 		helper.addOrderByProperty("u.name", true);
 		//用户状态查询
-		if(!"全部".equals(userStatus))
-			helper.addWhereCondition("u.status = ?", UserStatusEnum.getByLabel(userStatus));
+		if(userStatus!=null)
+			helper.addWhereCondition("u.status = ?", userStatus);
 		PageBean pageBean = userService.getPageBean(pageNum, helper);	
 		ActionContext.getContext().getValueStack().push(pageBean);
 		ActionContext.getContext().getSession().put("userHelper", helper);
@@ -158,14 +160,14 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			addFieldError("name", "姓名已经存在！");
 			return addUI();
 		}
-		if(UserTypeEnum.getById(userTypeId) == UserTypeEnum.DRIVER){
+		if(UserTypeEnum.DRIVER.getById(userTypeId) == UserTypeEnum.DRIVER){
 			DriverLicense dl = new DriverLicense();
 			dl.setLicenseID(licenseID);
 			dl.setExpireDate(expireDate);
 			model.setDriverLicense(dl);
 		}
-		model.setGender(UserGenderEnum.getById(genderId));
-		model.setUserType(UserTypeEnum.getById(userTypeId));
+		model.setGender(UserGenderEnum.FEMALE.getById(genderId));
+		model.setUserType(UserTypeEnum.DRIVER.getById(userTypeId));
 		model.setStatus(UserStatusEnum.NORMAL);//默认为正常状态
 		model.setDepartment(departmentService.getById(departmentId));
 		//处理角色
@@ -232,8 +234,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			addFieldError("name", "姓名已经存在！");
 			return addUI();
 		}
-		model.setGender(UserGenderEnum.getById(genderId));
-		model.setStatus(UserStatusEnum.getById(statusId));
+		model.setGender(UserGenderEnum.FEMALE.getById(genderId));
+		model.setStatus(UserStatusEnum.LOCKED.getById(statusId));
 		System.out.println("departmentId: "+departmentId);
 		model.setDepartment(departmentService.getById(departmentId));
 		//处理角色
@@ -250,7 +252,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		}
 		
 		
-		model.setUserType(UserTypeEnum.getById(userTypeId));
+		model.setUserType(UserTypeEnum.DRIVER.getById(userTypeId));
 		if(model.getUserType()==UserTypeEnum.DRIVER){
 			model.setDriverLicense(new DriverLicense());
 			model.getDriverLicense().setLicenseID(licenseID);
@@ -537,11 +539,11 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		this.roleString = roleString;
 	}
 
-	public String getUserStatus() {
+	public UserStatusEnum getUserStatus() {
 		return userStatus;
 	}
 
-	public void setUserStatus(String userStatus) {
+	public void setUserStatus(UserStatusEnum userStatus) {
 		this.userStatus = userStatus;
 	}
 

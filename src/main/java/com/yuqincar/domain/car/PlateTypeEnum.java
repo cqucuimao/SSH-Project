@@ -30,7 +30,7 @@ public enum PlateTypeEnum implements BaseEnum {
 		return PlateTypeEnum.values();
 	}
 
-	public static PlateTypeEnum getById(int id) {
+	public PlateTypeEnum getById(int id) {
 		for (PlateTypeEnum u : PlateTypeEnum.values()) {
 			if (u.getId() == id)
 				return u;

@@ -34,7 +34,7 @@ public enum UserGenderEnum implements BaseEnum{
 		return UserGenderEnum.values();
 	}
 
-	public static UserGenderEnum getById(int id) {
+	public UserGenderEnum getById(int id) {
 		for (UserGenderEnum u : UserGenderEnum.values()) {
 			if (u.getId() == id)
 				return u;

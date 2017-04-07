@@ -37,7 +37,7 @@ public enum ChargeModeEnum implements BaseEnum {
 		return ChargeModeEnum.values();
 	}
 
-	public static ChargeModeEnum getById(int id) {
+	public ChargeModeEnum getById(int id) {
 		for (ChargeModeEnum u : ChargeModeEnum.values()) {
 			if (u.getId() == id)
 				return u;

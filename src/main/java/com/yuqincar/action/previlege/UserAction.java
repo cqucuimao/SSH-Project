@@ -554,5 +554,4 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
-
 }

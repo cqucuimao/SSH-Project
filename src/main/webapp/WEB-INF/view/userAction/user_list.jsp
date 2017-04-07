@@ -16,7 +16,7 @@
                     <td>
                     <%-- <s:select style="width:135px;" name="userStatus" list="{'全部','正常' ,'已锁定'}" /> --%>
                     <cqu:enumSelector name="userStatus" enumName="com.yuqincar.domain.privilege.UserStatusEnum"/>
-                    <cqu:enumSelector name="orderStatus" enumName="com.yuqincar.domain.order.OrderStatusEnum"/>
+                    <%-- <cqu:enumSelector name="orderStatus" enumName="com.yuqincar.domain.order.OrderStatusEnum"/> --%>
                     </td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" />

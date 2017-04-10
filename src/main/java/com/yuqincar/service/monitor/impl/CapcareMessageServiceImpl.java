@@ -182,9 +182,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 	 * 每个10S从凯步获取车辆位置信息
 	 */
 	public void getCapcareMessagePerTenSecondFromCapcare() {
-		
 		int limitLen = 98;
-			
 		//考虑到服务器重启后的第一次访问，内存中是没有位置信息的，如果map.size()==0,那么就从数据库的CapcareMessage实体中获取位置来初始化map。
 		if(capcareMap.size() == 0){
 			List<CapcareMessage> capcareMessages = capcareMessageDao.getAll();
@@ -203,10 +201,17 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		JSONArray notNullDevices = new JSONArray();
 		int sum = devices.size();
 		CapcareMessage capcareMessage;
+		String sn = null;
+		String plateNumberFromCapcare = null;
 		
 		for(int i=0;i<sum;i++){
-			String sn = devices.getJSONObject(i).getString("sn");
-			String plateNumberFromCapcare = carService.getCarByDeviceSN(sn).getPlateNumber();
+			sn = devices.getJSONObject(i).getString("sn");
+			//catch NullPointerException
+			try {
+				 plateNumberFromCapcare = carService.getCarByDeviceSN(sn).getPlateNumber();
+			} catch (NullPointerException e) {
+				continue;
+			}
 			float lng = Float.valueOf(devices.getJSONObject(i).getJSONObject("position").get("lng").toString()).floatValue();
 			float lat = Float.valueOf(devices.getJSONObject(i).getJSONObject("position").get("lat").toString()).floatValue();
 			String mode = devices.getJSONObject(i).getJSONObject("position").get("mode").toString();
@@ -250,6 +255,7 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 				}					
 			}			
 		}
+
 		int positionNum = notNullDevices.size(); 
 		int groups = positionNum/limitLen + 1;//组数
 		int lastGroupNum = positionNum%limitLen;//最后一组的个数

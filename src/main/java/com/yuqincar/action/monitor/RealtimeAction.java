@@ -347,21 +347,6 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
  		exportservice.exportExcel(report_name, title, listAll, response);
 	}
 	
-	//测试日志
-	public void testLog1() throws ArithmeticException{
-		int a = 1;
-		int b = 0;
-		System.out.println("a/b="+a/b);
-	}
-	
-	public void testLog(){
-		try {
-			testLog1();
-		} catch (ArithmeticException e) {
-			
-		}
-	}
-	
 	public String delete(){
 		monitorGroupService.delete(monitorGroupId);
 		return monitorGroup();
@@ -512,6 +497,7 @@ public class RealtimeAction extends BaseAction implements ModelDriven<Car>{
 	//获取凯步数据
 	public void getCapcareData(){
 		Map<String, CapcareMessage> capcareMap = CapcareMessageServiceImpl.capcareMap;
+		System.out.println(capcareMap);
 		CapcareMessageVO cmvo = new CapcareMessageVO();
 		cmvo.setPlateNumber(capcareMap.get(carPlateNumber).getPlateNumber());
 		cmvo.setLongitude(capcareMap.get(carPlateNumber).getLongitude());

@@ -28,7 +28,7 @@ public enum ProtocolOrderPayPeriodEnum implements BaseEnum {
 		return ProtocolOrderPayPeriodEnum.values();
 	}
 
-	public static ProtocolOrderPayPeriodEnum getById(int id) {
+	public ProtocolOrderPayPeriodEnum getById(int id) {
 		for (ProtocolOrderPayPeriodEnum u : ProtocolOrderPayPeriodEnum.values()) {
 			if (u.getId() == id)
 				return u;

@@ -32,7 +32,7 @@ public enum DocumentStatusEnum implements BaseEnum{
 		return DocumentStatusEnum.values();
 	}
 
-	public static DocumentStatusEnum getById(int id) {
+	public DocumentStatusEnum getById(int id) {
 		for (DocumentStatusEnum u : DocumentStatusEnum.values()) {
 			if (u.getId() == id)
 				return u;

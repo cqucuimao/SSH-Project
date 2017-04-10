@@ -33,7 +33,7 @@ public enum UserTypeEnum implements BaseEnum{
 		return UserTypeEnum.values();
 	}
 
-	public static UserTypeEnum getById(int id) {
+	public UserTypeEnum getById(int id) {
 		for (UserTypeEnum u : UserTypeEnum.values()) {
 			if (u.getId() == id)
 				return u;

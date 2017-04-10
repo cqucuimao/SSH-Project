@@ -303,7 +303,7 @@ public class ScheduleAction extends BaseAction {
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
 			order.setActualMoney(protocolMoney);
-			order.setPayPeriod(ProtocolOrderPayPeriodEnum.getById(payPeriodId));
+			order.setPayPeriod(ProtocolOrderPayPeriodEnum.MONTH.getById(payPeriodId));
 			order.setFirstPayDate(DateUtils.getYMD(firstPayDate));
 			order.setMoneyForPeriodPay(moneyForPeriodPay);
 		}else{
@@ -535,7 +535,7 @@ public class ScheduleAction extends BaseAction {
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
 			order.setActualMoney(protocolMoney);
-			order.setPayPeriod(ProtocolOrderPayPeriodEnum.getById(payPeriodId));
+			order.setPayPeriod(ProtocolOrderPayPeriodEnum.MONTH.getById(payPeriodId));
 			order.setFirstPayDate(DateUtils.getYMD(firstPayDate));
 			order.setMoneyForPeriodPay(moneyForPeriodPay);
 		}else{

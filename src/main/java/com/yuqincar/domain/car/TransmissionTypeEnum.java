@@ -32,7 +32,7 @@ public enum TransmissionTypeEnum implements BaseEnum {
 		return TransmissionTypeEnum.values();
 	}
 
-	public static TransmissionTypeEnum getById(int id) {
+	public TransmissionTypeEnum getById(int id) {
 		for (TransmissionTypeEnum u : TransmissionTypeEnum.values()) {
 			if (u.getId() == id)
 				return u;

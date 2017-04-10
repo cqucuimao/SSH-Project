@@ -197,6 +197,9 @@ public class CapcareMessageServiceImpl implements CapcareMessageService{
 		String capcareMessageString  = gcm.excute();
 		
 		JSONObject jsonObject = JSONObject.fromObject(capcareMessageString);
+		//若没有返回正确的json数据，程序到此就结束
+		if( !jsonObject.containsKey("devices"))
+			return ;
 		JSONArray devices = jsonObject.getJSONArray("devices");
 		JSONArray notNullDevices = new JSONArray();
 		int sum = devices.size();

@@ -24,21 +24,9 @@ public enum ProtocolOrderPayPeriodEnum implements BaseEnum {
 		return label;
 	}
 
-	public static ProtocolOrderPayPeriodEnum[] getAllEnum() {
-		return ProtocolOrderPayPeriodEnum.values();
-	}
-
 	public ProtocolOrderPayPeriodEnum getById(int id) {
 		for (ProtocolOrderPayPeriodEnum u : ProtocolOrderPayPeriodEnum.values()) {
 			if (u.getId() == id)
-				return u;
-		}
-		return null;
-	}
-
-	public static ProtocolOrderPayPeriodEnum getByLabel(String label) {
-		for (ProtocolOrderPayPeriodEnum u : ProtocolOrderPayPeriodEnum.values()) {
-			if (u.getLabel().equals(label))
 				return u;
 		}
 		return null;

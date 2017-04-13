@@ -40,11 +40,6 @@ public class CarCareAppointmentServiceImpl implements CarCareAppointmentService 
 		params.put("date", DateUtils.getYMDString(carCareAppointment.getDate()));
 		//给司机发短信
 		smsService.sendTemplateSMS(carCareAppointment.getDriver().getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER, params);
-		//给4S员工发短信
-		//目前只有一个4S员工
-		for(User in4SUser:businessParameterService.getBusinessParameter().getEmployeesIn4SForSMS()){
-			smsService.sendTemplateSMS(in4SUser.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_4S_EMPLOYEE, params);
-		}
     }
 	
 	public CarCareAppointment getCarCareAppointmentById(Long id){

@@ -108,18 +108,15 @@ public class smsFailRecordAction extends BaseAction {
 	
 	public String getSendName() {
 		SMSFailRecord smsFailRecord=(SMSFailRecord)ActionContext.getContext().getValueStack().peek();
-		System.out.println("***phoneNumber="+smsFailRecord.getPhoneNumber());
 		String sendName="";
 		if(userService.getByPhoneNumber(smsFailRecord.getPhoneNumber())!=null)
 		{
 			sendName=userService.getByPhoneNumber(smsFailRecord.getPhoneNumber()).getName()+"("
 					+userService.getByPhoneNumber(smsFailRecord.getPhoneNumber()).getDepartment().getName()+")";
-			System.out.println("###sendName="+sendName);
 		}
 		else if(customerService.getCustomerByPhoneNumber(smsFailRecord.getPhoneNumber())!=null) {
 			sendName=customerService.getCustomerByPhoneNumber(smsFailRecord.getPhoneNumber()).getName()+"("
 					+customerService.getCustomerByPhoneNumber(smsFailRecord.getPhoneNumber()).getCustomerOrganization().getName()+")";
-			System.out.println("***sendName="+sendName);
 		}
 		return sendName;
 	}

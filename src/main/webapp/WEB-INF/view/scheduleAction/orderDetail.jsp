@@ -16,7 +16,7 @@
                 </tr>
                 <tr>
                     <th width="70"><s:property value="tr.getText('order.Order.status')" />：</th>
-                    <td>${status.string }</td>
+                    <td>${status.label }</td>
                 </tr>
                 <tr>
                     <th width="70"><s:property value="tr.getText('order.Order.customerOrganization')" />：</th>

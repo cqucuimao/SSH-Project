@@ -11,13 +11,11 @@ import org.springframework.stereotype.Controller;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
-import com.yuqincar.dao.lbs.LBSDao;
-import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.car.CarCare;
 import com.yuqincar.domain.car.CarCareAppointment;
 import com.yuqincar.domain.common.PageBean;
+import com.yuqincar.domain.privilege.User;
+import com.yuqincar.service.businessParameter.BusinessParameterService;
 import com.yuqincar.service.car.CarCareAppointmentService;
-import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.sms.SMSService;
 import com.yuqincar.utils.DateUtils;
 import com.yuqincar.utils.QueryHelper;
@@ -28,6 +26,10 @@ public class CarCareAppointmentAction extends BaseAction implements ModelDriven<
 	private CarCareAppointment model;
 	@Autowired
 	private CarCareAppointmentService carCareAppointmentService;
+	@Autowired
+	private BusinessParameterService businessParameterService;
+	@Autowired
+	private SMSService smsService;
 	
 	private int doneOrUndone;
 	
@@ -93,7 +95,17 @@ public class CarCareAppointmentAction extends BaseAction implements ModelDriven<
 			return addUI();
 		}
 		model.setDone(false);
+		//保存预约信息时，已经给司机发送短信了。
 		carCareAppointmentService.saveCarCareAppointment(model);
+		
+		//给4S发送短信（不能写到saveCarCareAppointment中，因为这个方法会被定时任务MileUpdate批量调用，会触发短信流量限制）
+		Map<String,String> params=new HashMap<String,String>();
+		String plateNumber= model.getCar().getPlateNumber()+"（"+DateUtils.getYMDString(model.getDate())+"）";
+		params.put("plateNumber", plateNumber);
+		for(User in4SUser:businessParameterService.getBusinessParameter().getEmployeesIn4SForSMS()){
+			smsService.sendTemplateSMS(in4SUser.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_4S_EMPLOYEE, params);
+		}
+		
 		model=null;
 		ActionContext.getContext().getValueStack().push(getModel());
 		return freshList();

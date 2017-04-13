@@ -121,7 +121,7 @@ public class CustomerAction extends BaseAction implements ModelDriven<Customer> 
 		String[] array = phonesStr.split(";");
 		List<String> list = java.util.Arrays.asList(array);
 		customer.setPhones(list);
-		customer.setGender(model.isGender());
+		customer.setGender(model.getGender());
 		
 		//更新到数据库
 		customerService.updateCustomer(customer);

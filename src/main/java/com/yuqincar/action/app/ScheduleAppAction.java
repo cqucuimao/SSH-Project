@@ -282,7 +282,7 @@ public class ScheduleAppAction  extends BaseAction implements Preparable {
 				tvo.setCustomerOrganization(order.getCustomerOrganization().getName());
 				tvo.setCustomer(order.getCustomer().getName());
 				tvo.setPhoneNumber(order.getPhone());
-				tvo.setChargeMode(order.getChargeMode()==ChargeModeEnum.MILE ? "按里程计费" : "按天计费");
+				tvo.setChargeMode(order.getChargeMode().getLabel());
 				if(order.getChargeMode()==ChargeModeEnum.MILE){
 					tvo.setAddress("从 "+order.getFromAddress()+" 到 "+order.getToAddress());
 					tvo.setTime(DateUtils.getYMDHMString(order.getPlanBeginDate()));

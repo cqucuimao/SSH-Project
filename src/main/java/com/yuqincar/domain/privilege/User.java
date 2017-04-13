@@ -23,7 +23,7 @@ import javax.persistence.Transient;
 import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.common.BaseEntity;
-import com.yuqincar.domain.order.DayOrderDetail;
+import com.yuqincar.domain.common.GenderEnum;
 import com.yuqincar.utils.Text;
 
 @Entity
@@ -61,7 +61,7 @@ public class User extends BaseEntity implements Serializable {
 	private String name; 
 	
 	@Text("性别")
-	private UserGenderEnum gender; 
+	private GenderEnum gender; 
 	
 	@Column(nullable=false)
 	@Text("手机")
@@ -139,7 +139,6 @@ public class User extends BaseEntity implements Serializable {
 		if (userPrivileges.contains(privUrl)) {
 			return true;
 		}else {
-			System.out.println("Fail authorization, privUrl="+privUrl);
 			return false;
 		}
 		
@@ -161,11 +160,11 @@ public class User extends BaseEntity implements Serializable {
 		this.password = password;
 	}
 
-	public UserGenderEnum getGender() {
+	public GenderEnum getGender() {
 		return gender;
 	}
 
-	public void setGender(UserGenderEnum gender) {
+	public void setGender(GenderEnum gender) {
 		this.gender = gender;
 	}
 

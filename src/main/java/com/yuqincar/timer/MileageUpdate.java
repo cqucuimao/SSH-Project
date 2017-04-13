@@ -53,6 +53,9 @@ public class MileageUpdate {
 	@Transactional
 	public void update() {
 		List<Car> cars = carService.getAll();
+		StringBuffer plateNumber4Manager=new StringBuffer();
+		StringBuffer plateNumber4NoDriver=new StringBuffer();
+		StringBuffer plateNumber44SEmployee=new StringBuffer();
 		for(Car car : cars) {
 			if(car.getStatus()==CarStatusEnum.SCRAPPED || car.isBorrowed())
 				continue;
@@ -73,7 +76,6 @@ public class MileageUpdate {
 			
 			//判断是否保养过期，如果car.getNextCareMile==0，说明该车的数据不全，不处理。
 			if(!car.isCareExpired() && car.getNextCareMile()>0 && car.getMileage()>car.getNextCareMile()){
-				System.out.println(car.getPlateNumber()+"保养里程过期。 "+mile+">"+car.getNextCareMile());
 				car.setCareExpired(true);
 								
 				if(car.getDriver()!=null){
@@ -99,19 +101,43 @@ public class MileageUpdate {
 					//保存预约信息时，已经给司机发送短信了。
 					carCareAppointmentService.saveCarCareAppointment(cca);
 					
-					Map<String,String> params=new HashMap<String,String>();
-					params.put("plateNumber", car.getPlateNumber());
-					params.put("date", DateUtils.getYMDString(date));
-					for(User managerForCarCareAppointment:businessParameterService.getBusinessParameter().getEmployeesForCarCareAppointmentSMS())
-						smsService.sendTemplateSMS(managerForCarCareAppointment.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER, params);
+					if(plateNumber4Manager.length()>0)
+						plateNumber4Manager.append("，");
+					plateNumber4Manager.append(car.getPlateNumber()).append("（").append(DateUtils.getYMDString(date)).append("）");
+					
+					if(plateNumber44SEmployee.length()>0)
+						plateNumber44SEmployee.append("，");
+					plateNumber44SEmployee.append(car.getPlateNumber()).append("（").append(DateUtils.getYMDString(date)).append("）");
 				}else{
-					Map<String,String> params=new HashMap<String,String>();
-					params.put("plateNumber", car.getPlateNumber());
-					for(User managerForCarCareAppointment:businessParameterService.getBusinessParameter().getEmployeesForCarCareAppointmentSMS())
-						smsService.sendTemplateSMS(managerForCarCareAppointment.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER, params);
+					if(plateNumber4NoDriver.length()>0)
+						plateNumber4NoDriver.append("，");
+					plateNumber4NoDriver.append(car.getPlateNumber());
 				}
 			}
 			carService.updateCar(car);
+		}
+		
+		Map<String,String> params=new HashMap<String,String>();
+		
+		if(plateNumber4Manager.length()>0){
+			params.put("plateNumber", plateNumber4Manager.toString());
+			for(User managerForCarCareAppointment:businessParameterService.getBusinessParameter().getEmployeesForCarCareAppointmentSMS())
+				smsService.sendTemplateSMS(managerForCarCareAppointment.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER, params);
+			params.clear();
+		}
+		
+		if(plateNumber44SEmployee.length()>0){
+			params.put("plateNumber", plateNumber44SEmployee.toString());
+			for(User in4SUser:businessParameterService.getBusinessParameter().getEmployeesIn4SForSMS()){
+				smsService.sendTemplateSMS(in4SUser.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_4S_EMPLOYEE, params);
+			}
+			params.clear();
+		}
+			
+		if(plateNumber4NoDriver.length()>0){
+			params.put("plateNumber", plateNumber4NoDriver.toString());
+			for(User managerForCarCareAppointment:businessParameterService.getBusinessParameter().getEmployeesForCarCareAppointmentSMS())
+				smsService.sendTemplateSMS(managerForCarCareAppointment.getPhoneNumber(), SMSService.SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER, params);
 		}
 	}
 }

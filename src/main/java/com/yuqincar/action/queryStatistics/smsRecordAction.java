@@ -108,18 +108,15 @@ public class smsRecordAction extends BaseAction {
 	
 	public String getSendName() {
 		SMSRecord smsRecord=(SMSRecord)ActionContext.getContext().getValueStack().peek();
-		System.out.println("***phoneNumber="+smsRecord.getPhoneNumber());
 		String sendName="";
 		if(userService.getByPhoneNumber(smsRecord.getPhoneNumber())!=null)
 		{
 			sendName=userService.getByPhoneNumber(smsRecord.getPhoneNumber()).getName()+"("
 					+userService.getByPhoneNumber(smsRecord.getPhoneNumber()).getDepartment().getName()+")";
-			System.out.println("###sendName="+sendName);
 		}
 		else if(customerService.getCustomerByPhoneNumber(smsRecord.getPhoneNumber())!=null) {
 			sendName=customerService.getCustomerByPhoneNumber(smsRecord.getPhoneNumber()).getName()+"("
 					+customerService.getCustomerByPhoneNumber(smsRecord.getPhoneNumber()).getCustomerOrganization().getName()+")";
-			System.out.println("***sendName="+sendName);
 		}
 		return sendName;
 	}

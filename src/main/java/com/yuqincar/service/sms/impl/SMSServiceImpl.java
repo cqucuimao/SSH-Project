@@ -1,6 +1,7 @@
 package com.yuqincar.service.sms.impl;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,9 +51,9 @@ public class SMSServiceImpl implements SMSService {
 		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER,"您有新的订单任务。单位：customerOrganization，联系人：customerName， 联系电话：phoneNumber，用车时间：time，目的地：destination，客户要求：customerMemo。请接受！");
 		SMS_CONTENT.put(SMS_TEMPLATE_NEW_ORDER_INCLUDE_OTHER_PASSENGER,"您有新的订单任务。单位：customerOrganization，联系人：customerName， 联系电话：phoneNumber，实际乘车人：otherPassengerName（otherPhoneNumber），用车时间：time，目的地：destination，客户要求：customerMemo。请接受！");
 		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_DRIVER,"车辆plateNumber达到了保养里程。系统已经为您生成了保养预约，日期是date，请保养车辆。保养完成后，请及时通知后勤保障科同事，以便解除车辆锁定。在此之前，调度人员无法为该车调度订单。");
-		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER,"车辆plateNumber达到了保养里程。系统已经生成了保养预约，日期是date，请关注。");
-		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER,"车辆plateNumber达到了保养里程，系统已经生成了保养预约。但由于该车辆没有指定默认驾驶员，保养记录也无法指定驾驶员。所以需要您联系驾驶员前去做保养，并在系统中指定保养预约驾驶员，否则无法锁定驾驶员，有可能导致订单调度错误。");
-		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_4S_EMPLOYEE,"车辆plateNumber已经生成保养预约，日期是date。");
+		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_MANAGER,"有车辆达到了保养里程，系统已经生成了保养预约，请关注。车辆（预约日期）如下：plateNumber");
+		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_NO_DRIVER,"车辆plateNumber达到了保养里程。但由于该车辆没有指定默认驾驶员，无法自动生成保养预约记实录。所以需要您联系驾驶员前去做保养，并在系统中手动添加保养预约记录，否则无法锁定驾驶员，有可能导致订单调度错误。");
+		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_APPOINTMENT_GENERATED_FOR_4S_EMPLOYEE,"有车辆预约保养，请关注。车辆（预约日期）如下：plateNumber");
 		SMS_CONTENT.put(SMS_TEMPLATE_CARCARE_NEARBY,"车辆plateNumber还有大约mileage公里将达到保养里程数，请根据实际情况合理安排工作。保养车辆前，请一定联系保养管理员创建保养预约。");
 		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_SUBMITTED_FOR_APPROVEUSER,"有一个proposer提交的临时扩充常备车库申请需要您审核");
 		SMS_CONTENT.put(SMS_TEMPLATE_RESERVECARAPPLYORDER_REJECTED_FOR_PROPOSER,"您提交的临时扩充常备车库申请被approveUser驳回。原因：reason。");
@@ -121,31 +122,11 @@ public class SMSServiceImpl implements SMSService {
 	}
 	
 	protected String getSMSRecordContent(String templateId,String paramString) {
-		String content=SMS_CONTENT.get(templateId);
-		/*String paramStr=paramString.replace("{", "");
-		paramStr=paramStr.replace("}", "");
-		String[] paramStringArr=paramStr.split(",");
-		for(int i=0;i<paramStringArr.length;i++)
-		{
-			String infor=paramStringArr[i].replaceAll("\"", "");
-			String strKey=infor.substring(0, infor.indexOf(":"));
-			String strValue=infor.substring(infor.indexOf(":")+1);
-			content=content.replace("{"+strKey+"}", strValue);
-		}*/
-		
+		String content=SMS_CONTENT.get(templateId);		
 		Gson gson = new Gson();
 		Map<String,String> map=gson.fromJson(paramString, Map.class); /*将内容转化成Map*/
 		for(String key:map.keySet())
-		{
-			/*System.out.println("{"+key+"}");
-			System.out.println(content);
-			if(content.contentEquals("{phoneNumber}"))
-				System.out.println("***OK");
-			else {
-				System.out.println("***NO");
-			}*/
 			content=content.replaceAll(key, map.get(key));
-		}
 		return content;
 	}
 	
@@ -162,17 +143,34 @@ public class SMSServiceImpl implements SMSService {
 		sMSFailRecordService.saveSMSFailRecord(sr);
 	}
 	
+	private List<String> chopSMSContent(String content){
+		int length=201;
+		List<String> list=new ArrayList<String>();
+		while(content.length()>0){
+			if(content.length()>length){
+				list.add(content.substring(0, length));
+				content=content.substring(length);
+			}else{
+				list.add(content);
+				content="";
+			}
+		}
+		return list;
+	}
+	
 	@Transactional
 	public void sendTemplateSMS(String phoneNumber,String templateId, Map<String, String> params) {
 		Gson gson = new Gson();
-		String template_param = gson.toJson(params);		
-		SMSQueue sq=new SMSQueue();
-		sq.setPhoneNumber(phoneNumber);
-		sq.setTemplateId(templateId);
-		sq.setParams(template_param);
-		sq.setInQueueDate(new Date());
-		sq.setTryTimes(0);
-		sMSQueueService.saveSMSQueue(sq);		
+		String template_param = gson.toJson(params);	
+		for(String content:chopSMSContent(template_param)){  //对于过长的短信内容自动分成多条发送。
+			SMSQueue sq=new SMSQueue();
+			sq.setPhoneNumber(phoneNumber);
+			sq.setTemplateId(templateId);
+			sq.setParams(content);
+			sq.setInQueueDate(new Date());
+			sq.setTryTimes(0);
+			sMSQueueService.saveSMSQueue(sq);
+		}
 	}
 	
 	@Transactional	

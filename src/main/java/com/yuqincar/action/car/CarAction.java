@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.gson.Gson;
-import com.mysql.jdbc.Driver;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
@@ -40,8 +39,6 @@ import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.device.DeviceService;
 import com.yuqincar.service.privilege.UserService;
 import com.yuqincar.utils.QueryHelper;
-
-import freemarker.template.utility.StringUtil;
 
 @Controller
 @Scope("prototype")
@@ -80,12 +77,7 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	private String driverName;
 	private String selectorName;
 	private String synchDriver;
-	private int transmissionTypeId;
-	private int plateTypeId;
 	private String actionFlag;
-	private String statusLabel;
-	private String plateTypeLabel;
-	private String transmissionTypeLabel;
 	private String careExpiredLabel;
 	private String insuranceExpiredLabel;
 	private String examineExpiredLabel;
@@ -171,29 +163,14 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		if(model.getServicePoint() != null && model.getServicePoint().getName() != null && !"".equals(model.getServicePoint().getName()))
 			helper.addWhereCondition("c.servicePoint.name like ?", "%"+model.getServicePoint().getName()+"%");
 		//车辆状态
-		if(statusLabel == "正常" || statusLabel.equals("正常")){
-			helper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
-		}
-		if(statusLabel == "报废" || statusLabel.equals("报废")){
-			helper.addWhereCondition("c.status=?", CarStatusEnum.SCRAPPED);
-		}
+		if(model.getStatus()!=null)
+			helper.addWhereCondition("c.status=?", model.getStatus());
 		//车牌类型
-		if(plateTypeLabel == "蓝牌" || plateTypeLabel.equals("蓝牌")){
-			helper.addWhereCondition("c.plateType=?", PlateTypeEnum.BLUE);
-		}
-		if(plateTypeLabel == "黄牌" || plateTypeLabel.equals("黄牌")){
-			helper.addWhereCondition("c.plateType=?", PlateTypeEnum.YELLOW);
-		}
+		if(model.getPlateType()!=null)
+			helper.addWhereCondition("c.plateType=?", model.getPlateType());
 		//变速箱类型
-		if(transmissionTypeLabel == "自动" || transmissionTypeLabel.equals("自动")){
-			helper.addWhereCondition("c.transmissionType=?", TransmissionTypeEnum.AUTO);
-		}
-		if(transmissionTypeLabel == "手动" || transmissionTypeLabel.equals("手动")){
-			helper.addWhereCondition("c.transmissionType=?", TransmissionTypeEnum.MANNUAL);
-		}
-		if(transmissionTypeLabel == "不确定" || transmissionTypeLabel.equals("不确定")){
-			helper.addWhereCondition("c.transmissionType=?", TransmissionTypeEnum.UNKNOWN);
-		}
+		if(model.getTransmissionType()!=null)
+			helper.addWhereCondition("c.transmissionType=?", model.getTransmissionType());
 		//品牌
 		if(model.getBrand() != null && !"".equals(model.getBrand())){
 			helper.addWhereCondition("c.brand like ?","%"+model.getBrand()+"%" );
@@ -347,8 +324,6 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		model.setServiceType(carService.getCarServiceTypeById(carServiceTypeId));
 		model.setServicePoint(carService.getServicePointById(servicePointId));
 		model.setStatus(CarStatusEnum.NORMAL);
-		model.setPlateType(PlateTypeEnum.BLUE.getById(plateTypeId));
-		model.setTransmissionType(TransmissionTypeEnum.AUTO.getById(transmissionTypeId));
 		model.setBorrowed(false);
 		if(StringUtils.isEmpty(model.getTollChargeSN()))
 			model.setTollChargeSN(null);
@@ -436,8 +411,8 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 		car.setTollChargeSN(StringUtils.isEmpty(model.getTollChargeSN()) ? null : model.getTollChargeSN());
 		car.setEnrollDate(model.getEnrollDate());
 		car.setSeatNumber(model.getSeatNumber());
-		car.setPlateType(PlateTypeEnum.BLUE.getById(plateTypeId));
-		car.setTransmissionType(TransmissionTypeEnum.AUTO.getById(transmissionTypeId));
+		car.setPlateType(model.getPlateType());
+		car.setTransmissionType(model.getTransmissionType());
 		car.setRegistDate(model.getRegistDate());
 		car.setDriver(model.getDriver());
 		car.setServicePoint(carService.getServicePointById(servicePointId));
@@ -659,44 +634,11 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 	public void setSynchDriver(String synchDriver) {
 		this.synchDriver = synchDriver;
 	}
-	public int getTransmissionTypeId() {
-		return transmissionTypeId;
-	}
-	public void setTransmissionTypeId(int transmissionTypeId) {
-		this.transmissionTypeId = transmissionTypeId;
-	}
-	public int getPlateTypeId() {
-		return plateTypeId;
-	}
-	public void setPlateTypeId(int plateTypeId) {
-		this.plateTypeId = plateTypeId;
-	}
 	public String getActionFlag() {
 		return actionFlag;
 	}
 	public void setActionFlag(String actionFlag) {
 		this.actionFlag = actionFlag;
-	}
-	
-	public String getStatusLabel() {
-		return statusLabel;
-	}
-	public void setStatusLabel(String statusLabel) {
-		this.statusLabel = statusLabel;
-	}
-	
-	public String getPlateTypeLabel() {
-		return plateTypeLabel;
-	}
-	public void setPlateTypeLabel(String plateTypeLabel) {
-		this.plateTypeLabel = plateTypeLabel;
-	}
-	
-	public String getTransmissionTypeLabel() {
-		return transmissionTypeLabel;
-	}
-	public void setTransmissionTypeLabel(String transmissionTypeLabel) {
-		this.transmissionTypeLabel = transmissionTypeLabel;
 	}
 	
 	public String getBorrowedLabel() {
@@ -835,5 +777,5 @@ public class CarAction extends BaseAction implements ModelDriven<Car>{
 
 	public void setSelectedPlateNumber(String selectedPlateNumber) {
 		this.selectedPlateNumber = selectedPlateNumber;
-	}	
+	}
 }

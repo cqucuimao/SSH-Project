@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.SystemOutLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -24,13 +23,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.dao.order.CarServiceSuperTypeDao;
 import com.yuqincar.domain.car.Car;
-import com.yuqincar.domain.car.CarCare;
-import com.yuqincar.domain.car.CarExamine;
-import com.yuqincar.domain.car.CarRepair;
 import com.yuqincar.domain.car.CarServiceSuperType;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.car.CarStatusEnum;
-import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
@@ -106,7 +101,7 @@ public class ScheduleAction extends BaseAction {
 	private String callForOtherSendSMS;
 	private User saler;
 	private BigDecimal protocolMoney;
-	private int payPeriodId;
+	private ProtocolOrderPayPeriodEnum payPeriod;
 	private String firstPayDate;
 	private BigDecimal moneyForPeriodPay;
 	
@@ -114,9 +109,6 @@ public class ScheduleAction extends BaseAction {
 		QueryHelper helper = new QueryHelper(Car.class, "c");
 		helper.addWhereCondition("c.status=? and c.plateNumber=?", CarStatusEnum.NORMAL,queryCar.getPlateNumber());
 		List<Car> cars = carService.queryCar(1, helper).getRecordList();
-		System.out.println("cars.size="+cars.size());
-		for(Car car:cars)
-			System.out.println("car="+car.getPlateNumber());
 		Date beginDate_,endDate_;
 		if(getChargeMode(chargeMode)==ChargeModeEnum.DAY || getChargeMode(chargeMode)==ChargeModeEnum.PROTOCOL){
 			beginDate_=DateUtils.getMinDate(DateUtils.getYMD(planBeginDate));
@@ -126,8 +118,6 @@ public class ScheduleAction extends BaseAction {
 			endDate_ = DateUtils.getMaxDate(DateUtils.getOffsetDate(beginDate_,
 					4));
 		}
-		System.out.println("beginDate="+beginDate_);
-		System.out.println("endDate="+endDate_);
 		// 每一个car保存对应5天的状态信息
 		List<LinkedHashMap<myCar, LinkedHashMap<String, Integer>>> carStatus = new ArrayList<LinkedHashMap<myCar, LinkedHashMap<String, Integer>>>();
 		LinkedHashMap<myCar, LinkedHashMap<String, Integer>> teMap = null;
@@ -246,11 +236,6 @@ public class ScheduleAction extends BaseAction {
 			writeJson(jsonArray.toJSONString());
 		}
 	}
-
-	public String getChargeModeString() {
-		Order order=(Order)ActionContext.getContext().getValueStack().peek();
-		return orderService.getChargeModeString(order.getChargeMode());
-	}
 	
 	public String getPlanBeginDateString(){
 		Order order=(Order)ActionContext.getContext().getValueStack().peek();
@@ -303,7 +288,7 @@ public class ScheduleAction extends BaseAction {
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
 			order.setActualMoney(protocolMoney);
-			order.setPayPeriod(ProtocolOrderPayPeriodEnum.MONTH.getById(payPeriodId));
+			order.setPayPeriod(payPeriod);
 			order.setFirstPayDate(DateUtils.getYMD(firstPayDate));
 			order.setMoneyForPeriodPay(moneyForPeriodPay);
 		}else{
@@ -406,7 +391,7 @@ public class ScheduleAction extends BaseAction {
 			saler=order.getSaler();
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			protocolMoney=order.getOrderMoney().setScale(0,BigDecimal.ROUND_HALF_UP);
-			payPeriodId = order.getPayPeriod().getId();
+			payPeriod = order.getPayPeriod();
 			firstPayDate = DateUtils.getYMDHMString(order.getFirstPayDate());
 			moneyForPeriodPay = order.getMoneyForPeriodPay().setScale(0,BigDecimal.ROUND_HALF_UP);
 		}
@@ -535,7 +520,7 @@ public class ScheduleAction extends BaseAction {
 		if(order.getChargeMode()==ChargeModeEnum.PROTOCOL){
 			order.setOrderMoney(protocolMoney);
 			order.setActualMoney(protocolMoney);
-			order.setPayPeriod(ProtocolOrderPayPeriodEnum.MONTH.getById(payPeriodId));
+			order.setPayPeriod(payPeriod);
 			order.setFirstPayDate(DateUtils.getYMD(firstPayDate));
 			order.setMoneyForPeriodPay(moneyForPeriodPay);
 		}else{
@@ -1006,12 +991,12 @@ public class ScheduleAction extends BaseAction {
 		this.protocolMoney = protocolMoney;
 	}
 
-	public int getPayPeriodId() {
-		return payPeriodId;
+	public ProtocolOrderPayPeriodEnum getPayPeriod() {
+		return payPeriod;
 	}
 
-	public void setPayPeriodId(int payPeriodId) {
-		this.payPeriodId = payPeriodId;
+	public void setPayPeriod(ProtocolOrderPayPeriodEnum payPeriod) {
+		this.payPeriod = payPeriod;
 	}
 
 	public String getFirstPayDate() {

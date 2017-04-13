@@ -68,16 +68,16 @@
 										<td>
 											<div class="filter">
 												<label class="mr10">
-													<input type="radio" name="radio" value="days" checked /><s:property value="tr.getText('order.ChargeModeEnum.DAY')" />
+													<input type="radio" name="radio" value="days" checked /><s:property value="@com.yuqincar.domain.order.ChargeModeEnum@DAY" />
 												</label>
 												<label class="mr10">
-													<input type="radio" name="radio" value="protocol" /><s:property value="tr.getText('order.ChargeModeEnum.PROTOCOL')" />
+													<input type="radio" name="radio" value="protocol" /><s:property value="@com.yuqincar.domain.order.ChargeModeEnum@PROTOCOL" />
 												</label>												
 												<label class="mr10">
-													<input type="radio" name="radio" value="plane"/><s:property value="tr.getText('order.ChargeModeEnum.PLANE')" />
+													<input type="radio" name="radio" value="plane"/><s:property value="@com.yuqincar.domain.order.ChargeModeEnum@PLANE" />
 												</label>												
 												<label class="mr10">
-													<input type="radio" name="radio" value="mileage"/><s:property value="tr.getText('order.ChargeModeEnum.MILE')" />
+													<input type="radio" name="radio" value="mileage"/><s:property value="@com.yuqincar.domain.order.ChargeModeEnum@MILE" />
 												</label>
 											</div>
 										</td>
@@ -132,7 +132,7 @@
 									<tr class="filter_protocol">
 										<th>收款周期</th>
 										<td>
-											<s:select class="SelectStyle" name="payPeriodId" list="#{'0':'每月','1':'每季度' ,'2':'每年' ,'3':'一次性'}" style="width:84px;"/>
+											<cqu:enumSelector name="payPeriod" enumName="order.ProtocolOrderPayPeriodEnum" style="width:84px;" notNull="true"/>
 											&nbsp;首次收款日期<span class="required">*</span>
 											<s:textfield class="Wdate half" type="text" name="firstPayDate" id="firstPayDate" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 										</td>

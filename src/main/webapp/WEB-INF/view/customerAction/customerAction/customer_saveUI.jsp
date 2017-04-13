@@ -34,7 +34,7 @@
                     <tr>
                     	<th><s:property value="tr.getText('order.Customer.gender')" /><span class="required">*</span></th>
                     	<td>
-                    		<s:radio name="gender" list="%{#{'true':'男性','false':'女性'}}" value="name==null ? 'true' : gender"></s:radio>
+                    		<cqu:enumSelector name="gender" enumName="common.GenderEnum" notNull="true"/>
                     	</td>
                     </tr>
                     <tr>

@@ -4,10 +4,9 @@ import com.yuqincar.domain.common.BaseEnum;
 import com.yuqincar.utils.Text;
 
 public enum PlateTypeEnum implements BaseEnum {
-
-	@Text("蓝牌")
+	
 	BLUE(0,"蓝牌"),
-	@Text("黄牌")
+	
 	YELLOW(1,"黄牌");
 	
 	private int id;
@@ -33,14 +32,6 @@ public enum PlateTypeEnum implements BaseEnum {
 	public PlateTypeEnum getById(int id) {
 		for (PlateTypeEnum u : PlateTypeEnum.values()) {
 			if (u.getId() == id)
-				return u;
-		}
-		return null;
-	}
-
-	public static PlateTypeEnum getByLabel(String label) {
-		for (PlateTypeEnum u : PlateTypeEnum.values()) {
-			if (u.getLabel().equals(label))
 				return u;
 		}
 		return null;

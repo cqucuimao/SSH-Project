@@ -184,6 +184,21 @@
                 <name>enumName</name>    
                 <required>true</required>  
                 <rtexprvalue>true</rtexprvalue>  
+      </attribute>   
+      <attribute>    
+                <name>cssClass</name>    
+                <required>false</required>  
+                <rtexprvalue>false</rtexprvalue>  
+      </attribute> 
+      <attribute>    
+                <name>style</name>    
+                <required>false</required>  
+                <rtexprvalue>false</rtexprvalue>  
+      </attribute> 
+      <attribute>    
+                <name>notNull</name>    
+                <required>false</required>  
+                <rtexprvalue>true</rtexprvalue>  
       </attribute> 
 </tag>
 </taglib>  

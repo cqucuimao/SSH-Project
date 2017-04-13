@@ -27,8 +27,7 @@
 					</td>
 					<th>已经处理</th>
 					<td>
-					 <s:select name="isDeal" 
-					 list="#{'0':'否','1':'是','2':'全部'}"  headerKey="0" >
+					 <s:select name="isDeal" list="#{'0':'否','1':'是','2':'全部'}"  headerKey="0" >
 					 </s:select>
 					</td>
 					<td>

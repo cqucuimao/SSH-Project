@@ -1,20 +1,14 @@
 package com.yuqincar.domain.order;
 
-import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.common.BaseEnum;
-import com.yuqincar.utils.Text;
 
 public enum ChargeModeEnum implements BaseEnum {
-	@Text("按里程计费")
 	MILE(0,"按里程计费"),
 	
-	@Text("按天计费")
 	DAY(1,"按天计费"),
 	
-	@Text("协议计费")
 	PROTOCOL(2,"协议计费"),
 	
-	@Text("接送机")
 	PLANE(3,"接送机");
 	
 	private int id;
@@ -33,10 +27,6 @@ public enum ChargeModeEnum implements BaseEnum {
 		return label;
 	}
 
-	public static ChargeModeEnum[] getAllEnum() {
-		return ChargeModeEnum.values();
-	}
-
 	public ChargeModeEnum getById(int id) {
 		for (ChargeModeEnum u : ChargeModeEnum.values()) {
 			if (u.getId() == id)
@@ -45,7 +35,8 @@ public enum ChargeModeEnum implements BaseEnum {
 		return null;
 	}
 
-	public static ChargeModeEnum getByLabel(String label) {
+	
+	private static ChargeModeEnum getByLabel(String label) {
 		for (ChargeModeEnum u : ChargeModeEnum.values()) {
 			if (u.getLabel().equals(label))
 				return u;
@@ -56,14 +47,15 @@ public enum ChargeModeEnum implements BaseEnum {
 	public static ChargeModeEnum fromString(String str){
 		if(str==null || str.length()==0)
 			return null;
-		if(str.equals("mile") || str.equals("按里程计费"))
+		if(str.equals("mile"))
 			return MILE;
-		else if(str.equals("day") || str.equals("按天计费"))
+		else if(str.equals("day"))
 			return DAY;
-		else if(str.equals("protocol") || str.equals("按协议计费"))
+		else if(str.equals("protocol"))
 			return PROTOCOL;
-		else if(str.equals("plane") || str.equals("接送机"))
+		else if(str.equals("plane"))
 			return PLANE;
-		return null;
+		
+		return getByLabel(str);
 	} 
 }

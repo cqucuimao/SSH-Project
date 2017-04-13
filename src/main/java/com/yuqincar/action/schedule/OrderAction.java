@@ -65,7 +65,7 @@ public class OrderAction extends BaseAction {
 	private CustomerOrganization customerOrganization;
 	private String customerName;
 	private String phone;
-	private String chargeMode;
+	private ChargeModeEnum chargeMode;
 	private Date planBeginDate1;
 	private Date planBeginDate2;
 	private Date planEndDate1;
@@ -92,7 +92,7 @@ public class OrderAction extends BaseAction {
 	private Date scheduleTime2;
 	private String memo;
 	private long schedulerId;
-	private String orderSource;
+	private OrderSourceEnum orderSource;
 	private String callForOtherLabel;
 	private String otherPassengerName;
 	private String otherPhoneNumber;
@@ -103,7 +103,7 @@ public class OrderAction extends BaseAction {
 	private String driverName;
 	private Date planBeginDate;
 	private Date planEndDate;
-	private String status;
+	private OrderStatusEnum status;
 	private long orderId;
 	private String actionId;
 	private Date actionTime;
@@ -662,35 +662,6 @@ public class OrderAction extends BaseAction {
 			return "0";
 	}
 	
-	private OrderStatusEnum getOrderStatus(String status){
-		if(status==null || status.isEmpty())
-			return null;
-		if (status.equals("在队列")) {
-			return OrderStatusEnum.INQUEUE;
-		} else if (status.equals("已调度")) {
-			return OrderStatusEnum.SCHEDULED;
-		} else if (status.equals("已接受")) {
-			return OrderStatusEnum.ACCEPTED;
-		} else if (status.equals("已开始")) {
-			return OrderStatusEnum.BEGIN;
-		} else if (status.equals("已上车")) {
-			return OrderStatusEnum.GETON;
-		} else if (status.equals("已下车")) {
-			return OrderStatusEnum.GETOFF;
-		} else if (status.equals("已结束")) {
-			return OrderStatusEnum.END;
-		} else if (status.equals("已付费")) {
-			return OrderStatusEnum.PAID;
-		} else if (status.equals("已取消")) {
-			return OrderStatusEnum.CANCELLED;
-		}
-		return null;
-	}
-	
-	private String getOrderStatusString(OrderStatusEnum status){
-		return status.toString();
-	}
-	
 	public String protocolOrderRemind(){
 		ActionContext.getContext().put("recordList", orderService.getNeedRemindProtocolOrder());
 		return "protocolOrderRemind";
@@ -718,7 +689,7 @@ public class OrderAction extends BaseAction {
 		QueryHelper helper = new QueryHelper("order_", "o");
 		helper.addWhereCondition("o.status<>? and o.status<>? and o.status<>? and o.status<>?", OrderStatusEnum.INQUEUE,
 				OrderStatusEnum.END,OrderStatusEnum.PAID,OrderStatusEnum.CANCELLED);
-		status="未完成";
+		status=OrderStatusEnum.UNDONE;
 		ActionContext.getContext().getSession().put("orderManagerStatus", status);
 		helper.addOrderByProperty("o.id", false);
 		return helper;
@@ -736,13 +707,12 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("TO_DAYS(?)<=TO_DAYS(o.planBeginDate)", planBeginDate);
 		if(planEndDate!=null)
 			helper.addWhereCondition("TO_DAYS(o.planBeginDate)<=TO_DAYS(?)", planEndDate);
-		if("未完成".equals(status)){//“未完成”是默认值。
-			helper.addWhereCondition("o.status<>? and o.status<>? and o.status<>? and o.status<>?", OrderStatusEnum.INQUEUE,
-					OrderStatusEnum.END,OrderStatusEnum.PAID,OrderStatusEnum.CANCELLED);
-		}else{
-			OrderStatusEnum statusEnum=getOrderStatus(status);
-			if(statusEnum!=null)
-				helper.addWhereCondition("o.status=?", statusEnum);
+		if(status!=null){
+			if(status==OrderStatusEnum.UNDONE){//“未完成”是默认值。
+				helper.addWhereCondition("o.status<>? and o.status<>? and o.status<>? and o.status<>?", OrderStatusEnum.INQUEUE,
+						OrderStatusEnum.END,OrderStatusEnum.PAID,OrderStatusEnum.CANCELLED);
+			}else
+				helper.addWhereCondition("o.status=?", status);
 		}
 		helper.addOrderByProperty("o.id", false);
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
@@ -783,7 +753,7 @@ public class OrderAction extends BaseAction {
 		QueryHelper helper=(QueryHelper)ActionContext.getContext().getSession().get("orderManagerHelper");
 		PageBean<Order> pageBean = orderService.queryOrder(pageNum, helper);
 		ActionContext.getContext().getValueStack().push(pageBean);
-		status=(String)ActionContext.getContext().getSession().get("orderManagerStatus");
+		status=(OrderStatusEnum)ActionContext.getContext().getSession().get("orderManagerStatus");
 		return "list";
 	}
 
@@ -793,20 +763,6 @@ public class OrderAction extends BaseAction {
 		return "queryUI";
 	}
 	
-	private ChargeModeEnum getChargeMode(String chargeMode){
-		if(chargeMode==null || chargeMode.isEmpty())
-			return null;
-		if (chargeMode.equals("按天计费")) {
-			return ChargeModeEnum.DAY;
-		} else if (chargeMode.equals("按里程计费")) {
-			return ChargeModeEnum.MILE;
-		} else if (chargeMode.equals("协议计费")) {
-			return ChargeModeEnum.PROTOCOL;
-		} else if (chargeMode.equals("接送机")) {
-			return ChargeModeEnum.PLANE;
-		} 
-		return null;
-	}
 	private OrderSourceEnum getOrderSource(String orderSource){
 		if(orderSource==null || orderSource.isEmpty())
 			return null;
@@ -832,16 +788,19 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("TO_DAYS(?)<=TO_DAYS(o.planBeginDate)", planBeginDate);
 		if(planEndDate!=null)
 			helper.addWhereCondition("TO_DAYS(o.planBeginDate)<=TO_DAYS(?)", planEndDate);
-		OrderStatusEnum statusEnum=getOrderStatus(status);
-		if(statusEnum!=null)
-			helper.addWhereCondition("o.status=?", statusEnum);
+		if(status!=null){
+			if(status==OrderStatusEnum.UNDONE){
+				helper.addWhereCondition("o.status<>? and o.status<>? and o.status<>? and o.status<>?", OrderStatusEnum.INQUEUE,
+						OrderStatusEnum.END,OrderStatusEnum.PAID,OrderStatusEnum.CANCELLED);
+			}else
+				helper.addWhereCondition("o.status=?", status);
+		}
 		if(customerName != null && !customerName.isEmpty())
 			helper.addWhereCondition("o.customer.name=?", customerName);
 		if(phone != null && !phone.isEmpty())
 			helper.addWhereCondition("o.phone=?", phone);
-		ChargeModeEnum chargeModeEnum = getChargeMode(chargeMode);
-		if(chargeModeEnum!=null)
-			helper.addWhereCondition("o.chargeMode=?", chargeModeEnum);
+		if(chargeMode!=null)
+			helper.addWhereCondition("o.chargeMode=?", chargeMode);
 		if(planBeginDate1!=null)
 			helper.addWhereCondition("TO_DAYS(?)<=TO_DAYS(o.planBeginDate)", planBeginDate1);
 		if(planBeginDate2!=null)
@@ -888,9 +847,8 @@ public class OrderAction extends BaseAction {
 			helper.addWhereCondition("o.car=?", car);
 		if(scheduler!=null)
 			helper.addWhereCondition("o.scheduler=?", scheduler);
-		OrderSourceEnum orderSourceEnum = getOrderSource(orderSource);
-		if(orderSourceEnum != null)
-			helper.addWhereCondition("o.orderSource=?", orderSourceEnum);
+		if(orderSource != null)
+			helper.addWhereCondition("o.orderSource=?", orderSource);
 		if(callForOtherLabel == "是" || "是".equals(callForOtherLabel)){
 			helper.addWhereCondition("o.callForOther =?", true);
 		}
@@ -1001,11 +959,13 @@ public class OrderAction extends BaseAction {
 		this.planEndDate = planEndDate;
 	}
 
-	public String getStatus() {
+	public OrderStatusEnum getStatus() {
+		System.out.println("in getStatus");
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(OrderStatusEnum status) {
+		System.out.println("in setStatus");
 		this.status = status;
 	}
 
@@ -1346,11 +1306,11 @@ public class OrderAction extends BaseAction {
 		this.tax = tax;
 	}
 
-	public String getChargeMode() {
+	public ChargeModeEnum getChargeMode() {
 		return chargeMode;
 	}
 
-	public void setChargeMode(String chargeMode) {
+	public void setChargeMode(ChargeModeEnum chargeMode) {
 		this.chargeMode = chargeMode;
 	}
 
@@ -1538,11 +1498,11 @@ public class OrderAction extends BaseAction {
 		this.schedulerId = schedulerId;
 	}
 
-	public String getOrderSource() {
+	public OrderSourceEnum getOrderSource() {
 		return orderSource;
 	}
 
-	public void setOrderSource(String orderSource) {
+	public void setOrderSource(OrderSourceEnum orderSource) {
 		this.orderSource = orderSource;
 	}
 

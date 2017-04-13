@@ -32,6 +32,7 @@ import com.yuqincar.dao.order.PriceTableDao;
 import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.common.GenderEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.order.ChargeModeEnum;
 import com.yuqincar.domain.order.Customer;
@@ -118,7 +119,6 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	public void EnQueue(Order order,int copyNumber) {
-		System.out.println("in EnQueue");
 		//处理是否新建客户单位和客户		
 		List<BaseEntity> cc=dealCCP(order.getCustomerOrganization().getName(),order.getCustomer().getName(),order.getPhone());
 		order.setCustomerOrganization((CustomerOrganization)cc.get(0));
@@ -144,8 +144,6 @@ public class OrderServiceImpl implements OrderService {
 			}
 			
 			//给值班员发短信
-			System.out.println("keeper="+watchKeeperService.getWatchKeeper().getKeeper().getName());
-			System.out.println("keeper="+watchKeeperService.getWatchKeeper().getKeeper().getPhoneNumber());
 			smsService.sendTemplateSMS(watchKeeperService.getWatchKeeper().getKeeper().getPhoneNumber(), SMSService.SMS_TEMPLATE_ORDER_ENQUEUE, param);
 			
 			//给值班员发APP推送消息
@@ -449,8 +447,8 @@ public class OrderServiceImpl implements OrderService {
 		
 		if(order.getChargeMode()!=toUpdateOrder.getChargeMode())
 			sb.append("(").append(++n).append(")").append("计价方式由：")
-				.append(getChargeModeString(toUpdateOrder.getChargeMode()))
-				.append(" 改为 ").append(getChargeModeString(order.getChargeMode())).append("；");
+				.append(toUpdateOrder.getChargeMode().getLabel())
+				.append(" 改为 ").append(order.getChargeMode().getLabel()).append("；");
 		
 		if(!order.getPlanBeginDate().equals(toUpdateOrder.getPlanBeginDate()))
 			sb.append("(").append(++n).append(")").append("计划开始时间由：")
@@ -940,8 +938,6 @@ public class OrderServiceImpl implements OrderService {
 		    //计算前缀的长度
 		    int prefix="renderReverse&&renderReverse(".length();
 		    String realAddressJson=addressJson.substring(prefix, addressJson.length()-1);
-//		    System.out.println("result=");
-//		    System.out.println(JSON.parseObject(realAddressJson).getJSONObject("result"));
 		    JSONObject result=JSON.parseObject(realAddressJson).getJSONObject("result");
 		    String address=result.getString("formatted_address") + "（" + result.getString("sematic_description")+ "）";
 		    sb.append(address).append(" - ");
@@ -953,7 +949,6 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public String getChargeModeString(ChargeModeEnum chargeMode) {
-		System.out.println("in getChargeModeString in serviceImpl");
 		switch(chargeMode){
 		case MILE:
 			return TextResolve.getText("order.ChargeModeEnum.MILE");
@@ -968,7 +963,6 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public String getOperationRecordTypeString(OrderOperationTypeEnum type){
-		System.out.println("in getOperationRecordTypeString in serviceImpl");
 		switch(type){
 		case MODIFY:
 			return TextResolve.getText("order.OrderOperationTypeEnum.MODIFY");
@@ -1018,11 +1012,6 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	public List<BaseEntity> dealCCP(String customerOrganizationName,String customerName,String phoneNumber){
-		System.out.println("in dealCCP");
-		System.out.println("customerOrganizationName="+customerOrganizationName);
-		System.out.println("customerName="+customerName);
-		System.out.println("phoneNumber="+phoneNumber);
-		
 		boolean customerOrganizationExist=false,customerExist=false,phoneNumberExist=false;
 		List<BaseEntity> cc=new ArrayList<BaseEntity>(2);
 		customerOrganizationExist=customerOrganizationDao.isNameExist(0, customerOrganizationName);
@@ -1098,7 +1087,7 @@ public class OrderServiceImpl implements OrderService {
 					
 					Customer customer=new Customer();
 					customer.setName(customerName);
-					customer.setGender(true);
+					customer.setGender(GenderEnum.MALE);
 					customer.setCustomerOrganization(customerOrganization);
 					List<String> phones=new ArrayList<String>(1);
 					phones.add(phoneNumber);
@@ -1120,7 +1109,7 @@ public class OrderServiceImpl implements OrderService {
 					
 					Customer customer=new Customer();
 					customer.setName(customerName);
-					customer.setGender(true);
+					customer.setGender(GenderEnum.MALE);
 					customer.setCustomerOrganization(customerOrganization);
 					List<String> phones=new ArrayList<String>(1);
 					phones.add(phoneNumber);
@@ -1460,7 +1449,6 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Transactional
 	public void EditDriverAction(String actionId, Date date, User user){
-		System.out.println("in editDriverAction");
 		Order order=getOrderFromActionVOId(actionId);
 		OrderStatusEnum status=getStatusFromActionVOId(actionId);
 		DayOrderDetail dod=getDayOrderDetailFromActionVOId(actionId);

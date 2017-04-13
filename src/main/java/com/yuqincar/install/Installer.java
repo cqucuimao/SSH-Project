@@ -36,6 +36,7 @@ import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.car.DriverLicense;
 import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.car.ServicePoint;
+import com.yuqincar.domain.common.GenderEnum;
 import com.yuqincar.domain.order.Price;
 import com.yuqincar.domain.order.PriceTable;
 import com.yuqincar.domain.order.WatchKeeper;
@@ -43,7 +44,6 @@ import com.yuqincar.domain.privilege.Department;
 import com.yuqincar.domain.privilege.Privilege;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
-import com.yuqincar.domain.privilege.UserGenderEnum;
 import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.order.WatchKeeperService;
@@ -683,7 +683,10 @@ public class Installer {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				user.setGender(UserGenderEnum.getByLabel(line.get(5)));
+				if("男".equals(line.get(5)))
+					user.setGender(GenderEnum.MALE);
+				else if("女".equals(line.get(5)))
+					user.setGender(GenderEnum.FEMALE);
 				
 				if(line.get(3) == "否" || line.get(3).equals("否")){
 					user.setUserType(UserTypeEnum.OFFICE);
@@ -788,7 +791,10 @@ public class Installer {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					car.setPlateType(PlateTypeEnum.getByLabel(line.get(9)));
+					if("蓝牌".equals(line.get(9)))
+						car.setPlateType(PlateTypeEnum.BLUE);
+					else if("黄牌".equals(line.get(9)))
+						car.setPlateType(PlateTypeEnum.YELLOW);
 					
 					int seatNumber = Integer.parseInt(line.get(10));
 					car.setSeatNumber(seatNumber);

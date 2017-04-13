@@ -19,6 +19,7 @@ import com.yuqincar.action.common.BaseAction;
 import com.yuqincar.domain.car.CarServiceType;
 import com.yuqincar.domain.common.BaseEntity;
 import com.yuqincar.domain.common.Company;
+import com.yuqincar.domain.common.GenderEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.VerificationCode;
 import com.yuqincar.domain.order.ChargeModeEnum;
@@ -316,7 +317,7 @@ public class OrderAppAction extends BaseAction{
 		CustomerInfoVO civo=new CustomerInfoVO();
 		civo.setName(customer.getName());
 		civo.setOrganizationName(customer.getCustomerOrganization().getName());
-		civo.setGender(customer.isGender() ? "male" : "female");
+		civo.setGender(customer.getGender()==GenderEnum.MALE ? "male" : "female");
 
 		String json = JSON.toJSONString(civo);
 		writeJson(json);
@@ -338,7 +339,7 @@ public class OrderAppAction extends BaseAction{
 		List<BaseEntity> list=orderService.dealCCP(newCustomerOrganizationName, newCustomerName, phoneNumber);
 		Customer customer=(Customer)list.get(1);
 		customer.setCustomerOrganization((CustomerOrganization)list.get(0));
-		customer.setGender(newGender.equals("male"));
+		customer.setGender(newGender.equals("male") ? GenderEnum.MALE : GenderEnum.FEMALE);
 		customerService.updateCustomer(customer);
 		
 		writeJson("{\"status\":true}");

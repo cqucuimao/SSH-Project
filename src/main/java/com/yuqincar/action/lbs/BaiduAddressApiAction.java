@@ -40,7 +40,6 @@ public class BaiduAddressApiAction {
 			String queryString = request.getQueryString();
 			String url = BASEURL+queryString+ENDURL;
 			
-			System.out.println("url="+url);
 			String json = HttpMethod.get(url);
 			//返回的数据不是标准的json格式,外部有一层renderReverse&&renderReverse()，需要手动去除
 		    //计算前缀的长度

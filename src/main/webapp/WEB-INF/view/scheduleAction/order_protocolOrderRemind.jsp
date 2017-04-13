@@ -55,14 +55,14 @@
 							<td class="alignCenter">${sn }</td>
 							<td>${customerOrganization.name }</td>
 							<td>${customer.name }</td>
-							<td>${chargeModeString }</td>
+							<td>${chargeMode.label }</td>
 							<td>${planDateString}</td>
 							<td>${actualDateString}</td>
 							<td>${serviceType.title }</td>	
 							<td>${car.plateNumber }</td>	
 							<td>${driver.name }</td>
 							<td>${saler.name }</td>						
-							<td>${statusString }</td>
+							<td>${status.label }</td>
 							<td class="alignCenter">
 							<s:a action="order_view.action?orderId=%{id}"><i class="icon-operate-detail" title="查看"></i></s:a>
 							<s:a action="order_print.action?sn=%{sn}"><i class="icon-operate-print" title="打印"></i></s:a>

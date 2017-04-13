@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.dbunit.dataset.stream.StreamingDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -17,15 +15,12 @@ import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ModelDriven;
 import com.yuqincar.action.common.BaseAction;
-import com.yuqincar.domain.car.Car;
 import com.yuqincar.domain.car.DriverLicense;
-import com.yuqincar.domain.car.TollCharge;
+import com.yuqincar.domain.common.GenderEnum;
 import com.yuqincar.domain.common.PageBean;
 import com.yuqincar.domain.common.TreeNode;
-import com.yuqincar.domain.order.OrderStatusEnum;
 import com.yuqincar.domain.privilege.Role;
 import com.yuqincar.domain.privilege.User;
-import com.yuqincar.domain.privilege.UserGenderEnum;
 import com.yuqincar.domain.privilege.UserStatusEnum;
 import com.yuqincar.domain.privilege.UserTypeEnum;
 import com.yuqincar.service.privilege.DepartmentService;
@@ -63,9 +58,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	private Date expireDate;
 	
 	private String actionFlag;
-	private int genderId;
-	private int userTypeId;
-	private int statusId;
+	private GenderEnum gender;
 	private String keyword;
 	private UserStatusEnum userStatus;
 	
@@ -160,14 +153,12 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			addFieldError("name", "姓名已经存在！");
 			return addUI();
 		}
-		if(UserTypeEnum.DRIVER.getById(userTypeId) == UserTypeEnum.DRIVER){
+		if(model.getUserType() == UserTypeEnum.DRIVER){
 			DriverLicense dl = new DriverLicense();
 			dl.setLicenseID(licenseID);
 			dl.setExpireDate(expireDate);
 			model.setDriverLicense(dl);
 		}
-		model.setGender(UserGenderEnum.FEMALE.getById(genderId));
-		model.setUserType(UserTypeEnum.DRIVER.getById(userTypeId));
 		model.setStatus(UserStatusEnum.NORMAL);//默认为正常状态
 		model.setDepartment(departmentService.getById(departmentId));
 		//处理角色
@@ -234,12 +225,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			addFieldError("name", "姓名已经存在！");
 			return addUI();
 		}
-		model.setGender(UserGenderEnum.FEMALE.getById(genderId));
-		model.setStatus(UserStatusEnum.LOCKED.getById(statusId));
-		System.out.println("departmentId: "+departmentId);
 		model.setDepartment(departmentService.getById(departmentId));
 		//处理角色
-		System.out.println("roleString="+roleString);
 		if(roleString != null && !roleString.equals("")){
 			String[] roleIds = roleString.split(",");
 			Long[] longRoleIds = new Long[roleIds.length];
@@ -251,8 +238,6 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			model.setRoles(new HashSet<Role>(roleList));
 		}
 		
-		
-		model.setUserType(UserTypeEnum.DRIVER.getById(userTypeId));
 		if(model.getUserType()==UserTypeEnum.DRIVER){
 			model.setDriverLicense(new DriverLicense());
 			model.getDriverLicense().setLicenseID(licenseID);
@@ -493,34 +478,12 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		this.actionFlag = actionFlag;
 	}
 
-
-	public int getUserTypeId() {
-		return userTypeId;
+	public GenderEnum getGender() {
+		return gender;
 	}
 
-
-	public void setUserTypeId(int userTypeId) {
-		this.userTypeId = userTypeId;
-	}
-
-
-	public int getStatusId() {
-		return statusId;
-	}
-
-
-	public void setStatusId(int statusId) {
-		this.statusId = statusId;
-	}
-
-
-	public int getGenderId() {
-		return genderId;
-	}
-
-
-	public void setGenderId(int genderId) {
-		this.genderId = genderId;
+	public void setGender(GenderEnum gender) {
+		this.gender = gender;
 	}
 
 	public Long[] getSelectedRoleIds() {

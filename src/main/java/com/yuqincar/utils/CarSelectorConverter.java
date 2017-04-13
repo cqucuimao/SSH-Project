@@ -17,7 +17,6 @@ public class CarSelectorConverter extends StrutsTypeConverter {
 	
 	public Object convertFromString(Map context, String[] values, Class toClass) { 
 		if(toClass==Car.class){
-			//System.out.println("i am in CarSelectorConverter******");
 			String rValue=values[0];
 			boolean isNumber=true;
 			for(int i=0;i<rValue.length();i++)
@@ -31,18 +30,15 @@ public class CarSelectorConverter extends StrutsTypeConverter {
 			if(isNumber)
 			{
 				Long id=Long.valueOf(values[0]);
-				//System.out.println("id: "+id);
 				return carService.getCarById(id);
 			}else
 			{
 				String name=values[0];
-				System.out.println("carPlateNumber: "+name);
 				char ch='(';
 				if(name.contains(Character.toString(ch)))
 				{
 					int index=name.indexOf('(');
 					name=name.substring(0, index);
-					//System.out.println("carPlateNumber: "+name);
 					return carService.getCarByPlateNumber(name);
 				}
 				else

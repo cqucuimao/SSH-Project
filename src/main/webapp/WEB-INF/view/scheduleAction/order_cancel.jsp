@@ -34,7 +34,7 @@
                     </tr>
                     <tr>
                     	<th>计费方式</th>
-                    	<td>${chargeModeString }</td>
+                    	<td>${chargeMode.label }</td>
                         <th>用车人数：</th>
                         <td>${passengerNumber }人</td>
                     </tr>
@@ -42,7 +42,7 @@
                         <th>车型：</th>
                         <td>${serviceType.title }</td>
                         <th>订单状态：</th>
-                        <td>${statusString }</td>
+                        <td>${status.label }</td>
                     </tr>
                     <tr>
                         <th>计划起止时间：</th>

@@ -13,17 +13,14 @@ public class EnumSelectorConverter extends StrutsTypeConverter {
 	
 	public Object convertFromString(Map context, String[] values, Class toClass) {
 		if(values[0].equals("-1"))
-		{
 			return null;
-		}
 		BaseEnum baseEnum=(BaseEnum)toClass.getEnumConstants()[0];
 		return baseEnum.getById(Integer.parseInt(values[0]));
     }  
   
     public String convertToString(Map context, Object o) {
-    	System.out.println("in convertToString");
-    	BaseEnum be=(BaseEnum)o;
-    	if(be!=null)
+		BaseEnum be=(BaseEnum)o;
+		if(be!=null)
     		return be.getLabel();
     	else
     		return "";  

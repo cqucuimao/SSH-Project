@@ -24,7 +24,7 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.chargeMode')" /></th>
-					<td><s:select name="chargeMode" list="{'所有方式','按里程计费','按天计费','协议计费','接送机'}" /></td>
+					<td><cqu:enumSelector name="chargeMode" enumName="order.ChargeModeEnum"/></td>
 					<th><s:property value="tr.getText('order.Order.planBeginDate')" /></th>
 					<td>
 						<s:textfield name="planBeginDate1" id="planBeginDate1" class="Wdate half" type="text" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
@@ -94,7 +94,7 @@
 				</tr>
 				<tr>	
 					<th><s:property value="tr.getText('order.Order.status')" /></th>
-					<td><s:select name="status" list="{'所有状态','在队列','已调度','已接受','已开始','已上车','已下车','已结束','已付费','已取消'}"></s:select></td>
+					<td><cqu:enumSelector name="status" enumName="order.OrderStatusEnum"/></td>
 					<th><s:property value="tr.getText('order.Order.memo')" /></th>
 					<td><s:textfield class="inputText" name="memo" /></td>
 				</tr>
@@ -102,7 +102,7 @@
 					<th><s:property value="tr.getText('order.Order.scheduler')" /></th>
 					<td><cqu:userAutocompleteSelector name="scheduler"/></td>
 					<th><s:property value="tr.getText('order.Order.orderSource')" /></th>
-					<td><s:select name="orderSource" list="{'所有来源','调度员','客户端','网站'}"  /></td>
+					<td><cqu:enumSelector name="orderSource" enumName="order.OrderSourceEnum"/></td> 
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('order.Order.callForOther')" /></th>
@@ -145,7 +145,7 @@
 					<td><cqu:userAutocompleteSelector name="saler"/></td>					
 					<th><s:property value="tr.getText('order.Order.customerOrganization')" />(模糊查询)</th>
 					<td><s:textfield class="inputText" name="customerOrganizationKeyword" /></td>
-				</tr>
+				</tr> 
 				</tbody>
 				<tfoot>
 					<tr>

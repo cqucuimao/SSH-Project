@@ -82,9 +82,7 @@
 					</tr>
 					<tr>
 						<th><s:property value="tr.getText('car.Car.plateType')" /><span class="required">*</span></th>
-						<td>
-								<s:radio list="#{'0':'蓝牌','1':'黄牌'}" name="plateTypeId" value="plateType.id" class="{required:true}"/>
-						</td>
+						<td><cqu:enumSelector name="plateType" enumName="car.PlateTypeEnum" notNull="true"/></td>
 					</tr>
 					<tr>
 						<th><s:property value="tr.getText('car.Car.seatNumber')" /><span class="required">*</span></th>
@@ -96,7 +94,7 @@
 					<tr>
 						<th><s:property value="tr.getText('car.Car.transmissionType')" /><span class="required">*</span></th>
 						<td>
-								<s:radio list="#{'0':'自动','1':'手动'}" name="transmissionTypeId" value="transmissionType.id" class="{required:true}"/>
+							<cqu:enumSelector name="transmissionType" enumName="car.TransmissionTypeEnum" notNull="true"/>
 						</td>
 					</tr>
 					<tr>
@@ -168,9 +166,6 @@
 					EngineSN:{
 						required:true,
 					},
-					plateType:{
-						required:true,
-					},
 					enrollDate:{
 						required:true,
 					},
@@ -178,12 +173,6 @@
 						required:true,
 					},
 					servicePointId:{
-						required:true,
-					},
-					plateTypeId:{
-						required:true,
-					},
-					transmissionTypeId:{
 						required:true,
 					},
 					seatNumber:{

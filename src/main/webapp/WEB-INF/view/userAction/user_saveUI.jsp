@@ -37,21 +37,21 @@
                     </tr>
                     <tr>
                     	<th><s:property value="tr.getText('privilege.User.gender')" /></th>
-						<td>
-							   <s:radio list="#{'0':'男','1':'女'}" name="genderId" value="gender.id"/>
-						</td>
+						<td><cqu:enumSelector name="gender" enumName="common.GenderEnum" notNull="true"/></td>
                     </tr>
                     <tr>
                     	<th><s:property value="tr.getText('privilege.User.birth')" /></th>
                     	<td>
-                        	<s:textfield class="Wdate half" id="birth" name="birth"  onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                    		<s:textfield cssClass="inputText" name="birth" id="birth" class="Wdate half" onfocus="new WdatePicker({dateFmt:'yyyy-MM-dd'})">
+								<s:param name="value">
+									<s:date name="birth" format="yyyy-MM-dd" />
+								</s:param>
+							</s:textfield>
                         </td>
                     </tr>
                     <tr>
                     <th><s:property value="tr.getText('privilege.User.userType')" /><span class="required">*</span></th>
-						<td>
-							   <s:radio list="#{'0':'办公室员工','1':'司机员工'}" name="userTypeId" value="userType.id"/>
-						</td>
+						<td><cqu:enumSelector name="userType" enumName="privilege.UserTypeEnum" notNull="true"/></td>
                     </tr>
                     <tr class="license" style="display:none">
                         <th><s:property value="tr.getText('privilege.User.driverLicense')" /><span class="required">*</span></th>
@@ -98,9 +98,7 @@
                     </tr>
                     <tr class="userStatus" style="display:none">
                     	<th><s:property value="tr.getText('privilege.User.status')" /></th>
-						<td>
-							   <s:radio list="#{'0':'正常','1':'锁定'}" name="statusId" value="status.id"/>
-						</td>
+						<td><cqu:enumSelector name="status" enumName="privilege.UserStatusEnum" notNull="true"/></td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -117,42 +115,23 @@
         </div>
     </div>
     <script type="text/javascript">
-    	 
-	    function formatDateField(obj){
-			//将90-6-21 转换为 1990-06-21
-			var dateStr=obj.val();
-			if(dateStr.length>0){
-				var arr=dateStr.split("-");
-				if(arr[0].length==2)
-					arr[0]="19"+arr[0];
-				var date = new Date(arr[0],arr[1]-1,arr[2]);
-				var dateStr=date.Format("yyyy-MM-dd");
-				obj.val(dateStr);
-			}
-		}
     
    		formatDateField1($("input[name=expireDate]"));
-   		formatDateField($("#birth"));
     	var actionFlag = $("input[name=actionFlag]").val();
-    	//如果是新加用户，用户类型默认选中办公室员工
-    	if(actionFlag == "add"){
-    		document.getElementsByName('userTypeId')[0].checked=true;
-    		document.getElementsByName('genderId')[0].checked=true;
-    	}	
+    	
     	//修改用户是显示用户状态
     	if(actionFlag =="edit"){
     		$(".userStatus").show();
     	}
-    	if($("input[name=userTypeId]:checked").val() == 1){
+    	if($("#userType").find("option:selected").text()=="司机员工"){
     		$(".license").show();
     	}
     
-    	$("input[name=userTypeId]").click(function(){
-    		if($("input[name=userTypeId]:checked").val() == 1){
+    	$("#userType").click(function(){
+    		if($("#userType").find("option:selected").text()=="司机员工"){
         		$(".license").show();
-        	}if($("input[name=userTypeId]:checked").val() == 0){
-        		$(".license").hide();
-        	}	
+        	}else
+        		$(".license").hide();        		
     	});  	
     	
     	// 手机号码验证

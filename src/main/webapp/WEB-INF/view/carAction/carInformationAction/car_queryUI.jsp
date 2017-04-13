@@ -52,9 +52,9 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('car.Car.status')" /></th>
-					<td><s:select name="statusLabel" list="#{0:'正常',1:'报废'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="选择车辆状态" /></td>
+					<td><cqu:enumSelector name="status" enumName="car.CarStatusEnum"/></td>
 					<th><s:property value="tr.getText('car.Car.plateType')" /></th>
-					<td><s:select name="plateTypeLabel" list="#{0:'蓝牌',1:'黄牌'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="选择车牌类型" /></td>
+					<td><cqu:enumSelector name="plateType" enumName="car.PlateTypeEnum"/></td>
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('car.Car.registDate')" /></th>
@@ -76,7 +76,7 @@
 				</tr>
 				<tr>
 					<th><s:property value="tr.getText('car.Car.transmissionType')" /></th>
-					<td><s:select name="transmissionTypeLabel" list="#{0:'自动',1:'手动',2:'不确定'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="选择变速箱类型" /></td>	
+					<td><cqu:enumSelector name="transmissionType" enumName="car.TransmissionTypeEnum"/></td>	
 					<th><s:property value="tr.getText('car.Car.careExpired')" /></th>
 					<td><s:select name="careExpiredLabel" list="#{0:'否',1:'是'}" cssClass="SelectStyle"  listKey="value" listValue="value"  headerKey="" headerValue="" /></td>
 				</tr>

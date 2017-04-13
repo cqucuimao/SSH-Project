@@ -9,13 +9,12 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
 import com.yuqincar.domain.common.BaseEntity;
+import com.yuqincar.domain.common.GenderEnum;
 import com.yuqincar.domain.privilege.UserAPPDeviceTypeEnum;
 import com.yuqincar.utils.Text;
 
@@ -53,7 +52,7 @@ public class Customer extends BaseEntity {
 	private List<OtherPassenger> otherPassengers;
 	
 	@Text("性别")
-	private boolean gender; //true表示男性，false表示女性
+	private GenderEnum gender;
 	
 	@Text("APP设备类型")
 	private UserAPPDeviceTypeEnum appDeviceType;
@@ -100,11 +99,11 @@ public class Customer extends BaseEntity {
 		this.otherPassengers = otherPassengers;
 	}
 
-	public boolean isGender() {
+	public GenderEnum getGender() {
 		return gender;
 	}
 
-	public void setGender(boolean gender) {
+	public void setGender(GenderEnum gender) {
 		this.gender = gender;
 	}
 

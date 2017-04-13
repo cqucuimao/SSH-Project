@@ -1,19 +1,15 @@
 package com.yuqincar.install;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.TreeSet;
+import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.struts2.views.freemarker.tags.RadioModel;
 
 import com.baidu.yun.core.log.YunLogEvent;
 import com.baidu.yun.core.log.YunLogHandler;
@@ -24,15 +20,50 @@ import com.baidu.yun.push.exception.PushClientException;
 import com.baidu.yun.push.exception.PushServerException;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceRequest;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceResponse;
-import com.itextpdf.text.pdf.hyphenation.TernaryTree.Iterator;
+import com.google.gson.Gson;
 import com.yuqincar.utils.DateUtils;
 
 public class Test {
 
 	public static void main(String[] args) {
-		String keyword="渝AGB526(斯柯达明锐)";
-		keyword=keyword.substring(0,keyword.indexOf("("));
-		System.out.println(keyword);
+//		String content="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//		content=content+"1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//		content=content+"1";
+//		content=content+"2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+//		content=content+"2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222";
+//		content=content+"2";
+//		content=content+"3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333";
+//		content=content+"3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333";
+//		content=content+"34444444444444444444444";
+		String content="陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周123周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周";
+		content=content+"陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周陈恒鑫周";
+		content=content+"分";
+		content=content+"陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟756方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧";
+		content=content+"陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧陈方舟夏碧";
+		content=content+"隔";
+		content=content+"蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范wey陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范";
+		content=content+"蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范蒋永碧陈生安陈方林范";
+		content=content+"线祖光周祖光周";
+		List<String> list=chopSMSContent(content);
+		for(String str:list){
+			System.out.println(str);
+			System.out.println("size="+str.length());
+		}
+	}
+	
+	private static List<String> chopSMSContent(String content){
+		int length=201;
+		List<String> list=new ArrayList<String>();
+		while(content.length()>0){
+			if(content.length()>length){
+				list.add(content.substring(0, length));
+				content=content.substring(length);
+			}else{
+				list.add(content);
+				content="";
+			}
+		}
+		return list;
 	}
 	
 	private static void testURLEncode(){

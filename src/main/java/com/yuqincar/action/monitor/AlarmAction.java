@@ -43,7 +43,6 @@ public class AlarmAction extends BaseAction{
 	
 	//查询未处理的警告信息
 	public void getUndealedMessages(){
-		System.out.println("in getUndealedMessages");
 		String jsonStr=null;
 		List<WarningMessage> messages=warningMessageService.getUndealedMessages();
 		if(messages.size()==0)

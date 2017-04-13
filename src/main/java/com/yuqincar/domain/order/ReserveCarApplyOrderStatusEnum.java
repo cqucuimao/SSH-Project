@@ -1,8 +1,6 @@
 package com.yuqincar.domain.order;
 
-import com.yuqincar.domain.car.PlateTypeEnum;
 import com.yuqincar.domain.common.BaseEnum;
-import com.yuqincar.utils.Text;
 
 public enum ReserveCarApplyOrderStatusEnum implements BaseEnum {
 	NEW(0,"新建"),
@@ -32,22 +30,9 @@ public enum ReserveCarApplyOrderStatusEnum implements BaseEnum {
 	public String getLabel() {
 		return label;
 	}
-
-	public static ReserveCarApplyOrderStatusEnum[] getAllEnum() {
-		return ReserveCarApplyOrderStatusEnum.values();
-	}
-
 	public ReserveCarApplyOrderStatusEnum getById(int id) {
 		for (ReserveCarApplyOrderStatusEnum u : ReserveCarApplyOrderStatusEnum.values()) {
 			if (u.getId() == id)
-				return u;
-		}
-		return null;
-	}
-
-	public static ReserveCarApplyOrderStatusEnum getByLabel(String label) {
-		for (ReserveCarApplyOrderStatusEnum u : ReserveCarApplyOrderStatusEnum.values()) {
-			if (u.getLabel().equals(label))
 				return u;
 		}
 		return null;

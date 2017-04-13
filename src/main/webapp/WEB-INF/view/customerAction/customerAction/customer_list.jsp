@@ -47,14 +47,7 @@
 						<tr>
 							<td>${customerOrganization.name}</td>
 							<td>${name}</td>
-							<td>
-								<s:if test="gender==true">
-								<s:text name="男"></s:text>
-								</s:if>
-								<s:else>
-								<s:text name="女"></s:text>
-								</s:else>
-							</td>
+							<td>${gender.label}</td>
 							<td>
 								<s:iterator value="phones" var="p" status="s">
 									<s:property value="p"/>

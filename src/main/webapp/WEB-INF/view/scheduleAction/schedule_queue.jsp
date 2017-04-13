@@ -62,7 +62,7 @@
 							<td>${sn}</td>
 							<td>${customer.name}</td>
 							<td>${customerOrganization.name}</td>
-							<td>${chargeModeString }</td>
+							<td>${chargeMode.label }</td>
 							<td>${planBeginDateString }</td>
 							<td>${serviceType.title}</td>
 							<td>${fromAddress}</td>

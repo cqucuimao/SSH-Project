@@ -14,9 +14,7 @@
 					<td><s:textfield cssClass="inputText" name="name" type="text" /></td>
 					 <th><s:property value="tr.getText('privilege.User.status')" /></th>
                     <td>
-                    <%-- <s:select style="width:135px;" name="userStatus" list="{'全部','正常' ,'已锁定'}" /> --%>
-                    <cqu:enumSelector name="userStatus" enumName="com.yuqincar.domain.privilege.UserStatusEnum"/>
-                    <%-- <cqu:enumSelector name="orderStatus" enumName="com.yuqincar.domain.order.OrderStatusEnum"/> --%>
+                    <cqu:enumSelector name="userStatus" enumName="privilege.UserStatusEnum"/>
                     </td>
 					<td>
 						<input class="inputButton" type="submit" value="查询" />

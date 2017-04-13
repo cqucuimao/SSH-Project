@@ -28,10 +28,6 @@ public enum DocumentStatusEnum implements BaseEnum{
 		return label;
 	}
 	
-	public static DocumentStatusEnum[] getAllEnum() {
-		return DocumentStatusEnum.values();
-	}
-
 	public DocumentStatusEnum getById(int id) {
 		for (DocumentStatusEnum u : DocumentStatusEnum.values()) {
 			if (u.getId() == id)
@@ -39,13 +35,4 @@ public enum DocumentStatusEnum implements BaseEnum{
 		}
 		return null;
 	}
-
-	public static DocumentStatusEnum getByLabel(String label) {
-		for (DocumentStatusEnum u : DocumentStatusEnum.values()) {
-			if (u.getLabel().equals(label))
-				return u;
-		}
-		return null;
-	}
-
 }

@@ -337,6 +337,12 @@
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>
+			<s:if test=" #session.user.hasPrivilegeByUrl('/realtimeChart_exportUI') ">
+			<dd>
+				<s:a action="realtimeChart_exportUI">监控报表</s:a>
+				<i class="icon-menu-arrow"></i>
+			</dd>
+			</s:if>
 		</dl>
 		</s:if>
 		
@@ -447,7 +453,6 @@
 			<s:if test=" #session.user.hasPrivilegeByUrl('/customer_list') ">
 			<dd>
 				<s:a action="customer_list">查阅公文</s:a>
->>>>>>> branch 'master' of http://139.224.80.248:3000/yuqin/Web.git
 				<i class="icon-menu-arrow"></i>
 			</dd>
 			</s:if>

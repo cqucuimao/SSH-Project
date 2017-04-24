@@ -476,6 +476,18 @@
 			<result name="list">/WEB-INF/view/queryStatisticsAction/smsRecord/smsFailRecord_list.jsp
 			</result>
 		</action>
+		
+		<!-- 监控报表功能 -->
+		<action name="realtimeChart_*" class="realtimeChartAction" method="{1}">
+			<result name="exportUI">/WEB-INF/view/queryStatisticsAction/realtimeChartAction/exportUI.jsp
+			</result>
+			<result name="success" type="stream">
+                <param name="contentType">application/pdf; charset=gb2312</param>
+                <param name="inputName">pdfStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">2048</param>
+            </result>
+		</action>
 
 		<!-- GPS设备API -->
 		<action name="api" class="apiAction" method="api">

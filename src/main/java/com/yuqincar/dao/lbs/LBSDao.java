@@ -14,5 +14,7 @@ public interface LBSDao {
 	
 	//得到beginTime和endTime之间的里程数。
 	public float getStepMile(Car car, Date beginTime, Date endTime);
+	
+	public float getStepMileByEnhancedTrack(Car car, Date beginDate, Date endDate);
 
 }

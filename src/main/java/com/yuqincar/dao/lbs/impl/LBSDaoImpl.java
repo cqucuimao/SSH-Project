@@ -257,7 +257,7 @@ public class LBSDaoImpl implements LBSDao{
 	 * @param endDate
 	 * @return
 	 */
-	private float getStepMileByEnhancedTrack(Car car, Date beginDate, Date endDate){
+	public float getStepMileByEnhancedTrack(Car car, Date beginDate, Date endDate){
 		
 		float distanceOfTrack = 0;
 		float betweenTrackDistance = 0;

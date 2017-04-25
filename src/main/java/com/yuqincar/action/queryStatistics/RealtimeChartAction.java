@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.poi.ss.formula.FormulaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -127,13 +128,13 @@ public class RealtimeChartAction extends BaseAction{
 	    for(int i=0;i<rcvo.size();i++){
 	    	
 	    	//plateNumber of car
-	    	cell = new PdfPCell (new Paragraph ("车辆:",font));
+	    	cell = new PdfPCell (new Paragraph ("车辆",font));
 		    table.addCell (cell);	
 		    cell = new PdfPCell(new Paragraph(rcvo.get(i).getPlateNumber(),font));
 		    cell.setColspan (4);
 		    table.addCell(cell);
 		    //all miles
-		    cell = new PdfPCell (new Paragraph ("总里程:",font));
+		    cell = new PdfPCell (new Paragraph ("总里程",font));
 		    table.addCell (cell);	
 		    String totalMiles = df.format(rcvo.get(i).getTotalMile());
 		    cell = new PdfPCell(new Paragraph(totalMiles+" 公里",font));
@@ -164,7 +165,10 @@ public class RealtimeChartAction extends BaseAction{
 			    cell = new PdfPCell(new Paragraph(rcvo.get(i).getPaths().get(j).getMiles()+"",font));
 			    table.addCell(cell);
 		    }
-		    
+		    cell = new PdfPCell(new Paragraph(" ",font));
+		    cell.setColspan(5);
+		    cell.setBorder(0);
+		    table.addCell(cell);
 		    
 	    }
 	    doc.add(table);
@@ -196,14 +200,18 @@ public class RealtimeChartAction extends BaseAction{
 			String json = HttpMethod.get(url+sn);
 			JSONObject jsonObject = JSONObject.fromObject(json);
 			int ret = Integer.valueOf(jsonObject.getInt("ret"));
-			//filter the tracks
+			
 			if(ret == 1){
 				JSONArray tracks = jsonObject.getJSONArray("track");
+				float tmile = 0f;
+				RealtimeChartVO vo = new RealtimeChartVO();
+				ArrayList<Path> paths = new ArrayList<Path>();
+				//有轨迹的车辆
 				if(tracks.size()>0){
-					RealtimeChartVO vo = new RealtimeChartVO();
-					ArrayList<Path> paths = new ArrayList<Path>();
+					//filter the tracks
 					//from end to begin
 					for(int i=tracks.size()-1;i>=0;i--){
+						
 						long time = tracks.getJSONObject(i).getJSONArray("states").getJSONObject(0).getLong("receive")
 											-tracks.getJSONObject(i).getJSONArray("states").getJSONObject(1).getLong("receive");
 						if(tracks.getJSONObject(i).getDouble("distance")/time > 2.0/3600000){
@@ -211,6 +219,7 @@ public class RealtimeChartAction extends BaseAction{
 								long pathBegin = tracks.getJSONObject(i).getJSONArray("states").getJSONObject(1).getLong("receive");
 								long pathEnd = tracks.getJSONObject(i).getJSONArray("states").getJSONObject(0).getLong("receive");
 								double miles = tracks.getJSONObject(i).getDouble("distance");
+								tmile += miles;
 								path.setBeginDate(new Date(pathBegin));
 								path.setEndDate(new Date(pathEnd));
 								path.setMiles(miles);
@@ -221,9 +230,15 @@ public class RealtimeChartAction extends BaseAction{
 					if(paths.size()>0){
 						vo.setPlateNumber(car.getPlateNumber());
 						vo.setPaths(paths);
-						vo.setTotalMile(lbsDao.getStepMileByEnhancedTrack(car, date, calendar.getTime()));
+						vo.setTotalMile(tmile);
 						rcvo.add(vo);
 					}
+			    //没有轨迹的车辆
+				}else{
+					vo.setPlateNumber(car.getPlateNumber());
+					vo.setPaths(paths);
+					vo.setTotalMile(0f);
+					rcvo.add(vo);
 				}
 			}
 		}

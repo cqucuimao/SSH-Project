@@ -19,4 +19,7 @@ public interface MonitorGroupService extends BaseService{
 	public MonitorGroup getById(Long id);
 	
 	public List<Car> sortCarByPlateNumber(List<Car> cars);
+	
+	public List<Car> getCarFromStandingGarage();
+	
 }

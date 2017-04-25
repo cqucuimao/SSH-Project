@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yuqincar.dao.car.CarDao;
 import com.yuqincar.dao.monitor.MonitorGroupDao;
 import com.yuqincar.domain.car.Car;
+import com.yuqincar.domain.car.CarStatusEnum;
 import com.yuqincar.domain.monitor.MonitorGroup;
 import com.yuqincar.service.car.CarService;
 import com.yuqincar.service.monitor.MonitorGroupService;
+import com.yuqincar.utils.QueryHelper;
 
 @Service
 public class MonitorGroupServiceImpl implements MonitorGroupService{
@@ -22,6 +25,9 @@ public class MonitorGroupServiceImpl implements MonitorGroupService{
 	
 	@Autowired
 	private CarService carService;
+	
+	@Autowired
+	private CarDao carDao;
 	
 	@Transactional
 	public void delete(Long id) {
@@ -53,6 +59,14 @@ public class MonitorGroupServiceImpl implements MonitorGroupService{
 			sortList.add(carService.getCarByPlateNumber(plateNumber));
 		}
 		return sortList;
+	}
+	public List<Car> getCarFromStandingGarage() {
+		QueryHelper queryHelper=new QueryHelper(Car.class,"c");
+		queryHelper.addWhereCondition("c.status=?", CarStatusEnum.NORMAL);
+		queryHelper.addWhereCondition("c.device is not null");
+		queryHelper.addWhereCondition("c.borrowed=?", false);
+		queryHelper.addWhereCondition("c.standingGarage=?", true);
+		return carDao.getAllQuerry(queryHelper);
 	}
 
 	

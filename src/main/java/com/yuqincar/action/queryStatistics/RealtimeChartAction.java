@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -115,69 +118,56 @@ public class RealtimeChartAction extends BaseAction{
 				addFieldError("null1", "该时间段内没有轨迹！");
 				return exportUI();
 			}
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			addFieldError("null2", "请求出错，请重试！");
 			return exportUI();
 		}
+		PdfPCell cell = new PdfPCell();
 	    for(int i=0;i<rcvo.size();i++){
+	    	
 	    	//plateNumber of car
-	    	PdfPCell cell = new PdfPCell (new Paragraph ("车辆:",font));
-		    cell.setBorder(0);
+	    	cell = new PdfPCell (new Paragraph ("车辆:",font));
 		    table.addCell (cell);	
 		    cell = new PdfPCell(new Paragraph(rcvo.get(i).getPlateNumber(),font));
 		    cell.setColspan (4);
-		    cell.setBorder(0);
 		    table.addCell(cell);
 		    //all miles
 		    cell = new PdfPCell (new Paragraph ("总里程:",font));
-		    cell.setBorder(0);
 		    table.addCell (cell);	
 		    String totalMiles = df.format(rcvo.get(i).getTotalMile());
 		    cell = new PdfPCell(new Paragraph(totalMiles+" 公里",font));
 		    cell.setColspan (4);
-		    cell.setBorder(0);
 		    table.addCell(cell);
 		    //list of tracks
 		    cell = new PdfPCell(new Paragraph("轨迹序号",font));
-		    cell.setBorder(0);
 		    table.addCell(cell);
 		    cell = new PdfPCell(new Paragraph("开始时间",font));
-		    cell.setBorder(0);
 		    table.addCell(cell);
 		    cell = new PdfPCell(new Paragraph("结束时间",font));
-		    cell.setBorder(0);
 		    table.addCell(cell);
 		    cell = new PdfPCell(new Paragraph("轨迹摘要",font));
-		    cell.setBorder(0);
 		    table.addCell(cell);
 		    cell = new PdfPCell(new Paragraph("里程(公里)",font));
-		    cell.setBorder(0);
 		    table.addCell(cell);
 		    for(int j=0;j<rcvo.get(i).getPaths().size();j++){
 			    cell = new PdfPCell(new Paragraph((j+1)+"",font));
-			    cell.setBorder(0);
 			    table.addCell(cell);
 			    String fromDate = sdf.format(rcvo.get(i).getPaths().get(j).getBeginDate());
 			    cell = new PdfPCell(new Paragraph(fromDate,font));
-			    cell.setBorder(0);
 			    table.addCell(cell);
 			    String toDate = sdf.format(rcvo.get(i).getPaths().get(j).getEndDate());
 			    cell = new PdfPCell(new Paragraph(toDate,font));
-			    cell.setBorder(0);
 			    table.addCell(cell);
 			    cell = new PdfPCell(new Paragraph(rcvo.get(i).getPaths().get(j).getPathAbstract(),font));
-			    cell.setBorder(0);
 			    table.addCell(cell);
 			    cell = new PdfPCell(new Paragraph(rcvo.get(i).getPaths().get(j).getMiles()+"",font));
-			    cell.setBorder(0);
 			    table.addCell(cell);
 		    }
-		    //add a enter
-		    cell = new PdfPCell(new Paragraph("\n\n",font));
-		    table.addCell(cell);
 		    
-		    doc.add(table);
+		    
 	    }
+	    doc.add(table);
 	    //打印结束，关闭
 	    doc.close ();
 	    this.pdfStream = new ByteArrayInputStream(buffer.toByteArray());
@@ -192,9 +182,8 @@ public class RealtimeChartAction extends BaseAction{
 	//get trails
 	public ArrayList<RealtimeChartVO> getAllTrails(){
 		ArrayList<RealtimeChartVO> rcvo = new ArrayList<RealtimeChartVO>();
-		List<Car> cars = carService.getCarsForMonitoring();
 		//sort by plateNumber
-		monitorGroupService.sortCarByPlateNumber(cars);
+		List<Car> cars = monitorGroupService.sortCarByPlateNumber(monitorGroupService.getCarFromStandingGarage());
 		long begin = date.getTime();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -204,43 +193,37 @@ public class RealtimeChartAction extends BaseAction{
 				 "&user_id="+Configuration.getCapcareUserId()+"&app_name="+Configuration.getCapcareAppName()+"&device_sn=";
 		for(Car car : cars){
 			String sn = car.getDevice().getSN();
-			url += sn;
-			String json = HttpMethod.get(url);
-			System.out.println(json);
+			String json = HttpMethod.get(url+sn);
 			JSONObject jsonObject = JSONObject.fromObject(json);
 			int ret = Integer.valueOf(jsonObject.getInt("ret"));
 			//filter the tracks
-			JSONArray filterTracks = new JSONArray();
 			if(ret == 1){
 				JSONArray tracks = jsonObject.getJSONArray("track");
-				System.out.println(tracks.size());
 				if(tracks.size()>0){
-					for(int i=0;i<tracks.size();i++){
-						long time = tracks.getJSONObject(i).getJSONArray("states").getJSONObject(0).getLong("receive")
-											-tracks.getJSONObject(i).getJSONArray("states").getJSONObject(1).getLong("receive");
-						if(tracks.getJSONObject(i).getDouble("distance")/time > 2.0/3600000){
-							filterTracks.add(tracks.getJSONObject(i));
-						}
-					}
 					RealtimeChartVO vo = new RealtimeChartVO();
 					ArrayList<Path> paths = new ArrayList<Path>();
 					//from end to begin
-					for(int i=filterTracks.size()-1;i>=0;i--){
-						Path path = new Path();
-						long pathBegin = filterTracks.getJSONObject(i).getJSONArray("states").getJSONObject(1).getLong("receive");
-						long pathEnd = filterTracks.getJSONObject(i).getJSONArray("states").getJSONObject(0).getLong("receive");
-						double miles = filterTracks.getJSONObject(i).getDouble("distance");
-						path.setBeginDate(new Date(pathBegin));
-						path.setEndDate(new Date(pathEnd));
-						path.setMiles(miles);
-						path.setPathAbstract(orderService.getOrderTrackAbstract(sn, new Date(pathBegin), new Date(pathEnd)));
-						paths.add(path);
+					for(int i=tracks.size()-1;i>=0;i--){
+						long time = tracks.getJSONObject(i).getJSONArray("states").getJSONObject(0).getLong("receive")
+											-tracks.getJSONObject(i).getJSONArray("states").getJSONObject(1).getLong("receive");
+						if(tracks.getJSONObject(i).getDouble("distance")/time > 2.0/3600000){
+								Path path = new Path();
+								long pathBegin = tracks.getJSONObject(i).getJSONArray("states").getJSONObject(1).getLong("receive");
+								long pathEnd = tracks.getJSONObject(i).getJSONArray("states").getJSONObject(0).getLong("receive");
+								double miles = tracks.getJSONObject(i).getDouble("distance");
+								path.setBeginDate(new Date(pathBegin));
+								path.setEndDate(new Date(pathEnd));
+								path.setMiles(miles);
+								path.setPathAbstract(orderService.getOrderTrackAbstract(sn, new Date(pathBegin), new Date(pathEnd)));
+								paths.add(path);
+						}
 					}
-					vo.setPlateNumber(car.getPlateNumber());
-					vo.setPaths(paths);
-					vo.setTotalMile(lbsDao.getStepMileByEnhancedTrack(car, date, calendar.getTime()));
-					
-					rcvo.add(vo);
+					if(paths.size()>0){
+						vo.setPlateNumber(car.getPlateNumber());
+						vo.setPaths(paths);
+						vo.setTotalMile(lbsDao.getStepMileByEnhancedTrack(car, date, calendar.getTime()));
+						rcvo.add(vo);
+					}
 				}
 			}
 		}
